@@ -15,6 +15,14 @@
             "en": "Sprite"
         }
     },
+    "Button": {
+        "path": "button",
+        "translations": {
+            "fr": "Bouton",
+            "es": "Buton",
+            "en": "Button"
+        }
+    },
     "Tangara": {
         "path": "tangara",
         "translations": {
