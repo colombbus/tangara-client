@@ -39,7 +39,7 @@ define(['jquery','TEnvironment', 'TUtils', 'objects/TGraphicalObject'], function
               }
             }
         },
-        touchEnd: function(touch) {
+        designTouchEnd: function(touch) {
           this.p.destinationX = this.p.x;
           this.p.destinationY = this.p.y;
           this._super(touch);
@@ -61,28 +61,28 @@ define(['jquery','TEnvironment', 'TUtils', 'objects/TGraphicalObject'], function
     Sprite.prototype.qSprite = qInstance.TSprite;
     
     Sprite.prototype._moveForward = function(value) {
-        if (typeof value !== 'undefined' && !isNaN(value)) {
+        if (TUtils.checkInteger(value)) {
           this.qObject.p.destinationX+=value;
         }
         return;
     };
 
     Sprite.prototype._moveBackward = function(value) {
-        if (typeof value !== 'undefined' && !isNaN(value)) {
+        if (TUtils.checkInteger(value)) {
           this.qObject.p.destinationX-=value;
         }
         return;
     };
         
     Sprite.prototype._moveUpward = function(value) {
-        if (typeof value !== 'undefined' && !isNaN(value)) {
+        if (TUtils.checkInteger(value)) {
           this.qObject.p.destinationY-=value;
         }
         return;
     };
 
     Sprite.prototype._moveDownward = function(value) {
-        if (typeof value !== 'undefined' && !isNaN(value)) {
+        if (TUtils.checkInteger(value)) {
           this.qObject.p.destinationY+=value;
         }
         return;
@@ -95,7 +95,7 @@ define(['jquery','TEnvironment', 'TUtils', 'objects/TGraphicalObject'], function
     };
     
     Sprite.prototype._addImage = function(name) {
-        if (typeof name === 'string') {
+        if (TUtils.checkString(name)) {
             // add image only if not already added
             if (typeof this.images[name] === 'undefined') {
                 var asset = TEnvironment.getUserResource(name);
@@ -119,7 +119,7 @@ define(['jquery','TEnvironment', 'TUtils', 'objects/TGraphicalObject'], function
     };
 
     Sprite.prototype._displayImage = function(name) {
-        if (typeof name === 'string' && typeof this.images[name] !== 'undefined' && this.displayedImage !== name) {
+        if (TUtils.checkString(name) && typeof this.images[name] !== 'undefined' && this.displayedImage !== name) {
             window.console.log("displaying image '"+name+"'");
             var asset = this.images[name];
             var qObject = this.qObject;
