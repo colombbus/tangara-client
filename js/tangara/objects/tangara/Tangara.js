@@ -8,19 +8,19 @@ define(['jquery','TEnvironment', 'TUtils', 'objects/TObject'], function($, TEnvi
     Tangara.prototype.className = "Tangara";
 
     Tangara.prototype._write = function(value) {
-        if (typeof value === 'string') {
+	    if (TUtils.checkString(value)) {
             TEnvironment.addLogMessage(value);
         }
     };
 
     Tangara.prototype._alert = function(value) {
-        if (typeof value === 'string') {
+	    if (TUtils.checkString(value)) {
             window.alert(value);
         }
     };
 
     Tangara.prototype._loadScript = function(name) {
-        if (typeof name === 'string') {
+	    if (TUtils.checkString(name)) {
             var scriptUrl = TEnvironment.getUserResource(name);
             var parent = this;
             $.ajax({
@@ -41,7 +41,6 @@ define(['jquery','TEnvironment', 'TUtils', 'objects/TObject'], function($, TEnvi
     var tangaraInstance = new Tangara();
 
     return tangaraInstance;
-    //return Tangara;
 });
 
 
