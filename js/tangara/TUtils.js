@@ -111,6 +111,14 @@ define(['jquery'], function($) {
                 return typeof args[number] !== 'undefined'? args[number]: match;
             });
         };
+        
+        this.checkInteger = function(value) {
+	        return (typeof value !== 'undefined' && !isNaN(value));
+        }
+        
+        this.checkString = function(value) {
+	        return (typeof value !== 'undefined' && (typeof value === 'string' || value instanceof String));
+        }
     };
     
     var utilInstance = new TUtils();
