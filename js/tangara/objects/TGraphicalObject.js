@@ -10,6 +10,7 @@ define(['jquery','jquery_animate_enhanced','TEnvironment'], function($, animate_
     TGraphicalObject.TYPE_CHARACTER = 0x0100;
     TGraphicalObject.TYPE_CATCHABLE = 0x0200;
     TGraphicalObject.TYPE_SPRITE = 0x0400;
+    TGraphicalObject.TYPE_INPUT = 0x0800;
     
     var qInstance = TEnvironment.getQuintusInstance();
     
@@ -21,14 +22,14 @@ define(['jquery','jquery_animate_enhanced','TEnvironment'], function($, animate_
             },props),defaultProps);
             this.operations = new Array();
       },
-      drag: function(touch) {
+      designDrag:function(touch) {
         if (this.p.designMode) {
           this.p.dragging = true;
           this.p.x = touch.origX + touch.dx;
           this.p.y = touch.origY + touch.dy;
         }
        },
-      touchEnd: function(touch) {
+      designTouchEnd: function(touch) {
         if (this.p.designMode) {
           this.p.dragging = false;
         }
@@ -134,19 +135,19 @@ define(['jquery','jquery_animate_enhanced','TEnvironment'], function($, animate_
     TGraphicalObject.prototype._setDesignMode = function(value) {
         var qObject = this.qObject;
         if (value) {
-          qObject.on("drag");
-          qObject.on("touchEnd");
+          qObject.on("drag", qObject, "designDrag");
+          qObject.on("touchEnd", qObject, "designTouchEnd");
           for (var i=0; i<qObject.children.length; i++) {
-            qObject.children[i].on("drag");
-            qObject.children[i].on("touchEnd");
+            qObject.children[i].on("drag", qObject, "designDrag");
+            qObject.children[i].on("touchEnd", qObject, "designTouchEnd");
           }
           qObject.p.designMode = true;
         } else {
-          qObject.off("drag");
-          qObject.off("touchEnd");
+          qObject.off("drag", qObject, "designDrag");
+          qObject.off("touchEnd", qObject, "designTouchEnd");
           for (var i=0; i<qObject.children.length; i++) {
-            qObject.children[i].off("drag");
-            qObject.children[i].off("touchEnd");
+            qObject.children[i].off("drag", qObject, "designDrag");
+            qObject.children[i].off("touchEnd", qObject, "designTouchEnd");
           }
           qObject.p.designMode = false;
         }
