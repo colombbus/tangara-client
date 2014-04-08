@@ -47,7 +47,7 @@ define(['jquery','TEnvironment', 'TUtils', 'objects/TGraphicalObject'], function
               }
             }
         },
-        drag: function(touch) {
+        designDrag: function(touch) {
             for (var i=0; i<this.children.length; i++) {
                 this.children[i].stopAnimation();
             }
@@ -57,7 +57,7 @@ define(['jquery','TEnvironment', 'TUtils', 'objects/TGraphicalObject'], function
             }
             this._super(touch);
         },
-        touchEnd: function(touch) {
+        designTouchEnd: function(touch) {
             this.p.destinationX = this.p.x;
             this.p.destinationY = this.p.y;
             this._super(touch);
@@ -115,12 +115,6 @@ define(['jquery','TEnvironment', 'TUtils', 'objects/TGraphicalObject'], function
                 mayCatch:false
             },props),defaultProps);
             this.add("tween");
-        },
-        drag: function(touch) {
-          this.container.drag(touch);
-        },
-        touchEnd: function(touch) {
-          this.container.touchEnd(touch);
         },
         startAnimation: function() {
             this.p.initX = this.p.x;
@@ -238,28 +232,28 @@ define(['jquery','TEnvironment', 'TUtils', 'objects/TGraphicalObject'], function
     Character.prototype.qSprite = qInstance.Character;
 
     Character.prototype._moveForward = function(value) {
-        if (typeof value !== 'undefined' && !isNaN(value)) {
+        if (TUtils.checkInteger(value)) {
           this.qObject.p.destinationX+=value;
         }
         return;
     };
 
     Character.prototype._moveBackward = function(value) {
-        if (typeof value !== 'undefined' && !isNaN(value)) {
+        if (TUtils.checkInteger(value)) {
           this.qObject.p.destinationX-=value;
         }
         return;
     };
         
     Character.prototype._moveUpward = function(value) {
-        if (typeof value !== 'undefined' && !isNaN(value)) {
+        if (TUtils.checkInteger(value)) {
           this.qObject.p.destinationY-=value;
         }
         return;
     };
 
     Character.prototype._moveDownward = function(value) {
-        if (typeof value !== 'undefined' && !isNaN(value)) {
+        if (TUtils.checkInteger(value)) {
           this.qObject.p.destinationY+=value;
         }
         return;
@@ -272,7 +266,7 @@ define(['jquery','TEnvironment', 'TUtils', 'objects/TGraphicalObject'], function
     };
     
     Character.prototype._loadSkeleton = function(name) {
-        if (typeof name !== 'undefined' && (typeof name === 'string' || name instanceof String)) {
+        if (TUtils.checkString(name)) {
           window.console.log("loading skeleton");
           var baseImageUrl = this.getResource(name)+"/";
           var skeletonUrl = baseImageUrl+"skeleton.json";
@@ -367,37 +361,37 @@ define(['jquery','TEnvironment', 'TUtils', 'objects/TGraphicalObject'], function
     };
         
     Character.prototype._change = function(name) {
-        if (typeof name !== 'undefined' && (typeof name === 'string' || name instanceof String)) {
+        if (TUtils.checkString(name)) {
           var simplifiedName = TUtils.removeAccents(name);
           this._loadSkeleton(this.getMessage(simplifiedName));
         }
     };
     
     Character.prototype._raiseLeftArm = function(value) {
-        if (typeof value !== 'undefined' && !isNaN(value)) {
+        if (TUtils.checkInteger(value)) {
           this.leftElement.lower(value);
         }
     };
 
     Character.prototype._raiseRightArm = function(value) {
-        if (typeof value !== 'undefined' && !isNaN(value)) {
+        if (TUtils.checkInteger(value)) {
           this.rightElement.raise(value);
         }
     };
     
     Character.prototype._lowerLeftArm = function(value) {
-        if (typeof value !== 'undefined' && !isNaN(value)) {
+        if (TUtils.checkInteger(value)) {
           this.leftElement.raise(value);
         }
     };
 
     Character.prototype._lowerRightArm = function(value) {
-        if (typeof value !== 'undefined' && !isNaN(value)) {
+        if (TUtils.checkInteger(value)) {
           this.rightElement.lower(value);
         }
     };
     
-    Character.prototype._mayCatch = function(object, command) {
+    Character.prototype._mayCatch = function(object, command) {   
         var qObject = this.getQObject();
         var catchableQObject = object.getQObject();
         qObject.mayCatch(catchableQObject, command);
