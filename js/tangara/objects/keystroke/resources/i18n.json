@@ -1,7 +1,8 @@
 {
     "fr": {
         "methods":[
-            {"name": "_addCommand", "translated": "ajouterCommande", "displayed": "ajouterCommande(\"commande\")"}
+            {"name": "_addCommand", "translated": "ajouterCommande", "displayed": "ajouterCommande(\"touche\", \"commande\")"},
+            {"name": "_removeCommands", "translated": "supprimerCommandes", "displayed": "supprimerCommandes(\"touche\")"}
         ]
     }
 }

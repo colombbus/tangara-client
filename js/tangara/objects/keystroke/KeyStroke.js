@@ -30,6 +30,34 @@ define(['jquery','TEnvironment', 'TUtils', 'objects/TObject'], function($, TEnvi
             }
         }
     };
+    
+    KeyStroke.prototype._removeCommands = function(key) {
+        if (TUtils.checkString(key)) {
+            key = TUtils.removeAccents(key);
+            key = this.getMessage(key);
+            var keycode = TUtils.getkeyCode(key);
+            if (keycode !== false) {
+                var eventName = "key_"+keycode;
+                if (typeof this.commands[eventName] !== 'undefined') {
+                	this.commands[eventName] = undefined;
+                	qInstance.input.keys[keycode] = undefined;
+                }
+            }
+        }
+    };
+    
+    Keystroke.prototype._activate = function() {
+	    
+    };
+
+    Keystroke.prototype._deactivate = function() {
+	    
+    };
+    
+    Keystroke.prototype.deleteObject = function() {
+    	
+	    TObject.deleteObject.call(this);
+    }
 
     KeyStroke.prototype.processKey = function() {
         var that = this;
