@@ -2,7 +2,7 @@ define(['jquery','TEnvironment', 'TUtils', 'objects/TGraphicalObject'], function
     var Button = function(label) {
         window.console.log("Initializing button");
         TGraphicalObject.call(this);
-        if (typeof label === 'string') {
+        if (TUtils.checkString(label)) {
           this._setText(label);
         }
         this._setLocation(0,0);
