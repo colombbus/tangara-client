@@ -4,7 +4,7 @@
         "gauche":"left",
         "droite":"right",
         "haut":"up",
-        "bas":"down",
+        "bas":"down"
     },
     "en": {
     }
