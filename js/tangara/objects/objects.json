@@ -23,6 +23,14 @@
             "en": "Button"
         }
     },
+    "KeyStroke": {
+        "path": "keystroke",
+        "translations": {
+            "fr": "CommandesClavier",
+            "es": "TBT",
+            "en": "KeyStroke"
+        }
+    },
     "Tangara": {
         "path": "tangara",
         "translations": {
