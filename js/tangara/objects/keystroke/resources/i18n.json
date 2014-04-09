@@ -1,0 +1,7 @@
+{
+    "fr": {
+        "methods":[
+            {"name": "_addCommand", "translated": "ajouterCommande", "displayed": "ajouterCommande(\"commande\")"}
+        ]
+    }
+}
