@@ -7,6 +7,7 @@ define(['jquery','jquery_animate_enhanced','TEnvironment', 'objects/TObject'], f
     }
 
     TGraphicalObject.prototype = new TObject();
+	TGraphicalObject.prototype.constructor = TGraphicalObject;
 
     TGraphicalObject.prototype.className = "";
     TGraphicalObject.TYPE_CHARACTER = 0x0100;

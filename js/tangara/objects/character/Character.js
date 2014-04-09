@@ -15,6 +15,7 @@ define(['jquery','TEnvironment', 'TUtils', 'objects/TGraphicalObject'], function
     };
 
     Character.prototype = new TGraphicalObject();
+    Character.prototype.constructor = Character;
     Character.prototype.className = "Character";
     
     var qInstance = TEnvironment.getQuintusInstance();

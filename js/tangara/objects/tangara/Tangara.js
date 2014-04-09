@@ -5,6 +5,7 @@ define(['jquery','TEnvironment', 'TUtils', 'objects/TObject'], function($, TEnvi
     };
     
     Tangara.prototype = new TObject();
+    Tangara.prototype.constructor = Tangara;
     Tangara.prototype.className = "Tangara";
 
     Tangara.prototype._write = function(value) {

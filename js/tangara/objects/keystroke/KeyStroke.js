@@ -6,6 +6,7 @@ define(['jquery','TEnvironment', 'TUtils', 'objects/TObject'], function($, TEnvi
     var qInstance = TEnvironment.getQuintusInstance();
 
     KeyStroke.prototype = new TObject();
+    KeyStroke.prototype.constructor = KeyStroke;
     KeyStroke.prototype.className = "KeyStroke";
 
     KeyStroke.prototype.commands = new Array();
@@ -14,7 +15,6 @@ define(['jquery','TEnvironment', 'TUtils', 'objects/TObject'], function($, TEnvi
         if (TUtils.checkString(key)&&TUtils.checkString(command)) {
             key = TUtils.removeAccents(key);
             key = this.getMessage(key);
-            window.console.log("key : "+key);
             var keycode = TUtils.getkeyCode(key);
             if (keycode !== false) {
                 var eventName = "key_"+keycode;

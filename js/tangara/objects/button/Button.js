@@ -10,6 +10,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'objects/TGraphicalObject'], functio
     };
 
     Button.prototype = new TGraphicalObject();
+    Button.prototype.constructor = Button;
     Button.prototype.className = "Button";
 
     var qInstance = TEnvironment.getQuintusInstance();
