@@ -122,7 +122,7 @@ define(['jquery','TEnvironment', 'TUtils', 'objects/TGraphicalObject'], function
         	qObject.p.label = label;
         	qObject.updateSize();
 		}	    
-    }
+    };
 
     Button.prototype._setTextSize = function(size) {
         if (TUtils.checkInteger(size)) {
@@ -130,7 +130,7 @@ define(['jquery','TEnvironment', 'TUtils', 'objects/TGraphicalObject'], function
         	qObject.p.textSize = size;
         	qObject.updateSize();
 		}	    
-    }
+    };
     
     Button.prototype._setColor = function(red,green,blue) {
     	var r,g,b,ra,ga,ba;
@@ -147,7 +147,7 @@ define(['jquery','TEnvironment', 'TUtils', 'objects/TGraphicalObject'], function
         	qObject.p.strokeColor = "rgb("+ra+","+ga+","+ba+")";
         	qObject.p.strokeColorActive = "rgb("+ra+","+ga+","+ba+")";
         }
-    }
+    };
     
     Button.prototype._setTextColor = function(red,green,blue) {
     	var r,g,b;
@@ -158,17 +158,17 @@ define(['jquery','TEnvironment', 'TUtils', 'objects/TGraphicalObject'], function
         	var qObject = this.qObject;
         	qObject.p.textColor = "rgb("+r+","+g+","+b+")";
         }
-    }
+    };
 
-	Button.prototype._addCommand = function(command) {
-		if (TUtils.checkString(command)) {
-			this.qObject.addCommand(command);	
-		}
-	}
-    
-	Button.prototype._emptyCommands = function() {
-		this.qObject.emptyCommands();
-	}
+    Button.prototype._addCommand = function(command) {
+            if (TUtils.checkString(command)) {
+                    this.qObject.addCommand(command);	
+            }
+    };
+
+    Button.prototype._emptyCommands = function() {
+            this.qObject.emptyCommands();
+    };
 
     TEnvironment.internationalize(Button);
     
