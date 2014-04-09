@@ -1,0 +1,16 @@
+{
+    "fr": {
+        "garcon":"boy",
+        "fille":"girl",
+        "chien":"dog",
+        "chat":"cat",
+        "unknwon skeleton":"Personnage '{0}' introuvable"
+    },
+    "en": {
+        "boy":"boy",
+        "girl":"girl",
+        "dog":"dog",
+        "cat":"cat",
+        "unknwon skeleton":"Character '{0}' unknown"
+    }
+}
