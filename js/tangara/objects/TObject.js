@@ -28,7 +28,7 @@ define(['jquery','TEnvironment'], function($, TEnvironment) {
             });
         }
     };
-
+    
     TObject.prototype.deleteObject = function() {
         TEnvironment.deleteTObject(this);
     };
