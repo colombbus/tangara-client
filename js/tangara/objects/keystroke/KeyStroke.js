@@ -46,15 +46,15 @@ define(['jquery','TEnvironment', 'TUtils', 'objects/TObject'], function($, TEnvi
         }
     };
     
-    Keystroke.prototype._activate = function() {
+    KeyStroke.prototype._activate = function() {
 	    
     };
 
-    Keystroke.prototype._deactivate = function() {
+    KeyStroke.prototype._deactivate = function() {
 	    
     };
     
-    Keystroke.prototype.deleteObject = function() {
+    KeyStroke.prototype.deleteObject = function() {
     	
 	    TObject.deleteObject.call(this);
     }
