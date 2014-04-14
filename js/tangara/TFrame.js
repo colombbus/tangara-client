@@ -1,4 +1,4 @@
-define(['jquery', 'split-pane','TCanvas', 'TEnvironment', 'TEditor', 'TLog'], function($, SplitPane, TCanvas, TEnvironment, TEditor, TLog) {
+define(['jquery', 'split-pane','TCanvas', 'TEnvironment', 'TEditor', 'TLog', 'Tessai'], function($, SplitPane, TCanvas, TEnvironment, TEditor, TLog, TAffiche) {
     function TFrame() {
         var domFrame = document.createElement("div");
         domFrame.id = "tframe";
@@ -10,7 +10,9 @@ define(['jquery', 'split-pane','TCanvas', 'TEnvironment', 'TEditor', 'TLog'], fu
         var canvas = new TCanvas();
         topDiv.appendChild(canvas.getElement());
         domFrame.appendChild(topDiv);
-
+        
+        var tess= new Tessai();
+        
         var separator1 = document.createElement("div");
         separator1.id="tframe-separator";
         separator1.className="split-pane-divider";
