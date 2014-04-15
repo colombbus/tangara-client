@@ -1,6 +1,7 @@
-define(['jquery','TEnvironment', 'TUtils', 'objects/TObject'], function($, TEnvironment, TUtils, TObject) {
+define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'objects/TObject'], function($, TEnvironment, TUtils, CommandManager, TObject) {
     var KeyStroke = function() {
         TObject.call(this);
+        this.commands = new CommandManager();
     };
 
     var qInstance = TEnvironment.getQuintusInstance();
@@ -9,24 +10,22 @@ define(['jquery','TEnvironment', 'TUtils', 'objects/TObject'], function($, TEnvi
     KeyStroke.prototype.constructor = KeyStroke;
     KeyStroke.prototype.className = "KeyStroke";
 
-    KeyStroke.prototype.commands = new Array();
-
     KeyStroke.prototype._addCommand = function(key, command) {
-        if (TUtils.checkString(key)&&TUtils.checkString(command)) {
+        if (TUtils.checkString(key)&&TUtils.checkCommand(command)) {
             key = TUtils.removeAccents(key);
             key = this.getMessage(key);
             var keycode = TUtils.getkeyCode(key);
             if (keycode !== false) {
                 var eventName = "key_"+keycode;
-                if (typeof this.commands[eventName] === 'undefined') {
-                    this.commands[eventName] = new Array();
+                if (!this.commands.hasCommands(eventName)) {
+                    // add key binding for this key
                     var map = new Array();
                     map[keycode] = eventName;
                     qInstance.input.keyboardControls(map);
                     qInstance.input.on(eventName, this, "processKey");
                     qInstance.input.on(eventName+"Up", this, "processKeyUp");
                 }
-                this.commands[eventName].push(command);
+                this.commands.addCommand(command, eventName);
             }
         }
     };
@@ -38,9 +37,9 @@ define(['jquery','TEnvironment', 'TUtils', 'objects/TObject'], function($, TEnvi
             var keycode = TUtils.getkeyCode(key);
             if (keycode !== false) {
                 var eventName = "key_"+keycode;
-                if (typeof this.commands[eventName] !== 'undefined') {
-                	this.commands[eventName] = undefined;
-                	qInstance.input.keys[keycode] = undefined;
+                if (this.commands.hasCommands(eventName)) {
+                    qInstance.input.keys[keycode] = undefined;
+                    this.commands.removeCommands(eventName);
                 }
             }
         }
@@ -57,15 +56,13 @@ define(['jquery','TEnvironment', 'TUtils', 'objects/TObject'], function($, TEnvi
     KeyStroke.prototype.deleteObject = function() {
     	
 	    TObject.deleteObject.call(this);
-    }
+    };
 
     KeyStroke.prototype.processKey = function() {
         var that = this;
         $.each(qInstance.inputs, function(eventName, value) {
-            if (value && typeof that.commands[eventName] !== 'undefined') {
-                for (var i = 0; i < that.commands[eventName].length; i++) {
-                    TEnvironment.execute(that.commands[eventName][i]);
-                }
+            if (value) {
+                that.commands.executeCommands({'field':eventName});
             }
         });
     };
