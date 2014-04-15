@@ -130,6 +130,14 @@ define(function() {
         this.checkString = function(value) {
             return (typeof value !== 'undefined' && (typeof value === 'string' || value instanceof String));
         };
+
+        this.checkFunction = function(value) {
+            return (typeof value !== 'undefined' && (typeof value === 'function' || value instanceof Function));
+        };
+        
+        this.checkCommand = function(value) {
+            return this.checkString(value)||this.checkFunction(value);
+        };
         
         this.getkeyCode = function(value) {
             if (this.checkString(value)) {
