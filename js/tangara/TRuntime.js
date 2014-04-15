@@ -40,14 +40,17 @@ define(['jquery', 'TEnvironment'], function($, TEnvironment) {
             });
         };
         
-        this.execute = function(commands) {
+        this.execute = function(commands, parameter) {
             var error = false;
             var message;
             try {
                 if (typeof (runtimeCallback) === 'undefined') {
-                    eval(commands);
+                    if (typeof commands === 'string' || commands instanceof String)
+                        eval(commands);
+                    else if (typeof commands === 'function' || commands instanceof Function)
+                        commands(parameter);
                 } else {
-                    runtimeCallback(commands);
+                    runtimeCallback(commands, parameter);
                 }
             } catch (e) {
                 error = true;
