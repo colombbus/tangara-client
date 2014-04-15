@@ -1,4 +1,4 @@
-define(['jquery', 'TEnvironment', 'TUtils', 'objects/TGraphicalObject'], function($, TEnvironment, TUtils, TGraphicalObject) {
+define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'objects/TGraphicalObject'], function($, TEnvironment, TUtils, CommandManager, TGraphicalObject) {
     var Button = function(label) {
         window.console.log("Initializing button");
         TGraphicalObject.call(this);
@@ -35,7 +35,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'objects/TGraphicalObject'], functio
             }, props), defaultProps);
             this.on("touch");
             this.on("touchEnd");
-            this.actionCommands = new Array();
+            this.commands = new CommandManager();
         },
         updateSize: function() {
             var oldH = this.p.h;
@@ -103,15 +103,13 @@ define(['jquery', 'TEnvironment', 'TUtils', 'objects/TGraphicalObject'], functio
             }
         },
         addCommand: function(command) {
-            this.actionCommands.push(command);
+            this.commands.addCommand(command);
         },
         executeCommands: function() {
-            for (var i = 0; i < this.actionCommands.length; i++) {
-                TEnvironment.execute(this.actionCommands[i]);
-            }
+            this.commands.executeCommands();
         },
-        emptyCommands: function() {
-            this.actionCommands.length = 0;
+        removeCommands: function() {
+            this.commands.removeCommands();
         }
     });
 
@@ -162,13 +160,13 @@ define(['jquery', 'TEnvironment', 'TUtils', 'objects/TGraphicalObject'], functio
     };
 
     Button.prototype._addCommand = function(command) {
-        if (TUtils.checkString(command)) {
+        if (TUtils.checkCommand(command)) {
             this.qObject.addCommand(command);
         }
     };
 
-    Button.prototype._emptyCommands = function() {
-        this.qObject.emptyCommands();
+    Button.prototype._removeCommands = function() {
+        this.qObject.removeCommands();
     };
 
     TEnvironment.internationalize(Button);
