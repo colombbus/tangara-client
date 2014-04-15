@@ -62,8 +62,8 @@ define(['jquery','TRuntime', 'quintus'], function($, TRuntime, Quintus) {
             return canvas;
         };
         
-        this.execute = function(command) {
-            TRuntime.execute(command);
+        this.execute = function(command, parameter) {
+            TRuntime.execute(command, parameter);
         };
         
         this.addLog = function(text, success) {
