@@ -8,7 +8,7 @@
             {"name": "_setColor", "translated": "d\u00e9finirCouleur", "displayed": "d\u00e9finirCouleur(125,125,125)"},
             {"name": "_setTextColor", "translated": "d\u00e9finirCouleurTexte", "displayed": "d\u00e9finirCouleurTexte(0,0,0)"},
             {"name": "_addCommand", "translated": "ajouterCommande", "displayed": "ajouterCommande(\"commande\")"},
-            {"name": "_emptyCommands", "translated": "supprimerCommandes", "displayed": "supprimerCommandes()"}
+            {"name": "_removeCommands", "translated": "supprimerCommandes", "displayed": "supprimerCommandes()"}
         ]
     }
 }
