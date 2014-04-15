@@ -141,7 +141,7 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'objects/TObject'],
         this.keys.length = 0;
         this.keys = undefined;
         
-	TObject.deleteObject.call(this);
+	TObject.prototype.deleteObject.call(this);
     };
 
     KeyStroke.prototype.processKeyDown = function(e) {
