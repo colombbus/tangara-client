@@ -99,7 +99,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'objects/TGraphicalObject'], functio
         touchEnd: function(touch) {
             if (!this.p.designMode) {
                 this.p.active = false;
-                this.p.executed = false
+                this.p.executed = false;
             }
         },
         addCommand: function(command) {
