@@ -1,4 +1,4 @@
-define(['jquery','TEnvironment', 'TUtils', 'objects/TObject'], function($, TEnvironment, TUtils, TObject) {
+define(['jquery','TEnvironment', 'TUtils', 'TObject'], function($, TEnvironment, TUtils, TObject) {
     var Tangara = function() {
         window.console.log("Initializing tangara");
         TObject.call(this);
