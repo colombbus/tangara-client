@@ -1,4 +1,4 @@
-define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'objects/TObject'], function($, TEnvironment, TUtils, CommandManager, TObject) {
+define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TObject'], function($, TEnvironment, TUtils, CommandManager, TObject) {
     var KeyStroke = function() {
         TObject.call(this);
         this.commands = new CommandManager();
