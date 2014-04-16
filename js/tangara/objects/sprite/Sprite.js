@@ -1,4 +1,4 @@
-define(['jquery','TEnvironment', 'TUtils', 'objects/TGraphicalObject'], function($, TEnvironment, TUtils, TGraphicalObject) {
+define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject'], function($, TEnvironment, TUtils, TGraphicalObject) {
     var Sprite = function(name) {
         window.console.log("Initializing sprite");
         TGraphicalObject.call(this);
