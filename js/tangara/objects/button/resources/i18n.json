@@ -1,8 +1,6 @@
 {
     "fr": {
         "methods": [
-            {"name": "_delete", "translated": "supprimer", "displayed": "supprimer()"},
-            {"name": "_setLocation", "translated": "d\u00e9finirPosition", "displayed": "d\u00e9finirPosition(0,0)"},
             {"name": "_setText", "translated": "d\u00e9finirTexte", "displayed": "d\u00e9finirTexte(\"texte\")"},
             {"name": "_setTextSize", "translated": "d\u00e9finirTailleTexte", "displayed": "d\u00e9finirTailleTexte(12)"},
             {"name": "_setColor", "translated": "d\u00e9finirCouleur", "displayed": "d\u00e9finirCouleur(125,125,125)"},

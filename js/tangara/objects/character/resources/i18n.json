@@ -11,8 +11,6 @@
             {"name":"_lowerRightArm","translated":"baisserBrasDroit","displayed":"baisserBrasDroit(50)"},
             {"name":"_stop","translated":"arr\u00eater","displayed":"arr\u00eater()"},
             {"name":"_change","translated":"changer","displayed":"changer(\"garçon\")"},
-            {"name":"_delete","translated":"supprimer","displayed":"supprimer()"},
-            {"name":"_setLocation","translated":"d\u00e9finirPosition","displayed":"d\u00e9finirPosition(0,0)"},
             {"name":"_mayCatch","translated":"peutAttraper","displayed":"peutAttraper(objet)"}
         ]
     }

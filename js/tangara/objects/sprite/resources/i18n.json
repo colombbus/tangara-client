@@ -7,9 +7,7 @@
             {"name":"_moveDownward","translated":"descendre","displayed":"descendre(50)"},
             {"name":"_stop","translated":"arreter","displayed":"arrêter()"},
             {"name":"_addImage","translated":"ajouterImage","displayed":"ajouterImage(\"image\")"},
-            {"name":"_displayImage","translated":"afficherImage","displayed":"afficherImage(\"image\")"},
-            {"name":"_delete","translated":"supprimer","displayed":"supprimer()"},
-            {"name":"_setLocation","translated":"d\u00e9finirPosition","displayed":"d\u00e9finirPosition(0,0)"}
+            {"name":"_displayImage","translated":"afficherImage","displayed":"afficherImage(\"image\")"}
         ]
     }
 }

@@ -398,7 +398,7 @@ define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject'], function($, TEnv
         qObject.mayCatch(catchableQObject, command);
     };
 
-    TEnvironment.internationalize(Character);
+    TEnvironment.internationalize(Character, true);
 
     return Character;
 });

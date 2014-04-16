@@ -169,7 +169,7 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TObject'], functio
         }
     };
 
-    TEnvironment.internationalize(KeyStroke);
+    TEnvironment.internationalize(KeyStroke, true);
     
     return KeyStroke;
 });

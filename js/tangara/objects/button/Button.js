@@ -169,7 +169,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
         this.qObject.removeCommands();
     };
 
-    TEnvironment.internationalize(Button);
+    TEnvironment.internationalize(Button, true);
 
     return Button;
 });

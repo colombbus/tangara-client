@@ -3,7 +3,7 @@ define(['jquery','TEnvironment'], function($, TEnvironment) {
         this.load();
     }
 
-    TObject.prototype.className = "";
+    TObject.prototype.className = "TObject";
 
     TObject.prototype.load = function() {
         if (this.className.length !== 0 && typeof this.constructor.messages === 'undefined') {
@@ -17,7 +17,6 @@ define(['jquery','TEnvironment'], function($, TEnvironment) {
                 global:false,
                 async: false,
                 success: function(data) {
-                window.console.log("test ?");
                     if (typeof data[language] !== 'undefined'){
                         parent.constructor.messages = data[language];
                         window.console.log("found messages in language: "+language);

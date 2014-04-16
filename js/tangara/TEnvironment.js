@@ -5,9 +5,11 @@ define(['jquery','TRuntime', 'quintus'], function($, TRuntime, Quintus) {
         var runtimeFrame;
         var runtimeCallback;
         var quintusInstance;
+        var translated = new Array();
         
         this.messages;
         
+        // TODO: change this
         this.language = "fr";
         
         this.load = function() {
@@ -100,28 +102,54 @@ define(['jquery','TRuntime', 'quintus'], function($, TRuntime, Quintus) {
             this.language = language;
         };
         
-        this.internationalize = function(initialClass) {
-            var translationFile = initialClass.prototype.getResource("i18n.json");
-            window.console.log("traduction : "+translationFile);
-            var language = this.language;
+        var addTranslatedMethod = function(aClass, name, translated) {
+            aClass.prototype[translated] = aClass.prototype[name];
+            //TODO: find a working way to prevent classes from being modified 
+            // Object.freeze(initialClass.prototype); // TOO STRICT
+            Object.defineProperty(aClass, translated,  {
+              enumerable: false,
+              configurable: false,
+              writable: false}); // DOES NOT WORK
+        };
         
+        var addTranslatedMethods = function(aClass, file, language) {
+            if (typeof translated[file] !== "undefined") {
+                // translation already loaded: we use it
+                $.each(translated[file], function(name, translated) {
+                    addTranslatedMethod(aClass,name, translated);
+                });
+            }
             $.ajax({
                 dataType: "json",
-                url: translationFile,
+                url: file,
                 async: false,
                 success: function(data) {
+                    translated[file] = new Array();
+                    window.console.log("traduction : "+file);
                     window.console.log("Language : "+language);
                     $.each(data[language]['methods'], function(key, val ) {
-                        initialClass.prototype[val['translated']] = initialClass.prototype[val['name']];
-                        //TODO: find a working way to prevent classes from being modified 
-                        // Object.freeze(initialClass.prototype); // TOO STRICT
-                        Object.defineProperty(initialClass, val['translated'],  {
-                          enumerable: false,
-                          configurable: false,
-                          writable: false}); // DOES NOT WORK
+                        addTranslatedMethod(aClass,val['name'], val['translated']);
+                        translated[file][val['name']] = val['translated'];
                     });
+                },
+                error: function(data, status, error) {
+                    window.console.log("Error loading translated methods ("+file+"): "+status);
                 }
             });
+        };
+        
+        this.internationalize = function(initialClass, parents) {
+            var translationFile = initialClass.prototype.getResource("i18n.json");
+            addTranslatedMethods(initialClass, translationFile, this.language);
+            if ((typeof parents !== 'undefined')&&parents) {
+                // internationalize parents as well
+                var parentClass = Object.getPrototypeOf(initialClass.prototype);
+                while (parentClass !== Object.prototype) {
+                    translationFile = parentClass.getResource("i18n.json");
+                    addTranslatedMethods(initialClass, translationFile, this.language);
+                    parentClass = Object.getPrototypeOf(parentClass);
+                }
+            }
             return initialClass;
         };
         

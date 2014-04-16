@@ -144,7 +144,7 @@ define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject'], function($, TEnv
         this._displayImage(name);
     };
     
-    TEnvironment.internationalize(Sprite);
+    TEnvironment.internationalize(Sprite, true);
     
     return Sprite;
 });
