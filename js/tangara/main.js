@@ -6,7 +6,9 @@ require.config({
         "jquery_animate_enhanced":'../libs/jquery.animate-enhanced/jquery.animate-enhanced.min',
         "ace":'../libs/ace',
         "split-pane":'../libs/split-pane/split-pane',
-        "quintus":'../libs/quintus-0.2.0/quintus-all.min'
+        "quintus":'../libs/quintus-0.2.0/quintus-all.min',
+        "TObject":'objects/tobject/TObject',
+        "TGraphicalObject":'objects/tgraphicalobject/TGraphicalObject'
     }
 });
 
