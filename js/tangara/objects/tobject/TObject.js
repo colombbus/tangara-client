@@ -14,14 +14,19 @@ define(['jquery','TEnvironment'], function($, TEnvironment) {
             $.ajax({
                 dataType: "json",
                 url: messageFile,
+                global:false,
                 async: false,
                 success: function(data) {
+                window.console.log("test ?");
                     if (typeof data[language] !== 'undefined'){
                         parent.constructor.messages = data[language];
                         window.console.log("found messages in language: "+language);
                     } else {
                         window.console.log("found no messages for language: "+language);
                     }
+                },
+                error: function(data, status, error) {
+                    window.console.log("Error loading messages (messages.json)");
                 }
             });
         }

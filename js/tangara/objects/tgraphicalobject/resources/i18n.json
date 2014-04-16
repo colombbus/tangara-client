@@ -1,9 +1,8 @@
 {
     "fr": {
         "methods":[
-            {"name":"_write","translated":"\u00e9crire","displayed":"\u00e9crire(\"texte\")"},
-            {"name":"_alert","translated":"alerter","displayed":"alerter(\"texte\")"},
-            {"name":"_loadScript","translated":"chargerProgramme","displayed":"chargerProgramme(\"programme\")"}
+            {"name":"_setCenterLocation","translated":"d\u00e9finirPositionCentre","displayed":"d\u00e9finirPositionCentre(0,0)"},
+            {"name":"_setLocation","translated":"d\u00e9finirPosition","displayed":"d\u00e9finirPosition(0,0)"}
         ]
     }
 }

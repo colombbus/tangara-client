@@ -1,4 +1,4 @@
-define(['jquery','jquery_animate_enhanced','TEnvironment', 'objects/TObject'], function($, animate_enhanced, TEnvironment, TObject) {
+define(['jquery','jquery_animate_enhanced','TEnvironment', 'TObject'], function($, animate_enhanced, TEnvironment, TObject) {
     function TGraphicalObject() {
         this.qObject = new this.qSprite();
         TObject.call(this);
@@ -9,7 +9,7 @@ define(['jquery','jquery_animate_enhanced','TEnvironment', 'objects/TObject'], f
     TGraphicalObject.prototype = new TObject();
 	TGraphicalObject.prototype.constructor = TGraphicalObject;
 
-    TGraphicalObject.prototype.className = "";
+    TGraphicalObject.prototype.className = "TGraphicalObject";
     TGraphicalObject.TYPE_CHARACTER = 0x0100;
     TGraphicalObject.TYPE_CATCHABLE = 0x0200;
     TGraphicalObject.TYPE_SPRITE = 0x0400;
@@ -97,7 +97,7 @@ define(['jquery','jquery_animate_enhanced','TEnvironment', 'objects/TObject'], f
         }
     };
     
-    TGraphicalObject.prototype._setDesignMode = function(value) {
+    TGraphicalObject.prototype.setDesignMode = function(value) {
         var qObject = this.qObject;
         if (value) {
           qObject.on("drag", qObject, "designDrag");
