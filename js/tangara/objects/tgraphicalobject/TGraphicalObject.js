@@ -2,6 +2,7 @@ define(['jquery', 'jquery_animate_enhanced', 'TEnvironment', 'TObject'], functio
     function TGraphicalObject() {
         this.qObject = new this.qSprite();
         TObject.call(this);
+        this._setLocation(0, 0);
         var canvas = TEnvironment.getCanvas();
         canvas.addGraphicalObject(this);
     }
