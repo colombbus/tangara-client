@@ -5,7 +5,6 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
         if (TUtils.checkString(label)) {
             this._setText(label);
         }
-        this._setLocation(0, 0);
         this.qObject.initialized();
     };
 
