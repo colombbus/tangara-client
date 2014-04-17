@@ -51,5 +51,9 @@ define(['jquery','TEnvironment'], function($, TEnvironment) {
         this.deleteObject();
     };
 
+    TObject.prototype.freeze = function(value) {
+        // every object may add actions to take to freeze
+    };
+
     return TObject;
 });

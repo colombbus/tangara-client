@@ -47,6 +47,18 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TObject'], functio
         this.keyboardEnabled = true;
     };
 
+    KeyStroke.prototype.disableKeyboard = function() {
+        if (!this.keyboardEnabled) {
+            return false;
+        }
+        var element = qInstance.el;
+
+        element.removeEventListener("keydown",this.listenerKeyDown, false);
+        element.removeEventListener("keyup",this.listenerKeyUp, false);
+
+        this.keyboardEnabled = false;
+    };
+
     KeyStroke.prototype._addCommand = function(key, command) {
         if (TUtils.checkString(key)&&TUtils.checkCommand(command)) {
             var keycode = this.getKeyCode(key);
@@ -125,16 +137,14 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TObject'], functio
     
     KeyStroke.prototype.deleteObject = function() {
         // remove listeners
-        var element = qInstance.el;
-        element.removeEventListener("keydown",this.listenerKeyDown, false);
-        element.removeEventListener("keyup",this.listenerKeyUp, false);
+        this.disableKeyboard();
 
         // delete commands
         for (var keycode in this.keys) {
             this.commands.removeCommands(keycode+"_down");
             this.commands.removeCommands(keycode+"_up");
         }
-            this.commands.removeCommands("key_up_all");
+        this.commands.removeCommands("key_up_all");
         this.commands = undefined;
         
         // delete keys
@@ -167,6 +177,15 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TObject'], functio
                 this.commands.executeCommands({'field':"key_up_all"});
             }
         }
+    };
+    
+    KeyStroke.prototype.freeze = function(value) {
+        if (value) {
+            this.disableKeyboard();
+        } else {
+            this.enableKeyboard();
+        }
+        TObject.prototype.freeze.call(this, value);
     };
 
     TEnvironment.internationalize(KeyStroke, true);
