@@ -1,0 +1,29 @@
+{
+    "name": "TangaraJS",
+    "type": "Javascript project",
+    "description": "The tangaraUI project aims to provide a PHP interface build on the \"Symfony2 Framework\" for TangaraJS",
+    "keywords": ["colombbus", "javascript", "educational IDE", "learn programming", "tangara", "tangarajs", "requirejs"],
+    "license": "GPL v3.0",
+    "authors": [
+        {
+            "name": "Benoit Prady",
+            "email": "benoit.prady@colombbus.org"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "jquery/jquery",
+                "version": "1.11.0",
+                "dist": {
+                    "url": "http://code.jquery.com/jquery-1.11.0.js",
+                    "type": "file"
+                }
+            }
+        }
+    ],
+    "require": {
+      "jquery/jquery": "1.11.*"
+    }
+}
