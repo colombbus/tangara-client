@@ -1,4 +1,4 @@
-define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject'], function($, TEnvironment, TUtils, TGraphicalObject) {
+define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'], function($, TEnvironment, TUtils, CommandManager, TGraphicalObject) {
     var Sprite = function(name) {
         window.console.log("Initializing sprite");
         TGraphicalObject.call(this);
@@ -21,23 +21,56 @@ define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject'], function($, TEnv
                 destinationX: 0,
                 destinationY: 0,
                 velocity:200,
-                type:TGraphicalObject.TYPE_SPRITE
+                type:TGraphicalObject.TYPE_SPRITE,
+                direction:'none',
+                watchCollisions:false,
+                collisionMask:TGraphicalObject.TYPE_SPRITE,
+                category:'',
+                moving:false
             },props),defaultProps);
         },
         step: function(dt) {
             var p = this.p;
+            p.moving = false;
             if (!p.dragging) {
-              var step = p.velocity*dt; 
-              if (p.x < p.destinationX) {
-                  p.x = Math.min(p.x+step, p.destinationX); 
-              } else if (p.x > p.destinationX) {
-                  p.x = Math.max(p.x-step, p.destinationX); 
+              var step = p.velocity*dt;
+              switch (p.direction) {
+                    case 'none':
+                        if (p.x < p.destinationX) {
+                            p.x = Math.min(p.x + step, p.destinationX);
+                            p.moving = true;
+                        } else if (p.x > p.destinationX) {
+                            p.x = Math.max(p.x - step, p.destinationX);
+                            p.moving = true;
+                        }
+                        if (p.y < p.destinationY) {
+                            p.y = Math.min(p.y + step, p.destinationY);
+                            p.moving = true;
+                        } else if (p.y > p.destinationY) {
+                            p.y = Math.max(p.y - step, p.destinationY);
+                            p.moving = true;
+                        }
+                        break;
+                    case 'right':
+                        p.x+=step;
+                        p.moving = true;
+                        break;
+                    case 'left':
+                        p.x-=step;
+                        p.moving = true;
+                        break;
+                    case 'top':
+                        p.y-=step;
+                        p.moving = true;
+                        break;
+                    case 'bottom':
+                        p.y+=step;
+                        p.moving = true;
+                        break;
               }
-              if (p.y < p.destinationY) {
-                  p.y = Math.min(p.y+step, p.destinationY); 
-              } else if (p.y > p.destinationY) {
-                  p.y = Math.max(p.y-step, p.destinationY); 
-              }
+            }
+            if (this.p.watchCollisions && this.p.moving) {
+                this.stage.collide(this, {collisionMask:TGraphicalObject.TYPE_SPRITE, maxCol:1});
             }
         },
         designTouchEnd: function(touch) {
@@ -56,61 +89,162 @@ define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject'], function($, TEnv
             this.perform(function(){
                 this.p.destinationX = this.p.x;this.p.destinationY = this.p.y;
             }, {});
+        },
+        setCategory: function(name) {
+            this.p.category = name;
+        },
+        getCategory: function(name) {
+            return this.p.category;
+        },
+        addCollisionCommand: function(command, param) {
+            if (typeof param === 'undefined') {
+                // collisions with all sprites
+                if (typeof this.collisionCommands === 'undefined') {
+                    this.collisionCommands = new CommandManager();
+                }
+                this.collisionCommands.addCommand(command);
+            } else if (TUtils.checkString(param)) {
+                // collision with a given category
+                if (typeof this.categoryCollisionCommands === 'undefined') {
+                    this.categoryCollisionCommands = new CommandManager();
+                }            
+                this.categoryCollisionCommands.addCommand(command, param);
+            } else if (TUtils.checkObject(param)) {
+                // collision with a given sprite
+                if (typeof this.spriteCollisionCommands === 'undefined') {
+                    this.spriteCollisionCommands = new CommandManager();
+                }
+                this.spriteCollisionCommands.addCommand(command, param.getQObject());
+            }
+            if (!this.p.watchCollisions) {
+                this.on("hit", this, "objectEncountered");
+                this.p.watchCollisions = true;
+            }
+        },
+        objectEncountered: function(col) {
+            // TODO add event object with info on collision
+            var object = col.obj;
+            var category = object.getCategory();
+            // 1st check collision commands with this object
+            if (typeof this.spriteCollisionCommands !== 'undefined' && this.spriteCollisionCommands.hasCommands(object)) {
+                window.console.log("Objet");
+                this.spriteCollisionCommands.executeCommands({'field':object});
+            }
+            // 2nd check collision commands with object's category
+            if (typeof this.categoryCollisionCommands !== 'undefined' && this.categoryCollisionCommands.hasCommands(category)) {
+                window.console.log("Catégorie");
+                this.categoryCollisionCommands.executeCommands({'field':category});
+            }
+            // 3rd check general collision commands
+            if (typeof this.collisionCommands !== 'undefined' && this.collisionCommands.hasCommands()) {
+                window.console.log("Général");
+                this.collisionCommands.executeCommands();
+            }
         }
       });
     
     Sprite.prototype.qSprite = qInstance.TSprite;
     
+    // MOVEMENT MANAGEMENT
+    
     Sprite.prototype._moveForward = function(value) {
+        if (typeof value === 'undefined') {
+            this._alwaysMoveForward();
+        }
         if (TUtils.checkInteger(value)) {
           this.qObject.p.destinationX+=value;
         }
         return;
     };
 
+    Sprite.prototype._alwaysMoveForward = function() {
+        this.qObject.p.direction = 'right';
+        return;
+    };
+
     Sprite.prototype._moveBackward = function(value) {
+        if (typeof value === 'undefined') {
+            this._alwaysMoveBackward();
+        }
         if (TUtils.checkInteger(value)) {
           this.qObject.p.destinationX-=value;
         }
         return;
     };
-        
+
+    Sprite.prototype._alwaysMoveBackward = function() {
+        this.qObject.p.direction = 'left';
+        return;
+    };
+    
     Sprite.prototype._moveUpward = function(value) {
+        if (typeof value === 'undefined') {
+            this._alwaysMoveUpward();
+        }
         if (TUtils.checkInteger(value)) {
           this.qObject.p.destinationY-=value;
         }
         return;
     };
 
+    Sprite.prototype._alwaysMoveUpward = function() {
+        this.qObject.p.direction = 'top';
+        return;
+    };
+
     Sprite.prototype._moveDownward = function(value) {
+        if (typeof value === 'undefined') {
+            this._alwaysMoveDownward();
+        }
         if (TUtils.checkInteger(value)) {
           this.qObject.p.destinationY+=value;
         }
         return;
     };
     
+    Sprite.prototype._alwaysMoveDownward = function() {
+        this.qObject.p.direction = 'bottom';
+        return;
+    };
+
     Sprite.prototype._stop = function() {
         this.qObject.p.destinationX = this.qObject.p.x;
         this.qObject.p.destinationY = this.qObject.p.y;
+        this.qObject.p.direction = 'none';
         return;
     };
     
+    Sprite.prototype._setVelocity = function(value) {
+        if (TUtils.checkInteger(value)) {
+            this.qObject.p.velocity = value*10;
+        }
+    };
+    
+    // IMAGES MANAGEMENT
+    
+    Sprite.waitingForImage = new Array();
+        
     Sprite.prototype._addImage = function(name) {
         if (TUtils.checkString(name)) {
             // add image only if not already added
             if (typeof this.images[name] === 'undefined') {
                 var asset = TEnvironment.getUserResource(name);
-                var qObject = this.qObject;
-                var sprite = this;
-                sprite.images[name] = asset;
+                this.images[name] = asset;
                 window.console.log("loading asset '"+asset+"'");
                 qInstance.load(asset, function() {
-                    // in case _displayImage is called while loading, set image
-                    if (typeof sprite.images[sprite.displayedImage] !=='undefined' && qObject.p.asset !== sprite.images[sprite.displayedImage]) {
-                        qObject.asset(sprite.images[sprite.displayedImage], true);
-                        if (!qObject.p.initialized) {
-                            qObject.initialized();
+                    if (typeof Sprite.waitingForImage[name] !== 'undefined') {
+                        // in case _displayImage was called while loading, set image for waiting sprites
+                        while (Sprite.waitingForImage[name].length>0) {
+                            var sprite = Sprite.waitingForImage[name].pop();
+                            var qObject = sprite.qObject;
+                            if (typeof sprite.images[sprite.displayedImage] !=='undefined' && qObject.p.asset !== sprite.images[sprite.displayedImage]) {
+                                qObject.asset(sprite.images[sprite.displayedImage], true);
+                                if (!qObject.p.initialized) {
+                                    qObject.initialized();
+                                }
+                            }                            
                         }
+                        Sprite.waitingForImage[name] = undefined;
                     }
                 });
             }
@@ -127,13 +261,17 @@ define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject'], function($, TEnv
             this.displayedImage = name;
             // check if image actually loaded
             if (qInstance.assets[asset]) {
-                window.console.log("setting asset '"+asset+"'");
                 qObject.asset(asset, true);
                 if (!qObject.p.initialized) {
                     qObject.initialized();
                 }
+            } else {
+                // otherwise, image will be displayed once loaded
+                if (typeof Sprite.waitingForImage[name] === 'undefined') {
+                    Sprite.waitingForImage[name] = new Array();
+                }
+                Sprite.waitingForImage[name].push(this);
             }
-            // otherwise, image will be displayed once loaded
         } else {
             throw new Error(TUtils.format(this.getMessage("resource not found"), name));
         }
@@ -143,6 +281,23 @@ define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject'], function($, TEnv
         this._addImage(name);
         this._displayImage(name);
     };
+    
+    // COLLISION MANAGEMENT
+    
+    Sprite.prototype._setCategory = function(name) {
+        if (TUtils.checkString(name)) {
+            this.qObject.setCategory(name);
+        }
+    };
+    
+    Sprite.prototype._ifCollision = function(param1, param2) {
+        this.qObject.addCollisionCommand(param1, param2);
+    };
+
+    Sprite.prototype._ifCollisionWith = function(who, command) {
+        this._ifCollision(command, who);
+    };
+
     
     TEnvironment.internationalize(Sprite, true);
     
