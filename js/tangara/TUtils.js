@@ -134,6 +134,11 @@ define(function() {
         this.checkFunction = function(value) {
             return (typeof value !== 'undefined' && (typeof value === 'function' || value instanceof Function));
         };
+
+        this.checkObject = function(value) {
+            return (typeof value === 'object' || this.checkFunction(value));
+        };
+
         
         this.checkCommand = function(value) {
             return this.checkString(value)||this.checkFunction(value);
