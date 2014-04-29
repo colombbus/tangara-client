@@ -59,33 +59,33 @@ body, html {
     overflow:hidden;
 }
 
-.teditor {
+.tconsole {
     width:100%;
     background-color:#C5D6DB;
 }
 
-.teditor-inner {
+.tconsole-inner {
     display:table;
     height:100%;
     width:100%;
 }
 
-.teditor-text {
+.tconsole-text {
     display:table-cell;
     width:80%;
     height:100%;
     padding:5px;
 }
 
-.teditor-text-inner {
+.tconsole-text-inner {
     width:100%;
     height:100%;
 }
 
-#teditor-text-0 {
+#tconsole-text-0 {
     background-color:#C5D6DB;
 }
-.teditor-buttons {
+.tconsole-buttons {
     display:table-cell;
     width:20%;
     height:100%;
@@ -94,16 +94,16 @@ body, html {
     text-align:center;
 }
 
-.teditor-button {
+.tconsole-button {
     min-width:100px;
 }
 
-.teditor-button-image {
+.tconsole-button-image {
     margin-right:5px;
     vertical-align:text-bottom;
 }
 
-.teditor-button-separator {
+.tconsole-button-separator {
     width:100%;
     height:10px;
 }
