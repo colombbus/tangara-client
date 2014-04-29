@@ -1,4 +1,4 @@
-define(['jquery','ace/ace', 'TCanvas', 'TEnvironment'], function($,ace,TCanvas,TEnvironment) {
+define(['jquery','ace/ace', 'TEnvironment'], function($,ace,TEnvironment) {
 
     function TEditor() {
         var domEditor = document.createElement("div");
