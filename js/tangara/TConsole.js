@@ -1,66 +1,65 @@
 define(['jquery','ace/ace', 'TEnvironment'], function($,ace,TEnvironment) {
 
-    function TEditor() {
-        var domEditor = document.createElement("div");
-        domEditor.className = "teditor";
+    function TConsole() {
+        var domConsole = document.createElement("div");
+        domConsole.className = "tconsole";
 
-        var domEditorContainer = document.createElement("div");
-        domEditorContainer.className = "teditor-inner";
+        var domConsoleContainer = document.createElement("div");
+        domConsoleContainer.className = "tconsole-inner";
 
-        var domEditorCellText = document.createElement("div");
-        domEditorCellText.className = "teditor-text";
+        var domConsoleCellText = document.createElement("div");
+        domConsoleCellText.className = "tconsole-text";
 
-        var domEditorCellButtons = document.createElement("div");
-        domEditorCellButtons.className = "teditor-buttons";
+        var domConsoleCellButtons = document.createElement("div");
+        domConsoleCellButtons.className = "tconsole-buttons";
 
-        var domEditorText = document.createElement("div");
-	domEditorText.setAttribute("contenteditable","true");
-        domEditorText.id = "teditor-text-"+TEditor.editorId;
-        domEditorText.className = "teditor-text-inner";
+        var domConsoleText = document.createElement("div");
+        domConsoleText.id = "tconsole-text-"+TConsole.consoleId;
+        domConsoleText.className = "tconsole-text-inner";
 
         // for iOS to show keyboard
         // TODO: add this only for iOS devices
-        domEditorText.setAttribute("contenteditable", "true");
+        domConsoleText.setAttribute("contenteditable", "true");
 
-        domEditorCellText.appendChild(domEditorText);
-        domEditorContainer.appendChild(domEditorCellText);
+        domConsoleCellText.appendChild(domConsoleText);
+        domConsoleContainer.appendChild(domConsoleCellText);
 
         var buttonExecute = document.createElement("button");
-        buttonExecute.className = "teditor-button";
+        buttonExecute.className = "tconsole-button";
         var imageExecute = document.createElement("img");
         imageExecute.src = TEnvironment.getBaseUrl() + "/images/play.png";
-        imageExecute.className = "teditor-button-image";
+        imageExecute.className = "tconsole-button-image";
         buttonExecute.appendChild(imageExecute);
         buttonExecute.appendChild(document.createTextNode(TEnvironment.getMessage('button-execute')));
 
         var buttonClear = document.createElement("button");
-        buttonClear.className = "teditor-button";
+        buttonClear.className = "tconsole-button";
         var imageClear = document.createElement("img");
         imageClear.src = TEnvironment.getBaseUrl() + "/images/clear.png";
-        imageClear.className = "teditor-button-image";
+        imageClear.className = "tconsole-button-image";
         buttonClear.appendChild(imageClear);
         buttonClear.appendChild(document.createTextNode(TEnvironment.getMessage('button-clear')));
 
-        domEditorCellButtons.appendChild(buttonExecute);
+        domConsoleCellButtons.appendChild(buttonExecute);
         var separator = document.createElement("div");
-        separator.className = "teditor-button-separator";
-        domEditorCellButtons.appendChild(separator);
-        domEditorCellButtons.appendChild(buttonClear);
+        separator.className = "tconsole-button-separator";
+        domConsoleCellButtons.appendChild(separator);
+        domConsoleCellButtons.appendChild(buttonClear);
 
-        domEditorContainer.appendChild(domEditorCellButtons);
+        domConsoleContainer.appendChild(domConsoleCellButtons);
 
-        domEditor.appendChild(domEditorContainer);
+        domConsole.appendChild(domConsoleContainer);
 
-        TEditor.editorId++;
+        TConsole.consoleId++;
 
         var aceEditor;
 
         this.getElement = function() {
-            return domEditor;
+            return domConsole;
         };
 
         this.displayed = function() {
-            aceEditor = ace.edit(domEditorText.id);
+            aceEditor = ace.edit(domConsoleText.id);
             aceEditor.getSession().setMode("ace/mode/java");
             aceEditor.setShowPrintMargin(false);
             aceEditor.renderer.setShowGutter(false);
@@ -164,7 +163,7 @@ define(['jquery','ace/ace', 'TEnvironment'], function($,ace,TEnvironment) {
         };
     };
 
-    TEditor.editorId = 0;
+    TConsole.consoleId = 0;
 
-    return TEditor;
+    return TConsole;
 });
