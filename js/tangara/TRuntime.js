@@ -1,4 +1,4 @@
-define(['jquery', 'TEnvironment'], function($, TEnvironment) {
+define(['jquery'], function($) {
     function TRuntime() {
         var libs = new Array();
         var translatedNames = new Array();
