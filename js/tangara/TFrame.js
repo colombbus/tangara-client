@@ -1,4 +1,4 @@
-define(['jquery', 'split-pane','TCanvas', 'TEnvironment', 'TEditor', 'TLog'], function($, SplitPane, TCanvas, TEnvironment, TEditor, TLog) {
+define(['jquery', 'split-pane','TCanvas', 'TEnvironment', 'TConsole', 'TLog'], function($, SplitPane, TCanvas, TEnvironment, TConsole, TLog) {
     function TFrame() {
         var domFrame = document.createElement("div");
         domFrame.id = "tframe";
@@ -23,10 +23,10 @@ define(['jquery', 'split-pane','TCanvas', 'TEnvironment', 'TEditor', 'TLog'], fu
         var bottomDivInner = document.createElement("div");
         bottomDivInner.id = "tframe-bottom-inner";
         bottomDivInner.className = "split-pane fixed-bottom";
-        var editor = new TEditor();
-        var editorElement = editor.getElement();
-        editorElement.className = editorElement.className + " split-pane-component tframe-bottom-top";
-        bottomDivInner.appendChild(editorElement);
+        var console = new TConsole();
+        var consoleElement = console.getElement();
+        consoleElement.className = consoleElement.className + " split-pane-component tframe-bottom-top";
+        bottomDivInner.appendChild(consoleElement);
         var separator2 = document.createElement("div");
         separator2.id = "tframe-bottom-divider";
         separator2.className="split-pane-divider";
@@ -48,7 +48,7 @@ define(['jquery', 'split-pane','TCanvas', 'TEnvironment', 'TEditor', 'TLog'], fu
         
         this.displayed = function() {
             canvas.displayed();
-            editor.displayed();
+            console.displayed();
             log.displayed();
             $('.split-pane').splitPane();
         };
