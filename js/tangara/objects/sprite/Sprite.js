@@ -7,11 +7,14 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
         if (typeof name === 'string') {
           this._setImage(name);
         }
+        this.id = Sprite.nextId++;
+        this.qObject.id = this.id;
     };
     
     Sprite.prototype = new TGraphicalObject();
     Sprite.prototype.constructor = Sprite;
     Sprite.prototype.className = "Sprite";
+    Sprite.nextId = 0;
     
     var qInstance = TEnvironment.getQuintusInstance();
     
@@ -127,19 +130,19 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
             var category = object.getCategory();
             // 1st check collision commands with this object
             if (typeof this.spriteCollisionCommands !== 'undefined' && this.spriteCollisionCommands.hasCommands(object)) {
-                window.console.log("Objet");
                 this.spriteCollisionCommands.executeCommands({'field':object});
             }
             // 2nd check collision commands with object's category
             if (typeof this.categoryCollisionCommands !== 'undefined' && this.categoryCollisionCommands.hasCommands(category)) {
-                window.console.log("Catégorie");
                 this.categoryCollisionCommands.executeCommands({'field':category});
             }
             // 3rd check general collision commands
             if (typeof this.collisionCommands !== 'undefined' && this.collisionCommands.hasCommands()) {
-                window.console.log("Général");
                 this.collisionCommands.executeCommands();
             }
+        },
+        toString: function() {
+            return "Sprite_"+this.id;
         }
       });
     
