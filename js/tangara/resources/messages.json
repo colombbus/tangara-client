@@ -1,7 +1,10 @@
 {
     "fr": {
+        "mode-console":"Console",
+        "mode-editor":"Editeur",
         "button-execute":"Exécuter",
-        "button-clear":"Effacer",
+        "option-design-mode":"Mode Construction",
+        "option-clear":"Effacer",
         "clear-confirm":"Attention : vous allez effacer l'écran et l'historique\nSouhaitez-vous continuer ?"
     }
 }
