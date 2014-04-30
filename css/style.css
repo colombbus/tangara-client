@@ -99,6 +99,7 @@ body, html {
 .ttoolbar-button,
 .ttoolbar-option
 {
+    font-size:10pt;
     min-width:100px;
     margin-left:10px;
     margin-right:10px;
@@ -121,10 +122,10 @@ body, html {
 
 .ttoolbar-mode-image,
 .ttoolbar-button-image,
-.ttoolbar-option-image
-{
+.ttoolbar-option-image {
     margin-right:5px;
     vertical-align:text-bottom;
+    height:16px;
 }
 
 .ttoolbar-mode:hover,
@@ -170,7 +171,7 @@ body, html {
     width:100%;
     height:100%;
     background-color:#C8C8C8;
-    overflow:auto;
+    overflow:hidden;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     -ms-box-sizing: border-box;
@@ -180,6 +181,18 @@ body, html {
 
 #tlog-inner {
     padding:5px;
+    height:100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    box-sizing: border-box;
+    overflow:hidden;
+}
+
+#tlog {
+    height:100%;
+    overflow:auto;
 }
             
 .tlog-row {
