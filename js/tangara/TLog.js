@@ -2,9 +2,12 @@ define(['jquery','TCanvas'], function($, TCanvas) {
     function TLog() {
         var domOuterLog = document.createElement("div");
         domOuterLog.id = "tlog-outer";
+        var domInnerLog = document.createElement("div");
+        domInnerLog.id = "tlog-inner";
         var domLog = document.createElement("div");
-        domLog.id = "tlog-inner";
-        domOuterLog.appendChild(domLog);
+        domLog.id = "tlog";
+        domInnerLog.appendChild(domLog);
+        domOuterLog.appendChild(domInnerLog);
                 
         this.getElement = function() {
             return domOuterLog;
@@ -35,14 +38,14 @@ define(['jquery','TCanvas'], function($, TCanvas) {
                     }
                     row.appendChild(document.createTextNode(line));
                     domLog.appendChild(row);
-                    domOuterLog.scrollTop = domOuterLog.scrollHeight;
+                    domLog.scrollTop = domLog.scrollHeight;
                 }
                 if (!success) {
                     var row = document.createElement("div");
                     row.className = "tlog-row tlog-failure";
                     row.appendChild(document.createTextNode(errorMessage));
                     domLog.appendChild(row);
-                    domOuterLog.scrollTop = domOuterLog.scrollHeight;
+                    domLog.scrollTop = domLog.scrollHeight;
                 }
             }
         };
@@ -53,7 +56,7 @@ define(['jquery','TCanvas'], function($, TCanvas) {
                 row.className = "tlog-row tlog-message";
                 row.appendChild(document.createTextNode(text));
                 domLog.appendChild(row);
-                domOuterLog.scrollTop = domOuterLog.scrollHeight;
+                domLog.scrollTop = domLog.scrollHeight;
             }
         };
         

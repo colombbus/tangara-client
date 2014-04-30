@@ -4,7 +4,7 @@ define(['jquery','ace/ace', 'TEnvironment'], function($,ace,TEnvironment) {
         var domConsole = document.createElement("div");
         domConsole.id = "tconsole";
         // start with console hidden
-        domConsole.style.display="hidden";
+        domConsole.style.display="none";
         
         var domConsoleText = document.createElement("div");
         domConsoleText.id = "tconsole-text";

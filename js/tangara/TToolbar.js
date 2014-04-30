@@ -70,26 +70,6 @@ define(['jquery','TEnvironment'], function($,TEnvironment) {
         };
         
         this.displayed = function() {
-            var toolbar = this;
-            $(domConsole).click(function() {
-                toolbar.enableConsole();
-            });
-
-            $(domConsole).click(function() {
-                toolbar.enableConsole();
-            });
-            
-            $(buttonExecute).click(function() {
-                TEnvironment.execute(aceEditor.getSession().getValue());
-                aceEditor.setValue("", -1);
-            });
-
-            $(buttonClear).click(function() {
-                if (window.confirm(TEnvironment.getMessage('clear-confirm'))) {
-                    TEnvironment.getCanvas().clear();
-                    TEnvironment.clearLog();
-                }
-            });
         };
         
         this.enableConsole = function() {
