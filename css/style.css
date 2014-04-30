@@ -215,3 +215,15 @@ body, html {
 .runtime-frame {
     display:none;
 }
+
+.tlog-row.tlog-success:hover {
+    background: none repeat scroll 0 0 #C5D6DB;
+    border-radius: 5px;
+    margin-left: 0;
+    text-indent: 5px;
+}
+
+
+.tlog-success {
+    text-indent: 5px;
+}
