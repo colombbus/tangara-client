@@ -36,11 +36,11 @@ define(['TEnvironment'], function(TEnvironment) {
         }
         if (typeof field === 'undefined') {
             for (i = 0; i < this.commands.length; i++) {
-                TEnvironment.execute(this.commands[i], parameter);
+                TEnvironment.executeCommand(this.commands[i], parameter);
             }
         } else if (typeof this.commands[field] !== 'undefined') {
             for (i = 0; i < this.commands[field].length; i++) {
-                TEnvironment.execute(this.commands[field][i], parameter);
+                TEnvironment.executeCommand(this.commands[field][i], parameter);
             }
         }
     };

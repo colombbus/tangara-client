@@ -1,6 +1,7 @@
 define(['jquery', 'TRuntime', 'quintus'], function($, TRuntime, Quintus) {
     var TEnvironment = function() {
         var canvas;
+        var toolbar;
         var log;
         var runtimeFrame;
         var runtimeCallback;
@@ -59,12 +60,16 @@ define(['jquery', 'TRuntime', 'quintus'], function($, TRuntime, Quintus) {
             return;
         };
 
+        this.setToolbar = function(element) {
+            toolbar = element;
+            return;
+        };
 
         this.getCanvas = function() {
             return canvas;
         };
 
-        this.execute = function(command, parameter) {
+        this.executeCommand = function(command, parameter) {
             TRuntime.execute(command, parameter);
         };
 
