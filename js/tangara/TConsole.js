@@ -1,4 +1,4 @@
-define(['jquery','ace/ace', 'TEnvironment'], function($,ace,TEnvironment) {
+define(['jquery','ace/ace'], function($,ace) {
 
     function TConsole() {
         var domConsole = document.createElement("div");
