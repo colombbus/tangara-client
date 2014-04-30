@@ -11,7 +11,14 @@ define(['jquery','TCanvas'], function($, TCanvas) {
         };
 
         this.displayed = function() {
-            return;
+            this.update();
+        };
+        
+        this.update = function() {
+            // compute the margin from the height of "tframe-bottom-top" div
+            var height = $("#tframe-bottom-top").height();
+            domOuterLog.style.marginTop = "-"+height+"px";
+            domOuterLog.style.paddingTop = height+"px";
         };
         
         this.addLines = function(text, errorMessage) {

@@ -1,8 +1,8 @@
-define(['jquery', 'split-pane','TCanvas', 'TEnvironment', 'TConsole', 'TLog'], function($, SplitPane, TCanvas, TEnvironment, TConsole, TLog) {
+define(['jquery', 'split-pane','TCanvas', 'TEnvironment', 'TConsole', 'TToolbar','TLog'], function($, SplitPane, TCanvas, TEnvironment, TConsole, TToolbar, TLog) {
     function TFrame() {
         var domFrame = document.createElement("div");
         domFrame.id = "tframe";
-        domFrame.className = "split-pane fixed-bottom";
+        domFrame.className = "split-pane horizontal-percent";
         var topDiv = document.createElement("div");
         topDiv.id = "tframe-top";
         topDiv.className = "split-pane-component";
@@ -16,32 +16,31 @@ define(['jquery', 'split-pane','TCanvas', 'TEnvironment', 'TConsole', 'TLog'], f
         separator1.className="split-pane-divider";
         domFrame.appendChild(separator1);
 
-        // Add Editor and Log
+        // Add Console, Toolbar and Log
         var bottomDiv = document.createElement("div");
         bottomDiv.id = "tframe-bottom";
         bottomDiv.className = "split-pane-component";
-        var bottomDivInner = document.createElement("div");
-        bottomDivInner.id = "tframe-bottom-inner";
-        bottomDivInner.className = "split-pane fixed-bottom";
+        // create special div to allow log to fill up remaining height
+        var bottomTopDiv = document.createElement("div");
+        bottomTopDiv.id = "tframe-bottom-top";
         var console = new TConsole();
         var consoleElement = console.getElement();
-        consoleElement.className = consoleElement.className + " split-pane-component tframe-bottom-top";
-        bottomDivInner.appendChild(consoleElement);
-        var separator2 = document.createElement("div");
-        separator2.id = "tframe-bottom-divider";
-        separator2.className="split-pane-divider";
-        bottomDivInner.appendChild(separator2);
+        bottomTopDiv.appendChild(consoleElement);
+        var toolbar = new TToolbar();
+        var toolbarElement = toolbar.getElement();
+        bottomTopDiv.appendChild(toolbarElement);
+        bottomDiv.appendChild(bottomTopDiv);
         var log = new TLog();
         var logElement = log.getElement();
-        logElement.className = logElement.className + " split-pane-component tframe-bottom-bottom";
-        bottomDivInner.appendChild(logElement);
-        bottomDiv.appendChild(bottomDivInner);
+        bottomDiv.appendChild(logElement);
         domFrame.appendChild(bottomDiv);
 
         // Set environment
         TEnvironment.setCanvas(canvas);
+        TEnvironment.setToolbar(toolbar);
+        TEnvironment.setConsole(console);
         TEnvironment.setLog(log);
-
+        
         this.getElement = function() {
             return domFrame;
         };
@@ -51,6 +50,8 @@ define(['jquery', 'split-pane','TCanvas', 'TEnvironment', 'TConsole', 'TLog'], f
             console.displayed();
             log.displayed();
             $('.split-pane').splitPane();
+            // Start with console enabled
+            TEnvironment.enableConsole();
         };
 
     }

@@ -2,10 +2,13 @@ define(['jquery', 'TRuntime', 'quintus'], function($, TRuntime, Quintus) {
     var TEnvironment = function() {
         var canvas;
         var toolbar;
+        var console;
         var log;
         var runtimeFrame;
         var runtimeCallback;
         var quintusInstance;
+        var editorEnabled = false;
+        var consoleEnabled = false;
         var translated = new Array();
 
         this.messages;
@@ -65,12 +68,89 @@ define(['jquery', 'TRuntime', 'quintus'], function($, TRuntime, Quintus) {
             return;
         };
 
+        this.setConsole = function(element) {
+            console = element;
+            return;
+        };
+
         this.getCanvas = function() {
             return canvas;
         };
 
+        this.enableConsole = function() {
+            if (!consoleEnabled) {
+                // Editor and Console cannot co-exist
+                this.disableEditor();
+                toolbar.enableConsole();
+                console.show();
+                log.update();
+                consoleEnabled = true;
+            }
+        };
+
+        this.disableConsole = function() {
+            if (consoleEnabled) {
+                toolbar.disableConsole();
+                console.hide();
+                log.update();
+                consoleEnabled = false;
+            }
+        };
+        
+        this.toggleConsole = function() {
+            if (consoleEnabled) {
+                this.disableConsole();
+            } else {
+                this.enableConsole();
+            }
+        };
+
+        this.enableEditor = function() {
+            if (!editorEnabled) {
+                // Editor and Console cannot co-exist
+                this.disableConsole();
+                toolbar.enableEditor();
+                editorEnabled = true;
+            }
+        };
+
+        this.disableEditor = function() {
+            if (editorEnabled) {
+                toolbar.disableEditor();
+                editorEnabled = false;
+            }
+        };
+
+        this.toggleEditor = function() {
+            if (editorEnabled) {
+                this.disableEditor();
+            } else {
+                this.enableEditor();
+            }
+        };
+
         this.executeCommand = function(command, parameter) {
             TRuntime.execute(command, parameter);
+        };
+        
+        this.execute = function() {
+            if (consoleEnabled) {
+                var command = console.getValue();
+                this.executeCommand(command);
+                console.clear();
+                console.addHistory(command);
+            }
+        };
+        
+        this.clear = function(confirm) {
+            var goOn = true;
+            if (typeof confirm !== 'undefined' && confirm) {
+                goOn = window.confirm(this.getMessage('clear-confirm'));
+            }
+            if (goOn) {
+                canvas.clear();
+                this.clearLog();
+            }
         };
 
         this.addLog = function(text, success) {

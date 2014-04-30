@@ -2,57 +2,23 @@ define(['jquery','ace/ace', 'TEnvironment'], function($,ace,TEnvironment) {
 
     function TConsole() {
         var domConsole = document.createElement("div");
-        domConsole.className = "tconsole";
-
-        var domConsoleContainer = document.createElement("div");
-        domConsoleContainer.className = "tconsole-inner";
-
-        var domConsoleCellText = document.createElement("div");
-        domConsoleCellText.className = "tconsole-text";
-
-        var domConsoleCellButtons = document.createElement("div");
-        domConsoleCellButtons.className = "tconsole-buttons";
-
+        domConsole.id = "tconsole";
+        // start with console hidden
+        domConsole.style.display="hidden";
+        
         var domConsoleText = document.createElement("div");
-        domConsoleText.id = "tconsole-text-"+TConsole.consoleId;
-        domConsoleText.className = "tconsole-text-inner";
-
+        domConsoleText.id = "tconsole-text";
         // for iOS to show keyboard
         // TODO: add this only for iOS devices
         domConsoleText.setAttribute("contenteditable", "true");
-
-        domConsoleCellText.appendChild(domConsoleText);
-        domConsoleContainer.appendChild(domConsoleCellText);
-
-        var buttonExecute = document.createElement("button");
-        buttonExecute.className = "tconsole-button";
-        var imageExecute = document.createElement("img");
-        imageExecute.src = TEnvironment.getBaseUrl() + "/images/play.png";
-        imageExecute.className = "tconsole-button-image";
-        buttonExecute.appendChild(imageExecute);
-        buttonExecute.appendChild(document.createTextNode(TEnvironment.getMessage('button-execute')));
-
-        var buttonClear = document.createElement("button");
-        buttonClear.className = "tconsole-button";
-        var imageClear = document.createElement("img");
-        imageClear.src = TEnvironment.getBaseUrl() + "/images/clear.png";
-        imageClear.className = "tconsole-button-image";
-        buttonClear.appendChild(imageClear);
-        buttonClear.appendChild(document.createTextNode(TEnvironment.getMessage('button-clear')));
-
-        domConsoleCellButtons.appendChild(buttonExecute);
-        var separator = document.createElement("div");
-        separator.className = "tconsole-button-separator";
-        domConsoleCellButtons.appendChild(separator);
-        domConsoleCellButtons.appendChild(buttonClear);
-
-        domConsoleContainer.appendChild(domConsoleCellButtons);
-
-        domConsole.appendChild(domConsoleContainer);
-
-        TConsole.consoleId++;
+        domConsole.appendChild(domConsoleText);
 
         var aceEditor;
+        var totalCommands = 0;
+        var history = 0;
+        var archives_command=[];
+        var commandlineNotEnded;
+        var cursorPosition;
 
         this.getElement = function() {
             return domConsole;
@@ -65,40 +31,13 @@ define(['jquery','ace/ace', 'TEnvironment'], function($,ace,TEnvironment) {
             aceEditor.renderer.setShowGutter(false);
             aceEditor.setFontSize("20px");
             aceEditor.setHighlightActiveLine(false);
-            aceEditor.focus();
-
-            $(buttonExecute).click(function() {
-                TEnvironment.execute(aceEditor.getSession().getValue());
-                aceEditor.setValue("", -1);
-            });
-
-            $(buttonClear).click(function() {
-                if (window.confirm(TEnvironment.getMessage('clear-confirm'))) {
-                    TEnvironment.getCanvas().clear();
-                    TEnvironment.clearLog();
-                }
-            });
-
-            var totalCommands = 0;
-            var history = 0;
-            var archives_command=[];
-            var commandlineNotEnded;
-            var cursorPosition;
 
             aceEditor.commands.addCommand({
                 name: 'executeCommand',
                 bindKey: {win: 'Return',  mac: 'Return'},
                 exec: function(editor) {
                     require(['TEnvironment'], function(TEnvironment) {
-                        var commandline = aceEditor.getSession().getValue();
-                        TEnvironment.execute(commandline);
-                        editor.setValue("", -1);
-                        if (commandline.length > 0){
-                            archives_command.push($.trim(commandline));
-                            totalCommands++;
-                            history = totalCommands;
-                            commandlineNotEnded ="";
-                        }
+                        TEnvironment.execute();
                     });
                 },
                 readOnly: true // false if this command should not apply in readOnly mode
@@ -161,9 +100,33 @@ define(['jquery','ace/ace', 'TEnvironment'], function($,ace,TEnvironment) {
                 readOnly: true // false if this command should not apply in readOnly mode
              });
         };
+        
+        this.addHistory = function(commandLine) {
+            if (commandLine.length > 0){
+                archives_command.push($.trim(commandLine));
+                totalCommands++;
+                history = totalCommands;
+                commandlineNotEnded ="";
+            }
+        };
+        
+        this.getValue = function() {
+            return aceEditor.getSession().getValue();
+        };
+        
+        this.clear = function() {
+            aceEditor.setValue("", -1);
+        };
+        
+        this.show = function() {
+            $(domConsole).show();
+            aceEditor.focus();
+        };
+        
+        this.hide = function() {
+            $(domConsole).hide();
+        };
     };
-
-    TConsole.consoleId = 0;
 
     return TConsole;
 });
