@@ -1,4 +1,4 @@
-define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TObject'], function($, TEnvironment, TUtils, CommandManager, TObject) {
+define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TObject', 'TRuntime'], function($, TEnvironment, TUtils, CommandManager, TObject, TRuntime) {
     var KeyStroke = function() {
         TObject.call(this);
         this.commands = new CommandManager();
@@ -19,9 +19,9 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TObject'], functio
         this.enableKeyboard();
     };
 
-    var qInstance = TEnvironment.getQuintusInstance();
+    var qInstance = TRuntime.getQuintusInstance();
 
-    KeyStroke.prototype = new TObject();
+    KeyStroke.prototype = Object.create(TObject.prototype);
     KeyStroke.prototype.constructor = KeyStroke;
     KeyStroke.prototype.className = "KeyStroke";
 
