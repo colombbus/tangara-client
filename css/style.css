@@ -5,6 +5,8 @@ body, html {
     padding:0;
 }
 
+/* TFrame */
+
 #tframe {
     height:100%;
     width:100%;
@@ -36,6 +38,8 @@ body, html {
     background:url("../images/handle.png") no-repeat scroll 50% 1px #EBEBEB;
 }
 
+/* TCanvas */
+
 #tcanvas {
     background-color:#FFFFFF;
     width:500px;
@@ -51,7 +55,20 @@ body, html {
     overflow:hidden;
 }
 
-/* TCONSOLE */
+/* TEditor */
+
+#teditor {
+    height:100%;
+    width:100%;
+}
+
+#teditor-text {
+    margin:10px;
+    height:100%;
+    width:100%;
+}
+
+/* TConsole */
 
 #tconsole {
     width:100%;
@@ -66,7 +83,7 @@ body, html {
     background-color:#C5D6DB;
 }
 
-/* TOOLBAR */
+/* TToolbar */
 
 #ttoolbar {
     background-color:#FFFFFF;
@@ -164,6 +181,7 @@ body, html {
     background-color:#47A447;
 }
 
+/* TLog */
 
 #tlog-outer {
     position:relative;
@@ -211,6 +229,8 @@ body, html {
 .tlog-message {
     color:#0000FF;
 }
+
+/* TRuntinme */
 
 .runtime-frame {
     display:none;
