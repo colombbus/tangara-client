@@ -62,6 +62,7 @@ define(['jquery'], function($) {
                 else
                     TEnvironment.addLog(commands);
             });
+            return !error;
         };
         
         this.setCallback = function(callback) {
