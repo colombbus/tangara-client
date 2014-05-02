@@ -15,7 +15,8 @@ require.config({
 //window.location.protocol + "//" + window.location.host+ window.location.pathname.split("/").slice(0, -1).join("/")+"/js/tangara",
 //baseUrl: 'js/tangara',
 // Start the main app logic.
-require(['jquery', 'TFrame'],function($, TFrame) {
+require(['jquery', 'TEnvironment', 'TRuntime', 'TFrame'],function($, TEnvironment, TRuntime, TFrame) {
+    TRuntime.load(TEnvironment.getLanguage(), TEnvironment.getObjectListUrl());
     frame = new TFrame();
     domFrame = frame.getElement();
     $("body").append(domFrame);
