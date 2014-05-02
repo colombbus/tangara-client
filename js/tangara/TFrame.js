@@ -1,4 +1,4 @@
-define(['jquery', 'split-pane','TCanvas', 'TEnvironment', 'TConsole', 'TToolbar','TLog'], function($, SplitPane, TCanvas, TEnvironment, TConsole, TToolbar, TLog) {
+define(['jquery', 'split-pane','TCanvas', 'TEditor', 'TEnvironment', 'TConsole', 'TToolbar','TLog'], function($, SplitPane, TCanvas, TEditor, TEnvironment, TConsole, TToolbar, TLog) {
     function TFrame() {
         var domFrame = document.createElement("div");
         domFrame.id = "tframe";
@@ -9,6 +9,10 @@ define(['jquery', 'split-pane','TCanvas', 'TEnvironment', 'TConsole', 'TToolbar'
         // Add Canvas
         var canvas = new TCanvas();
         topDiv.appendChild(canvas.getElement());
+        // Add Editor
+        var editor = new TEditor();
+        topDiv.appendChild(editor.getElement());
+
         domFrame.appendChild(topDiv);
 
         var separator1 = document.createElement("div");
@@ -37,6 +41,7 @@ define(['jquery', 'split-pane','TCanvas', 'TEnvironment', 'TConsole', 'TToolbar'
 
         // Set environment
         TEnvironment.setCanvas(canvas);
+        TEnvironment.setEditor(editor);
         TEnvironment.setToolbar(toolbar);
         TEnvironment.setConsole(console);
         TEnvironment.setLog(log);
@@ -47,6 +52,7 @@ define(['jquery', 'split-pane','TCanvas', 'TEnvironment', 'TConsole', 'TToolbar'
         
         this.displayed = function() {
             canvas.displayed();
+            editor.displayed();
             console.displayed();
             log.displayed();
             $('.split-pane').splitPane();
