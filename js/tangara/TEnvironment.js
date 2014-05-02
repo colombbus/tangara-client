@@ -1,6 +1,7 @@
 define(['jquery', 'TRuntime', 'quintus'], function($, TRuntime, Quintus) {
     var TEnvironment = function() {
         var canvas;
+        var editor;
         var toolbar;
         var console;
         var log;
@@ -58,6 +59,11 @@ define(['jquery', 'TRuntime', 'quintus'], function($, TRuntime, Quintus) {
             return;
         };
 
+        this.setEditor = function(element) {
+            editor = element;
+            return;
+        };
+
         this.setLog = function(element) {
             log = element;
             return;
@@ -110,6 +116,9 @@ define(['jquery', 'TRuntime', 'quintus'], function($, TRuntime, Quintus) {
                 // Editor and Console cannot co-exist
                 this.disableConsole();
                 toolbar.enableEditor();
+                this.pause();
+                canvas.hide();
+                editor.show();
                 editorEnabled = true;
             }
         };
@@ -117,6 +126,9 @@ define(['jquery', 'TRuntime', 'quintus'], function($, TRuntime, Quintus) {
         this.disableEditor = function() {
             if (editorEnabled) {
                 toolbar.disableEditor();
+                editor.hide();
+                canvas.show();
+                this.unpause();
                 editorEnabled = false;
             }
         };
@@ -130,15 +142,31 @@ define(['jquery', 'TRuntime', 'quintus'], function($, TRuntime, Quintus) {
         };
 
         this.executeCommand = function(command, parameter) {
-            TRuntime.execute(command, parameter);
+            return TRuntime.execute(command, parameter);
+        };
+        
+        this.executeProgram = function(command) {
+            var lines = command.split('\n');
+            for(var i = 0;i < lines.length;i++){
+                if (!this.executeCommand(lines[i])) {
+                    break;
+                }
+            }
         };
         
         this.execute = function() {
             if (consoleEnabled) {
+                // execution from console
                 var command = console.getValue();
                 this.executeCommand(command);
                 console.clear();
                 console.addHistory(command);
+            } else if (editorEnabled) {
+                // execution from editor
+                this.clear(false);
+                var program = editor.getValue();
+                this.disableEditor();
+                this.executeProgram(program);
             }
         };
         
