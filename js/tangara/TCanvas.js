@@ -1,34 +1,41 @@
-define(['jquery', 'TEnvironment'], function($, TEnvironment) {
+define(['jquery', 'TRuntime'], function($, TRuntime) {
 
     function TCanvas() {
+        var domCanvasOut = document.createElement("div");
+        domCanvasOut.id = "tcanvas-outer";
+        
+        var domCanvasDesign = document.createElement("div");
+        domCanvasDesign.id = "tcanvas-design";
+        // start with design mode off
+        domCanvasDesign.style.display="none";
+
+        domCanvasOut.appendChild(domCanvasDesign);
+
+        
         var domCanvas = document.createElement("canvas");
         domCanvas.id = "tcanvas";
-                
+        
+        domCanvasOut.appendChild(domCanvas);
+        
         var qStage;
 
-        var graphicalObjects = new Array();
 
         this.addGraphicalObject = function(object) {
             if (typeof qStage !== 'undefined') {
                 qStage.insert(object.getQObject());
-                graphicalObjects.push(object);
             }
         };
 
         this.removeGraphicalObject = function(object) {
-            var index = graphicalObjects.indexOf(object);
-            if (index > -1) {
-                qStage.remove(object.getQObject());
-                graphicalObjects.splice(index, 1);
-            }
+            qStage.remove(object.getQObject());
         };
         
         this.getElement = function() {
-            return domCanvas;
+            return domCanvasOut;
         };
         
         this.displayed = function() {
-            var qInstance = TEnvironment.getQuintusInstance();
+            var qInstance = TRuntime.getQuintusInstance();
             //QInstance.setup("tcanvas",{ height:domCanvas.style.height, width:domCanvas.style.width});
             qInstance.setup("tcanvas", {maximize: true }).touch(qInstance.SPRITE_ALL);
             qInstance.stageScene(null);
@@ -42,22 +49,22 @@ define(['jquery', 'TEnvironment'], function($, TEnvironment) {
             container.removeAttribute("style");*/
         };
         
-        this.clear = function() {
-            while (graphicalObjects.length>0) {
-                graphicalObjects[0].deleteObject();
-            }
-        };
-        
         this.show = function() {
-            // find the container added by Quintus
-            $("#tcanvas_container").show();
+            $(domCanvasOut).show();
         };
         
         this.hide = function() {
-            // find the container added by Quintus
-            $("#tcanvas_container").hide();
+            $(domCanvasOut).hide();
         };
 
+        this.setDesignMode = function(value) {
+            if (value) {
+                $(domCanvasDesign).show();
+            } else {
+                $(domCanvasDesign).hide();
+            }
+        };
+        
     }
 
     return TCanvas;
