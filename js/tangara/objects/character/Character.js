@@ -1,8 +1,6 @@
 define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager'], function($, TEnvironment, TUtils, TGraphicalObject, CommandManager) {
     var Character = function(characterName) {
-        window.console.log("Initializing character");
         TGraphicalObject.call(this);
-        window.console.log("Character initialized");
         if (typeof(characterName)==='undefined') {
             characterName = "boy";
         } else {
@@ -14,11 +12,11 @@ define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager']
         this._loadSkeleton(characterName);
     };
 
-    Character.prototype = new TGraphicalObject();
+    Character.prototype = Object.create(TGraphicalObject.prototype);
     Character.prototype.constructor = Character;
     Character.prototype.className = "Character";
     
-    var qInstance = TEnvironment.getQuintusInstance();
+    var qInstance = Character.prototype.qInstance;
     
     qInstance.TGraphicalObject.extend("Character", {
         init: function(props,defaultProps) {
@@ -50,9 +48,6 @@ define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager']
             }
         },
         designDrag: function(touch) {
-            for (var i=0; i<this.children.length; i++) {
-                this.children[i].stopAnimation();
-            }
             if (!this.p.dragging) {
                 touch.origX = this.p.x;
                 touch.origY = this.p.y;
@@ -63,9 +58,6 @@ define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager']
             this.p.destinationX = this.p.x;
             this.p.destinationY = this.p.y;
             this._super(touch);
-            for (var i=0; i<this.children.length; i++) {
-                this.children[i].startAnimation();
-            }
         },
         getSideCoordinates: function(side) {
             var element;
@@ -124,6 +116,17 @@ define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager']
                 }
                 obj.p.type = obj.p.type | TGraphicalObject.TYPE_CATCHABLE;
             },[object, command]);
+        },
+        freeze: function(value) {
+            if (value) {
+                for (var i=0; i<this.children.length; i++) {
+                    this.children[i].stopAnimation();
+                }
+            } else {
+                for (var i=0; i<this.children.length; i++) {
+                    this.children[i].startAnimation();
+                }
+            }
         }
     });
 
@@ -298,98 +301,102 @@ define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager']
         return;
     };
     
-    Character.prototype._loadSkeleton = function(name) {
-        if (TUtils.checkString(name)) {
-          window.console.log("loading skeleton");
-          var baseImageUrl = this.getResource(name)+"/";
-          var skeletonUrl = baseImageUrl+"skeleton.json";
-          window.console.log("Skeleton URL : "+skeletonUrl);
-          var parent = this;
-          var elements = new Array();
-          var assets = new Array();
-          $.ajax({
-              dataType: "json",
-              url: skeletonUrl,
-              async: false,
-              success: function(data) {
-                  $.each( data['skeleton']['element'], function( key, val ) {
-                      elements.push(val);
-                      assets.push(baseImageUrl+val['image']);
-                  });
-              }
-          }).fail(function(jqxhr, textStatus, error) {
-              throw new Error(TUtils.format(parent.getMessage("unknwon skeleton"), name));
-          });
-
-          var qObject = this.qObject;
-          var qStage = qInstance.stage();
-          // destroy previous elements
-          for (var i=0; i<qObject.children.length; i++) {
+    Character.prototype.build = function(baseUrl, elements, assets) {
+        var qObject = this.qObject;
+        var qStage = qInstance.stage();
+        // destroy previous elements
+        for (var i=0; i<qObject.children.length; i++) {
             qObject.children[i].destroy();
-          }
-          var chest = null;
-          var leftArm = null;
-          var rightArm = null;
-          var character = this;
-          qInstance.load(assets,function() {
-              // Add elements to character
-              for (var i=0; i<elements.length; i++) {
-                  var val = elements[i];
-                  var element = new qInstance.CharacterPart({asset:baseImageUrl+ val['image'], name:val['name']});
-                  // Set center if defined
-                  if (typeof val['cx'] !== 'undefined') {
+        }
+        var chest = null;
+        var leftArm = null;
+        var rightArm = null;
+        var character = this;
+        qInstance.load(assets,function() {
+            // Add elements to character
+            for (var i=0; i<elements.length; i++) {
+                var val = elements[i];
+                var element = new qInstance.CharacterPart({asset:baseUrl+ val['image'], name:val['name']});
+                // Set center if defined
+                if (typeof val['cx'] !== 'undefined') {
                     element.p.cx = val['cx'];
-                  }
-                  if (typeof val['cy'] !== 'undefined') {
+                }
+                if (typeof val['cy'] !== 'undefined') {
                     element.p.cy = val['cy'];
-                  }
-                  // Set elements coordinates (relative to character)
-                  element.p.x = val['coordinateX']+element.p.cx;
-                  element.p.y = val['coordinateY']+element.p.cy;
-                  // Set collision if hand defined
-                  if (typeof val['hand'] !== 'undefined') {
-                      var hand = val['hand'];
-                      element.p.points = [[hand[0][0],hand[0][1]], [hand[0][0],hand[1][1]], [hand[1][0],hand[1][1]], [hand[1][0],hand[0][1]]];
-                      // register collision handler
-                      element.p.mayCatch = true;
-                      element.on("hit", element, "objectEncountered");
-                  }
-                  qStage.insert(element, qObject);
-                  switch(val['name']) {
+                }
+                // Set elements coordinates (relative to character)
+                element.p.x = val['coordinateX']+element.p.cx;
+                element.p.y = val['coordinateY']+element.p.cy;
+                // Set collision if hand defined
+                if (typeof val['hand'] !== 'undefined') {
+                    var hand = val['hand'];
+                    element.p.points = [[hand[0][0],hand[0][1]], [hand[0][0],hand[1][1]], [hand[1][0],hand[1][1]], [hand[1][0],hand[0][1]]];
+                    // register collision handler
+                    element.p.mayCatch = true;
+                    element.on("hit", element, "objectEncountered");
+                }
+                qStage.insert(element, qObject);
+                switch(val['name']) {
                     case 'leftArm' : 
-                      character.leftElement = element;
-                      leftArm = element;
-                      element.side = "left";
-                      break;
+                        character.leftElement = element;
+                        leftArm = element;
+                        element.side = "left";
+                        break;
                     case 'rightArm' :
-                      character.rightElement = element;
-                      rightArm = element;
-                      element.side = "right";
-                      break;
+                        character.rightElement = element;
+                        rightArm = element;
+                        element.side = "right";
+                        break;
                     case 'leftLeg' : 
-                      character.leftElement = element;
-                      element.side = "left";
-                      break;
+                        character.leftElement = element;
+                        element.side = "left";
+                        break;
                     case 'rightLeg' :
-                      character.rightElement = element;
-                      element.side = "right";
-                      break;
+                        character.rightElement = element;
+                        element.side = "right";
+                        break;
                     case 'chest' :
-                      chest = element;
-                      break;
+                        chest = element;
+                        break;
                   }
                   element.startAnimation();
-              }
-              qObject.leftElement = character.leftElement;
-              qObject.rightElement = character.rightElement;
-              if (chest !== null) {
+            }
+            qObject.leftElement = character.leftElement;
+            qObject.rightElement = character.rightElement;
+            if (chest !== null) {
                 chest.leftArm = leftArm;
                 chest.rightArm = rightArm;
-              }
-              if (!qObject.p.initialized) {
-                  qObject.initialized();
-              }
-          });
+            }
+            if (!qObject.p.initialized) {
+                qObject.initialized();
+            }
+        });
+    };
+    
+    Character.prototype._loadSkeleton = function(name) {
+        if (TUtils.checkString(name)) {
+            window.console.log("loading skeleton");
+            var baseImageUrl = this.getResource(name)+"/";
+            var skeletonUrl = baseImageUrl+"skeleton.json";
+            window.console.log("Skeleton URL : "+skeletonUrl);
+            var parent = this;
+            var elements = new Array();
+            var assets = new Array();
+            window.console.log("url : "+skeletonUrl);
+            $.ajax({
+                dataType: "json",
+                url: skeletonUrl,
+                async: true,
+                success: function(data) {
+                    $.each( data['skeleton']['element'], function( key, val ) {
+                        elements.push(val);
+                        assets.push(baseImageUrl+val['image']);
+                    });
+                    parent.build(baseImageUrl, elements, assets);
+                }
+            }).fail(function(jqxhr, textStatus, error) {
+                throw new Error(TUtils.format(parent.getMessage("unknwon skeleton"), name));
+            });
         }
     };
         
