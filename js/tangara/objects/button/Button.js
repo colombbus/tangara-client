@@ -8,11 +8,11 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
         this.qObject.initialized();
     };
 
-    Button.prototype = new TGraphicalObject();
+    Button.prototype = Object.create(TGraphicalObject.prototype);
     Button.prototype.constructor = Button;
     Button.prototype.className = "Button";
 
-    var qInstance = TEnvironment.getQuintusInstance();
+    var qInstance = Button.prototype.qInstance;
 
     qInstance.TGraphicalObject.extend("TButton", {
         init: function(props, defaultProps) {
