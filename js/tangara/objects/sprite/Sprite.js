@@ -62,11 +62,11 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
                         p.x-=step;
                         p.moving = true;
                         break;
-                    case 'top':
+                    case 'up':
                         p.y-=step;
                         p.moving = true;
                         break;
-                    case 'bottom':
+                    case 'down':
                         p.y+=step;
                         p.moving = true;
                         break;
@@ -93,10 +93,62 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
                 this.p.destinationX = this.p.x;this.p.destinationY = this.p.y;
             }, {});
         },
+        moveForward: function(value) {
+            this.perform(function(value){
+                this.p.destinationX+=value;
+            }, [value]);
+        },
+        alwaysMoveForward: function() {
+            this.perform(function(){
+                this.p.direction = 'right';
+            }, {});
+        },
+        moveBackward: function(value) {
+            this.perform(function(value){
+                this.p.destinationX-=value;
+            }, [value]);
+        },
+        alwaysMoveBackward: function() {
+            this.perform(function(){
+                this.p.direction = 'left';
+            }, {});
+        },
+        moveUpward: function(value) {
+            this.perform(function(value){
+                this.p.destinationY-=value;
+            }, [value]);
+        },
+        alwaysMoveUpward: function() {
+            this.perform(function(){
+                this.p.direction = 'up';
+            }, {});
+        },
+        moveDownward: function(value) {
+            this.perform(function(value){
+                this.p.destinationY+=value;
+            }, [value]);
+        },
+        alwaysMoveDownward: function() {
+            this.perform(function(){
+                this.p.direction = 'down';
+            }, {});
+        },
+        stop: function() {
+            this.perform(function(){
+                this.p.destinationX = this.p.x;
+                this.p.destinationY = this.p.y;
+                this.p.direction = 'none';
+            }, {});
+        },
+        setVelocity: function(value) {
+            this.perform(function(value){
+                this.p.velocity = value*10;
+            }, [value]);
+        },
         setCategory: function(name) {
             this.p.category = name;
         },
-        getCategory: function(name) {
+        getCategory: function() {
             return this.p.category;
         },
         addCollisionCommand: function(command, param) {
@@ -155,13 +207,13 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
             this._alwaysMoveForward();
         }
         if (TUtils.checkInteger(value)) {
-          this.qObject.p.destinationX+=value;
+            this.qObject.moveForward(value);
         }
         return;
     };
 
     Sprite.prototype._alwaysMoveForward = function() {
-        this.qObject.p.direction = 'right';
+        this.qObject.alwaysMoveForward();
         return;
     };
 
@@ -170,13 +222,13 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
             this._alwaysMoveBackward();
         }
         if (TUtils.checkInteger(value)) {
-          this.qObject.p.destinationX-=value;
+            this.qObject.moveBackward(value);
         }
         return;
     };
 
     Sprite.prototype._alwaysMoveBackward = function() {
-        this.qObject.p.direction = 'left';
+        this.qObject.alwaysMoveBackward();
         return;
     };
     
@@ -185,13 +237,13 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
             this._alwaysMoveUpward();
         }
         if (TUtils.checkInteger(value)) {
-          this.qObject.p.destinationY-=value;
+            this.qObject.moveUpward(value);
         }
         return;
     };
 
     Sprite.prototype._alwaysMoveUpward = function() {
-        this.qObject.p.direction = 'top';
+        this.qObject.alwaysMoveUpward();
         return;
     };
 
@@ -200,26 +252,24 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
             this._alwaysMoveDownward();
         }
         if (TUtils.checkInteger(value)) {
-          this.qObject.p.destinationY+=value;
+            this.qObject.moveDownward(value);
         }
         return;
     };
     
     Sprite.prototype._alwaysMoveDownward = function() {
-        this.qObject.p.direction = 'bottom';
+        this.qObject.alwaysMoveDownward();
         return;
     };
 
     Sprite.prototype._stop = function() {
-        this.qObject.p.destinationX = this.qObject.p.x;
-        this.qObject.p.destinationY = this.qObject.p.y;
-        this.qObject.p.direction = 'none';
+        this.qObject.stop();
         return;
     };
     
     Sprite.prototype._setVelocity = function(value) {
         if (TUtils.checkInteger(value)) {
-            this.qObject.p.velocity = value*10;
+            this.qObject.setVelocity(value);
         }
     };
     
@@ -301,6 +351,9 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
         this._ifCollision(command, who);
     };
 
+    Sprite.prototype.toString = function() {
+        return this.qObject.toString();
+    };
     
     TEnvironment.internationalize(Sprite, true);
     
