@@ -1,16 +1,16 @@
-define(['jquery', 'TEnvironment', 'TUtils', 'TObject'], function($, TEnvironment, TUtils, TObject) {
+define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject'], function($, TUI, TEnvironment, TRuntime, TUtils, TObject) {
     var Tangara = function() {
         window.console.log("Initializing tangara");
         TObject.call(this);
     };
 
-    Tangara.prototype = new TObject();
+    Tangara.prototype = Object.create(TObject.prototype);
     Tangara.prototype.constructor = Tangara;
     Tangara.prototype.className = "Tangara";
 
     Tangara.prototype._write = function(value) {
         if (TUtils.checkString(value)) {
-            TEnvironment.addLogMessage(value);
+            TUI.addLogMessage(value);
         }
     };
 
@@ -29,7 +29,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TObject'], function($, TEnvironment
                 url: scriptUrl,
                 async: false,
                 success: function(data) {
-                    TEnvironment.executeProgram(data);
+                    TRuntime.executeProgram(data);
                 }
             }).fail(function(jqxhr, textStatus, error) {
                 throw new Error(TUtils.format(parent.getMessage("script unreachable"), name));
@@ -38,12 +38,12 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TObject'], function($, TEnvironment
     };
 
     Tangara.prototype._pause = function() {
-        TEnvironment.pause();
+        TRuntime.stop();
     };
 
 
     Tangara.prototype._unpause = function() {
-        TEnvironment.unpause();
+        TRuntime.start();
     };
 
     TEnvironment.internationalize(Tangara);
