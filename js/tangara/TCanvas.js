@@ -1,4 +1,4 @@
-define(['TEnvironment'], function(TEnvironment) {
+define(['jquery', 'TEnvironment'], function($, TEnvironment) {
 
     function TCanvas() {
         var domCanvas = document.createElement("canvas");
@@ -46,6 +46,16 @@ define(['TEnvironment'], function(TEnvironment) {
             while (graphicalObjects.length>0) {
                 graphicalObjects[0].deleteObject();
             }
+        };
+        
+        this.show = function() {
+            // find the container added by Quintus
+            $("#tcanvas_container").show();
+        };
+        
+        this.hide = function() {
+            // find the container added by Quintus
+            $("#tcanvas_container").hide();
         };
 
     }
