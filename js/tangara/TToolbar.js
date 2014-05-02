@@ -1,4 +1,4 @@
-define(['jquery','TEnvironment'], function($,TEnvironment) {
+define(['jquery','TEnvironment', 'TUI'], function($,TEnvironment, TUI) {
     function TToolbar() {
         var domToolbar = document.createElement("div");
         domToolbar.id = "ttoolbar";
@@ -14,7 +14,7 @@ define(['jquery','TEnvironment'], function($,TEnvironment) {
         domConsole.appendChild(imageConsole);
         domConsole.appendChild(document.createTextNode(TEnvironment.getMessage('mode-console')));
         domConsole.className = "ttoolbar-mode";
-        domConsole.onclick = function() { TEnvironment.toggleConsole(); };
+        domConsole.onclick = function() { TUI.toggleConsole(); };
         var domEditor = document.createElement("button");
         var imageEditor = document.createElement("img");
         imageEditor.src = TEnvironment.getBaseUrl() + "/images/editor.png";
@@ -22,7 +22,7 @@ define(['jquery','TEnvironment'], function($,TEnvironment) {
         domEditor.appendChild(imageEditor);
         domEditor.appendChild(document.createTextNode(TEnvironment.getMessage('mode-editor')));
         domEditor.className = "ttoolbar-mode";
-        domEditor.onclick = function() { TEnvironment.toggleEditor(); };
+        domEditor.onclick = function() { TUI.toggleEditor(); };
         domModes.appendChild(domConsole);
         domModes.appendChild(domEditor);
         domToolbar.appendChild(domModes);
@@ -40,7 +40,7 @@ define(['jquery','TEnvironment'], function($,TEnvironment) {
         imageExecute.className = "ttoolbar-button-image";
         buttonExecute.appendChild(imageExecute);
         buttonExecute.appendChild(document.createTextNode(TEnvironment.getMessage('button-execute')));
-        buttonExecute.onclick = function() { TEnvironment.execute(); };
+        buttonExecute.onclick = function() { TUI.execute(); };
 
         // OPTIONS
         var domOptions = document.createElement("div");
@@ -55,7 +55,7 @@ define(['jquery','TEnvironment'], function($,TEnvironment) {
         imageClear.className = "ttoolbar-option-image";
         optionClear.appendChild(imageClear);
         optionClear.appendChild(document.createTextNode(TEnvironment.getMessage('option-clear')));
-        optionClear.onclick = function() { TEnvironment.clear(true); };
+        optionClear.onclick = function() { TUI.clear(true); };
 
         var optionDesignMode = document.createElement("button");
         optionDesignMode.className = "ttoolbar-option";
@@ -64,6 +64,7 @@ define(['jquery','TEnvironment'], function($,TEnvironment) {
         imageDesignMode.className = "ttoolbar-option-image";
         optionDesignMode.appendChild(imageDesignMode);
         optionDesignMode.appendChild(document.createTextNode(TEnvironment.getMessage('option-design-mode')));
+        optionDesignMode.onclick = function() { TUI.toggleDesignMode(); };
 
         this.getElement = function() {
             return domToolbar;
