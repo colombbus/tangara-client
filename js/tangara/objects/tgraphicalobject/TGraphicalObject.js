@@ -47,11 +47,10 @@ define(['jquery', 'jquery_animate_enhanced', 'TEnvironment', 'TObject'], functio
         },
         initialized: function() {
             this.p.initialized = true;
-            for (var i = 0; i < this.operations.length; i++) {
-                var operation = this.operations[i];
+            while (this.operations.length>0) {
+                var operation = this.operations.shift();
                 operation[0].apply(this, operation[1]);
             }
-            this.operations = new Array();
         },
         setLocation: function(x, y) {
             this.perform(function(x, y) {
