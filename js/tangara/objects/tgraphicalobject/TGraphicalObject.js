@@ -1,13 +1,11 @@
-define(['jquery', 'jquery_animate_enhanced', 'TEnvironment', 'TObject'], function($, animate_enhanced, TEnvironment, TObject) {
+define(['TObject', 'TUI', 'TRuntime', 'TEnvironment', ], function(TObject, TUI, TRuntime, TEnvironment) {
     function TGraphicalObject() {
         this.qObject = new this.qSprite();
-        TObject.call(this);
         this._setLocation(0, 0);
-        var canvas = TEnvironment.getCanvas();
-        canvas.addGraphicalObject(this);
+        TRuntime.addGraphicalObject(this);
     }
 
-    TGraphicalObject.prototype = new TObject();
+    TGraphicalObject.prototype = Object.create(TObject.prototype);
     TGraphicalObject.prototype.constructor = TGraphicalObject;
 
     TGraphicalObject.prototype.className = "TGraphicalObject";
@@ -16,7 +14,7 @@ define(['jquery', 'jquery_animate_enhanced', 'TEnvironment', 'TObject'], functio
     TGraphicalObject.TYPE_SPRITE = 0x0400;
     TGraphicalObject.TYPE_INPUT = 0x0800;
 
-    var qInstance = TEnvironment.getQuintusInstance();
+    var qInstance = TRuntime.getQuintusInstance();
 
     qInstance.Sprite.extend("TGraphicalObject", {
         init: function(props, defaultProps) {
@@ -63,9 +61,13 @@ define(['jquery', 'jquery_animate_enhanced', 'TEnvironment', 'TObject'], functio
                 this.p.x = x;
                 this.p.y = y;
             }, [x, y]);
+        },
+        freeze: function(value) {
+            // to be implemented by subclasses
         }
     });
 
+    TGraphicalObject.prototype.qInstance = qInstance;
     TGraphicalObject.prototype.qSprite = qInstance.TGraphicalObject;
 
     TGraphicalObject.prototype.messages = null;
@@ -75,10 +77,8 @@ define(['jquery', 'jquery_animate_enhanced', 'TEnvironment', 'TObject'], functio
     };
 
     TGraphicalObject.prototype.deleteObject = function() {
-        var canvas = TEnvironment.getCanvas();
-        canvas.removeGraphicalObject(this);
-        this.getQObject().destroy();
-        TEnvironment.deleteTObject(this);
+        this.qObject.destroy();
+        TRuntime.removeGraphicalObject(this);
     };
 
     TGraphicalObject.prototype.getQObject = function() {
@@ -116,6 +116,15 @@ define(['jquery', 'jquery_animate_enhanced', 'TEnvironment', 'TObject'], functio
             }
             qObject.p.designMode = false;
         }
+    };
+    
+    TGraphicalObject.prototype.freeze = function(value) {
+        window.console.log("freezing "+this);
+        this.qObject.freeze(value);
+    };
+    
+    TGraphicalObject.prototype.toString = function() {
+        return "TGraphicalObject "+this.className;
     };
 
     return TGraphicalObject;
