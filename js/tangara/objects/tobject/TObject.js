@@ -1,38 +1,12 @@
-define(['jquery','TEnvironment'], function($, TEnvironment) {
+define(['jquery', 'TRuntime', 'TEnvironment'], function($, TRuntime, TEnvironment) {
     function TObject() {
-        this.load();
+        TRuntime.addObject(this);
     }
 
     TObject.prototype.className = "TObject";
 
-    TObject.prototype.load = function() {
-        if (this.className.length !== 0 && typeof this.constructor.messages === 'undefined') {
-            this.constructor.messages = new Array();
-            var messageFile = this.getResource("messages.json");
-            var language = TEnvironment.getLanguage();
-            var parent = this;
-            $.ajax({
-                dataType: "json",
-                url: messageFile,
-                global:false,
-                async: false,
-                success: function(data) {
-                    if (typeof data[language] !== 'undefined'){
-                        parent.constructor.messages = data[language];
-                        window.console.log("found messages in language: "+language);
-                    } else {
-                        window.console.log("found no messages for language: "+language);
-                    }
-                },
-                error: function(data, status, error) {
-                    window.console.log("Error loading messages (messages.json)");
-                }
-            });
-        }
-    };
-    
     TObject.prototype.deleteObject = function() {
-        TEnvironment.deleteTObject(this);
+        TRuntime.removeObject(this);
     };
 
     TObject.prototype.getResource = function(location) {
@@ -54,6 +28,10 @@ define(['jquery','TEnvironment'], function($, TEnvironment) {
     TObject.prototype.freeze = function(value) {
         // every object may add actions to take to freeze
     };
-
+    
+    TObject.prototype.toString = function() {
+        return "TObject "+this.className;
+    };
+    
     return TObject;
 });
