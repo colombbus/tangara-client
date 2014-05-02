@@ -11,12 +11,12 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
         this.qObject.id = this.id;
     };
     
-    Sprite.prototype = new TGraphicalObject();
+    Sprite.prototype = Object.create(TGraphicalObject.prototype);
     Sprite.prototype.constructor = Sprite;
     Sprite.prototype.className = "Sprite";
     Sprite.nextId = 0;
     
-    var qInstance = TEnvironment.getQuintusInstance();
+    var qInstance = Sprite.prototype.qInstance;
     
     qInstance.TGraphicalObject.extend("TSprite", {
         init: function(props,defaultProps) {
