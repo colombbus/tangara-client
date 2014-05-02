@@ -29,7 +29,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TObject'], function($, TEnvironment
                 url: scriptUrl,
                 async: false,
                 success: function(data) {
-                    TEnvironment.execute(data);
+                    TEnvironment.executeProgram(data);
                 }
             }).fail(function(jqxhr, textStatus, error) {
                 throw new Error(TUtils.format(parent.getMessage("script unreachable"), name));
