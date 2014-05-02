@@ -88,12 +88,12 @@ define(['jquery','TEnvironment'], function($,TEnvironment) {
         
         this.enableEditor = function() {
             domEditor.className = "ttoolbar-mode active";
-            editor = true;
+            domButtons.appendChild(buttonExecute);
         };
         
         this.disableEditor = function() {
             domEditor.className = "ttoolbar-mode";
-            editor = false;
+            domButtons.removeChild(buttonExecute);
         };
     };
     return TToolbar;
