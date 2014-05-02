@@ -1,4 +1,4 @@
-define(['jquery','ace/ace'], function($,ace) {
+define(['TUI', 'jquery','ace/ace'], function(TUI, $,ace) {
 
     function TConsole() {
         var domConsole = document.createElement("div");
@@ -36,12 +36,10 @@ define(['jquery','ace/ace'], function($,ace) {
                 name: 'executeCommand',
                 bindKey: {win: 'Return',  mac: 'Return'},
                 exec: function(editor) {
-                    require(['TEnvironment'], function(TEnvironment) {
-                        TEnvironment.execute();
-                    });
+                    TUI.execute();
                 },
                 readOnly: true // false if this command should not apply in readOnly mode
-             });
+            });
             aceEditor.commands.addCommand({
                 name: 'browseHistoryUp',
                 bindKey: {win: 'Up',  mac: 'Up'},
@@ -115,7 +113,7 @@ define(['jquery','ace/ace'], function($,ace) {
         };
         
         this.clear = function() {
-            aceEditor.setValue("", -1);
+            aceEditor.setValue("");
         };
         
         this.show = function() {
