@@ -1,15 +1,5 @@
-define(['jquery', 'TRuntime', 'quintus'], function($, TRuntime, Quintus) {
+define(['jquery'], function($) {
     var TEnvironment = function() {
-        var canvas;
-        var editor;
-        var toolbar;
-        var console;
-        var log;
-        var runtimeFrame;
-        var runtimeCallback;
-        var quintusInstance;
-        var editorEnabled = false;
-        var consoleEnabled = false;
         var translated = new Array();
 
         this.messages;
@@ -37,167 +27,8 @@ define(['jquery', 'TRuntime', 'quintus'], function($, TRuntime, Quintus) {
                     }
                 }
             });
-            this.loadGraphics();
-            this.loadRuntime();
         };
 
-        this.loadGraphics = function() {
-            window.console.log("* Loading Graphics");
-            quintusInstance = Quintus().include("Sprites, Scenes, 2D, UI, Anim, Input, Touch");
-            // Debug : 
-            //quintusInstance.debug = true;
-            //quintusInstance.debugFill = true;
-        };
-
-        this.loadRuntime = function() {
-            window.console.log("* Loading Runtime");
-            TRuntime.load();
-        };
-
-        this.setCanvas = function(element) {
-            canvas = element;
-            return;
-        };
-
-        this.setEditor = function(element) {
-            editor = element;
-            return;
-        };
-
-        this.setLog = function(element) {
-            log = element;
-            return;
-        };
-
-        this.setToolbar = function(element) {
-            toolbar = element;
-            return;
-        };
-
-        this.setConsole = function(element) {
-            console = element;
-            return;
-        };
-
-        this.getCanvas = function() {
-            return canvas;
-        };
-
-        this.enableConsole = function() {
-            if (!consoleEnabled) {
-                // Editor and Console cannot co-exist
-                this.disableEditor();
-                toolbar.enableConsole();
-                console.show();
-                log.update();
-                consoleEnabled = true;
-            }
-        };
-
-        this.disableConsole = function() {
-            if (consoleEnabled) {
-                toolbar.disableConsole();
-                console.hide();
-                log.update();
-                consoleEnabled = false;
-            }
-        };
-        
-        this.toggleConsole = function() {
-            if (consoleEnabled) {
-                this.disableConsole();
-            } else {
-                this.enableConsole();
-            }
-        };
-
-        this.enableEditor = function() {
-            if (!editorEnabled) {
-                // Editor and Console cannot co-exist
-                this.disableConsole();
-                toolbar.enableEditor();
-                this.pause();
-                canvas.hide();
-                editor.show();
-                editorEnabled = true;
-            }
-        };
-
-        this.disableEditor = function() {
-            if (editorEnabled) {
-                toolbar.disableEditor();
-                editor.hide();
-                canvas.show();
-                this.unpause();
-                editorEnabled = false;
-            }
-        };
-
-        this.toggleEditor = function() {
-            if (editorEnabled) {
-                this.disableEditor();
-            } else {
-                this.enableEditor();
-            }
-        };
-
-        this.executeCommand = function(command, parameter) {
-            return TRuntime.execute(command, parameter);
-        };
-        
-        this.executeProgram = function(command) {
-            var lines = command.split('\n');
-            for(var i = 0;i < lines.length;i++){
-                if (!this.executeCommand(lines[i])) {
-                    break;
-                }
-            }
-        };
-        
-        this.execute = function() {
-            if (consoleEnabled) {
-                // execution from console
-                var command = console.getValue();
-                this.executeCommand(command);
-                console.clear();
-                console.addHistory(command);
-            } else if (editorEnabled) {
-                // execution from editor
-                this.clear(false);
-                var program = editor.getValue();
-                this.disableEditor();
-                this.executeProgram(program);
-            }
-        };
-        
-        this.clear = function(confirm) {
-            var goOn = true;
-            if (typeof confirm !== 'undefined' && confirm) {
-                goOn = window.confirm(this.getMessage('clear-confirm'));
-            }
-            if (goOn) {
-                canvas.clear();
-                this.clearLog();
-            }
-        };
-
-        this.addLog = function(text, success) {
-            if (typeof log !== 'undefined') {
-                log.addLines(text, success);
-            }
-        };
-
-        this.addLogMessage = function(text) {
-            if (typeof log !== 'undefined') {
-                log.addMessage(text);
-            }
-        };
-
-        this.clearLog = function() {
-            if (typeof log !== 'undefined') {
-                log.clear();
-            }
-        };
 
         this.getBaseUrl = function() {
             return window.location.protocol + "//" + window.location.host + window.location.pathname.split("/").slice(0, -1).join("/");
@@ -205,6 +36,10 @@ define(['jquery', 'TRuntime', 'quintus'], function($, TRuntime, Quintus) {
 
         this.getObjectsUrl = function() {
             return this.getBaseUrl() + "/js/tangara/objects";
+        };
+
+        this.getObjectListUrl = function() {
+            return this.getObjectsUrl() + "/objects.json";
         };
 
         this.getLanguage = function() {
@@ -250,8 +85,31 @@ define(['jquery', 'TRuntime', 'quintus'], function($, TRuntime, Quintus) {
                 }
             });
         };
+        
+        var addTranslatedMessages = function(aClass, file, language) {
+            aClass.messages = new Array();
+            $.ajax({
+                dataType: "json",
+                url: file,
+                global:false,
+                async: false,
+                success: function(data) {
+                    if (typeof data[language] !== 'undefined'){
+                        aClass.messages = data[language];
+                        window.console.log("found messages in language: "+language);
+                    } else {
+                        window.console.log("found no messages for language: "+language);
+                    }
+                },
+                error: function(data, status, error) {
+                    window.console.log("Error loading messages for class: "+aClass);
+                }
+            });
+            
+        };
 
         this.internationalize = function(initialClass, parents) {
+            // 1st load translated methods
             var translationFile = initialClass.prototype.getResource("i18n.json");
             addTranslatedMethods(initialClass, translationFile, this.language);
             if ((typeof parents !== 'undefined') && parents) {
@@ -263,6 +121,9 @@ define(['jquery', 'TRuntime', 'quintus'], function($, TRuntime, Quintus) {
                     parentClass = Object.getPrototypeOf(parentClass);
                 }
             }
+            // 2nd load translated messages
+            translationFile = initialClass.prototype.getResource("messages.json");
+            addTranslatedMessages(initialClass, translationFile, this.language);
             return initialClass;
         };
 
@@ -280,87 +141,6 @@ define(['jquery', 'TRuntime', 'quintus'], function($, TRuntime, Quintus) {
                 return this.messages[code];
             } else {
                 return code;
-            }
-        };
-
-        this.initRuntimeFrame = function() {
-            if (typeof runtimeFrame === 'undefined') {
-                window.bindSandbox = function(callback) {
-                    require(['TEnvironment'], function(TEnvironment) {
-                        TEnvironment.setRuntimeCallback(callback);
-                    });
-                };
-                var iframe = document.createElement("iframe");
-                iframe.className = "runtime-frame";
-                iframe.setAttribute("src", "sandbox.html");
-                document.body.appendChild(iframe);
-                runtimeFrame = iframe.contentWindow || iframe;
-            }
-            return runtimeFrame;
-        };
-
-        this.getRuntimeFrame = function() {
-            return runtimeFrame;
-        };
-
-        this.setRuntimeCallback = function(callback) {
-            runtimeCallback = callback;
-            TRuntime.setCallback(callback);
-        };
-
-        this.getRuntimeCallback = function() {
-            return runtimeCallback;
-        };
-
-        this.getTObjectName = function(reference) {
-            var name;
-            $.each(runtimeFrame, function(key, value) {
-                if (value === reference) {
-                    name = key;
-                    return false;
-                }
-            });
-            return name;
-        };
-
-        this.deleteTObject = function(reference) {
-            $.each(runtimeFrame, function(key, value) {
-                if (value === reference) {
-                    delete runtimeFrame[key];
-                    return false;
-                }
-            });
-        };
-
-        this.setQuintusInstance = function(instance) {
-            quintusInstance = instance;
-        };
-
-        this.getQuintusInstance = function() {
-            return quintusInstance;
-        };
-
-        this.pause = function() {
-            if (quintusInstance.loop) {
-                quintusInstance.pauseGame();
-                // call freeze method on every object having it
-                $.each(runtimeFrame, function(key, value) {
-                    if (value && typeof value.freeze === 'function') {
-                        value.freeze(true);
-                    }
-                });
-            }
-        };
-
-        this.unpause = function() {
-            if (!quintusInstance.loop) {
-                quintusInstance.unpauseGame();
-                // call freeze method on every object having it
-                $.each(runtimeFrame, function(key, value) {
-                    if (value && typeof value.freeze === 'function') {
-                        value.freeze(false);
-                    }
-                });
             }
         };
 
