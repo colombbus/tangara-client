@@ -1,4 +1,4 @@
-define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject'], function($, TEnvironment, TUtils, TGraphicalObject) {
+define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager'], function($, TEnvironment, TUtils, TGraphicalObject, CommandManager) {
     var Character = function(characterName) {
         window.console.log("Initializing character");
         TGraphicalObject.call(this);
@@ -31,6 +31,7 @@ define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject'], function($, TEnv
                 type:TGraphicalObject.TYPE_CHARACTER
             },props),defaultProps);
             this.catchableObjects = new Array();
+            this.commands = new CommandManager();
         },
         step: function(dt) {
             var p = this.p;
@@ -87,13 +88,39 @@ define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject'], function($, TEnv
                 this.p.destinationX = this.p.x;this.p.destinationY = this.p.y;
             }, {});
         },
+        moveForward: function(value) {
+            this.perform(function(value){
+                this.p.destinationX+=value;
+            }, [value]);
+        },
+        moveBackward: function(value) {
+            this.perform(function(value){
+                this.p.destinationX-=value;
+            }, [value]);
+        },
+        moveUpward: function(value) {
+            this.perform(function(value){
+                this.p.destinationY-=value;
+            }, [value]);
+        },
+        moveDownward: function(value) {
+            this.perform(function(value){
+                this.p.destinationY+=value;
+            }, [value]);
+        },
+        stop: function() {
+            this.perform(function(){
+                this.p.destinationX = this.p.x;
+                this.p.destinationY = this.p.y;
+            }, {});
+        },
         mayCatch: function(object, command) {
             this.perform(function(obj, cmd){
-                if (typeof this.catchableObjects[obj] === 'undefined') {
-                    this.catchableObjects[obj] = new Array();
+                if (this.catchableObjects.indexOf(obj) === -1) {
+                    this.catchableObjects.push(obj);
                 }
                 if (typeof cmd !== 'undefined') {
-                    this.catchableObjects[obj].push(cmd);
+                    this.commands.addCommand(cmd, obj);
                 }
                 obj.p.type = obj.p.type | TGraphicalObject.TYPE_CATCHABLE;
             },[object, command]);
@@ -205,7 +232,8 @@ define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject'], function($, TEnv
         },
         objectEncountered: function(col) {
             var collided = col.obj;
-            if (typeof this.container.catchableObjects[collided] !== 'undefined' && ((collided.p.type & TGraphicalObject.TYPE_CATCHABLE) !== 0) ) {
+            var index = this.container.catchableObjects.indexOf(collided); 
+            if (typeof  index !== -1 && ((collided.p.type & TGraphicalObject.TYPE_CATCHABLE) !== 0) ) {
                 // we have caught: we cannot catch anymore
                 this.p.mayCatch = false;
 
@@ -221,11 +249,16 @@ define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject'], function($, TEnv
                 };
                 
                 // execute commands if any
-                var commands = this.container.catchableObjects[collided];
+                var commands = this.container.commands;
+                if (commands.hasCommands(collided)) {
+                    commands.executeCommands({'field':collided});
+                }
                 for (var i=0;i<commands.length;i++) {
                     TEnvironment.execute(commands[i]);
                 }
-                this.container.catchableObjects[collided] = [];
+                
+                // remove collided object from the list
+                this.container.catchableObjects.splice(index, 1);
             }
         }                
     });
@@ -234,35 +267,34 @@ define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject'], function($, TEnv
 
     Character.prototype._moveForward = function(value) {
         if (TUtils.checkInteger(value)) {
-          this.qObject.p.destinationX+=value;
+            this.qObject.moveForward(value);
         }
         return;
     };
 
     Character.prototype._moveBackward = function(value) {
         if (TUtils.checkInteger(value)) {
-          this.qObject.p.destinationX-=value;
+            this.qObject.moveBackward(value);
         }
         return;
     };
         
     Character.prototype._moveUpward = function(value) {
         if (TUtils.checkInteger(value)) {
-          this.qObject.p.destinationY-=value;
+            this.qObject.moveUpward(value);
         }
         return;
     };
 
     Character.prototype._moveDownward = function(value) {
         if (TUtils.checkInteger(value)) {
-          this.qObject.p.destinationY+=value;
+            this.qObject.moveDownward(value);
         }
         return;
     };
     
     Character.prototype._stop = function() {
-        this.qObject.p.destinationX = this.qObject.p.x;
-        this.qObject.p.destinationY = this.qObject.p.y;
+        this.qObject.stop();
         return;
     };
     
