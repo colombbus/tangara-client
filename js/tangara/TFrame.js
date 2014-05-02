@@ -1,4 +1,4 @@
-define(['jquery', 'split-pane','TCanvas', 'TEditor', 'TEnvironment', 'TConsole', 'TToolbar','TLog'], function($, SplitPane, TCanvas, TEditor, TEnvironment, TConsole, TToolbar, TLog) {
+define(['jquery', 'split-pane','TCanvas', 'TEditor', 'TUI', 'TConsole', 'TToolbar','TLog', 'TRuntime'], function($, SplitPane, TCanvas, TEditor, TUI, TConsole, TToolbar, TLog, TRuntime) {
     function TFrame() {
         var domFrame = document.createElement("div");
         domFrame.id = "tframe";
@@ -39,12 +39,16 @@ define(['jquery', 'split-pane','TCanvas', 'TEditor', 'TEnvironment', 'TConsole',
         bottomDiv.appendChild(logElement);
         domFrame.appendChild(bottomDiv);
 
-        // Set environment
-        TEnvironment.setCanvas(canvas);
-        TEnvironment.setEditor(editor);
-        TEnvironment.setToolbar(toolbar);
-        TEnvironment.setConsole(console);
-        TEnvironment.setLog(log);
+        // Set UI
+        TUI.setCanvas(canvas);
+        TUI.setEditor(editor);
+        TUI.setToolbar(toolbar);
+        TUI.setConsole(console);
+        TUI.setLog(log);
+        
+        // Plug Runtime with Canvas and Log
+        TRuntime.setCanvas(canvas);
+        TRuntime.setLog(log);
         
         this.getElement = function() {
             return domFrame;
@@ -57,7 +61,7 @@ define(['jquery', 'split-pane','TCanvas', 'TEditor', 'TEnvironment', 'TConsole',
             log.displayed();
             $('.split-pane').splitPane();
             // Start with console enabled
-            TEnvironment.enableConsole();
+            TUI.enableConsole();
         };
 
     }
