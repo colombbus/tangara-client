@@ -1,4 +1,4 @@
-define(['jquery','TCanvas'], function($, TCanvas) {
+define(['jquery'], function($) {
     function TLog() {
         var domOuterLog = document.createElement("div");
         domOuterLog.id = "tlog-outer";
