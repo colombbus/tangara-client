@@ -1,4 +1,4 @@
-define(['TEnvironment'], function(TEnvironment) {
+define(['TRuntime'], function(TRuntime) {
     var CommandManager = function() {
         this.commands = new Array();
     };
@@ -36,11 +36,11 @@ define(['TEnvironment'], function(TEnvironment) {
         }
         if (typeof field === 'undefined') {
             for (i = 0; i < this.commands.length; i++) {
-                TEnvironment.executeCommand(this.commands[i], parameter);
+                TRuntime.executeCommand(this.commands[i], parameter);
             }
         } else if (typeof this.commands[field] !== 'undefined') {
             for (i = 0; i < this.commands[field].length; i++) {
-                TEnvironment.executeCommand(this.commands[field][i], parameter);
+                TRuntime.executeCommand(this.commands[field][i], parameter);
             }
         }
     };
