@@ -123,6 +123,10 @@ define(function() {
             });
         };
         
+        this.checkBoolean = function(value) {
+            return (typeof value !== 'undefined' && typeof value === 'boolean');
+        };
+
         this.checkInteger = function(value) {
             return (typeof value !== 'undefined' && !isNaN(value));
         };
