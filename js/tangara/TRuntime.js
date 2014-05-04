@@ -201,7 +201,6 @@ define(['jquery', 'quintus'], function($, Quintus) {
         };
 
         this.clear = function() {
-            // TODO: handle duplicate objects
             while (tGraphicalObjects.length>0) {
                 var object = tGraphicalObjects.pop();
                 window.console.log("deleting graphical object "+object);
@@ -223,7 +222,6 @@ define(['jquery', 'quintus'], function($, Quintus) {
         };
         
         this.freeze = function(value) {
-            // TODO: handle duplicate objects
             window.console.log("freezing graphical objects");
             for (var i = 0; i<tGraphicalObjects.length; i++) {
                 tGraphicalObjects[i].freeze(value);
