@@ -18,7 +18,7 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'T
                 jumping:false,
                 vy:0,
                 gravity:9.8*100,
-                jumpSpeed: -300,
+                jumpSpeed: -300
             },props),defaultProps);
             this.on("hit", this, "checkBlocks");
             this.blocks = new Array();
