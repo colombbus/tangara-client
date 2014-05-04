@@ -38,5 +38,21 @@
             "es": "tangara",
             "en": "tangara"
         }
+    },
+    "Walker": {
+        "path": "walker",
+        "translations": {
+            "fr": "Promeneur",
+            "es": "TBT",
+            "en": "Walker"
+        }
+    },
+    "Block": {
+        "path": "block",
+        "translations": {
+            "fr": "Bloc",
+            "es": "TBT",
+            "en": "Block"
+        }
     }
 }
