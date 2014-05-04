@@ -16,6 +16,12 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
     Sprite.prototype.className = "Sprite";
     Sprite.nextId = 0;
     
+    Sprite.DIRECTION_NONE = 0x00;
+    Sprite.DIRECTION_LEFT = 0x01;
+    Sprite.DIRECTION_RIGHT = 0x02;
+    Sprite.DIRECTION_UP = 0x04;
+    Sprite.DIRECTION_DOWN = 0x08;
+    
     var qInstance = Sprite.prototype.qInstance;
     
     qInstance.TGraphicalObject.extend("TSprite", {
@@ -38,7 +44,7 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
             if (!p.dragging) {
               var step = p.velocity*dt;
               switch (p.direction) {
-                    case 'none':
+                    case Sprite.DIRECTION_NONE:
                         if (p.x < p.destinationX) {
                             p.x = Math.min(p.x + step, p.destinationX);
                             p.moving = true;
@@ -54,19 +60,19 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
                             p.moving = true;
                         }
                         break;
-                    case 'right':
+                    case Sprite.DIRECTION_RIGHT:
                         p.x+=step;
                         p.moving = true;
                         break;
-                    case 'left':
+                    case Sprite.DIRECTION_LEFT:
                         p.x-=step;
                         p.moving = true;
                         break;
-                    case 'up':
+                    case Sprite.DIRECTION_UP:
                         p.y-=step;
                         p.moving = true;
                         break;
-                    case 'down':
+                    case Sprite.DIRECTION_DOWN:
                         p.y+=step;
                         p.moving = true;
                         break;
@@ -85,12 +91,14 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
             this._super(x,y);
             this.perform(function(){
                 this.p.destinationX = this.p.x;this.p.destinationY = this.p.y;
+                this.p.direction = Sprite.DIRECTION_NONE;
             }, {});
         },
         setCenterLocation: function(x,y) {
             this._super(x,y);
             this.perform(function(){
                 this.p.destinationX = this.p.x;this.p.destinationY = this.p.y;
+                this.p.direction = Sprite.DIRECTION_NONE;
             }, {});
         },
         moveForward: function(value) {
@@ -100,7 +108,7 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
         },
         alwaysMoveForward: function() {
             this.perform(function(){
-                this.p.direction = 'right';
+                this.p.direction = Sprite.DIRECTION_RIGHT;
             }, {});
         },
         moveBackward: function(value) {
@@ -110,7 +118,7 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
         },
         alwaysMoveBackward: function() {
             this.perform(function(){
-                this.p.direction = 'left';
+                this.p.direction = Sprite.DIRECTION_LEFT;
             }, {});
         },
         moveUpward: function(value) {
@@ -120,7 +128,7 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
         },
         alwaysMoveUpward: function() {
             this.perform(function(){
-                this.p.direction = 'up';
+                this.p.direction = Sprite.DIRECTION_UP;
             }, {});
         },
         moveDownward: function(value) {
@@ -130,19 +138,19 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
         },
         alwaysMoveDownward: function() {
             this.perform(function(){
-                this.p.direction = 'down';
+                this.p.direction = Sprite.DIRECTION_DOWN;
             }, {});
         },
         stop: function() {
             this.perform(function(){
                 this.p.destinationX = this.p.x;
                 this.p.destinationY = this.p.y;
-                this.p.direction = 'none';
+                this.p.direction = Sprite.DIRECTION_NONE;
             }, {});
         },
         setVelocity: function(value) {
             this.perform(function(value){
-                this.p.velocity = value*10;
+                this.p.velocity = value*2;
             }, [value]);
         },
         setCategory: function(name) {
@@ -169,7 +177,7 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
                 if (typeof this.spriteCollisionCommands === 'undefined') {
                     this.spriteCollisionCommands = new CommandManager();
                 }
-                this.spriteCollisionCommands.addCommand(command, param.getQObject());
+                this.spriteCollisionCommands.addCommand(command, param.getQObject().getId());
             }
             if (!this.p.watchCollisions) {
                 this.on("hit", this, "objectEncountered");
@@ -179,10 +187,11 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
         objectEncountered: function(col) {
             // TODO add event object with info on collision
             var object = col.obj;
+            var id = object.getId();
             var category = object.getCategory();
             // 1st check collision commands with this object
-            if (typeof this.spriteCollisionCommands !== 'undefined' && this.spriteCollisionCommands.hasCommands(object)) {
-                this.spriteCollisionCommands.executeCommands({'field':object});
+            if (typeof this.spriteCollisionCommands !== 'undefined' && this.spriteCollisionCommands.hasCommands(id)) {
+                this.spriteCollisionCommands.executeCommands({'field':id});
             }
             // 2nd check collision commands with object's category
             if (typeof this.categoryCollisionCommands !== 'undefined' && this.categoryCollisionCommands.hasCommands(category)) {
@@ -192,6 +201,9 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
             if (typeof this.collisionCommands !== 'undefined' && this.collisionCommands.hasCommands()) {
                 this.collisionCommands.executeCommands();
             }
+        },
+        getId: function() {
+            return this.id;
         },
         toString: function() {
             return "Sprite_"+this.id;
