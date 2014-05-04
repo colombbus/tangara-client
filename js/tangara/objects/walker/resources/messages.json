@@ -1,0 +1,10 @@
+{
+    "fr": {
+        "resource not found":"Image '{0}' introuvable",
+        "format error":"Nom incorrect"
+    },
+    "en": {
+        "resource not found":"Picture '{0}' cannot be found",
+        "format error":"Wrong name"
+    }
+}
