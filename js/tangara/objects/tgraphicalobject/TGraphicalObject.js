@@ -12,7 +12,9 @@ define(['TObject', 'TUI', 'TRuntime', 'TEnvironment', ], function(TObject, TUI, 
     TGraphicalObject.TYPE_CHARACTER = 0x0100;
     TGraphicalObject.TYPE_CATCHABLE = 0x0200;
     TGraphicalObject.TYPE_SPRITE = 0x0400;
-    TGraphicalObject.TYPE_INPUT = 0x0800;
+    TGraphicalObject.TYPE_WALKER = 0x0800;
+    TGraphicalObject.TYPE_BLOCK = 0x1000;
+    TGraphicalObject.TYPE_INPUT = 0x2000;
 
     var qInstance = TRuntime.getQuintusInstance();
 
