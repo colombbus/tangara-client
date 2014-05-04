@@ -47,7 +47,8 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'T
         },
         checkBlocks: function(col) {
             var object = col.obj;
-            if (object.p.type === TGraphicalObject.TYPE_BLOCK && this.blocks.indexOf(object)>-1) {
+            var id = object.getId();
+            if (object.p.type === TGraphicalObject.TYPE_BLOCK && this.blocks.indexOf(id)>-1) {
                 // block encountered
                 this.p.x -= col.separate[0];
                 this.p.y -= col.separate[1];                
@@ -63,9 +64,9 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'T
             }
         },
         addBlock: function(block) {
-            var obj = block.getQObject();
-            if (this.blocks.indexOf(obj) === -1) {
-                this.blocks.push(obj);
+            var objId = block.getQObject().getId();
+            if (this.blocks.indexOf(objId) === -1) {
+                this.blocks.push(objId);
             }
         },
         mayFall: function(value) {
