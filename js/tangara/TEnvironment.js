@@ -122,6 +122,7 @@ define(['jquery'], function($) {
                 }
             }
             // 2nd load translated messages
+            // TODO: add messages from parent classes
             translationFile = initialClass.prototype.getResource("messages.json");
             addTranslatedMessages(initialClass, translationFile, this.language);
             return initialClass;
