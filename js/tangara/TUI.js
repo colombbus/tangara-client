@@ -54,7 +54,7 @@ define(['jquery', 'TRuntime', 'TEnvironment','quintus'], function($, TRuntime, T
                 console.show();
                 log.update();
                 consoleEnabled = true;
-                if (!editorWasEnabled) {
+                if (!editorWasEnabled || !consoleState) {
                     frame.raiseSeparator(console.getHeight());
                 }
             }
