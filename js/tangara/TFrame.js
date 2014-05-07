@@ -1,5 +1,6 @@
 define(['jquery', 'split-pane','TCanvas', 'TEditor', 'TUI', 'TConsole', 'TToolbar','TLog', 'TRuntime'], function($, SplitPane, TCanvas, TEditor, TUI, TConsole, TToolbar, TLog, TRuntime) {
     function TFrame() {
+        var initialized = false;
         var domFrame = document.createElement("div");
         domFrame.id = "tframe";
         domFrame.className = "split-pane horizontal-percent";
@@ -15,10 +16,10 @@ define(['jquery', 'split-pane','TCanvas', 'TEditor', 'TUI', 'TConsole', 'TToolba
 
         domFrame.appendChild(topDiv);
 
-        var separator1 = document.createElement("div");
-        separator1.id="tframe-separator";
-        separator1.className="split-pane-divider";
-        domFrame.appendChild(separator1);
+        var separator = document.createElement("div");
+        separator.id="tframe-separator";
+        separator.className="split-pane-divider";
+        domFrame.appendChild(separator);
 
         // Add Console, Toolbar and Log
         var bottomDiv = document.createElement("div");
@@ -40,6 +41,7 @@ define(['jquery', 'split-pane','TCanvas', 'TEditor', 'TUI', 'TConsole', 'TToolba
         domFrame.appendChild(bottomDiv);
 
         // Set UI
+        TUI.setFrame(this);
         TUI.setCanvas(canvas);
         TUI.setEditor(editor);
         TUI.setToolbar(toolbar);
@@ -62,6 +64,27 @@ define(['jquery', 'split-pane','TCanvas', 'TEditor', 'TUI', 'TConsole', 'TToolba
             $('.split-pane').splitPane();
             // Start with console enabled
             TUI.enableConsole();
+            initialized = true;
+        };
+        
+        this.lowerSeparator = function(value) {
+            if (initialized) {
+                var frameEl = $(domFrame);
+                var separatorEl = $(separator);
+                var topEl = $(topDiv);
+                var bottomEl = $(bottomDiv);
+                var totalHeight = frameEl.height();
+                var currentBottom = totalHeight - (separatorEl.position().top+separatorEl.height());
+                var newBottom = ((currentBottom  - value)* 100/ totalHeight) + '%';
+                topEl.css('bottom', newBottom);
+		separatorEl.css('bottom', newBottom);
+		bottomEl.css('height', newBottom);
+		frameEl.resize();
+            }
+        };
+        
+        this.raiseSeparator = function(value) {
+            this.lowerSeparator(-value);
         };
 
     }
