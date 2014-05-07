@@ -19,6 +19,7 @@ define(['TUI', 'jquery','ace/ace'], function(TUI, $,ace) {
         var archives_command=[];
         var commandlineNotEnded;
         var cursorPosition;
+        var computedHeight = -1;
 
         this.getElement = function() {
             return domConsole;
@@ -123,6 +124,13 @@ define(['TUI', 'jquery','ace/ace'], function(TUI, $,ace) {
         
         this.hide = function() {
             $(domConsole).hide();
+        };
+        
+        this.getHeight = function() {
+            if (computedHeight === -1) {
+                computedHeight = $(domConsole).outerHeight(false);
+            }
+            return computedHeight;
         };
     };
 
