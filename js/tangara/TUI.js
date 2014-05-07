@@ -1,13 +1,20 @@
 define(['jquery', 'TRuntime', 'TEnvironment','quintus'], function($, TRuntime, TEnvironment, Quintus) {
     var TUI = function() {
+        var frame;
         var canvas;
         var editor;
         var toolbar;
         var console;
         var editorEnabled = false;
         var consoleEnabled = false;
+        var consoleState = false;
         var designModeEnabled = false;
         var log;
+
+        this.setFrame = function(element) {
+            frame = element;
+            return;
+        };
 
         this.setCanvas = function(element) {
             canvas = element;
@@ -40,12 +47,16 @@ define(['jquery', 'TRuntime', 'TEnvironment','quintus'], function($, TRuntime, T
 
         this.enableConsole = function() {
             if (!consoleEnabled) {
+                var editorWasEnabled = editorEnabled;
                 // Editor and Console cannot co-exist
                 this.disableEditor();
                 toolbar.enableConsole();
                 console.show();
                 log.update();
                 consoleEnabled = true;
+                if (!editorWasEnabled) {
+                    frame.raiseSeparator(console.getHeight());
+                }
             }
         };
 
@@ -55,7 +66,14 @@ define(['jquery', 'TRuntime', 'TEnvironment','quintus'], function($, TRuntime, T
                 console.hide();
                 log.update();
                 consoleEnabled = false;
+                frame.lowerSeparator(console.getHeight());
             }
+        };
+        
+        this.hideConsole = function() {
+        };
+        
+        this.showConsole = function() {
         };
 
         this.toggleConsole = function() {
@@ -69,6 +87,7 @@ define(['jquery', 'TRuntime', 'TEnvironment','quintus'], function($, TRuntime, T
         this.enableEditor = function() {
             if (!editorEnabled) {
                 // Editor and Console cannot co-exist
+                consoleState = consoleEnabled;
                 this.disableConsole();
                 toolbar.enableEditor();
                 TRuntime.stop();
@@ -83,8 +102,11 @@ define(['jquery', 'TRuntime', 'TEnvironment','quintus'], function($, TRuntime, T
                 toolbar.disableEditor();
                 editor.hide();
                 canvas.show();
-                TRuntime.start();
                 editorEnabled = false;
+                // if console was enabled, enable it
+                if (consoleState)
+                    this.enableConsole();
+                TRuntime.start();
             }
         };
 
