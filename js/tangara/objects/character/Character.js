@@ -127,6 +127,26 @@ define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager']
                     this.children[i].startAnimation();
                 }
             }
+        },
+        raiseLeftArm: function(value) {
+            this.perform(function(value){
+                this.leftElement.lower(value);
+            }, [value]);
+        },
+        raiseRightArm: function(value) {
+            this.perform(function(value){
+                this.rightElement.raise(value);
+            }, [value]);
+        },
+        lowerLeftArm: function(value) {
+            this.perform(function(value){
+                this.leftElement.raise(value);
+            }, [value]);
+        },
+        lowerRightArm: function(value) {
+            this.perform(function(value){
+                this.rightElement.lower(value);
+            }, [value]);
         }
     });
 
@@ -311,7 +331,8 @@ define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager']
         var chest = null;
         var leftArm = null;
         var rightArm = null;
-        var character = this;
+        var leftElement = null;
+        var rightElement = null;
         qInstance.load(assets,function() {
             // Add elements to character
             for (var i=0; i<elements.length; i++) {
@@ -338,21 +359,21 @@ define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager']
                 qStage.insert(element, qObject);
                 switch(val['name']) {
                     case 'leftArm' : 
-                        character.leftElement = element;
+                        leftElement = element;
                         leftArm = element;
                         element.side = "left";
                         break;
                     case 'rightArm' :
-                        character.rightElement = element;
+                        rightElement = element;
                         rightArm = element;
                         element.side = "right";
                         break;
                     case 'leftLeg' : 
-                        character.leftElement = element;
+                        leftElement = element;
                         element.side = "left";
                         break;
                     case 'rightLeg' :
-                        character.rightElement = element;
+                        rightElement = element;
                         element.side = "right";
                         break;
                     case 'chest' :
@@ -361,8 +382,8 @@ define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager']
                   }
                   element.startAnimation();
             }
-            qObject.leftElement = character.leftElement;
-            qObject.rightElement = character.rightElement;
+            qObject.leftElement = leftElement;
+            qObject.rightElement = rightElement;
             if (chest !== null) {
                 chest.leftArm = leftArm;
                 chest.rightArm = rightArm;
@@ -409,25 +430,25 @@ define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager']
     
     Character.prototype._raiseLeftArm = function(value) {
         if (TUtils.checkInteger(value)) {
-          this.leftElement.lower(value);
+            this.qObject.raiseLeftArm(value);
         }
     };
 
     Character.prototype._raiseRightArm = function(value) {
         if (TUtils.checkInteger(value)) {
-          this.rightElement.raise(value);
+            this.qObject.raiseRightArm(value);
         }
     };
     
     Character.prototype._lowerLeftArm = function(value) {
         if (TUtils.checkInteger(value)) {
-          this.leftElement.raise(value);
+            this.qObject.lowerLeftArm(value);
         }
     };
 
     Character.prototype._lowerRightArm = function(value) {
         if (TUtils.checkInteger(value)) {
-          this.rightElement.lower(value);
+            this.qObject.lowerRightArm(value);
         }
     };
     
