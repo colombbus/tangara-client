@@ -1,4 +1,4 @@
-define(['jquery','ace/ace'], function($,ace) {
+define(['jquery','ace/ace', 'TProgram'], function($,ace, TProgram) {
 
     function TEditor() {
         var domEditor = document.createElement("div");
@@ -12,7 +12,16 @@ define(['jquery','ace/ace'], function($,ace) {
 
         
         var aceEditor;
+        var programs = new Array();
+        var currentProgram = new TProgram();
+        currentProgram.setEditor(this);
         
+        programs.push(currentProgram);
+                
+        function setDirty(value) {
+            currentProgram.setDirty(value);
+        }
+               
         this.getElement = function() {
             return domEditor;
         };
@@ -24,6 +33,17 @@ define(['jquery','ace/ace'], function($,ace) {
             //aceEditor.renderer.setShowGutter(false);
             aceEditor.setFontSize("20px");
             aceEditor.setHighlightActiveLine(false);
+            aceEditor.on('input', function() {
+                if (aceEditor.session.getUndoManager().isClean())
+                    setDirty(false);
+                else
+                    setDirty(true);
+            });
+            /* NOTE FOR LATER
+            $('#save').on("click", function() {
+                editor.session.getUndoManager().markClean()
+            })
+            */
         };
         
         this.show = function() {
@@ -37,6 +57,10 @@ define(['jquery','ace/ace'], function($,ace) {
         
         this.getValue = function() {
             return aceEditor.getSession().getValue();
+        };
+        
+        this.getStatements = function() {
+            return currentProgram.getStatements();
         };
         
     };
