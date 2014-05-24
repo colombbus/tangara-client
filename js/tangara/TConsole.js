@@ -1,4 +1,4 @@
-define(['TUI', 'jquery','ace/ace'], function(TUI, $,ace) {
+define(['TUI', 'TParser', 'jquery','ace/ace'], function(TUI, TParser, $,ace) {
 
     function TConsole() {
         var domConsole = document.createElement("div");
@@ -111,6 +111,10 @@ define(['TUI', 'jquery','ace/ace'], function(TUI, $,ace) {
         
         this.getValue = function() {
             return aceEditor.getSession().getValue();
+        };
+        
+        this.getStatements = function() {
+            return TParser.parse(this.getValue());
         };
         
         this.clear = function() {
