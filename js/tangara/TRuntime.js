@@ -50,12 +50,8 @@ define(['jquery', 'quintus'], function($, Quintus) {
         this.initRuntimeFrame = function() {
             if (typeof runtimeFrame === 'undefined') {
                 var runtime = this;
-                window.bindSandbox = function(callback) {
-                    runtime.setCallback(callback);
-                };
                 var iframe = document.createElement("iframe");
                 iframe.className = "runtime-frame";
-                iframe.setAttribute("src", "sandbox.html");
                 document.body.appendChild(iframe);
                 runtimeFrame = iframe.contentWindow || iframe;
             }
@@ -84,21 +80,27 @@ define(['jquery', 'quintus'], function($, Quintus) {
             return name;
         };
 
-        this.execute = function(commands, parameter) {
+        this.execute = function(commands, parameter, lineNumbers) {
             var error = false;
             var message;
             try {
-                if (typeof (runtimeCallback) === 'undefined') {
-                    if (typeof commands === 'string' || commands instanceof String)
-                        eval(commands);
-                    else if (typeof commands === 'function' || commands instanceof Function)
-                        commands(parameter);
-                } else {
-                    runtimeCallback(commands, parameter);
-                }
+                    if (typeof commands === 'string' || commands instanceof String) {
+                        runtimeFrame.eval(commands);
+                    } else if ((typeof commands === 'function' || commands instanceof Function) && (typeof runtimeFame[commands] === 'function' || runtimeFame[commands] instanceof Function)) {
+                        runtimeFame[commands].call(runtimeFrame, parameter);
+                    }
+                
             } catch (e) {
+                // TODO: real error management
                 error = true;
                 message = e.message;
+                if (typeof lineNumbers !== 'undefined') {
+                    if (lineNumbers[0]===lineNumbers[1]) {
+                        message += " (ligne : "+lineNumbers[0]+")";
+                    } else {
+                        message += " (lignes "+lineNumbers[0]+" à "+lineNumbers[1]+")";
+                    }
+                }
             }
             if (error)
                 this.addLog(commands, message);
@@ -107,17 +109,11 @@ define(['jquery', 'quintus'], function($, Quintus) {
             return !error;
         };
         
-        this.executeCommand = function(command, parameter) {
-            return this.execute(command, parameter);
-        };
-        
-        this.executeProgram = function(commands) {
-            //TODO: handle brackets (functions)
-            var lines = commands.split('\n');
-            for(var i = 0;i < lines.length;i++){
-                if (!this.executeCommand(lines[i])) {
-                    break;
-                }
+        this.executeStatements = function(statements) {
+            for (var i = 0; i<statements.length; i++) {
+                var statement = statements[i];
+                if (!this.execute(statement.body, null, [statement.loc.start.line,statement.loc.end.line] ))
+                    return false;
             }
         };
         
@@ -201,6 +197,7 @@ define(['jquery', 'quintus'], function($, Quintus) {
         };
 
         this.clear = function() {
+            // TODO: clear RuntimeFrame as well (e.g. to erase declared functions)
             while (tGraphicalObjects.length>0) {
                 var object = tGraphicalObjects.pop();
                 window.console.log("deleting graphical object "+object);
