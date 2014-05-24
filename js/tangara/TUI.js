@@ -168,18 +168,29 @@ define(['jquery', 'TRuntime', 'TEnvironment','quintus'], function($, TRuntime, T
         };
 
         this.execute = function() {
-            if (consoleEnabled) {
-                // execution from console
-                var command = console.getValue();
-                TRuntime.executeCommand(command);
-                console.addHistory(command);
-                console.clear();
-            } else if (editorEnabled) {
-                // execution from editor
-                this.clear(false);
-                var program = editor.getValue();
-                this.disableEditor();
-                TRuntime.executeProgram(program);
+            try {
+                if (consoleEnabled) {
+                    // execution from console
+                    var statements = console.getStatements();
+                    TRuntime.executeStatements(statements);
+                    //TODO handle history from TLog instead
+                    console.addHistory(console.getValue());
+                    console.clear();
+                } else if (editorEnabled) {
+                    // execution from editor
+                    this.clear(false);
+                    var program = editor.getStatements();
+                    this.disableEditor();
+                    TRuntime.executeStatements(program);
+                }
+            } catch (e) {
+                // TODO: real error management
+                if (typeof e.loc !== 'undefined') {
+                    var line = e.loc.line;
+                    window.alert("Erreur de syntaxe : "+e.message+"\n(ligne : "+line+")");
+                } else {
+                    window.alert("Erreur : "+e.message);
+                }
             }
         };
     };
