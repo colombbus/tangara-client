@@ -7,6 +7,7 @@ require.config({
         "ace":'../libs/ace',
         "split-pane":'../libs/split-pane/split-pane',
         "quintus":'../libs/quintus-0.2.0/quintus-all.min',
+        "acorn":'../libs/acorn/acorn',
         "TObject":'objects/tobject/TObject',
         "TGraphicalObject":'objects/tgraphicalobject/TGraphicalObject'
     }
