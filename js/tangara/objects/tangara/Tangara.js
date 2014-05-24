@@ -1,4 +1,4 @@
-define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject'], function($, TUI, TEnvironment, TRuntime, TUtils, TObject) {
+define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TParser'], function($, TUI, TEnvironment, TRuntime, TUtils, TObject, TParser) {
     var Tangara = function() {
         window.console.log("Initializing tangara");
         TObject.call(this);
@@ -21,6 +21,7 @@ define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject'], funct
     };
 
     Tangara.prototype._loadScript = function(name) {
+        // TODO : get parsed version directly
         if (TUtils.checkString(name)) {
             var scriptUrl = TEnvironment.getUserResource(name);
             var parent = this;
@@ -29,7 +30,18 @@ define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject'], funct
                 url: scriptUrl,
                 async: false,
                 success: function(data) {
-                    TRuntime.executeProgram(data);
+                    try {
+                        var statements = TParser.parse(data);
+                        TRuntime.executeStatements(statements);
+                    } catch (e) {
+                        // TODO: real error management
+                        if (typeof e.loc !== 'undefined') {
+                            var line = e.loc.line;
+                            window.alert("Erreur de syntaxe : "+e.message+"\n(ligne : "+line+")");
+                        } else {
+                            window.alert("Erreur : "+e.message);
+                        }
+                    }
                 }
             }).fail(function(jqxhr, textStatus, error) {
                 throw new Error(TUtils.format(parent.getMessage("script unreachable"), name));
