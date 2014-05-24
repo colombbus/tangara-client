@@ -84,12 +84,12 @@ define(['jquery', 'quintus'], function($, Quintus) {
             var error = false;
             var message;
             try {
-                    if (typeof commands === 'string' || commands instanceof String) {
-                        runtimeFrame.eval(commands);
-                    } else if ((typeof commands === 'function' || commands instanceof Function) && (typeof runtimeFame[commands] === 'function' || runtimeFame[commands] instanceof Function)) {
-                        runtimeFame[commands].call(runtimeFrame, parameter);
-                    }
-                
+                if (typeof commands === 'string' || commands instanceof String) {
+                    runtimeFrame.eval(commands);
+                } else if ((typeof commands === 'function' || commands instanceof Function) && (typeof runtimeFame[commands] === 'function' || runtimeFame[commands] instanceof Function)) {
+                    //TODO : does not work... to be fixed!
+                    runtimeFame[commands].call(runtimeFrame, parameter);
+                }
             } catch (e) {
                 // TODO: real error management
                 error = true;
