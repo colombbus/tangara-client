@@ -406,8 +406,8 @@
 
   // ECMAScript 5 reserved words.
 
-  // TWEAK FOR TANGARA: added 'window' and 'document' as reserved words
-  var isReservedWord5 = makePredicate("class enum extends super const export import window document");
+  // TWEAK FOR TANGARA: added 'window', 'document' and 'eval' as reserved words
+  var isReservedWord5 = makePredicate("class enum extends super const export import window document eval");
 
   // The additional reserved words in strict mode.
 
