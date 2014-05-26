@@ -12,16 +12,13 @@ define(['jquery','ace/ace', 'TProgram'], function($,ace, TProgram) {
 
         
         var aceEditor;
+        var dirty = false;
+        var codeChanged = false;
         var programs = new Array();
         var currentProgram = new TProgram();
-        currentProgram.setEditor(this);
         
         programs.push(currentProgram);
-                
-        function setDirty(value) {
-            currentProgram.setDirty(value);
-        }
-               
+                               
         this.getElement = function() {
             return domEditor;
         };
@@ -34,10 +31,11 @@ define(['jquery','ace/ace', 'TProgram'], function($,ace, TProgram) {
             aceEditor.setFontSize("20px");
             aceEditor.setHighlightActiveLine(false);
             aceEditor.on('input', function() {
+                codeChanged = true;
                 if (aceEditor.session.getUndoManager().isClean())
-                    setDirty(false);
+                    dirty = false;
                 else
-                    setDirty(true);
+                    dirty = true;
             });
             /* NOTE FOR LATER
             $('#save').on("click", function() {
@@ -60,6 +58,10 @@ define(['jquery','ace/ace', 'TProgram'], function($,ace, TProgram) {
         };
         
         this.getStatements = function() {
+            if (codeChanged) {
+                currentProgram.setCode(this.getValue());
+                codeChanged = false;
+            }
             return currentProgram.getStatements();
         };
         
