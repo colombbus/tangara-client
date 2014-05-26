@@ -151,6 +151,7 @@ define(['jquery', 'TRuntime', 'TEnvironment','quintus'], function($, TRuntime, T
             }
             if (goOn) {
                 TRuntime.clear();
+                console.clear();
                 this.clearLog();
             }
         };
@@ -166,6 +167,24 @@ define(['jquery', 'TRuntime', 'TEnvironment','quintus'], function($, TRuntime, T
                 log.clear();
             }
         };
+        
+        this.getPreviousRow = function() {
+            if (typeof log !== 'undefined') {
+                return log.getPreviousRow();
+            }
+        };
+
+        this.getNextRow = function() {
+            if (typeof log !== 'undefined') {
+                return log.getNextRow();
+            }
+        };
+        
+        this.setLastRow = function() {
+            if (typeof log !== 'undefined') {
+                return log.setLastRow();
+            }
+        };
 
         this.execute = function() {
             try {
@@ -173,8 +192,6 @@ define(['jquery', 'TRuntime', 'TEnvironment','quintus'], function($, TRuntime, T
                     // execution from console
                     var statements = console.getStatements();
                     TRuntime.executeStatements(statements);
-                    //TODO handle history from TLog instead
-                    console.addHistory(console.getValue());
                     console.clear();
                 } else if (editorEnabled) {
                     // execution from editor

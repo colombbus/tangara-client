@@ -8,6 +8,8 @@ define(['jquery'], function($) {
         domLog.id = "tlog";
         domInnerLog.appendChild(domLog);
         domOuterLog.appendChild(domInnerLog);
+        var rowCount = 0;
+        var currentRow = 0;
                 
         this.getElement = function() {
             return domOuterLog;
@@ -33,6 +35,9 @@ define(['jquery'], function($) {
                     var row = document.createElement("div");
                     if (success) {
                         row.className = "tlog-row tlog-success";
+                        row.id = "tlog-row-"+rowCount;
+                        rowCount++;
+                        currentRow = rowCount;
                     } else {
                         row.className = "tlog-row tlog-failure";
                     }
@@ -62,6 +67,43 @@ define(['jquery'], function($) {
         
         this.clear = function() {
             domLog.innerHTML = '';
+            rowCount = 0;
+            currentRow = 0;
+        };
+        
+        this.getPreviousRow = function() {
+            if (currentRow > 0) {
+                currentRow--;
+                var element = $("#tlog-row-"+currentRow);
+                if (typeof element !== 'undefined') {
+                    return element.text();
+                }
+            } else {
+                // First row reached
+                return null;
+            }
+        };
+
+        this.getNextRow = function() {
+            if (currentRow < rowCount) {
+                currentRow++;
+                if (currentRow < rowCount) {
+                    var element = $("#tlog-row-"+currentRow);
+                    if (typeof element !== 'undefined') {
+                        return element.text();
+                    }
+                } else {
+                    // Last row reached
+                    return null;
+                }
+            } else {
+                // Last row reached
+                return null;
+            }
+        };
+        
+        this.setLastRow = function() {
+            currentRow = rowCount;
         };
 
     } 

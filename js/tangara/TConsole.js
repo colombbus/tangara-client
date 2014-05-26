@@ -1,4 +1,4 @@
-define(['TUI', 'TParser', 'jquery','ace/ace'], function(TUI, TParser, $,ace) {
+define(['TUI', 'TParser', 'TLog', 'jquery','ace/ace'], function(TUI, TParser, TLog, $,ace) {
 
     function TConsole() {
         var domConsole = document.createElement("div");
@@ -14,12 +14,10 @@ define(['TUI', 'TParser', 'jquery','ace/ace'], function(TUI, TParser, $,ace) {
         domConsole.appendChild(domConsoleText);
 
         var aceEditor;
-        var totalCommands = 0;
-        var history = 0;
-        var archives_command=[];
-        var commandlineNotEnded;
-        var cursorPosition;
+        var currentCommand;
+        var currentPosition;
         var computedHeight = -1;
+        var browsingHistory = false;
 
         this.getElement = function() {
             return domConsole;
@@ -45,15 +43,14 @@ define(['TUI', 'TParser', 'jquery','ace/ace'], function(TUI, TParser, $,ace) {
                 name: 'browseHistoryUp',
                 bindKey: {win: 'Up',  mac: 'Up'},
                 exec: function(editor) {
-                    var commandLine;
-                    if (history === totalCommands) {
-                        commandlineNotEnded = editor.getValue();
-                        cursorPosition = editor.getCursorPositionScreen();
-                    }
-                    if (history > 0) {
-                        history--;
-                        commandLine = archives_command[history];
-                        editor.setValue(commandLine);
+                    var history = TUI.getPreviousRow();
+                    if (history !== null) {
+                        if (!browsingHistory) {
+                            currentCommand = editor.getValue();
+                            currentPosition = editor.getCursorPosition();
+                            browsingHistory = true;
+                        }
+                        editor.setValue(history);
                         editor.navigateLineEnd();
                     }
                 },
@@ -63,17 +60,17 @@ define(['TUI', 'TParser', 'jquery','ace/ace'], function(TUI, TParser, $,ace) {
                 name: 'browsehistoryDown',
                 bindKey: {win: 'Down',  mac: 'Down'},
                 exec: function(editor) {
-                    var commandLine;
-                    if (history < totalCommands){
-                        history++;
-                        commandLine = archives_command[history];
-                        editor.setValue(commandLine);
-                        editor.navigateLineEnd();
-                    }
-                    if (history === totalCommands){
-                        commandLine = commandlineNotEnded;
-                        editor.setValue(commandLine);
-                        editor.moveCursorToPosition(cursorPosition);
+                    if (browsingHistory) {
+                        var history = TUI.getNextRow();
+                        if (history !== null) {
+                            editor.setValue(history);
+                            editor.navigateLineEnd();
+                        } else {
+                            // end of history reached
+                            editor.setValue(currentCommand);
+                            editor.navigateTo(currentPosition.row, currentPosition.column);
+                            browsingHistory = false;
+                        }
                     }
                 },
                 readOnly: true // false if this command should not apply in readOnly mode
@@ -82,31 +79,15 @@ define(['TUI', 'TParser', 'jquery','ace/ace'], function(TUI, TParser, $,ace) {
                 name: 'returnToCurrentCommand',
                 bindKey: {win: 'Escape',  mac: 'Escape'},
                 exec: function(editor) {
-                    var currentLine = editor.getValue();
-                    var commandLine;
-                    if (history === totalCommands) {
-                        if (commandlineNotEnded !== currentLine) {
-                            commandLine = currentLine;
-                            cursorPosition = editor.getCursorPositionScreen();
-                        }
-                    } else {
-                        history = totalCommands;
-                        commandLine = commandlineNotEnded;
+                    if (browsingHistory) {
+                        editor.setValue(currentCommand);
+                        editor.navigateTo(currentPosition.row, currentPosition.column);
+                        TUI.setLastRow();
+                        browsingHistory = false;
                     }
-                    editor.setValue(commandLine);
-                    editor.moveCursorToPosition(cursorPosition);
                 },
                 readOnly: true // false if this command should not apply in readOnly mode
              });
-        };
-        
-        this.addHistory = function(commandLine) {
-            if (commandLine.length > 0){
-                archives_command.push($.trim(commandLine));
-                totalCommands++;
-                history = totalCommands;
-                commandlineNotEnded ="";
-            }
         };
         
         this.getValue = function() {
@@ -119,6 +100,7 @@ define(['TUI', 'TParser', 'jquery','ace/ace'], function(TUI, TParser, $,ace) {
         
         this.clear = function() {
             aceEditor.setValue("");
+            browsingHistory = false;
         };
         
         this.show = function() {
@@ -136,6 +118,7 @@ define(['TUI', 'TParser', 'jquery','ace/ace'], function(TUI, TParser, $,ace) {
             }
             return computedHeight;
         };
+        
     };
 
     return TConsole;
