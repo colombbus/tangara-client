@@ -1,4 +1,4 @@
-define(['jquery', 'TRuntime', 'TEnvironment','quintus'], function($, TRuntime, TEnvironment, Quintus) {
+define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, TEnvironment, TError, Quintus) {
     var TUI = function() {
         var frame;
         var canvas;
@@ -51,11 +51,13 @@ define(['jquery', 'TRuntime', 'TEnvironment','quintus'], function($, TRuntime, T
                 // Editor and Console cannot co-exist
                 this.disableEditor();
                 toolbar.enableConsole();
+                log.saveScroll();
                 console.show();
                 log.update();
                 consoleEnabled = true;
                 if (!editorWasEnabled || !consoleState) {
                     frame.raiseSeparator(console.getHeight());
+                    log.restoreScroll();
                 }
             }
         };
@@ -63,10 +65,12 @@ define(['jquery', 'TRuntime', 'TEnvironment','quintus'], function($, TRuntime, T
         this.disableConsole = function() {
             if (consoleEnabled) {
                 toolbar.disableConsole();
+                log.saveScroll();
                 console.hide();
                 log.update();
                 consoleEnabled = false;
                 frame.lowerSeparator(console.getHeight());
+                log.restoreScroll();
             }
         };
         
@@ -187,27 +191,18 @@ define(['jquery', 'TRuntime', 'TEnvironment','quintus'], function($, TRuntime, T
         };
 
         this.execute = function() {
-            try {
-                if (consoleEnabled) {
-                    // execution from console
-                    var statements = console.getStatements();
-                    TRuntime.executeStatements(statements);
-                    console.clear();
-                } else if (editorEnabled) {
-                    // execution from editor
-                    this.clear(false);
-                    var program = editor.getStatements();
-                    this.disableEditor();
-                    TRuntime.executeStatements(program);
-                }
-            } catch (e) {
-                // TODO: real error management
-                if (typeof e.loc !== 'undefined') {
-                    var line = e.loc.line;
-                    window.alert("Erreur de syntaxe : "+e.message+"\n(ligne : "+line+")");
-                } else {
-                    window.alert("Erreur : "+e.message);
-                }
+            if (consoleEnabled) {
+                // execution from console
+                TRuntime.setCurrentProgramName(null);
+                TRuntime.executeFrom(console);
+                console.clear();
+            } else if (editorEnabled) {
+                // execution from editor
+                this.clear(false);
+                this.disableEditor();
+                console.clear();
+                TRuntime.setCurrentProgramName(editor.getCurrentProgramName());
+                TRuntime.executeFrom(editor);
             }
         };
     };
