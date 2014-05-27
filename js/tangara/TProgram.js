@@ -3,6 +3,7 @@ define(['TParser'], function(TParser) {
     function TProgram() {
         var statements;
         var code = "";
+        var name = "test";
         
         
         this.save = function() {
@@ -20,6 +21,14 @@ define(['TParser'], function(TParser) {
        
         this.getStatements = function() {
             return statements;
+        };
+        
+        this.getName = function() {
+            return name;
+        };
+        
+        this.setName = function(value) {
+            name = value;            
         };
     }
     
