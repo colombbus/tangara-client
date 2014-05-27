@@ -65,6 +65,10 @@ define(['jquery','ace/ace', 'TProgram'], function($,ace, TProgram) {
             return currentProgram.getStatements();
         };
         
+        this.getCurrentProgramName = function() {
+            return currentProgram.getName();
+        };
+        
     };
     
     return TEditor;
