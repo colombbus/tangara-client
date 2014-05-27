@@ -1,4 +1,4 @@
-define(['jquery', 'quintus'], function($, Quintus) {
+define(['jquery', 'TError', 'quintus'], function($, TError, Quintus) {
     function TRuntime() {
         var libs = new Array();
         var translatedNames = new Array();
@@ -9,6 +9,7 @@ define(['jquery', 'quintus'], function($, Quintus) {
         var log;
         var tObjects = new Array();
         var tGraphicalObjects = new Array();
+        var currentProgramName;
         
         var designMode = false;
         var frozen = false;
@@ -81,8 +82,6 @@ define(['jquery', 'quintus'], function($, Quintus) {
         };
 
         this.execute = function(commands, parameter, lineNumbers) {
-            var error = false;
-            var message;
             try {
                 if (typeof commands === 'string' || commands instanceof String) {
                     runtimeFrame.eval(commands);
@@ -90,23 +89,16 @@ define(['jquery', 'quintus'], function($, Quintus) {
                     //TODO : does not work... to be fixed!
                     runtimeFame[commands].call(runtimeFrame, parameter);
                 }
+                this.logCommand(commands);
             } catch (e) {
-                // TODO: real error management
-                error = true;
-                message = e.message;
-                if (typeof lineNumbers !== 'undefined') {
-                    if (lineNumbers[0]===lineNumbers[1]) {
-                        message += " (ligne : "+lineNumbers[0]+")";
-                    } else {
-                        message += " (lignes "+lineNumbers[0]+" à "+lineNumbers[1]+")";
-                    }
-                }
+                var error = new TError(e);
+                error.setCode(commands);
+                error.setProgramName(currentProgramName);
+                error.setLines(lineNumbers);
+                this.logError(error);
+                return false;
             }
-            if (error)
-                this.addLog(commands, message);
-            else
-                this.addLog(commands);
-            return !error;
+            return true;
         };
         
         this.executeStatements = function(statements) {
@@ -114,6 +106,17 @@ define(['jquery', 'quintus'], function($, Quintus) {
                 var statement = statements[i];
                 if (!this.execute(statement.body, null, [statement.loc.start.line,statement.loc.end.line] ))
                     return false;
+            }
+        };
+        
+        this.executeFrom = function(object) {
+            try {
+                var statements = object.getStatements();
+                this.executeStatements(statements);
+            } catch (e) {
+                var error = new TError(e);
+                error.setProgramName(currentProgramName);
+                this.logError(error);
             }
         };
         
@@ -133,9 +136,15 @@ define(['jquery', 'quintus'], function($, Quintus) {
             log = element;
         };
         
-        this.addLog = function(text, success) {
+        this.logCommand = function(command) {
             if (typeof log !== 'undefined') {
-                log.addLines(text, success);
+                log.addCommand(command);
+            }
+        };
+        
+        this.logError = function(error) {
+            if (typeof log !== 'undefined') {
+                log.addError(error);
             }
         };
 
@@ -230,7 +239,13 @@ define(['jquery', 'quintus'], function($, Quintus) {
             frozen = value;
         };
         
+        this.setCurrentProgramName = function(name) {
+            currentProgramName = name;
+        };
         
+        this.getCurrentProgramName = function() {
+            return currentProgramName;
+        };
     };
     
     var runtimeInstance = new TRuntime();
