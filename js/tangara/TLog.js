@@ -10,7 +10,8 @@ define(['jquery'], function($) {
         domOuterLog.appendChild(domInnerLog);
         var rowCount = 0;
         var currentRow = 0;
-                
+        var scrollTop = 0;
+        
         this.getElement = function() {
             return domOuterLog;
         };
@@ -25,34 +26,44 @@ define(['jquery'], function($) {
             domOuterLog.style.marginTop = "-"+height+"px";
             domOuterLog.style.paddingTop = height+"px";
         };
-        
-        this.addLines = function(text, errorMessage) {
+
+        this.addCommand = function(text) {
             if (typeof text === 'string') {
                 var lines = text.split("\n");
-                var success = (typeof(errorMessage) === 'undefined');
                 for (var i=0; i<lines.length;i++) {
-                    line = lines[i];
+                    var line = lines[i];
                     var row = document.createElement("div");
-                    if (success) {
-                        row.className = "tlog-row tlog-success";
-                        row.id = "tlog-row-"+rowCount;
-                        rowCount++;
-                        currentRow = rowCount;
-                    } else {
-                        row.className = "tlog-row tlog-failure";
-                    }
+                    row.className = "tlog-row tlog-success";
+                    row.id = "tlog-row-"+rowCount;
+                    rowCount++;
+                    currentRow = rowCount;
                     row.appendChild(document.createTextNode(line));
                     domLog.appendChild(row);
                     domLog.scrollTop = domLog.scrollHeight;
                 }
-                if (!success) {
+            }
+        };
+
+        this.addError = function(error) {
+            var code = error.getCode();
+            if (typeof code === 'string') {
+                var lines = code.split("\n");
+                for (var i=0; i<lines.length;i++) {
+                    var line = lines[i];
                     var row = document.createElement("div");
                     row.className = "tlog-row tlog-failure";
-                    row.appendChild(document.createTextNode(errorMessage));
+                    row.appendChild(document.createTextNode(line));
                     domLog.appendChild(row);
-                    domLog.scrollTop = domLog.scrollHeight;
                 }
             }
+            var message = error.getMessage();
+            if (typeof message === 'string') {
+                row = document.createElement("div");
+                row.className = "tlog-row tlog-failure";
+                row.appendChild(document.createTextNode(message));
+                domLog.appendChild(row);
+            }
+            domLog.scrollTop = domLog.scrollHeight;
         };
         
         this.addMessage = function(text) {
@@ -104,6 +115,14 @@ define(['jquery'], function($) {
         
         this.setLastRow = function() {
             currentRow = rowCount;
+        };
+
+        this.saveScroll = function() {
+            scrollTop = $(domLog).scrollTop();
+        };
+        
+        this.restoreScroll = function() {
+            $(domLog).scrollTop(scrollTop);
         };
 
     } 
