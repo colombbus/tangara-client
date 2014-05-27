@@ -52,6 +52,9 @@ define(['jquery'], function($) {
                     var line = lines[i];
                     var row = document.createElement("div");
                     row.className = "tlog-row tlog-failure";
+                    row.id = "tlog-row-"+rowCount;
+                    rowCount++;
+                    currentRow = rowCount;
                     row.appendChild(document.createTextNode(line));
                     domLog.appendChild(row);
                 }
