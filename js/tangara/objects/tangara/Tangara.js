@@ -31,6 +31,7 @@ define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TPars
                 async: false,
                 success: function(data) {
                     try {
+                        TRuntime.setCurrentProgramName(name);
                         var statements = TParser.parse(data);
                         TRuntime.executeStatements(statements);
                     } catch (e) {
