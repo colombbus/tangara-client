@@ -1,4 +1,4 @@
-define(['jquery','ace/ace', 'TProgram'], function($,ace, TProgram) {
+define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'TProgram', 'TEnvironment'], function($,ace, ace_edit_session, ace_range, TProgram, TEnvironment) {
 
     function TEditor() {
         var domEditor = document.createElement("div");
@@ -15,10 +15,13 @@ define(['jquery','ace/ace', 'TProgram'], function($,ace, TProgram) {
         var dirty = false;
         var codeChanged = false;
         var programs = new Array();
-        var currentProgram = new TProgram();
-        
-        programs.push(currentProgram);
-                               
+        var sessions = new Array();
+        var currentProgram = null;
+        var newIndex = 1;
+        var AceEditSession = ace_edit_session.EditSession;
+        var AceRange = ace_range.Range;
+        var errorMarker = null;
+
         this.getElement = function() {
             return domEditor;
         };
@@ -32,11 +35,16 @@ define(['jquery','ace/ace', 'TProgram'], function($,ace, TProgram) {
             aceEditor.setHighlightActiveLine(false);
             aceEditor.on('input', function() {
                 codeChanged = true;
-                if (aceEditor.session.getUndoManager().isClean())
+                if (errorMarker !== null) {
+                    aceEditor.getSession().removeMarker(errorMarker);
+                    errorMarker = null;
+                }
+                /*if (!aceEditor.getSession().getUndoManager().hasUndo())
                     dirty = false;
                 else
-                    dirty = true;
+                    dirty = true;*/
             });
+            this.newProgram();
             /* NOTE FOR LATER
             $('#save').on("click", function() {
                 editor.session.getUndoManager().markClean()
@@ -67,6 +75,56 @@ define(['jquery','ace/ace', 'TProgram'], function($,ace, TProgram) {
         
         this.getCurrentProgramName = function() {
             return currentProgram.getName();
+        };
+        
+        this.editProgram = function(name) {
+            if (name !== currentProgram.getName()) {
+                if (typeof sessions[name] !== 'undefined') {
+                    // program already opened
+                    saveSession();
+                    openSession(name);
+                } else {
+                    // program not already opened : we open it
+                    this.openProgram(name);
+                }
+            }
+        };
+        
+        function saveSession() {
+            if (currentProgram !== null) {
+                sessions[currentProgram.getName()] = aceEditor.getSession();
+            }
+        }
+        
+        function openSession(name) {
+            aceEditor.setSession(sessions[name]);
+            currentProgram = programs[name];
+        }
+
+        function createSession(name) {
+            var program = new TProgram(name);
+            programs.push(program);
+            currentProgram = program;
+            var session = new AceEditSession(program.getCode());
+            sessions.push(session);
+            aceEditor.setSession(session);
+        }
+        
+        this.openProgram = function(name) {
+            saveSession();
+            createSession(name);
+        };
+        
+        this.newProgram = function() {
+            var name = TEnvironment.getMessage('program-new',newIndex);
+            saveSession();
+            createSession(name);
+            newIndex++;
+        };
+        
+        this.setError = function(lines) {
+            var range = new AceRange(lines[0]-1,0,lines[1]-1,100);
+            errorMarker = aceEditor.getSession().addMarker(range, 'tangara_error', 'line', true);
         };
         
     };
