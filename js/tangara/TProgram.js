@@ -1,13 +1,22 @@
 define(['TParser'], function(TParser) {
 
-    function TProgram() {
+    function TProgram(aName) {
         var statements;
         var code = "";
-        var name = "test";
+        var name = null;
+        var loaded = false;
         
+        if (typeof (aName) !== 'undefined') {
+            name = aName;
+        }
         
         this.save = function() {
             // TODO: save file
+        };
+        
+        this.load = function() {
+            // TODO: load file
+            loaded = true;
         };
         
         function parse() {
@@ -18,7 +27,14 @@ define(['TParser'], function(TParser) {
             code = value;
             parse();
         };
-       
+
+        this.getCode = function() {
+            if (!loaded) {
+                this.load();
+            }
+            return code;
+        };
+        
         this.getStatements = function() {
             return statements;
         };
