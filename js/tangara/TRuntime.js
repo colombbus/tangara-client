@@ -94,7 +94,9 @@ define(['jquery', 'TError', 'quintus'], function($, TError, Quintus) {
                 var error = new TError(e);
                 error.setCode(commands);
                 error.setProgramName(currentProgramName);
-                error.setLines(lineNumbers);
+                if (typeof lineNumbers!== 'undefined') {
+                    error.setLines(lineNumbers);
+                }
                 this.logError(error);
                 return false;
             }
