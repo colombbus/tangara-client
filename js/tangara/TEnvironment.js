@@ -139,7 +139,16 @@ define(['jquery'], function($) {
 
         this.getMessage = function(code) {
             if (typeof this.messages[code] !== 'undefined') {
-                return this.messages[code];
+                var message = this.messages[code];
+                if (arguments.length>1) {
+                    // message has to be parsed
+                    var elements = arguments;
+                    message = message.replace(/{(\d+)}/g, function(match, number) {
+                        number = parseInt(number)+1;
+                        return typeof elements[number] !== 'undefined' ? elements[number]:match;
+                    });
+                }
+                return message;
             } else {
                 return code;
             }
