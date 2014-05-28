@@ -94,6 +94,16 @@ define(['TUI', 'TParser', 'TLog', 'jquery','ace/ace'], function(TUI, TParser, TL
             return aceEditor.getSession().getValue();
         };
         
+        this.setValue = function(value) {
+            aceEditor.getSession().setValue(value);
+            // set cursor to the end of line
+            aceEditor.gotoPageDown();
+        };
+        
+        this.focus = function() {
+            aceEditor.focus();
+        };
+        
         this.getStatements = function() {
             return TParser.parse(this.getValue());
         };
