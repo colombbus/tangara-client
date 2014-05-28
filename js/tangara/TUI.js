@@ -205,6 +205,22 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 TRuntime.executeFrom(editor);
             }
         };
+        
+        this.handleError = function(index) {
+            var error = log.getError(index);
+            if (error.getProgramName() === null) {
+                // error from command
+                this.enableConsole();
+                console.setValue(error.getCode());
+                console.focus();
+            } else {
+                // error from program
+                this.enableEditor();
+                editor.editProgram(error.getProgramName());
+                editor.setError(error.getLines());
+            }
+                
+        };
     };
     
     var uiInstance = new TUI();
