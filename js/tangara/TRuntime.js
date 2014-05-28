@@ -116,6 +116,9 @@ define(['jquery', 'TError', 'quintus'], function($, TError, Quintus) {
             } catch (e) {
                 var error = new TError(e);
                 error.setProgramName(currentProgramName);
+                if (currentProgramName === null) {
+                    error.setCode(object.getValue());
+                }
                 this.logError(error);
             }
         };
