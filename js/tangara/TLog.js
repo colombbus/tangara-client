@@ -1,4 +1,4 @@
-define(['jquery'], function($) {
+define(['jquery', 'TUI'], function($, TUI) {
     function TLog() {
         var domOuterLog = document.createElement("div");
         domOuterLog.id = "tlog-outer";
@@ -11,6 +11,7 @@ define(['jquery'], function($) {
         var rowCount = 0;
         var currentRow = 0;
         var scrollTop = 0;
+        var errors = new Array();
         
         this.getElement = function() {
             return domOuterLog;
@@ -46,26 +47,30 @@ define(['jquery'], function($) {
 
         this.addError = function(error) {
             var code = error.getCode();
+            var message = error.getMessage();
+            var index = errors.push(error) -1;
+            var wrapper = document.createElement("div");
+            wrapper.onclick = function() { TUI.handleError(index); };
+            var row;
+            wrapper.className = "tlog-row tlog-failure";            
             if (typeof code === 'string') {
                 var lines = code.split("\n");
                 for (var i=0; i<lines.length;i++) {
                     var line = lines[i];
-                    var row = document.createElement("div");
-                    row.className = "tlog-row tlog-failure";
+                    row = document.createElement("div");
                     row.id = "tlog-row-"+rowCount;
                     rowCount++;
                     currentRow = rowCount;
                     row.appendChild(document.createTextNode(line));
-                    domLog.appendChild(row);
+                    wrapper.appendChild(row);
                 }
             }
-            var message = error.getMessage();
             if (typeof message === 'string') {
                 row = document.createElement("div");
-                row.className = "tlog-row tlog-failure";
                 row.appendChild(document.createTextNode(message));
-                domLog.appendChild(row);
+                wrapper.appendChild(row);
             }
+            domLog.appendChild(wrapper);
             domLog.scrollTop = domLog.scrollHeight;
         };
         
@@ -83,6 +88,7 @@ define(['jquery'], function($) {
             domLog.innerHTML = '';
             rowCount = 0;
             currentRow = 0;
+            errors.length = 0;
         };
         
         this.getPreviousRow = function() {
@@ -126,6 +132,13 @@ define(['jquery'], function($) {
         
         this.restoreScroll = function() {
             $(domLog).scrollTop(scrollTop);
+        };
+        
+        this.getError = function(index) {
+           if (index < errors.length) {
+               return errors[index];
+           }
+           return null;           
         };
 
     } 
