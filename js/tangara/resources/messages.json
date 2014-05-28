@@ -5,6 +5,7 @@
         "button-execute":"Exécuter",
         "option-design-mode":"Mode Construction",
         "option-clear":"Effacer",
-        "clear-confirm":"Attention : vous allez effacer l'écran et l'historique\nSouhaitez-vous continuer ?"
+        "clear-confirm":"Attention : vous allez effacer l'écran et l'historique\nSouhaitez-vous continuer ?",
+        "program-new":"Nouveau {0}"
     }
 }
