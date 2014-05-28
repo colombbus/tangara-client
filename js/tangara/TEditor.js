@@ -123,8 +123,13 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'TProgram', 'TEnvir
         };
         
         this.setError = function(lines) {
-            var range = new AceRange(lines[0]-1,0,lines[1]-1,100);
-            errorMarker = aceEditor.getSession().addMarker(range, 'tangara_error', 'line', true);
+            if (lines.length > 1) {
+                var range = new AceRange(lines[0]-1,0,lines[1]-1,100);
+                errorMarker = aceEditor.getSession().addMarker(range, 'tangara_error', 'line', true);
+            } else if (lines.length > 0) {
+                var range = new AceRange(lines[0]-1,0,lines[0]-1,100);
+                errorMarker = aceEditor.getSession().addMarker(range, 'tangara_error', 'line', true);
+            }
         };
         
     };
