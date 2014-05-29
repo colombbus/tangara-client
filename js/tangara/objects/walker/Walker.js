@@ -24,34 +24,36 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'T
             this.blocks = new Array();
         },
         step: function(dt) {
-            if (this.p.mayFall && (this.p.direction === Sprite.DIRECTION_UP || this.p.direction === Sprite.DIRECTION_DOWN)) {
-                // cannot move upward or downward when walker may fall
-                this.p.direction = Sprite.DIRECTION_NONE;
-            }
-            this._super(dt);
-            if (this.p.mayFall) {
-                if (this.p.jumping) {
-                    if (this.p.vy === 0) {
-                        // perform a jump
-                        this.p.vy = this.p.jumpSpeed;
-                    }
-                    this.p.jumping = false;
-                } else {
-                    this.p.vy += this.p.gravity * dt;
+            if (!this.p.dragging) {
+                if (this.p.mayFall && (this.p.direction === Sprite.DIRECTION_UP || this.p.direction === Sprite.DIRECTION_DOWN)) {
+                    // cannot move upward or downward when walker may fall
+                    this.p.direction = Sprite.DIRECTION_NONE;
                 }
-                this.p.y += this.p.vy * dt;
-                // no destinationY other than y can be set
-                this.p.destinationY = this.p.y;
+                this._super(dt);
+                if (this.p.mayFall) {
+                    if (this.p.jumping) {
+                        if (this.p.vy === 0) {
+                            // perform a jump
+                            this.p.vy = this.p.jumpSpeed;
+                        }
+                        this.p.jumping = false;
+                    } else {
+                        this.p.vy += this.p.gravity * dt;
+                    }
+                    this.p.y += this.p.vy * dt;
+                    // no destinationY other than y can be set
+                    this.p.destinationY = this.p.y;
+                }
+                this.stage.collide(this, {collisionMask:TGraphicalObject.TYPE_BLOCK, maxCol:1});
             }
-            this.stage.collide(this, {collisionMask:TGraphicalObject.TYPE_BLOCK, maxCol:1});
         },
         checkBlocks: function(col) {
             var object = col.obj;
             var id = object.getId();
-            if (object.p.type === TGraphicalObject.TYPE_BLOCK && this.blocks.indexOf(id)>-1) {
+            if (object.p.type === TGraphicalObject.TYPE_BLOCK && this.blocks.indexOf(id)>-1 && !object.checkTransparency(this,col)) {
                 // block encountered
                 this.p.x -= col.separate[0];
-                this.p.y -= col.separate[1];                
+                this.p.y -= col.separate[1];
                 if(this.p.mayFall) {
                     if (col.normalY < -0.3 && this.p.vy>0 ) {
                         // landed
