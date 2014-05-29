@@ -114,7 +114,10 @@ define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager']
                 if (typeof cmd !== 'undefined') {
                     this.commands.addCommand(cmd, obj);
                 }
-                obj.p.type = obj.p.type | TGraphicalObject.TYPE_CATCHABLE;
+                object.p.type=object.p.type | TGraphicalObject.TYPE_CATCHABLE;
+                // Force update of stage grid
+                this.stage.delGrid(object);
+                this.stage.addGrid(object);
             },[object, command]);
         },
         freeze: function(value) {
@@ -162,7 +165,6 @@ define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager']
                 initY:0,
                 initAngle:0,
                 type:TGraphicalObject.TYPE_CHARACTER,
-                collisionMask:qInstance.SPRITE_NONE,
                 mayCatch:false
             },props),defaultProps);
             this.add("tween");
@@ -255,13 +257,17 @@ define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager']
         },
         objectEncountered: function(col) {
             var collided = col.obj;
-            var index = this.container.catchableObjects.indexOf(collided); 
+            var index = this.container.catchableObjects.indexOf(collided);
             if (typeof  index !== -1 && ((collided.p.type & TGraphicalObject.TYPE_CATCHABLE) !== 0) ) {
                 // we have caught: we cannot catch anymore
                 this.p.mayCatch = false;
 
                 // collided object change type
                 collided.p.type = collided.p.type & ~TGraphicalObject.TYPE_CATCHABLE;
+                // Force update of stage grid
+                this.stage.delGrid(collided);
+                this.stage.addGrid(collided);
+
                 collided.owner = this.container;
                 collided.ownerSide = this.side;
                 // Redefine collided object movement
@@ -269,6 +275,8 @@ define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager']
                     var coordinates = this.owner.getSideCoordinates(this.ownerSide);
                     this.p.x = coordinates[0];
                     this.p.y = coordinates[1];
+                    // Why not checking for collisions sill?
+                    this.checkCollisions();
                 };
                 
                 // execute commands if any
@@ -457,7 +465,7 @@ define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager']
         var catchableQObject = object.getQObject();
         qObject.mayCatch(catchableQObject, command);
     };
-
+    
     TEnvironment.internationalize(Character, true);
 
     return Character;
