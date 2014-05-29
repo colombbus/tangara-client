@@ -2,7 +2,6 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'TUtils', 'objects/sprite/S
     var Block = function(name) {
         Sprite.call(this,name);
         this.transparentColor = null;
-        this.mask = null;
     };
     
     Block.prototype = Object.create(Sprite.prototype);
@@ -16,13 +15,145 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'TUtils', 'objects/sprite/S
             this._super(qInstance._extend({
                 type:TGraphicalObject.TYPE_BLOCK,
                 collisionMask:TGraphicalObject.TYPE_SPRITE,
-                imageData:null
+                imageData:null,
+                transparencyMask:null
             },props),defaultProps);
         },
         setImageData: function(data) {
             this.perform(function(value){
                 this.p.imageData = value;
             }, [data]);
+        },
+        checkTransparency: function(object, col) {
+            if (this.p.transparencyMask === null) {
+                return false;
+            }
+            
+            // get coordinates of bounding box, relative to this object
+            var objectWidth = object.p.w;
+            var objectHeight = object.p.h;
+            var thisWidth = this.p.w;
+            var thisHeight = this.p.h;
+            var objectX = Math.round(object.p.x - objectWidth/2 - this.p.x + thisWidth/2);
+            var objectY = Math.round(object.p.y - objectHeight/2 - this.p.y + thisHeight/2);
+            
+            
+            var separateXL = 0, separateXR = 0, separateYT = 0, separateYB = 0;
+            
+            var clear = true;
+            var index;
+            var mask = this.p.transparencyMask;
+            
+            // CHECK HORIZONTALLY
+            var middleY = Math.max(0, Math.min(Math.round(objectY+objectHeight/2), thisHeight-1));
+            if (typeof mask[middleY] !=='undefined') {
+                for (var i=0; i< objectWidth/2; i++) {
+                    index = objectX+i;
+                    if ((typeof mask[middleY][index] !== 'undefined') && !mask[middleY][index]) {
+                        separateXL = i+1;
+                        clear = false;
+                    }
+                    index = objectX+objectWidth-i;
+                    if ((typeof mask[middleY][index] !== 'undefined') && !mask[middleY][index]) {
+                        separateXR = i+1;
+                        clear = false;
+                    }
+                }            
+            }
+            
+            // CHECK VERTICALLY
+            var middleX = Math.max(0, Math.min(Math.round(objectX+objectWidth/2), thisWidth-1));
+            for (var j=0; j< objectHeight/2; j++) {
+                index = objectY+j;
+                if ((typeof mask[index] !== 'undefined') && (typeof mask[index][middleX] !== 'undefined') && !mask[index][middleX]) {
+                    separateYT = j+1;
+                    clear = false;
+                }
+                index = objectY+objectHeight-j;
+                if ((typeof mask[index] !== 'undefined') && (typeof mask[index][middleX] !== 'undefined') && !mask[index][middleX]) {
+                    separateYB = j+1;
+                    clear = false;
+                }
+            }
+            
+            if (clear) {
+                return true;
+            }
+            
+            if (separateXL !== 0) {
+                if (separateXR !== 0) {
+                    // cannot move horizontally
+                    col.separate[0] = 0;
+                } else {
+                    col.separate[0] = -separateXL;
+                }
+            } else {
+                col.separate[0] = separateXR;
+            }
+                
+            if (separateYT !== 0) {
+                if (separateYB !== 0) {
+                    // cannot move vertically
+                    col.separate[1] = 0;
+                } else {
+                    col.separate[1] = -separateYT;
+                }
+            } else {
+                col.separate[1] = separateYB;
+            }
+            
+            // calculate normal
+            var normalX = col.separate[0];
+            var normalY = -col.separate[1];
+            var dist = Math.sqrt(normalX*normalX + normalY*normalY);
+            if(dist > 0) {
+                normalX /= dist;
+                normalY /= dist;
+            }
+            
+            col.normalX = normalX;
+            col.normalY = normalY;
+            
+            return false;
+        },
+        draw: function(ctx) {
+            this._super(ctx);
+        },
+        addTransparency: function(red, green, blue) {
+            this.perform(function(red,green,blue) {
+                var asset = this.p.asset;
+                var image = qInstance.asset(asset);
+                var canvas = document.createElement('canvas');
+                var ctx = canvas.getContext('2d');
+                var width = image.width;
+                var height = image.height;
+                canvas.width = width;
+                canvas.height = height;
+                this.p.transparencyMask = new Array();
+                var mask = this.p.transparencyMask;
+                var row=-1, col=width;
+                ctx.drawImage(image, 0, 0 );
+                var imageData = ctx.getImageData(0, 0, width, height);
+                var data = imageData.data;
+                for (var i=0;i<data.length;i+=4) {
+                    col++;
+                    if (col>=width) {
+                        col = 0;
+                        row++;
+                        mask[row] = new Array();
+                    }
+                    var r=data[i];
+                    var g=data[i+1];
+                    var b=data[i+2];
+                    if (r===red && g===green && b===blue) {
+                        data[i+3] = 0;
+                    }
+                    mask[row][col] = (data[i+3] === 0)?true:false;
+                }
+                imageData.data = data;
+                ctx.putImageData(imageData,0,0);
+                image.src = canvas.toDataURL();
+            }, [red, green, blue]);
         }
     });
     
@@ -32,28 +163,7 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'TUtils', 'objects/sprite/S
     Block.prototype._setTransparent = function(red, green, blue) {
         if (TUtils.checkInteger(red) && TUtils.checkInteger(green) && TUtils.checkInteger(blue)) {
             if (typeof this.images[this.displayedImage] !=='undefined') {
-                var asset = this.images[this.displayedImage];
-                var image = qInstance.asset(asset);
-                var canvas = document.createElement('canvas');
-                var ctx = canvas.getContext('2d');
-                canvas.width = image.width;
-                canvas.height = image.height;
-                ctx.drawImage(image, 0, 0 );
-                var imageData = ctx.getImageData(0, 0, image.width, image.height);
-                var data = imageData.data;
-                //console.debug(myData);
-                for (var i=0;i<data.length;i+=4) {
-                    var r=data[i];
-                    var g=data[i+1];
-                    var b=data[i+2];
-                    if (r===red && g===green && b===blue) {
-                        data[i+3] = 0;
-                    }
-                }
-                imageData.data = data;
-                ctx.putImageData(imageData,0,0);
-                
-                image.src = canvas.toDataURL();
+                this.qObject.addTransparency(red, green, blue);
             }
         }
     };
