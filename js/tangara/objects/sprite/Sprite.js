@@ -327,23 +327,25 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
     };
 
     Sprite.prototype._displayImage = function(name) {
-        if (TUtils.checkString(name) && typeof this.images[name] !== 'undefined' && this.displayedImage !== name) {
-            window.console.log("displaying image '"+name+"'");
-            var asset = this.images[name];
-            var qObject = this.qObject;
-            this.displayedImage = name;
-            // check if image actually loaded
-            if (qInstance.assets[asset]) {
-                qObject.asset(asset, true);
-                if (!qObject.p.initialized) {
-                    qObject.initialized();
+        if (TUtils.checkString(name) && typeof this.images[name] !== 'undefined') {
+            if (this.displayedImage !== name) {
+                window.console.log("displaying image '"+name+"'");
+                var asset = this.images[name];
+                var qObject = this.qObject;
+                this.displayedImage = name;
+                // check if image actually loaded
+                if (qInstance.assets[asset]) {
+                    qObject.asset(asset, true);
+                    if (!qObject.p.initialized) {
+                        qObject.initialized();
+                    }
+                } else {
+                    // otherwise, image will be displayed once loaded
+                    if (typeof Sprite.waitingForImage[name] === 'undefined') {
+                        Sprite.waitingForImage[name] = new Array();
+                    }
+                    Sprite.waitingForImage[name].push(this);
                 }
-            } else {
-                // otherwise, image will be displayed once loaded
-                if (typeof Sprite.waitingForImage[name] === 'undefined') {
-                    Sprite.waitingForImage[name] = new Array();
-                }
-                Sprite.waitingForImage[name].push(this);
             }
         } else {
             throw new Error(TUtils.format(this.getMessage("resource not found"), name));
