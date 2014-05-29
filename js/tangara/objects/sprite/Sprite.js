@@ -33,17 +33,21 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
                 type:TGraphicalObject.TYPE_SPRITE,
                 direction:'none',
                 watchCollisions:false,
-                collisionMask:TGraphicalObject.TYPE_SPRITE,
                 category:'',
                 moving:false
             },props),defaultProps);
+        },
+        checkCollisions: function() {
+            if (this.p.watchCollisions && this.p.moving) {
+                this.stage.collide(this, {collisionMask:TGraphicalObject.TYPE_SPRITE, maxCol:1});
+            }
         },
         step: function(dt) {
             var p = this.p;
             p.moving = false;
             if (!p.dragging) {
-              var step = p.velocity*dt;
-              switch (p.direction) {
+                var step = p.velocity*dt;
+                switch (p.direction) {
                     case Sprite.DIRECTION_NONE:
                         if (p.x < p.destinationX) {
                             p.x = Math.min(p.x + step, p.destinationX);
@@ -77,9 +81,7 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
                         p.moving = true;
                         break;
               }
-            }
-            if (this.p.watchCollisions && this.p.moving) {
-                this.stage.collide(this, {collisionMask:TGraphicalObject.TYPE_SPRITE, maxCol:1});
+              this.checkCollisions();
             }
         },
         designTouchEnd: function(touch) {
@@ -187,19 +189,21 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
         objectEncountered: function(col) {
             // TODO add event object with info on collision
             var object = col.obj;
-            var id = object.getId();
-            var category = object.getCategory();
-            // 1st check collision commands with this object
-            if (typeof this.spriteCollisionCommands !== 'undefined' && this.spriteCollisionCommands.hasCommands(id)) {
-                this.spriteCollisionCommands.executeCommands({'field':id});
-            }
-            // 2nd check collision commands with object's category
-            if (typeof this.categoryCollisionCommands !== 'undefined' && this.categoryCollisionCommands.hasCommands(category)) {
-                this.categoryCollisionCommands.executeCommands({'field':category});
-            }
-            // 3rd check general collision commands
-            if (typeof this.collisionCommands !== 'undefined' && this.collisionCommands.hasCommands()) {
-                this.collisionCommands.executeCommands();
+            if (typeof object.getId !== 'undefined') {
+                var id = object.getId();
+                var category = object.getCategory();
+                // 1st check collision commands with this object
+                if (typeof this.spriteCollisionCommands !== 'undefined' && this.spriteCollisionCommands.hasCommands(id)) {
+                    this.spriteCollisionCommands.executeCommands({'field':id});
+                }
+                // 2nd check collision commands with object's category
+                if (typeof this.categoryCollisionCommands !== 'undefined' && this.categoryCollisionCommands.hasCommands(category)) {
+                    this.categoryCollisionCommands.executeCommands({'field':category});
+                }
+                // 3rd check general collision commands
+                if (typeof this.collisionCommands !== 'undefined' && this.collisionCommands.hasCommands()) {
+                    this.collisionCommands.executeCommands();
+                }
             }
         },
         getId: function() {
@@ -207,6 +211,10 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
         },
         toString: function() {
             return "Sprite_"+this.id;
+        },
+        freeze: function(value) {
+            //TODO: implement this
+            this._super(value);
         }
       });
     
@@ -366,7 +374,7 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
     Sprite.prototype.toString = function() {
         return this.qObject.toString();
     };
-    
+
     TEnvironment.internationalize(Sprite, true);
     
     return Sprite;
