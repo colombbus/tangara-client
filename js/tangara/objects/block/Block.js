@@ -120,59 +120,48 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'TUtils', 'objects/sprite/S
             col.normalY = normalY;
             
             return false;
-        },
-        draw: function(ctx) {
-            this._super(ctx);
-        },
-        addTransparency: function(red, green, blue) {
-            this.perform(function(red,green,blue) {
-                var asset = this.p.asset;
-                var image = qInstance.asset(asset);
-                var canvas = document.createElement('canvas');
-                var ctx = canvas.getContext('2d');
-                var width = image.width;
-                var height = image.height;
-                canvas.width = width;
-                canvas.height = height;
-                this.p.transparencyMask = new Array();
-                var mask = this.p.transparencyMask;
-                var row=-1, col=width;
-                ctx.drawImage(image, 0, 0 );
-                var imageData = ctx.getImageData(0, 0, width, height);
-                var data = imageData.data;
-                for (var i=0;i<data.length;i+=4) {
-                    col++;
-                    if (col>=width) {
-                        col = 0;
-                        row++;
-                        mask[row] = new Array();
-                    }
-                    var r=data[i];
-                    var g=data[i+1];
-                    var b=data[i+2];
-                    if (r===red && g===green && b===blue) {
-                        data[i+3] = 0;
-                    }
-                    mask[row][col] = (data[i+3] === 0)?true:false;
-                }
-                imageData.data = data;
-                ctx.putImageData(imageData,0,0);
-                image.src = canvas.toDataURL();
-            }, [red, green, blue]);
         }
     });
     
     Block.prototype.qSprite = qInstance.TBlock;
-
     
-    Block.prototype._setTransparent = function(red, green, blue) {
-        if (TUtils.checkInteger(red) && TUtils.checkInteger(green) && TUtils.checkInteger(blue)) {
-            if (typeof this.images[this.displayedImage] !=='undefined') {
-                this.qObject.addTransparency(red, green, blue);
+    Block.prototype.setDisplayedImage = function(name) {
+        if (Sprite.prototype.setDisplayedImage.call(this, name) && this.transparentColors.length>0) {
+            // compute transparency mask
+            var asset = this.images[name];
+            var image = qInstance.asset(asset);
+            var canvas = document.createElement('canvas');
+            var ctx = canvas.getContext('2d');
+            var width = image.width;
+            var height = image.height;
+            canvas.width = width;
+            canvas.height = height;
+            this.qObject.p.transparencyMask = new Array();
+            var mask = this.qObject.p.transparencyMask;
+            var row=-1, col=width;
+            ctx.drawImage(image, 0, 0 );
+            var imageData = ctx.getImageData(0, 0, width, height);
+            var data = imageData.data;
+            for (var i=0;i<data.length;i+=4) {
+                col++;
+                if (col>=width) {
+                    col = 0;
+                    row++;
+                    mask[row] = new Array();
+                }
+                mask[row][col] = (data[i+3] === 0)?true:false;
             }
         }
     };
-
+    
+    Block.prototype._setTransparent = function(red, green, blue) {
+        Sprite.prototype._setTransparent.call(this, red, green, blue);
+        if (this.transparentColors.length>0  && this.displayedImage !== "") {
+            // reset current image, in order to compute transparency mask
+            this.setDisplayedImage(this.displayedImage);
+        }
+    };
+    
     TEnvironment.internationalize(Block, true);
     
     return Block;
