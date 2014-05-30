@@ -1,4 +1,4 @@
-define(function() {
+define(['TEnvironment'], function(TEnvironment) {
     var TUtils = function() {
         var defaultDiacriticsRemovalap = [
             {'base':'A', 'letters':'\u0041\u24B6\uFF21\u00C0\u00C1\u00C2\u1EA6\u1EA4\u1EAA\u1EA8\u00C3\u0100\u0102\u1EB0\u1EAE\u1EB4\u1EB2\u0226\u01E0\u00C4\u01DE\u1EA2\u00C5\u01FA\u01CD\u0200\u0202\u1EA0\u1EAC\u1EB6\u1E00\u0104\u023A\u2C6F'},
@@ -107,6 +107,29 @@ define(function() {
         "numlock":144, "scrolllock":145, ",":188, "`":192, "[":219, "\\":220, "]":221, "'":222
         };
 
+        var colors = {
+            black:[0,0,0],
+            white:[255,255,255],
+            red:[255,0,0],
+            green:[0,128,0],
+            blue:[0,0,255],
+            beige:[245,245,220],
+            yellow:[255,255,0],
+            pink:[255,192,203],
+            orange:[255,165,0],
+            maroon:[128,0,0],
+            cyan:[0,255,255],
+            darkgreen:[0,100,0],
+            darkgray:[169,169,169],
+            fuchsia:[255,0,255],
+            gray:[128,128,128],
+            lightgreen:[144,238,144],
+            olive:[128,128,0],
+            navy:[0,0,128],
+            purple:[128,0,128],
+            blueviolet:[138,43,226]
+        };
+
         this.removeAccents = function(str) {
             var letters = str.split("");
             var newStr = "";
@@ -155,6 +178,15 @@ define(function() {
                 }
             }
             return false;
+        };
+        
+        this.getColor = function(value) {
+            var translated = TEnvironment.getMessage("color-"+value);
+            if (typeof colors[translated] !== 'undefined') {
+                return colors[translated];
+            } else {
+                return null;
+            }
         };
         
     };
