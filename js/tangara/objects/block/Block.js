@@ -34,9 +34,14 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'TUtils', 'objects/sprite/S
             var objectHeight = object.p.h;
             var thisWidth = this.p.w;
             var thisHeight = this.p.h;
-            var objectX = Math.round(object.p.x - objectWidth/2 - this.p.x + thisWidth/2);
-            var objectY = Math.round(object.p.y - objectHeight/2 - this.p.y + thisHeight/2);
+            var actualObjectX = object.p.x - objectWidth/2 - this.p.x + thisWidth/2;
+            var actualObjectY = object.p.y - objectHeight/2 - this.p.y + thisHeight/2;
             
+            var objectX = Math.round(actualObjectX);
+            var objectY = Math.round(actualObjectY);
+            
+            var deltaX = actualObjectX - objectX;
+            var deltaY = actualObjectY - objectY;
             
             var separateXL = 0, separateXR = 0, separateYT = 0, separateYB = 0;
             
@@ -85,10 +90,10 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'TUtils', 'objects/sprite/S
                     // cannot move horizontally
                     col.separate[0] = 0;
                 } else {
-                    col.separate[0] = -separateXL;
+                    col.separate[0] = -separateXL+deltaX;
                 }
             } else {
-                col.separate[0] = separateXR;
+                col.separate[0] = separateXR+deltaX;
             }
                 
             if (separateYT !== 0) {
@@ -96,10 +101,10 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'TUtils', 'objects/sprite/S
                     // cannot move vertically
                     col.separate[1] = 0;
                 } else {
-                    col.separate[1] = -separateYT;
+                    col.separate[1] = -separateYT+deltaY;
                 }
             } else {
-                col.separate[1] = separateYB;
+                col.separate[1] = separateYB+deltaY;
             }
             
             // calculate normal
