@@ -504,6 +504,8 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
                     }
                 }
             }
+        } else {
+            throw new Error(this.getMessage("wrong color"));
         }
     };
 
