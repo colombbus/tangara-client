@@ -28,7 +28,6 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'TProgram', 'TEnvir
         
         this.displayed = function() {
             aceEditor = ace.edit(domEditorText.id);
-            aceEditor.getSession().setMode("ace/mode/java");
             aceEditor.setShowPrintMargin(false);
             //aceEditor.renderer.setShowGutter(false);
             aceEditor.setFontSize("20px");
@@ -106,6 +105,7 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'TProgram', 'TEnvir
             programs.push(program);
             currentProgram = program;
             var session = new AceEditSession(program.getCode());
+            session.setMode("ace/mode/java");
             sessions.push(session);
             aceEditor.setSession(session);
         }
