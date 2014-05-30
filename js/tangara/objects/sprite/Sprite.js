@@ -452,6 +452,16 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
     };
     
     Sprite.prototype._setTransparent = function(red, green, blue) {
+        if (TUtils.checkString(red)) {
+            var value = TUtils.getColor(red);
+            if (value !== null) {
+                red = value[0];
+                green = value[1];
+                blue = value[2];
+            } else {
+                throw new Error(this.getMessage("wrong color"));
+            }
+        }
         if (TUtils.checkInteger(red) && TUtils.checkInteger(green) && TUtils.checkInteger(blue)) {
             this.transparentColors.push([red,green,blue]);
             var canvas = document.createElement('canvas');
