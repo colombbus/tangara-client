@@ -45,7 +45,7 @@ define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TPars
                     }
                 }
             }).fail(function(jqxhr, textStatus, error) {
-                throw new Error(TUtils.format(parent.getMessage("script unreachable"), name));
+                throw new Error(parent.getMessage("script unreachable", name));
             });
         }
     };
