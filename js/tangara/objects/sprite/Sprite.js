@@ -3,6 +3,7 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
         window.console.log("Initializing sprite");
         TGraphicalObject.call(this);
         this.images = new Array();
+        this.transparentColors = new Array();
         this.displayedImage = "";
         if (typeof name === 'string') {
           this._setImage(name);
@@ -215,6 +216,42 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
         freeze: function(value) {
             //TODO: implement this
             this._super(value);
+        },
+        addTransparency: function(red, green, blue) {
+            this.perform(function(red,green,blue) {
+                var canvas = document.createElement('canvas');
+                var asset = this.p.asset;
+                var image = qInstance.asset(asset);
+                var ctx = canvas.getContext('2d');
+                var width = image.width;
+                var height = image.height;
+                canvas.width = width;
+                canvas.height = height;
+                this.p.transparencyMask = new Array();
+                var mask = this.p.transparencyMask;
+                var row=-1, col=width;
+                ctx.drawImage(image, 0, 0 );
+                var imageData = ctx.getImageData(0, 0, width, height);
+                var data = imageData.data;
+                for (var i=0;i<data.length;i+=4) {
+                    col++;
+                    if (col>=width) {
+                        col = 0;
+                        row++;
+                        mask[row] = new Array();
+                    }
+                    var r=data[i];
+                    var g=data[i+1];
+                    var b=data[i+2];
+                    if (r===red && g===green && b===blue) {
+                        data[i+3] = 0;
+                    }
+                    mask[row][col] = (data[i+3] === 0)?true:false;
+                }
+                imageData.data = data;
+                ctx.putImageData(imageData,0,0);
+                image.src = canvas.toDataURL();
+            }, [red, green, blue]);
         }
       });
     
@@ -304,18 +341,50 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
                 var asset = TEnvironment.getUserResource(name);
                 this.images[name] = asset;
                 window.console.log("loading asset '"+asset+"'");
+                var spriteObject = this;
+                var loadedAsset = asset;
                 qInstance.load(asset, function() {
+                    // Unregister onload event otherwise every transparency manipulation will call this
+                    // function again.
+                    var image = qInstance.asset(loadedAsset);
+                    image.onload = null;
+                    
+                    // 1st handle transparency
+                    // Note that transparency settings of current Sprite will affect image for every other Sprites
+                    // using the same asset
+                    if (spriteObject.transparentColors.length>0) {
+                        console.log("Image loaded: handling transparent colors");
+                        var canvas = document.createElement('canvas');
+                        var ctx = canvas.getContext('2d');
+                        var width = image.width;
+                        var height = image.height;
+                        canvas.width = width;
+                        canvas.height = height;
+                        ctx.drawImage(image, 0, 0 );
+                        var imageData = ctx.getImageData(0, 0, width, height);
+                        var data = imageData.data;
+                        var color;
+                        for (var i=0;i<data.length;i+=4) {
+                            var r=data[i];
+                            var g=data[i+1];
+                            var b=data[i+2];
+                            for (var j=0; j<spriteObject.transparentColors.length;j++) {
+                                color = spriteObject.transparentColors[j];
+                                if (r===color[0] && g===color[1] && b===color[2]) {
+                                    data[i+3] = 0;
+                                }
+                            }
+                        }
+                        imageData.data = data;
+                        ctx.putImageData(imageData,0,0);
+                        image.src = canvas.toDataURL();
+                    }
+                    // 2nd set asset for all sprites waiting for this image
                     if (typeof Sprite.waitingForImage[name] !== 'undefined') {
                         // in case _displayImage was called while loading, set image for waiting sprites
                         while (Sprite.waitingForImage[name].length>0) {
                             var sprite = Sprite.waitingForImage[name].pop();
-                            var qObject = sprite.qObject;
-                            if (typeof sprite.images[sprite.displayedImage] !=='undefined' && qObject.p.asset !== sprite.images[sprite.displayedImage]) {
-                                qObject.asset(sprite.images[sprite.displayedImage], true);
-                                if (!qObject.p.initialized) {
-                                    qObject.initialized();
-                                }
-                            }                            
+                            sprite.setDisplayedImage(name);
                         }
                         Sprite.waitingForImage[name] = undefined;
                     }
@@ -325,27 +394,32 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
             throw new Error(this.getMessage("format error"));
         }
     };
-
+    
+    Sprite.prototype.setDisplayedImage = function(name) {
+        var asset = this.images[name];
+        var qObject = this.qObject;
+        this.displayedImage = name;
+        // check if image actually loaded
+        if (qInstance.assets[asset]) {
+            qObject.asset(asset, true);
+            if (!qObject.p.initialized) {
+                qObject.initialized();
+            }
+            return true;
+        } else {
+            // otherwise, image will be displayed once loaded
+            if (typeof Sprite.waitingForImage[name] === 'undefined') {
+                Sprite.waitingForImage[name] = new Array();
+            }
+            Sprite.waitingForImage[name].push(this);
+            return false;
+        }
+    };
+    
     Sprite.prototype._displayImage = function(name) {
         if (TUtils.checkString(name) && typeof this.images[name] !== 'undefined') {
             if (this.displayedImage !== name) {
-                window.console.log("displaying image '"+name+"'");
-                var asset = this.images[name];
-                var qObject = this.qObject;
-                this.displayedImage = name;
-                // check if image actually loaded
-                if (qInstance.assets[asset]) {
-                    qObject.asset(asset, true);
-                    if (!qObject.p.initialized) {
-                        qObject.initialized();
-                    }
-                } else {
-                    // otherwise, image will be displayed once loaded
-                    if (typeof Sprite.waitingForImage[name] === 'undefined') {
-                        Sprite.waitingForImage[name] = new Array();
-                    }
-                    Sprite.waitingForImage[name].push(this);
-                }
+                this.setDisplayedImage(name);
             }
         } else {
             throw new Error(TUtils.format(this.getMessage("resource not found"), name));
@@ -376,6 +450,54 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
     Sprite.prototype.toString = function() {
         return this.qObject.toString();
     };
+    
+    Sprite.prototype._setTransparent = function(red, green, blue) {
+        if (TUtils.checkInteger(red) && TUtils.checkInteger(green) && TUtils.checkInteger(blue)) {
+            this.transparentColors.push([red,green,blue]);
+            var canvas = document.createElement('canvas');
+            var key;
+            for (key in this.images) {
+                if (this.images.hasOwnProperty(key)) {
+                    var asset = this.images[key];
+                    // check if image actually loaded
+                    if (qInstance.assets[asset]) {
+                        var image = qInstance.asset(asset);
+                        var ctx = canvas.getContext('2d');
+                        var width = image.width;
+                        var height = image.height;
+                        canvas.width = width;
+                        canvas.height = height;
+                        /*this.p.transparencyMask = new Array();
+                        var mask = this.p.transparencyMask;
+                        var row=-1, col=width;*/
+                        ctx.drawImage(image, 0, 0 );
+                        var imageData = ctx.getImageData(0, 0, width, height);
+                        var data = imageData.data;
+                        for (var i=0;i<data.length;i+=4) {
+                            /*col++;
+                            if (col>=width) {
+                                col = 0;
+                                row++;
+                                mask[row] = new Array();
+                            }*/
+                            var r=data[i];
+                            var g=data[i+1];
+                            var b=data[i+2];
+                            if (r===red && g===green && b===blue) {
+                                data[i+3] = 0;
+                            }
+                            //mask[row][col] = (data[i+3] === 0)?true:false;
+                        }
+                        imageData.data = data;
+                        ctx.putImageData(imageData,0,0);
+                        image.src = canvas.toDataURL();
+                    }
+                }
+            }
+        }
+    };
+
+
 
     TEnvironment.internationalize(Sprite, true);
     
