@@ -17,7 +17,9 @@
             {"name":"_ifCollisionWith","translated":"siCollisionAvec","displayed":"siCollisionAvec(objet, \"commande\")"},
             {"name":"_setCategory","translated":"d\u00e9finirCat\u00e9gorie","displayed":"d\u00e9finirCat\u00e9gorie(\"nom\")"},
             {"name":"_displayImage","translated":"afficherImage","displayed":"afficherImage(\"image\")"},
-            {"name":"_setTransparent","translated":"rendreTransparent","displayed":"rendreTransparent(\"couleur\")"}
+            {"name":"_setTransparent","translated":"rendreTransparent","displayed":"rendreTransparent(\"couleur\")"},
+            {"name":"_displayNextImage","translated":"afficherImageSuivante","displayed":"afficherImageSuivante()"},
+            {"name":"_displayPreviousImage","translated":"afficherImagePr\u00e9c\u00e9dente","displayed":"afficherImagePr\u00e9c\u00e9dente()"}
         ]
     }
 }
