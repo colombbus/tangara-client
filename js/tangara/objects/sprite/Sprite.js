@@ -3,8 +3,11 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
         window.console.log("Initializing sprite");
         TGraphicalObject.call(this);
         this.images = new Array();
+        this.imageSets = new Array();
         this.transparentColors = new Array();
         this.displayedImage = "";
+        this.displayedSet = "";
+        this.displayedIndex = "";
         if (typeof name === 'string') {
           this._setImage(name);
         }
@@ -334,12 +337,19 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
     
     Sprite.waitingForImage = new Array();
         
-    Sprite.prototype._addImage = function(name) {
+    Sprite.prototype._addImage = function(name, set) {
         if (TUtils.checkString(name)) {
             // add image only if not already added
             if (typeof this.images[name] === 'undefined') {
                 var asset = TEnvironment.getUserResource(name);
                 this.images[name] = asset;
+                if (typeof set === 'undefined') {
+                    set = "";
+                }
+                if (typeof this.imageSets[set] === 'undefined') {
+                    this.imageSets[set] = new Array();
+                }
+                this.imageSets[set].push(name);
                 window.console.log("loading asset '"+asset+"'");
                 var spriteObject = this;
                 var loadedAsset = asset;
@@ -422,7 +432,45 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
                 this.setDisplayedImage(name);
             }
         } else {
-            throw new Error(TUtils.format(this.getMessage("resource not found"), name));
+            throw new Error(this.getMessage("resource not found", name));
+        }
+    };
+
+    Sprite.prototype._displayNextImage = function(set) {
+        if (typeof set === 'undefined') {
+            set = "";
+        }
+        if (typeof this.imageSets[set] === 'undefined') {
+            throw new Error(this.getMessage("wrong set"));
+        }
+        if (this.displayedSet === set) {
+            // We are in the same set: get next image
+            this.displayedIndex = (this.displayedIndex + 1) % this.imageSets[set].length;
+            this._displayImage(this.imageSets[set][this.displayedIndex]);
+        } else {
+            // We are changing set: start at 0
+            this.displayedIndex = 0;
+            this.displayedSet = set;
+            this._displayImage(this.imageSets[set][0]);
+        }
+    };
+
+    Sprite.prototype._displayPreviousImage = function(set) {
+        if (typeof set === 'undefined') {
+            set = "";
+        }
+        if (typeof this.imageSets[set] === 'undefined') {
+            throw new Error(this.getMessage("wrong set"));
+        }
+        if (this.displayedSet === set) {
+            // We are in the same set: get next image
+            this.displayedIndex = (this.displayedIndex - 1 + this.imageSets[set].length) % this.imageSets[set].length;
+            this._displayImage(this.imageSets[set][this.displayedIndex]);
+        } else {
+            // We are changing set: start at 0
+            this.displayedIndex = 0;
+            this.displayedSet = set;
+            this._displayImage(this.imageSets[set][0]);
         }
     };
 
