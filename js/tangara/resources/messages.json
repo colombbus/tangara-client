@@ -6,6 +6,25 @@
         "option-design-mode":"Mode Construction",
         "option-clear":"Effacer",
         "clear-confirm":"Attention : vous allez effacer l'écran et l'historique\nSouhaitez-vous continuer ?",
-        "program-new":"Nouveau {0}"
+        "program-new":"Nouveau {0}",
+        "color-noir":"black",
+        "color-blanc":"white",
+        "color-rouge":"red",
+        "color-vert":"green",
+        "color-bleu":"blue",
+        "color-beige":"beige",
+        "color-jaune":"yellow",
+        "color-rose":"pink",
+        "color-orange":"orange",
+        "color-marron":"maroon",
+        "color-cyan":"cyan",
+        "color-vert foncé":"darkgreen",
+        "color-gris":"gray",
+        "color-gris foncé":"darkgray",
+        "color-fuchsia":"fuchsia",
+        "color-vert olive":"olive",
+        "color-outremer":"navy",
+        "color-pourpre":"purple",
+        "color-violet":"blueviolet"
     }
 }
