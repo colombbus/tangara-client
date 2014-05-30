@@ -132,6 +132,16 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
 
     Button.prototype._setColor = function(red, green, blue) {
         var r, g, b, ra, ga, ba;
+        if (TUtils.checkString(red)) {
+            var value = TUtils.getColor(red);
+            if (value !== null) {
+                red = value[0];
+                green = value[1];
+                blue = value[2];
+            } else {
+                throw new Error(this.getMessage("wrong color"));
+            }
+        }
         if (TUtils.checkInteger(red) && TUtils.checkInteger(green) && TUtils.checkInteger(blue)) {
             r = Math.min(Math.abs(red), 255);
             g = Math.min(Math.abs(green), 255);
@@ -144,17 +154,31 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
             qObject.p.fillColorActive = "rgb(" + ra + "," + ga + "," + ba + ")";
             qObject.p.strokeColor = "rgb(" + ra + "," + ga + "," + ba + ")";
             qObject.p.strokeColorActive = "rgb(" + ra + "," + ga + "," + ba + ")";
+        } else {
+            throw new Error(this.getMessage("wrong color"));
         }
     };
 
     Button.prototype._setTextColor = function(red, green, blue) {
         var r, g, b;
+        if (TUtils.checkString(red)) {
+            var value = TUtils.getColor(red);
+            if (value !== null) {
+                red = value[0];
+                green = value[1];
+                blue = value[2];
+            } else {
+                throw new Error(this.getMessage("wrong color"));
+            }
+        }
         if (TUtils.checkInteger(red) && TUtils.checkInteger(green) && TUtils.checkInteger(blue)) {
             r = Math.min(Math.abs(red), 255);
             g = Math.min(Math.abs(green), 255);
             b = Math.min(Math.abs(blue), 255);
             var qObject = this.qObject;
             qObject.p.textColor = "rgb(" + r + "," + g + "," + b + ")";
+        } else {
+            throw new Error(this.getMessage("wrong color"));
         }
     };
 
