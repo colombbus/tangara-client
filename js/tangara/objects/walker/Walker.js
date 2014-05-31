@@ -30,7 +30,7 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'T
                 this._super(dt);
                 if (this.p.mayFall) {
                     if (this.p.jumping) {
-                        if (this.p.vy < 10) {
+                        if (this.p.vy === 0) {
                             // perform a jump
                             this.p.vy = this.p.jumpSpeed;
                         }
