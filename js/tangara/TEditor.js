@@ -137,6 +137,8 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'TProgram', 'TEnvir
                 errorMarker = aceEditor.getSession().addMarker(range, 'tangara_error', 'line', true);
             }
             aceEditor.navigateTo(lines[0]-1, 0);
+            // In a timer, because otherwise does not seem to work when editor mode has just been activated
+            setTimeout(function() { aceEditor.scrollToLine(lines[0]-1, true, true, null); }, 100);
         };
         
     };
