@@ -1,4 +1,4 @@
-define(['jquery','TEnvironment', 'TGraphicalObject', 'TUtils', 'objects/sprite/Sprite'], function($, TEnvironment, TGraphicalObject, TUtils, Sprite) {
+define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite'], function($, TEnvironment, TGraphicalObject, Sprite) {
     var Block = function(name) {
         Sprite.call(this,name);
         this.transparentColor = null;
