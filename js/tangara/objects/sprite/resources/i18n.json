@@ -20,7 +20,8 @@
             {"name":"_setTransparent","translated":"rendreTransparent","displayed":"rendreTransparent(\"couleur\")"},
             {"name":"_displayNextImage","translated":"afficherImageSuivante","displayed":"afficherImageSuivante()"},
             {"name":"_displayPreviousImage","translated":"afficherImagePr\u00e9c\u00e9dente","displayed":"afficherImagePr\u00e9c\u00e9dente()"},
-            {"name":"_goTo","translated":"allerA","displayed":"allerA(0,0)"}
+            {"name":"_goTo","translated":"allerA","displayed":"allerA(0,0)"},
+            {"name":"_watchCollisions","translated":"surveillerCollisions","displayed":"surveillerCollisions(true)"}
         ]
     }
 }
