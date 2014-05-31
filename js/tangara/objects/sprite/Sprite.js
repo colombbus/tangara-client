@@ -10,14 +10,11 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
         if (typeof name === 'string') {
           this._setImage(name);
         }
-        this.id = Sprite.nextId++;
-        this.qObject.id = this.id;
     };
     
     Sprite.prototype = Object.create(TGraphicalObject.prototype);
     Sprite.prototype.constructor = Sprite;
     Sprite.prototype.className = "Sprite";
-    Sprite.nextId = 0;
     
     Sprite.DIRECTION_NONE = 0x00;
     Sprite.DIRECTION_LEFT = 0x01;
@@ -39,15 +36,63 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
                 moving:false,
                 hasCollisionCommands:false,
                 collisionWatched:false,
-                frozen:false                
+                frozen:false
             },props),defaultProps);
             this.watchCollisions(true);
+            this.encounteredObjects = new Array();
+            this.lastEncounteredObjects = new Array();
+            this.reciprocalCol = new Array();
         },
         checkCollisions: function() {
             if (this.p.moving) {
-                this.stage.collide(this, {collisionMask:TGraphicalObject.TYPE_SPRITE, maxCol:1});
+                this.encounteredObjects = [];
+                this.reciprocalCol = [];
+                this.stage.collide(this, {collisionMask:TGraphicalObject.TYPE_SPRITE, maxCol:1, skipEvents:true});
+                var object, col;
+                for (var i=0; i<this.reciprocalCol.length;i++) {
+                    // Do the reciprical collision
+                    col = this.reciprocalCol[i];
+                    object = col.obj;
+                    col.obj = this;
+                    col.normalX *= -1;
+                    col.normalY *= -1;
+                    col.distance = 0;
+                    col.magnitude = 0;
+                    col.separate[0] = 0;
+                    col.separate[1] = 0;
+                    object.trigger('hit',col);
+                    object.trigger('hit.sprite',col);
+                }
+                this.lastEncounteredObjects = this.encounteredObjects.slice(0);
             }
         },
+        objectEncountered: function(col) {
+            if (this.p.hasCollisionCommands) {
+                // TODO add event object with info on collision
+                var object = col.obj;
+                this.encounteredObjects.push(object);
+                if (this.lastEncounteredObjects.indexOf(object) === -1) {
+                    if (typeof object.getId !== 'undefined') {
+                        var id = object.getId();
+                        var category = object.getCategory();
+                        // 1st check collision commands with this object
+                        if (typeof this.spriteCollisionCommands !== 'undefined' && this.spriteCollisionCommands.hasCommands(id)) {
+                            this.spriteCollisionCommands.executeCommands({'field':id});
+                        }
+                        // 2nd check collision commands with object's category
+                        if (typeof this.categoryCollisionCommands !== 'undefined' && this.categoryCollisionCommands.hasCommands(category)) {
+                            this.categoryCollisionCommands.executeCommands({'field':category});
+                        }
+                        // 3rd check general collision commands
+                        if (typeof this.collisionCommands !== 'undefined' && this.collisionCommands.hasCommands()) {
+                            this.collisionCommands.executeCommands();
+                        }
+                        // add the col for reciprocalCollision later
+                        this.reciprocalCol.push(col);
+                    }
+                }
+            }
+        },        
         step: function(dt) {
             var p = this.p;
             p.moving = false;
@@ -210,33 +255,11 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
                 this.p.collisionWatched = value;
             }, [value]);
         },
-        objectEncountered: function(col) {
-            if (this.p.hasCollisionCommands) {
-                // TODO add event object with info on collision
-                var object = col.obj;
-                if (typeof object.getId !== 'undefined') {
-                    var id = object.getId();
-                    var category = object.getCategory();
-                    // 1st check collision commands with this object
-                    if (typeof this.spriteCollisionCommands !== 'undefined' && this.spriteCollisionCommands.hasCommands(id)) {
-                        this.spriteCollisionCommands.executeCommands({'field':id});
-                    }
-                    // 2nd check collision commands with object's category
-                    if (typeof this.categoryCollisionCommands !== 'undefined' && this.categoryCollisionCommands.hasCommands(category)) {
-                        this.categoryCollisionCommands.executeCommands({'field':category});
-                    }
-                    // 3rd check general collision commands
-                    if (typeof this.collisionCommands !== 'undefined' && this.collisionCommands.hasCommands()) {
-                        this.collisionCommands.executeCommands();
-                    }
-                }
-            }
-        },
         getId: function() {
-            return this.id;
+            return this.p.id;
         },
         toString: function() {
-            return "Sprite_"+this.id;
+            return "Sprite_"+this.getId();
         },
         freeze: function(value) {
             this.p.frozen = value;

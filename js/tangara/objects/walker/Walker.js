@@ -19,11 +19,10 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'T
                 gravity:9.8*100,
                 jumpSpeed: -300
             },props),defaultProps);
-            this.on("hit", this, "checkBlocks");
             this.blocks = new Array();
         },
         step: function(dt) {
-            if (!this.p.dragging) {
+            if (!this.p.dragging && !this.p.frozen) {
                 if (this.p.mayFall && (this.p.direction === Sprite.DIRECTION_UP || this.p.direction === Sprite.DIRECTION_DOWN)) {
                     // cannot move upward or downward when walker may fall
                     this.p.direction = Sprite.DIRECTION_NONE;
@@ -31,7 +30,7 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'T
                 this._super(dt);
                 if (this.p.mayFall) {
                     if (this.p.jumping) {
-                        if (this.p.vy === 0) {
+                        if (this.p.vy < 10) {
                             // perform a jump
                             this.p.vy = this.p.jumpSpeed;
                         }
@@ -43,7 +42,12 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'T
                     // no destinationY other than y can be set
                     this.p.destinationY = this.p.y;
                 }
-                this.stage.collide(this, {collisionMask:TGraphicalObject.TYPE_BLOCK, maxCol:1});
+                // Search for blocks
+                var maxCol = 1, collided = false;
+                while((collided = this.stage.search(this, TGraphicalObject.TYPE_BLOCK)) && maxCol > 0) {
+                    this.checkBlocks(collided);
+                    maxCol--;
+                }
             }
         },
         checkBlocks: function(col) {
@@ -54,6 +58,7 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'T
                 this.p.x -= col.separate[0];
                 this.p.y -= col.separate[1];
                 if(this.p.mayFall) {
+                    this.p.destinationY = this.p.y;
                     if (col.normalY < -0.3 && this.p.vy>0 ) {
                         // landed
                         this.p.vy = 0;
