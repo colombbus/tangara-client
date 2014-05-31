@@ -6,6 +6,7 @@ define(['jquery','TEnvironment', 'TObject', 'TUtils', 'TRuntime'], function($, T
         this.running = false;
         this.timeout = null;
         this.loop = false;
+        this.wasRunning = false;
     };
     
     Sequence.prototype = Object.create(TObject.prototype);
@@ -112,6 +113,19 @@ define(['jquery','TEnvironment', 'TObject', 'TUtils', 'TRuntime'], function($, T
             this.loop = value;
         }
     };
+    
+    Sequence.prototype.freeze = function(value) {
+        TObject.prototype.freeze.call(value);
+        if (value) {
+            this.wasRunning = this.running;
+            this._pause();
+        } else {
+            if (this.wasRunning) {
+                this._unpause();
+            }
+        }
+    };
+
     
     TEnvironment.internationalize(Sequence, true);
     

@@ -5,6 +5,7 @@ define(['jquery','TEnvironment', 'TObject', 'TUtils', 'CommandManager'], functio
         this.delay = 1000;
         this.initialDelay = 0;
         this.running = false;
+        this.wasRunning = false;
         this.timeout = null;
         this.loop = true;
     };
@@ -76,6 +77,18 @@ define(['jquery','TEnvironment', 'TObject', 'TUtils', 'CommandManager'], functio
     Clock.prototype._loop = function(value) {
         if (TUtils.checkBoolean(value)) {
             this.loop = value;
+        }
+    };
+    
+    Clock.prototype.freeze = function(value) {
+        TObject.prototype.freeze.call(value);
+        if (value) {
+            this.wasRunning = this.running;
+            this._stop();
+        } else {
+            if (this.wasRunning) {
+                this._start();
+            }
         }
     };
     
