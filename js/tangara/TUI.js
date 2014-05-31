@@ -200,6 +200,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 // execution from editor
                 this.clear(false);
                 this.disableEditor();
+                this.disableDesignMode();
                 console.clear();
                 TRuntime.setCurrentProgramName(editor.getCurrentProgramName());
                 TRuntime.executeFrom(editor);
