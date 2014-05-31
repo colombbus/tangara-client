@@ -15,6 +15,7 @@ define(['TObject', 'TUI', 'TRuntime', 'TEnvironment', ], function(TObject, TUI, 
     TGraphicalObject.TYPE_WALKER = 0x0800;
     TGraphicalObject.TYPE_BLOCK = 0x1000;
     TGraphicalObject.TYPE_INPUT = 0x2000;
+    TGraphicalObject.TYPE_INACTIVE = 0x4000;
 
     var qInstance = TRuntime.getQuintusInstance();
 
@@ -121,7 +122,6 @@ define(['TObject', 'TUI', 'TRuntime', 'TEnvironment', ], function(TObject, TUI, 
     };
     
     TGraphicalObject.prototype.freeze = function(value) {
-        window.console.log("freezing "+this);
         this.qObject.freeze(value);
     };
     
