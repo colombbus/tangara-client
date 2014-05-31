@@ -187,6 +187,12 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TObject', 'TRuntim
         }
         TObject.prototype.freeze.call(this, value);
     };
+    
+    KeyStroke.prototype._displayCommands = function(value) {
+        if (TUtils.checkBoolean(value)) {
+            this.commands.logCommands(value);
+        }
+    };
 
     TEnvironment.internationalize(KeyStroke, true);
     
