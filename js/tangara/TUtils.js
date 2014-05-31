@@ -151,7 +151,7 @@ define(['TEnvironment'], function(TEnvironment) {
         };
         
         this.getBoolean = function(value) {
-            if (!checkBoolean(value)) {
+            if (!this.checkBoolean(value)) {
                 throw new Error(TEnvironment.getMessage("wrong boolean"), value);
             }
             return value;
@@ -223,7 +223,7 @@ define(['TEnvironment'], function(TEnvironment) {
         
         this.getColor = function(red, green, blue) {
             if (this.checkString(red)) {
-                var translated = TEnvironment.getMessage("color-"+value);
+                var translated = TEnvironment.getMessage("color-"+red);
                 if (typeof colors[translated] !== 'undefined') {
                     return colors[translated];
                 } else {
