@@ -1,7 +1,7 @@
 define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TParser'], function($, TUI, TEnvironment, TRuntime, TUtils, TObject, TParser) {
     var Tangara = function() {
-        window.console.log("Initializing tangara");
-        TObject.call(this);
+        // Do not call parent constructor, as we don't want this object to be erased when clearing the
+        // Runtime
     };
 
     Tangara.prototype = Object.create(TObject.prototype);
