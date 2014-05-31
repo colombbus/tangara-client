@@ -32,12 +32,10 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'TProgram', 'TEnvir
             //aceEditor.renderer.setShowGutter(false);
             aceEditor.setFontSize("20px");
             aceEditor.setHighlightActiveLine(false);
+            var self = this;
             aceEditor.on('input', function() {
                 codeChanged = true;
-                if (errorMarker !== null) {
-                    aceEditor.getSession().removeMarker(errorMarker);
-                    errorMarker = null;
-                }
+                self.removeError();
                 /*if (!aceEditor.getSession().getUndoManager().hasUndo())
                     dirty = false;
                 else
@@ -122,7 +120,15 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'TProgram', 'TEnvir
             newIndex++;
         };
         
+        this.removeError = function() {
+            if (errorMarker !== null) {
+                aceEditor.getSession().removeMarker(errorMarker);
+                errorMarker = null;
+            }
+        };
+        
         this.setError = function(lines) {
+            this.removeError();
             if (lines.length > 1) {
                 var range = new AceRange(lines[0]-1,0,lines[1]-1,100);
                 errorMarker = aceEditor.getSession().addMarker(range, 'tangara_error', 'line', true);
@@ -130,6 +136,7 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'TProgram', 'TEnvir
                 var range = new AceRange(lines[0]-1,0,lines[0]-1,100);
                 errorMarker = aceEditor.getSession().addMarker(range, 'tangara_error', 'line', true);
             }
+            aceEditor.navigateTo(lines[0]-1, 0);
         };
         
     };
