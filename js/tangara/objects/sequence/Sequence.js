@@ -7,6 +7,7 @@ define(['jquery','TEnvironment', 'TObject', 'TUtils', 'TRuntime'], function($, T
         this.timeout = null;
         this.loop = false;
         this.wasRunning = false;
+        this.logCommands = true;
     };
     
     Sequence.prototype = Object.create(TObject.prototype);
@@ -49,7 +50,7 @@ define(['jquery','TEnvironment', 'TObject', 'TUtils', 'TRuntime'], function($, T
             var action = this.actions[this.index];
             if (action.type === Sequence.TYPE_COMMAND) {
                 // execute command
-                TRuntime.execute(action.value);
+                TRuntime.execute(action.value, null, this.logCommands);
                 this.nextAction();
             } else if (action.type === Sequence.TYPE_DELAY) {
                 var self = this;
@@ -90,9 +91,9 @@ define(['jquery','TEnvironment', 'TObject', 'TUtils', 'TRuntime'], function($, T
         this.nextAction();
     };
 
-    Sequence.prototype._delete = function() {
-        this.stop();
-        TObject.prototype._delete.call(this);
+    Sequence.prototype.deleteObject = function() {
+        this._stop();
+        TObject.prototype.deleteObject.call(this);
     };
 
     Sequence.prototype._loop = function(value) {
@@ -126,7 +127,12 @@ define(['jquery','TEnvironment', 'TObject', 'TUtils', 'TRuntime'], function($, T
         }
     };
 
-    
+    Sequence.prototype._displayCommands = function(value) {
+        if (TUtils.checkBoolean(value)) {
+            this.logCommands = value;
+        }
+    };
+
     TEnvironment.internationalize(Sequence, true);
     
     return Sequence;
