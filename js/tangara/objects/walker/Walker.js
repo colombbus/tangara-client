@@ -12,8 +12,7 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'T
     qInstance.TSprite.extend("TWalker", {
         init: function(props,defaultProps) {
             this._super(qInstance._extend({
-                type:TGraphicalObject.TYPE_WALKER,
-                collisionMask:TGraphicalObject.TYPE_BLOCK,
+                type:TGraphicalObject.TYPE_WALKER | TGraphicalObject.TYPE_SPRITE,
                 mayFall:false,
                 jumping:false,
                 vy:0,
