@@ -162,7 +162,7 @@ define(['TEnvironment'], function(TEnvironment) {
         };
         
         this.getInteger = function(value) {
-            if (!checkInteger(value)) {
+            if (!this.checkInteger(value)) {
                 throw new Error(TEnvironment.getMessage("wrong integer"), value);
             }
             return value;
@@ -173,7 +173,7 @@ define(['TEnvironment'], function(TEnvironment) {
         };
 
         this.getString = function(value) {
-            if (!checkString(value)) {
+            if (!this.checkString(value)) {
                 throw new Error(TEnvironment.getMessage("wrong string"), value);
             }
             return value;
@@ -184,7 +184,7 @@ define(['TEnvironment'], function(TEnvironment) {
         };
 
         this.getFunction = function(value) {
-            if (!checkFunction(value)) {
+            if (!this.checkFunction(value)) {
                 throw new Error(TEnvironment.getMessage("wrong function"), value);
             }
             return value;
@@ -195,7 +195,7 @@ define(['TEnvironment'], function(TEnvironment) {
         };
 
         this.getObject = function(value) {
-            if (!checkObject(value)) {
+            if (!this.checkObject(value)) {
                 throw new Error(TEnvironment.getMessage("wrong object"), value);
             }
             return value;
@@ -206,7 +206,7 @@ define(['TEnvironment'], function(TEnvironment) {
         };
 
         this.getCommand = function(value) {
-            if (!checkCommand(value)) {
+            if (!this.checkCommand(value)) {
                 throw new Error(TEnvironment.getMessage("wrong command"), value);
             }
             return value;
