@@ -70,5 +70,13 @@
             "es": "TBT",
             "en": "Clock"
         }
+    },
+    "Text": {
+        "path": "text",
+        "translations": {
+            "fr": "Texte",
+            "es": "TBT",
+            "en": "Text"
+        }
     }
 }
