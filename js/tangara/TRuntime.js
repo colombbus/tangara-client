@@ -238,11 +238,9 @@ define(['jquery', 'TError', 'quintus'], function($, TError, Quintus) {
         };
         
         this.freeze = function(value) {
-            window.console.log("freezing graphical objects");
             for (var i = 0; i<tGraphicalObjects.length; i++) {
                 tGraphicalObjects[i].freeze(value);
             }
-            window.console.log("freezing objects");
             for (var i = 0; i<tObjects.length; i++) {
                 tObjects[i].freeze(value);
             }
