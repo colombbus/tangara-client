@@ -1,6 +1,5 @@
 define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'], function($, TEnvironment, TUtils, CommandManager, TGraphicalObject) {
     var Sprite = function(name) {
-        window.console.log("Initializing sprite");
         TGraphicalObject.call(this);
         this.images = new Array();
         this.imageSets = new Array();
