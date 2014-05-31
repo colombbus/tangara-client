@@ -15,11 +15,8 @@ define(['jquery','TEnvironment', 'TObject', 'TUtils', 'CommandManager'], functio
     Clock.prototype.className = "Clock";    
     
     Clock.prototype._addCommand = function(command) {
-        if (TUtils.checkCommand(command)) {
-            this.commands.addCommand(command);
-        } else {
-            throw new Error(this.getMessage("wrong command"));
-        }
+        command = TUtils.getCommand(command);
+        this.commands.addCommand(command);
     };
 
     Clock.prototype._removeCommands = function() {
@@ -27,19 +24,13 @@ define(['jquery','TEnvironment', 'TObject', 'TUtils', 'CommandManager'], functio
     };
 
     Clock.prototype._setDelay = function(delay) {
-        if (TUtils.checkInteger(delay)) {
-            this.delay = delay;
-        } else {
-            throw new Error(this.getMessage("wrong delay"));
-        }
+        delay = TUtils.getInteger(delay);
+        this.delay = delay;
     };
 
     Clock.prototype._setInitialDelay = function(delay) {
-        if (TUtils.checkInteger(delay)) {
-            this.initialDelay = delay;
-        } else {
-            throw new Error(this.getMessage("wrong delay"));
-        }
+        delay = TUtils.getInteger(delay);
+        this.initialDelay = delay;
     };
 
     Clock.prototype._start = function() {
@@ -75,9 +66,8 @@ define(['jquery','TEnvironment', 'TObject', 'TUtils', 'CommandManager'], functio
     };
 
     Clock.prototype._loop = function(value) {
-        if (TUtils.checkBoolean(value)) {
-            this.loop = value;
-        }
+        value = TUtils.getBoolean(value);
+        this.loop = value;
     };
     
     Clock.prototype.freeze = function(value) {
@@ -93,9 +83,8 @@ define(['jquery','TEnvironment', 'TObject', 'TUtils', 'CommandManager'], functio
     };
 
     Clock.prototype._displayCommands = function(value) {
-        if (TUtils.checkBoolean(value)) {
-            this.commands.logCommands(value);
-        }
+        value = TUtils.getBoolean(value);
+        this.commands.logCommands(value);
     };
     
     TEnvironment.internationalize(Clock, true);

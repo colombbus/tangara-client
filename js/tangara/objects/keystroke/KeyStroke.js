@@ -60,23 +60,22 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TObject', 'TRuntim
     };
 
     KeyStroke.prototype._addCommand = function(key, command) {
-        if (TUtils.checkString(key)&&TUtils.checkCommand(command)) {
-            var keycode = this.getKeyCode(key);
-            if (keycode !== false) {
-                this.keys[keycode] = false;
-                this.commands.addCommand(command, keycode+"_down");
-            }
+        key = TUtils.getString(key);
+        command = TUtils.getCommand(command);
+        var keycode = this.getKeyCode(key);
+        if (keycode !== false) {
+            this.keys[keycode] = false;
+            this.commands.addCommand(command, keycode+"_down");
         }
     };
     
     KeyStroke.prototype._removeCommands = function(key) {
-        if (TUtils.checkString(key)) {
-            var keycode = this.getKeyCode(key);
-            if (keycode !== false) {
-                this.commands.removeCommands(keycode+"_down");
-                if (! this.commands.hasCommands(keycode+"up")) {
-                    this.keys[keycode] = undefined;
-                }
+        key = TUtils.getString(key);
+        var keycode = this.getKeyCode(key);
+        if (keycode !== false) {
+            this.commands.removeCommands(keycode+"_down");
+            if (! this.commands.hasCommands(keycode+"up")) {
+                this.keys[keycode] = undefined;
             }
         }
     };
@@ -89,19 +88,18 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TObject', 'TRuntim
         } else {
             command = param1;
         }
-        if (TUtils.checkCommand(command)) {
-            if (TUtils.checkString(key)) {
-                // command to be launched when a given key is released
-                var keycode = this.getKeyCode(key);
-                if (keycode !== false) {
-                    this.keys[keycode] = false;
-                    this.commands.addCommand(command, keycode+"_up");
-                }
-            } else {
-                // command to be launched when all keys are released
-                this.commands.addCommand(command, "key_up_all");
-                this.checkAllKeysUp = true;
+        command = TUtils.getCommand(command);
+        if (TUtils.checkString(key)) {
+            // command to be launched when a given key is released
+            var keycode = this.getKeyCode(key);
+            if (keycode !== false) {
+                this.keys[keycode] = false;
+                this.commands.addCommand(command, keycode+"_up");
             }
+        } else {
+            // command to be launched when all keys are released
+            this.commands.addCommand(command, "key_up_all");
+            this.checkAllKeysUp = true;
         }
     };
 
@@ -189,9 +187,8 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TObject', 'TRuntim
     };
     
     KeyStroke.prototype._displayCommands = function(value) {
-        if (TUtils.checkBoolean(value)) {
-            this.commands.logCommands(value);
-        }
+        value = TUtils.getBoolean(value);
+        this.commands.logCommands(value);
     };
 
     TEnvironment.internationalize(KeyStroke, true);

@@ -25,6 +25,14 @@
         "color-vert olive":"olive",
         "color-outremer":"navy",
         "color-pourpre":"purple",
-        "color-violet":"blueviolet"
+        "color-violet":"blueviolet",
+        "wrong boolean":"{0} n'est pas un booléen valide",
+        "wrong integer":"{0} n'est pas un nombre entier",
+        "wrong string":"{0} n'est pas un texte",
+        "wrong function":"{0} n'est pas une fonction",
+        "wrong object":"{0} n'est pas un objet",
+        "wrong command":"{0} n'est pas une commande valide",
+        "wrong color string":"{0} n'est pas une couleur connue",
+        "wrong color":"impossible de définir une couleur à partir de {0} {1} {2}"
     }
 }

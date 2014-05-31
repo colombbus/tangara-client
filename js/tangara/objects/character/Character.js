@@ -7,7 +7,6 @@ define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager']
             var simplifiedName = TUtils.removeAccents(characterName);
             characterName = this.getMessage(simplifiedName);
         }
-        var leftElement, rightElement;
         this._setLocation(0,0);
         this._loadSkeleton(characterName);
     };
@@ -297,36 +296,27 @@ define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager']
     Character.prototype.qSprite = qInstance.Character;
 
     Character.prototype._moveForward = function(value) {
-        if (TUtils.checkInteger(value)) {
-            this.qObject.moveForward(value);
-        }
-        return;
+        value = TUtils.getInteger(value);
+        this.qObject.moveForward(value);
     };
 
     Character.prototype._moveBackward = function(value) {
-        if (TUtils.checkInteger(value)) {
-            this.qObject.moveBackward(value);
-        }
-        return;
+        value = TUtils.getInteger(value);
+        this.qObject.moveBackward(value);
     };
         
     Character.prototype._moveUpward = function(value) {
-        if (TUtils.checkInteger(value)) {
-            this.qObject.moveUpward(value);
-        }
-        return;
+        value = TUtils.getInteger(value);
+        this.qObject.moveUpward(value);
     };
 
     Character.prototype._moveDownward = function(value) {
-        if (TUtils.checkInteger(value)) {
-            this.qObject.moveDownward(value);
-        }
-        return;
+        value = TUtils.getInteger(value);
+        this.qObject.moveDownward(value);
     };
     
     Character.prototype._stop = function() {
         this.qObject.stop();
-        return;
     };
     
     Character.prototype.build = function(baseUrl, elements, assets) {
@@ -403,65 +393,64 @@ define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager']
     };
     
     Character.prototype._loadSkeleton = function(name) {
-        if (TUtils.checkString(name)) {
-            window.console.log("loading skeleton");
-            var baseImageUrl = this.getResource(name)+"/";
-            var skeletonUrl = baseImageUrl+"skeleton.json";
-            window.console.log("Skeleton URL : "+skeletonUrl);
-            var parent = this;
-            var elements = new Array();
-            var assets = new Array();
-            window.console.log("url : "+skeletonUrl);
-            $.ajax({
-                dataType: "json",
-                url: skeletonUrl,
-                async: true,
-                success: function(data) {
-                    $.each( data['skeleton']['element'], function( key, val ) {
-                        elements.push(val);
-                        assets.push(baseImageUrl+val['image']);
-                    });
-                    parent.build(baseImageUrl, elements, assets);
-                }
-            }).fail(function(jqxhr, textStatus, error) {
-                throw new Error(TUtils.format(parent.getMessage("unknwon skeleton"), name));
-            });
-        }
+        name = TUtils.getString(name);
+        window.console.log("loading skeleton");
+        var baseImageUrl = this.getResource(name)+"/";
+        var skeletonUrl = baseImageUrl+"skeleton.json";
+        window.console.log("Skeleton URL : "+skeletonUrl);
+        var parent = this;
+        var elements = new Array();
+        var assets = new Array();
+        window.console.log("url : "+skeletonUrl);
+        $.ajax({
+            dataType: "json",
+            url: skeletonUrl,
+            async: true,
+            success: function(data) {
+                $.each( data['skeleton']['element'], function( key, val ) {
+                    elements.push(val);
+                    assets.push(baseImageUrl+val['image']);
+                });
+                parent.build(baseImageUrl, elements, assets);
+            }
+        }).fail(function(jqxhr, textStatus, error) {
+            throw new Error(TUtils.format(parent.getMessage("unknwon skeleton"), name));
+        });
     };
         
     Character.prototype._change = function(name) {
-        if (TUtils.checkString(name)) {
-          var simplifiedName = TUtils.removeAccents(name);
-          this._loadSkeleton(this.getMessage(simplifiedName));
-        }
+        name = TUtils.getString(name);
+        var simplifiedName = TUtils.removeAccents(name);
+        this._loadSkeleton(this.getMessage(simplifiedName));
     };
     
     Character.prototype._raiseLeftArm = function(value) {
-        if (TUtils.checkInteger(value)) {
-            this.qObject.raiseLeftArm(value);
-        }
+        value = TUtils.getInteger(value);
+        this.qObject.raiseLeftArm(value);
     };
 
     Character.prototype._raiseRightArm = function(value) {
-        if (TUtils.checkInteger(value)) {
-            this.qObject.raiseRightArm(value);
-        }
+        value = TUtils.getInteger(value);
+        this.qObject.raiseRightArm(value);
     };
     
     Character.prototype._lowerLeftArm = function(value) {
-        if (TUtils.checkInteger(value)) {
-            this.qObject.lowerLeftArm(value);
-        }
+        value = TUtils.getInteger(value);
+        this.qObject.lowerLeftArm(value);
     };
 
     Character.prototype._lowerRightArm = function(value) {
-        if (TUtils.checkInteger(value)) {
-            this.qObject.lowerRightArm(value);
-        }
+        value = TUtils.getInteger(value);
+        this.qObject.lowerRightArm(value);
     };
     
-    Character.prototype._mayCatch = function(object, command) {   
+    Character.prototype._mayCatch = function(object, command) {
+        object = TUtils.getObject(object);
+        command = TUtils.getCommand(command);
         var qObject = this.getQObject();
+        if (typeof object.getQObject === 'undefined') {
+            throw new Error("wrong object type");
+        }
         var catchableQObject = object.getQObject();
         qObject.mayCatch(catchableQObject, command);
     };

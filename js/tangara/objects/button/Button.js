@@ -61,9 +61,6 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
             context.lineTo(-this.p.w / 2, 0);
             context.closePath();
 
-            // save current values
-            var oldFillStyle = context.fillStye
-
             // fill button
             if (this.p.active)
                 context.fillStyle = this.p.fillColorActive;
@@ -118,77 +115,44 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
     Button.prototype.qSprite = qInstance.TButton;
 
     Button.prototype._setText = function(label) {
-        if (TUtils.checkString(label)) {
-            var qObject = this.qObject;
-            qObject.p.label = label;
-            qObject.updateSize();
-        }
+        label = TUtils.getString(label);
+        var qObject = this.qObject;
+        qObject.p.label = label;
+        qObject.updateSize();
     };
 
     Button.prototype._setTextSize = function(size) {
-        if (TUtils.checkInteger(size)) {
-            var qObject = this.qObject;
-            qObject.p.textSize = size;
-            qObject.updateSize();
-        }
+        size = TUtils.getInteger(size);
+        var qObject = this.qObject;
+        qObject.p.textSize = size;
+        qObject.updateSize();
     };
 
     Button.prototype._setColor = function(red, green, blue) {
+        var color = TUtils.getColor(red, green, blue);
         var r, g, b, ra, ga, ba;
-        if (TUtils.checkString(red)) {
-            var value = TUtils.getColor(red);
-            if (value !== null) {
-                red = value[0];
-                green = value[1];
-                blue = value[2];
-            } else {
-                throw new Error(this.getMessage("wrong color"));
-            }
-        }
-        if (TUtils.checkInteger(red) && TUtils.checkInteger(green) && TUtils.checkInteger(blue)) {
-            r = Math.min(Math.abs(red), 255);
-            g = Math.min(Math.abs(green), 255);
-            b = Math.min(Math.abs(blue), 255);
-            ra = Math.max(r - 40, 0);
-            ga = Math.max(g - 40, 0);
-            ba = Math.max(b - 40, 0);
-            var qObject = this.qObject;
-            qObject.p.fillColor = "rgb(" + r + "," + g + "," + b + ")";
-            qObject.p.fillColorActive = "rgb(" + ra + "," + ga + "," + ba + ")";
-            qObject.p.strokeColor = "rgb(" + ra + "," + ga + "," + ba + ")";
-            qObject.p.strokeColorActive = "rgb(" + ra + "," + ga + "," + ba + ")";
-        } else {
-            throw new Error(this.getMessage("wrong color"));
-        }
+        r = color[0];
+        g = color[1];
+        b = color[2];
+        ra = Math.max(r - 40, 0);
+        ga = Math.max(g - 40, 0);
+        ba = Math.max(b - 40, 0);
+        var qObject = this.qObject;
+        qObject.p.fillColor = "rgb(" + r + "," + g + "," + b + ")";
+        qObject.p.fillColorActive = "rgb(" + ra + "," + ga + "," + ba + ")";
+        qObject.p.strokeColor = "rgb(" + ra + "," + ga + "," + ba + ")";
+        qObject.p.strokeColorActive = "rgb(" + ra + "," + ga + "," + ba + ")";
     };
 
     Button.prototype._setTextColor = function(red, green, blue) {
-        var r, g, b;
-        if (TUtils.checkString(red)) {
-            var value = TUtils.getColor(red);
-            if (value !== null) {
-                red = value[0];
-                green = value[1];
-                blue = value[2];
-            } else {
-                throw new Error(this.getMessage("wrong color"));
-            }
-        }
-        if (TUtils.checkInteger(red) && TUtils.checkInteger(green) && TUtils.checkInteger(blue)) {
-            r = Math.min(Math.abs(red), 255);
-            g = Math.min(Math.abs(green), 255);
-            b = Math.min(Math.abs(blue), 255);
-            var qObject = this.qObject;
-            qObject.p.textColor = "rgb(" + r + "," + g + "," + b + ")";
-        } else {
-            throw new Error(this.getMessage("wrong color"));
-        }
+        var color = TUtils.getColor(red, green, blue);
+        var qObject = this.qObject;
+        qObject.p.textColor = "rgb(" + color[0] + "," + color[1] + "," + color[2] + ")";
     };
 
     Button.prototype._addCommand = function(command) {
-        if (TUtils.checkCommand(command)) {
-            this.qObject.addCommand(command);
-        }
+        command = TUtils.getCommand(command);
+        this.qObject.addCommand(command);
     };
 
     Button.prototype._removeCommands = function() {

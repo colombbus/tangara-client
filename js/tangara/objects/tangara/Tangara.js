@@ -9,45 +9,32 @@ define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TPars
     Tangara.prototype.className = "Tangara";
 
     Tangara.prototype._write = function(value) {
-        if (TUtils.checkString(value)) {
-            TUI.addLogMessage(value);
-        }
+        value = TUtils.getString(value);
+        TUI.addLogMessage(value);
     };
 
     Tangara.prototype._alert = function(value) {
-        if (TUtils.checkString(value)) {
-            window.alert(value);
-        }
+        value = TUtils.getString(value);
+        window.alert(value);
     };
 
     Tangara.prototype._loadScript = function(name) {
         // TODO : get parsed version directly
-        if (TUtils.checkString(name)) {
-            var scriptUrl = TEnvironment.getUserResource(name);
-            var parent = this;
-            $.ajax({
-                dataType: "text",
-                url: scriptUrl,
-                async: false,
-                success: function(data) {
-                    try {
-                        TRuntime.setCurrentProgramName(name);
-                        var statements = TParser.parse(data);
-                        TRuntime.executeStatements(statements);
-                    } catch (e) {
-                        // TODO: real error management
-                        if (typeof e.loc !== 'undefined') {
-                            var line = e.loc.line;
-                            window.alert("Erreur de syntaxe : "+e.message+"\n(ligne : "+line+")");
-                        } else {
-                            window.alert("Erreur : "+e.message);
-                        }
-                    }
-                }
-            }).fail(function(jqxhr, textStatus, error) {
-                throw new Error(parent.getMessage("script unreachable", name));
-            });
-        }
+        name = TUtils.getString(name);
+        var scriptUrl = TEnvironment.getUserResource(name);
+        var parent = this;
+        $.ajax({
+            dataType: "text",
+            url: scriptUrl,
+            async: false,
+            success: function(data) {
+                TRuntime.setCurrentProgramName(name);
+                var statements = TParser.parse(data);
+                TRuntime.executeStatements(statements);
+            }
+        }).fail(function(jqxhr, textStatus, error) {
+            throw new Error(parent.getMessage("script unreachable", name));
+        });
     };
 
     Tangara.prototype._pause = function() {

@@ -95,21 +95,18 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'T
     Walker.prototype.qSprite = qInstance.TWalker;
 
     Walker.prototype._addBlock = function(block) {
-        if (TUtils.checkObject(block)) {
-            this.qObject.addBlock(block);
-        }
+        block = TUtils.getObject(block);
+        this.qObject.addBlock(block);
     };
     
     Walker.prototype._mayFall = function(value) {
-        if (TUtils.checkBoolean(value)) {
-            this.qObject.mayFall(value);
-        }
+        value = TUtils.getBoolean(value);
+        this.qObject.mayFall(value);
     };
 
     Walker.prototype._setJumpSpeed = function(value) {
-        if (TUtils.checkInteger(value)) {
-            this.qObject.setJumpSpeed(value);
-        }
+        value = TUtils.getInteger(value);
+        this.qObject.setJumpSpeed(value);
     };
 
     Walker.prototype._jump = function() {
@@ -117,9 +114,8 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'T
     };
 
     Walker.prototype._setGravity = function(value) {
-        if (TUtils.checkInteger(value)) {
-            this.qObject.setGravity(value);
-        }
+        value = TUtils.getInteger(value);
+        this.qObject.setGravity(value);
     };
 
     TEnvironment.internationalize(Walker, true);

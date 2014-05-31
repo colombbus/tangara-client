@@ -1,4 +1,4 @@
-define(['TObject', 'TUI', 'TRuntime', 'TEnvironment', ], function(TObject, TUI, TRuntime, TEnvironment) {
+define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment', ], function(TObject, TUtils, TRuntime, TEnvironment) {
     function TGraphicalObject() {
         this.qObject = new this.qSprite();
         this._setLocation(0, 0);
@@ -89,15 +89,15 @@ define(['TObject', 'TUI', 'TRuntime', 'TEnvironment', ], function(TObject, TUI, 
     };
 
     TGraphicalObject.prototype._setCenterLocation = function(x, y) {
-        if (typeof x === 'number' && typeof y === 'number') {
-            this.qObject.setCenterLocation(x, y);
-        }
+        x = TUtils.getInteger(x);
+        y = TUtils.getInteger(y);
+        this.qObject.setCenterLocation(x, y);
     };
 
     TGraphicalObject.prototype._setLocation = function(x, y) {
-        if (typeof x === 'number' && typeof y === 'number') {
-            this.qObject.setLocation(x, y);
-        }
+        x = TUtils.getInteger(x);
+        y = TUtils.getInteger(y);
+        this.qObject.setLocation(x, y);
     };
 
     TGraphicalObject.prototype.setDesignMode = function(value) {

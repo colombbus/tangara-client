@@ -19,19 +19,13 @@ define(['jquery','TEnvironment', 'TObject', 'TUtils', 'TRuntime'], function($, T
     Sequence.MINIMUM_LOOP = 100;
     
     Sequence.prototype._addCommand = function(command) {
-        if (TUtils.checkCommand(command)) {
-            this.actions.push({type:Sequence.TYPE_COMMAND,value:command});
-        } else {
-            throw new Error(this.getMessage("wrong command"));
-        }
+        command = TUtils.getCommand(command);
+        this.actions.push({type:Sequence.TYPE_COMMAND,value:command});
     };
 
     Sequence.prototype._addDelay = function(delay) {
-        if (TUtils.checkInteger(delay)) {
-            this.actions.push({type:Sequence.TYPE_DELAY,value:delay});
-        } else {
-            throw new Error(this.getMessage("wrong delay"));
-        }
+        delay = TUtils.getInteger(delay);
+        this.actions.push({type:Sequence.TYPE_DELAY,value:delay});
     };
     
     Sequence.prototype.nextAction = function() {
@@ -97,22 +91,21 @@ define(['jquery','TEnvironment', 'TObject', 'TUtils', 'TRuntime'], function($, T
     };
 
     Sequence.prototype._loop = function(value) {
-        if (TUtils.checkBoolean(value)) {
-            if (value) {
-                // WARNING: in order to prevent Tangara freeze, check that there is at least a total delay of MINIMUM_LOOP in actions
-                var totalDelay = 0;
-                for (var i=0; i<this.actions.length;i++) {
-                    var action = this.actions[i];
-                    if (action.type === Sequence.TYPE_DELAY) {
-                        totalDelay += action.value;
-                    }
+        value = TUtils.getBoolean(value);
+        if (value) {
+            // WARNING: in order to prevent Tangara freeze, check that there is at least a total delay of MINIMUM_LOOP in actions
+            var totalDelay = 0;
+            for (var i=0; i<this.actions.length;i++) {
+                var action = this.actions[i];
+                if (action.type === Sequence.TYPE_DELAY) {
+                    totalDelay += action.value;
                 }
-                if (totalDelay < Sequence.MINIMUM_LOOP) {
-                    throw new Error(this.getMessage("freeze warning",Sequence.MINIMUM_LOOP));
-                }
-            }            
-            this.loop = value;
-        }
+            }
+            if (totalDelay < Sequence.MINIMUM_LOOP) {
+                throw new Error(this.getMessage("freeze warning",Sequence.MINIMUM_LOOP));
+            }
+        }            
+        this.loop = value;
     };
     
     Sequence.prototype.freeze = function(value) {
@@ -128,9 +121,8 @@ define(['jquery','TEnvironment', 'TObject', 'TUtils', 'TRuntime'], function($, T
     };
 
     Sequence.prototype._displayCommands = function(value) {
-        if (TUtils.checkBoolean(value)) {
-            this.logCommands = value;
-        }
+        value = TUtils.getBoolean(value);
+        this.logCommands = value;
     };
 
     TEnvironment.internationalize(Sequence, true);
