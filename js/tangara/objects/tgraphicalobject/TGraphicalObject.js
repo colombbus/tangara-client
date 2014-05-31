@@ -128,6 +128,14 @@ define(['TObject', 'TUI', 'TRuntime', 'TEnvironment', ], function(TObject, TUI, 
     TGraphicalObject.prototype.toString = function() {
         return "TGraphicalObject "+this.className;
     };
+    
+    TGraphicalObject.prototype._hide = function() {
+        this.qObject.p.hidden = true;
+    };
+    
+    TGraphicalObject.prototype._show = function() {
+        this.qObject.p.hidden = false;
+    };
 
     return TGraphicalObject;
 });
