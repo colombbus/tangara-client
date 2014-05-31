@@ -81,7 +81,10 @@ define(['jquery', 'TError', 'quintus'], function($, TError, Quintus) {
             return name;
         };
 
-        this.execute = function(commands, parameter, lineNumbers) {
+        this.execute = function(commands, parameter, logCommands, lineNumbers) {
+            if (typeof logCommands === 'undefined') {
+                logCommands = true;
+            }
             try {
                 if (typeof commands === 'string' || commands instanceof String) {
                     runtimeFrame.eval(commands);
@@ -89,12 +92,14 @@ define(['jquery', 'TError', 'quintus'], function($, TError, Quintus) {
                     //TODO : does not work... to be fixed!
                     runtimeFame[commands].call(runtimeFrame, parameter);
                 }
-                this.logCommand(commands);
+                if (logCommands) {
+                    this.logCommand(commands);
+                }
             } catch (e) {
                 var error = new TError(e);
                 error.setCode(commands);
                 error.setProgramName(currentProgramName);
-                if (typeof lineNumbers!== 'undefined') {
+                if (typeof lineNumbers !== null) {
                     error.setLines(lineNumbers);
                 }
                 this.logError(error);
@@ -106,7 +111,7 @@ define(['jquery', 'TError', 'quintus'], function($, TError, Quintus) {
         this.executeStatements = function(statements) {
             for (var i = 0; i<statements.length; i++) {
                 var statement = statements[i];
-                if (!this.execute(statement.body, null, [statement.loc.start.line,statement.loc.end.line] ))
+                if (!this.execute(statement.body, null, true, [statement.loc.start.line,statement.loc.end.line]))
                     return false;
             }
         };

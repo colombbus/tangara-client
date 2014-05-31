@@ -1,6 +1,7 @@
 define(['TRuntime'], function(TRuntime) {
     var CommandManager = function() {
         this.commands = new Array();
+        this.logging= true;
     };
     
     CommandManager.prototype.addCommand = function(command, field) {
@@ -36,11 +37,11 @@ define(['TRuntime'], function(TRuntime) {
         }
         if (typeof field === 'undefined') {
             for (i = 0; i < this.commands.length; i++) {
-                TRuntime.execute(this.commands[i], parameter);
+                TRuntime.execute(this.commands[i], parameter, this.logging);
             }
         } else if (typeof this.commands[field] !== 'undefined') {
             for (i = 0; i < this.commands[field].length; i++) {
-                TRuntime.execute(this.commands[field][i], parameter);
+                TRuntime.execute(this.commands[field][i], parameter, this.logging);
             }
         }
     };
@@ -53,6 +54,9 @@ define(['TRuntime'], function(TRuntime) {
         }
     };
 
+    CommandManager.prototype.logCommands = function(value) {
+        this.logging = value;
+    };
     
     return CommandManager;
 });
