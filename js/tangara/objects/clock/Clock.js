@@ -69,9 +69,9 @@ define(['jquery','TEnvironment', 'TObject', 'TUtils', 'CommandManager'], functio
         }
     };
 
-    Clock.prototype._delete = function() {
-        this.stop();
-        TObject.prototype._delete.call(this);
+    Clock.prototype.deleteObject = function() {
+        this._stop();
+        TObject.prototype.deleteObject.call(this);
     };
 
     Clock.prototype._loop = function(value) {
@@ -89,6 +89,12 @@ define(['jquery','TEnvironment', 'TObject', 'TUtils', 'CommandManager'], functio
             if (this.wasRunning) {
                 this._start();
             }
+        }
+    };
+
+    Clock.prototype._displayCommands = function(value) {
+        if (TUtils.checkBoolean(value)) {
+            this.commands.logCommands(value);
         }
     };
     
