@@ -61,6 +61,9 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
             context.lineTo(-this.p.w / 2, 0);
             context.closePath();
 
+            // save current values
+            var oldFillStyle = context.fillStye
+
             // fill button
             if (this.p.active)
                 context.fillStyle = this.p.fillColorActive;
@@ -82,6 +85,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
             else
                 context.fillStyle = this.p.textColor;
             context.textBaseline = "middle";
+            context.font = "normal " + this.p.textSize + "px Verdana,Sans-serif";
             context.fillText(this.p.label, -this.p.w / 2 + this.p.textSize, 0);
 
         },

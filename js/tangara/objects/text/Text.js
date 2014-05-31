@@ -38,6 +38,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
         draw: function(context) {
             context.fillStyle = this.p.textColor;
             context.textBaseline = "middle";
+            context.font = "normal " + this.p.textSize + "px Verdana,Sans-serif";
             context.fillText(this.p.label, -this.p.w / 2, 0);
         }
     });
