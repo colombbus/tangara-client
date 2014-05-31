@@ -147,6 +147,13 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
                 this.p.direction = Sprite.DIRECTION_DOWN;
             }, {});
         },
+        goTo: function(x,y) {
+            this.perform(function(x,y){
+                this.p.destinationX = x + this.p.w / 2;
+                this.p.destinationY = y + this.p.h / 2;
+                this.p.direction = Sprite.DIRECTION_NONE;
+            }, [x,y]);
+        },        
         stop: function() {
             this.perform(function(){
                 this.p.destinationX = this.p.x;
@@ -554,6 +561,12 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
             }
         } else {
             throw new Error(this.getMessage("wrong color"));
+        }
+    };
+    
+    Sprite.prototype._goTo = function(x, y) {
+        if (TUtils.checkInteger(x) && TUtils.checkInteger(y)) {
+            this.qObject.goTo(x,y);
         }
     };
 
