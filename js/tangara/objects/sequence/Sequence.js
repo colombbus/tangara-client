@@ -1,0 +1,152 @@
+define(['jquery','TEnvironment', 'TObject', 'TUtils', 'TRuntime'], function($, TEnvironment, TObject, TUtils, TRuntime) {
+    var Sequence = function() {
+        TObject.call(this);
+        this.actions = new Array();
+        this.index = -1;
+        this.running = false;
+        this.timeout = null;
+        this.loop = false;
+        /*this.worker = null;
+        this.blobURL = null;
+        this.createWorker();*/
+    };
+    
+    Sequence.prototype = Object.create(TObject.prototype);
+    Sequence.prototype.constructor = Sequence;
+    Sequence.prototype.className = "Sequence";    
+    
+    Sequence.TYPE_COMMAND = 0x01;
+    Sequence.TYPE_DELAY = 0x02;
+    Sequence.MINIMUM_LOOP = 500;
+    
+    /*Sequence.prototype.createWorker = function() {
+        var blob = new Blob([
+            "addEventListener('message', function(e) {\n\
+                var delay = e.data;\n\
+                if (typeof delay !== 'undefined' && !isNaN(delay) {\n\
+                    setTimeout(function() {\n\
+                            postMessage("");\n\
+                        }\n\
+                        , delay);\n\
+                }\n\
+            });")]);
+
+        // Obtain a blob URL reference to our worker 'file'.
+        this.blobURL = window.URL.createObjectURL(blob);
+
+        this.worker = new Worker(blobURL);
+    };*/
+
+    
+    /*worker.onmessage = function(e) {
+        // e.data == 'msg from worker'
+    };
+    
+    worker.postMessage(); // Start the worker.
+    };*/
+    
+    Sequence.prototype._addCommand = function(command) {
+        if (TUtils.checkCommand(command)) {
+            this.actions.push({type:Sequence.TYPE_COMMAND,value:command});
+        } else {
+            throw new Error(this.getMessage("wrong command"));
+        }
+    };
+
+    Sequence.prototype._addDelay = function(delay) {
+        if (TUtils.checkInteger(delay)) {
+            this.actions.push({type:Sequence.TYPE_DELAY,value:delay});
+        } else {
+            throw new Error(this.getMessage("wrong delay"));
+        }
+    };
+    
+    Sequence.prototype.nextAction = function() {
+        this.timeout = null;
+        this.index++;
+        if (this.actions.length > 0 && this.running) {
+            if (this.index >= this.actions.length) {
+                if (this.loop) {
+                    this.index = 0;
+                } else {
+                    // last action reached: we stop here
+                    this.running = false;
+                    return;
+                }
+            }
+            var action = this.actions[this.index];
+            if (action.type === Sequence.TYPE_COMMAND) {
+                // execute command
+                TRuntime.execute(action.value);
+                this.nextAction();
+            } else if (action.type === Sequence.TYPE_DELAY) {
+                var self = this;
+                this.timeout = window.setTimeout(function() { self.nextAction(); }, action.value);
+            }
+        }
+    };
+    
+    Sequence.prototype._start = function() {
+        if (this.running) {
+            // Sequence is already running: restart it
+            this.stop();
+        }
+        this.running = true;
+        this.index = -1;
+        this.nextAction();
+    };
+
+    Sequence.prototype._stop = function() {
+        this.running = false;
+        this.index = -1;
+        if (this.timeout !== null) {
+            window.clearTimeout(this.timeout);
+            this.timeout = null;
+        }
+    };
+    
+    Sequence.prototype._pause = function() {
+        this.running = false;
+        if (this.timeout !== null) {
+            window.clearTimeout(this.timeout);
+            this.timeout = null;
+        }
+    };
+    
+    Sequence.prototype._unpause = function() {
+        this.running = true;
+        this.nextAction();
+    };
+
+    Sequence.prototype._delete = function() {
+        this.stop();
+        TObject.prototype._delete.call(this);
+        //window.URL.revokeObjectURL(this.blobURL);
+        
+    };
+
+    Sequence.prototype._loop = function(value) {
+        if (TUtils.checkBoolean(value)) {
+            if (value) {
+                // WARNING: in order to prevent Tangara freeze, check that there is at least a total delay of MINIMUM_LOOP in actions
+                var totalDelay = 0;
+                for (var i=0; i<this.actions.length;i++) {
+                    var action = this.actions[i];
+                    if (action.type === Sequence.TYPE_DELAY) {
+                        totalDelay += action.value;
+                    }
+                }
+                if (totalDelay < Sequence.MINIMUM_LOOP) {
+                    throw new Error(this.getMessage("freeze warning",Sequence.MINIMUM_LOOP));
+                }
+            }            
+            this.loop = value;
+        }
+    };
+    
+    TEnvironment.internationalize(Sequence, true);
+    
+    return Sequence;
+});
+
+

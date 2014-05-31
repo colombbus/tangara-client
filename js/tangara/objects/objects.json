@@ -54,5 +54,13 @@
             "es": "TBT",
             "en": "Block"
         }
+    },
+    "Sequence": {
+        "path": "sequence",
+        "translations": {
+            "fr": "Séquence",
+            "es": "TBT",
+            "en": "Sequence"
+        }
     }
 }

@@ -1,0 +1,11 @@
+{
+    "fr": {
+        "wrong command":"Commande incorrecte",
+        "wrong delay":"Valeur incorrecte",
+        "freeze warning":"Pour boucler, la Séquence doit posséder un délai d'au moins {0} millisecondes"
+    },
+    "en": {
+        "wrong command":"Wrong command",
+        "wrong delay":"Wrong value"
+    }
+}
