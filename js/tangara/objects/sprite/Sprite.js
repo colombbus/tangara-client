@@ -36,20 +36,23 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
                 velocity:200,
                 type:TGraphicalObject.TYPE_SPRITE,
                 direction:'none',
-                watchCollisions:false,
                 category:'',
-                moving:false
+                moving:false,
+                hasCollisionCommands:false,
+                collisionWatched:false,
+                frozen:false                
             },props),defaultProps);
+            this.watchCollisions(true);
         },
         checkCollisions: function() {
-            if (this.p.watchCollisions && this.p.moving) {
+            if (this.p.moving) {
                 this.stage.collide(this, {collisionMask:TGraphicalObject.TYPE_SPRITE, maxCol:1});
             }
         },
         step: function(dt) {
             var p = this.p;
             p.moving = false;
-            if (!p.dragging) {
+            if (!p.dragging && !p.frozen) {
                 var step = p.velocity*dt;
                 switch (p.direction) {
                     case Sprite.DIRECTION_NONE:
@@ -192,28 +195,41 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
                 }
                 this.spriteCollisionCommands.addCommand(command, param.getQObject().getId());
             }
-            if (!this.p.watchCollisions) {
-                this.on("hit", this, "objectEncountered");
-                this.p.watchCollisions = true;
+            if (!this.p.hasCollisionCommands) {
+                this.p.hasCollisionCommands = true;
             }
         },
+        watchCollisions: function(value) {
+            this.perform(function(value){
+                if (value === this.p.collisionWatched)
+                    return;
+                if (value) {
+                    this.on("hit", this, "objectEncountered");
+                } else {
+                    this.off("hit", this, "objectEncountered");
+                }
+                this.p.collisionWatched = value;
+            }, [value]);
+        },
         objectEncountered: function(col) {
-            // TODO add event object with info on collision
-            var object = col.obj;
-            if (typeof object.getId !== 'undefined') {
-                var id = object.getId();
-                var category = object.getCategory();
-                // 1st check collision commands with this object
-                if (typeof this.spriteCollisionCommands !== 'undefined' && this.spriteCollisionCommands.hasCommands(id)) {
-                    this.spriteCollisionCommands.executeCommands({'field':id});
-                }
-                // 2nd check collision commands with object's category
-                if (typeof this.categoryCollisionCommands !== 'undefined' && this.categoryCollisionCommands.hasCommands(category)) {
-                    this.categoryCollisionCommands.executeCommands({'field':category});
-                }
-                // 3rd check general collision commands
-                if (typeof this.collisionCommands !== 'undefined' && this.collisionCommands.hasCommands()) {
-                    this.collisionCommands.executeCommands();
+            if (this.p.hasCollisionCommands) {
+                // TODO add event object with info on collision
+                var object = col.obj;
+                if (typeof object.getId !== 'undefined') {
+                    var id = object.getId();
+                    var category = object.getCategory();
+                    // 1st check collision commands with this object
+                    if (typeof this.spriteCollisionCommands !== 'undefined' && this.spriteCollisionCommands.hasCommands(id)) {
+                        this.spriteCollisionCommands.executeCommands({'field':id});
+                    }
+                    // 2nd check collision commands with object's category
+                    if (typeof this.categoryCollisionCommands !== 'undefined' && this.categoryCollisionCommands.hasCommands(category)) {
+                        this.categoryCollisionCommands.executeCommands({'field':category});
+                    }
+                    // 3rd check general collision commands
+                    if (typeof this.collisionCommands !== 'undefined' && this.collisionCommands.hasCommands()) {
+                        this.collisionCommands.executeCommands();
+                    }
                 }
             }
         },
@@ -224,7 +240,7 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
             return "Sprite_"+this.id;
         },
         freeze: function(value) {
-            //TODO: implement this
+            this.p.frozen = value;
             this._super(value);
         },
         addTransparency: function(red, green, blue) {
@@ -570,7 +586,11 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
         }
     };
 
-
+    Sprite.prototype._watchCollisions = function(value) {
+        if (TUtils.checkBoolean(value)) {
+            this.qObject.watchCollisions(value);
+        }
+    };
 
     TEnvironment.internationalize(Sprite, true);
     
