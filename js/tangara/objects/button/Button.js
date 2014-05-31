@@ -1,6 +1,5 @@
 define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'], function($, TEnvironment, TUtils, CommandManager, TGraphicalObject) {
     var Button = function(label) {
-        window.console.log("Initializing button");
         TGraphicalObject.call(this);
         if (TUtils.checkString(label)) {
             this._setText(label);
