@@ -6,9 +6,6 @@ define(['jquery','TEnvironment', 'TObject', 'TUtils', 'TRuntime'], function($, T
         this.running = false;
         this.timeout = null;
         this.loop = false;
-        /*this.worker = null;
-        this.blobURL = null;
-        this.createWorker();*/
     };
     
     Sequence.prototype = Object.create(TObject.prototype);
@@ -17,33 +14,7 @@ define(['jquery','TEnvironment', 'TObject', 'TUtils', 'TRuntime'], function($, T
     
     Sequence.TYPE_COMMAND = 0x01;
     Sequence.TYPE_DELAY = 0x02;
-    Sequence.MINIMUM_LOOP = 500;
-    
-    /*Sequence.prototype.createWorker = function() {
-        var blob = new Blob([
-            "addEventListener('message', function(e) {\n\
-                var delay = e.data;\n\
-                if (typeof delay !== 'undefined' && !isNaN(delay) {\n\
-                    setTimeout(function() {\n\
-                            postMessage("");\n\
-                        }\n\
-                        , delay);\n\
-                }\n\
-            });")]);
-
-        // Obtain a blob URL reference to our worker 'file'.
-        this.blobURL = window.URL.createObjectURL(blob);
-
-        this.worker = new Worker(blobURL);
-    };*/
-
-    
-    /*worker.onmessage = function(e) {
-        // e.data == 'msg from worker'
-    };
-    
-    worker.postMessage(); // Start the worker.
-    };*/
+    Sequence.MINIMUM_LOOP = 100;
     
     Sequence.prototype._addCommand = function(command) {
         if (TUtils.checkCommand(command)) {
@@ -121,8 +92,6 @@ define(['jquery','TEnvironment', 'TObject', 'TUtils', 'TRuntime'], function($, T
     Sequence.prototype._delete = function() {
         this.stop();
         TObject.prototype._delete.call(this);
-        //window.URL.revokeObjectURL(this.blobURL);
-        
     };
 
     Sequence.prototype._loop = function(value) {
