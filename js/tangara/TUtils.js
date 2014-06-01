@@ -152,7 +152,7 @@ define(['TEnvironment'], function(TEnvironment) {
         
         this.getBoolean = function(value) {
             if (!this.checkBoolean(value)) {
-                throw new Error(TEnvironment.getMessage("wrong boolean"), value);
+                throw new Error(TEnvironment.getMessage("wrong boolean", value));
             }
             return value;
         };
@@ -163,7 +163,7 @@ define(['TEnvironment'], function(TEnvironment) {
         
         this.getInteger = function(value) {
             if (!this.checkInteger(value)) {
-                throw new Error(TEnvironment.getMessage("wrong integer"), value);
+                throw new Error(TEnvironment.getMessage("wrong integer", value));
             }
             return value;
         };
@@ -174,7 +174,7 @@ define(['TEnvironment'], function(TEnvironment) {
 
         this.getString = function(value) {
             if (!this.checkString(value)) {
-                throw new Error(TEnvironment.getMessage("wrong string"), value);
+                throw new Error(TEnvironment.getMessage("wrong string", value));
             }
             return value;
         };
@@ -185,7 +185,7 @@ define(['TEnvironment'], function(TEnvironment) {
 
         this.getFunction = function(value) {
             if (!this.checkFunction(value)) {
-                throw new Error(TEnvironment.getMessage("wrong function"), value);
+                throw new Error(TEnvironment.getMessage("wrong function", value));
             }
             return value;
         };
@@ -196,7 +196,7 @@ define(['TEnvironment'], function(TEnvironment) {
 
         this.getObject = function(value) {
             if (!this.checkObject(value)) {
-                throw new Error(TEnvironment.getMessage("wrong object"), value);
+                throw new Error(TEnvironment.getMessage("wrong object", value));
             }
             return value;
         };
@@ -207,7 +207,7 @@ define(['TEnvironment'], function(TEnvironment) {
 
         this.getCommand = function(value) {
             if (!this.checkCommand(value)) {
-                throw new Error(TEnvironment.getMessage("wrong command"), value);
+                throw new Error(TEnvironment.getMessage("wrong command", value));
             }
             return value;
         };
@@ -227,7 +227,7 @@ define(['TEnvironment'], function(TEnvironment) {
                 if (typeof colors[translated] !== 'undefined') {
                     return colors[translated];
                 } else {
-                    throw new Error(TEnvironment.getMessage("wrong color string"), red);
+                    throw new Error(TEnvironment.getMessage("wrong color string", red));
                 }
             } else if (this.checkInteger(red) && this.checkInteger(green) & this.checkInteger(blue)) {
                 red = Math.min(Math.abs(red), 255);
