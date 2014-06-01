@@ -1,4 +1,4 @@
-define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'TProgram', 'TEnvironment', 'TLink'], function($,ace, ace_edit_session, ace_range, TProgram, TEnvironment, TLink) {
+define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 'TProgram', 'TEnvironment', 'TLink'], function($,ace, ace_edit_session, ace_range, ace_undo_manager, TProgram, TEnvironment, TLink) {
 
     function TEditor() {
         var domEditor = document.createElement("div");
@@ -20,6 +20,7 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'TProgram', 'TEnvir
         var editing = new Array();
         var currentProgram = null;
         var AceEditSession = ace_edit_session.EditSession;
+        var AceUndoManager = ace_undo_manager.UndoManager;
         var AceRange = ace_range.Range;
         var errorMarker = null;
 
@@ -41,10 +42,6 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'TProgram', 'TEnvir
                 }
                 codeChanged = true;
                 self.removeError();
-                /*if (!aceEditor.getSession().getUndoManager().hasUndo())
-                    dirty = false;
-                else
-                    dirty = true;*/
             });
             aceEditor.commands.addCommand({
                 name: "save",
@@ -55,11 +52,6 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'TProgram', 'TEnvir
             });
             
             this.newProgram();
-            /* NOTE FOR LATER
-            $('#save').on("click", function() {
-                editor.session.getUndoManager().markClean()
-            })
-            */
         };
         
         this.show = function() {
@@ -119,6 +111,7 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'TProgram', 'TEnvir
         function createSession(program) {
             var session = new AceEditSession(program.getCode());
             session.setMode("ace/mode/java");
+            session.setUndoManager(new AceUndoManager());             
             editing[program.getName()]['session'] = session;
             aceEditor.setSession(session);
         }
@@ -173,6 +166,8 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'TProgram', 'TEnvir
             saveSession();
             currentProgram.save();
             this.updateProgramName();
+            var undo = aceEditor.getSession().getUndoManager();
+            undo.reset();
         };
         
         this.removeError = function() {
