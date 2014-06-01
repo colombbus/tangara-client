@@ -66,6 +66,24 @@ define(['jquery','TEnvironment', 'TUI'], function($,TEnvironment, TUI) {
         optionDesignMode.appendChild(document.createTextNode(TEnvironment.getMessage('option-design-mode')));
         optionDesignMode.onclick = function() { TUI.toggleDesignMode(); };
 
+        var optionSaveProgram = document.createElement("button");
+        optionSaveProgram.className = "ttoolbar-option";
+        var imageSaveProgram = document.createElement("img");
+        imageSaveProgram.src = TEnvironment.getBaseUrl() + "/images/save.png";
+        imageSaveProgram.className = "ttoolbar-option-image";
+        optionSaveProgram.appendChild(imageSaveProgram);
+        optionSaveProgram.appendChild(document.createTextNode(TEnvironment.getMessage('option-save-program')));
+        optionSaveProgram.onclick = function() { TUI.saveProgram(); };
+
+        var optionNewProgram = document.createElement("button");
+        optionNewProgram.className = "ttoolbar-option";
+        var imageNewProgram = document.createElement("img");
+        imageNewProgram.src = TEnvironment.getBaseUrl() + "/images/new.png";
+        imageNewProgram.className = "ttoolbar-option-image";
+        optionNewProgram.appendChild(imageNewProgram);
+        optionNewProgram.appendChild(document.createTextNode(TEnvironment.getMessage('option-new-program')));
+        optionNewProgram.onclick = function() { TUI.newProgram(); };
+
         this.getElement = function() {
             return domToolbar;
         };
@@ -89,11 +107,15 @@ define(['jquery','TEnvironment', 'TUI'], function($,TEnvironment, TUI) {
         
         this.enableEditor = function() {
             domEditor.className = "ttoolbar-mode active";
+            domOptions.appendChild(optionSaveProgram);
+            domOptions.appendChild(optionNewProgram);
             domButtons.appendChild(buttonExecute);
         };
         
         this.disableEditor = function() {
             domEditor.className = "ttoolbar-mode";
+            domOptions.removeChild(optionSaveProgram);
+            domOptions.removeChild(optionNewProgram);
             domButtons.removeChild(buttonExecute);
         };
     };
