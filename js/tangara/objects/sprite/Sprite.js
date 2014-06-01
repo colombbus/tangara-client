@@ -23,7 +23,7 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
     Sprite.DIRECTION_DOWN = 0x08;
     
     var qInstance = Sprite.prototype.qInstance;
-    
+        
     qInstance.TGraphicalObject.extend("TSprite", {
         init: function(props,defaultProps) {
             this._super(qInstance._extend({
@@ -45,50 +45,57 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
         },
         checkCollisions: function() {
             if (this.p.moving) {
+                // Look for other sprites
                 this.encounteredObjects = [];
-                this.reciprocalCol = [];
-                this.stage.collide(this, {collisionMask:TGraphicalObject.TYPE_SPRITE, maxCol:1, skipEvents:true});
-                var object, col;
-                for (var i=0; i<this.reciprocalCol.length;i++) {
-                    // Do the reciprical collision
-                    col = this.reciprocalCol[i];
-                    object = col.obj;
-                    col.obj = this;
-                    col.normalX *= -1;
-                    col.normalY *= -1;
-                    col.distance = 0;
-                    col.magnitude = 0;
-                    col.separate[0] = 0;
-                    col.separate[1] = 0;
-                    object.trigger('hit',col);
-                    object.trigger('hit.sprite',col);
+                this.reciprocalCol = false;
+                var skip = 0;
+                var collided = this.stage.Tsearch(this, TGraphicalObject.TYPE_SPRITE, skip);
+                var collision = false, object;
+                while(collided && !collision) {
+                    object = collided.obj;
+                    this.encounteredObjects.push(object);
+                    if (this.lastEncounteredObjects.indexOf(object) === -1) {
+                        this.objectEncountered(collided);
+                        collision = true;
+                    } else {
+                        // look for another sprite
+                        skip++;
+                        collided = this.stage.Tsearch(this, TGraphicalObject.TYPE_SPRITE, skip);
+                    }
                 }
                 this.lastEncounteredObjects = this.encounteredObjects.slice(0);
+                if (collision) {
+                    // Do the reciprical collision
+                    collided.obj = this;
+                    collided.normalX *= -1;
+                    collided.normalY *= -1;
+                    collided.distance = 0;
+                    collided.magnitude = 0;
+                    collided.separate[0] = 0;
+                    collided.separate[1] = 0;
+                    object.trigger('hit',collided);
+                    object.trigger('hit.sprite',collided);
+                }
             }
         },
         objectEncountered: function(col) {
             if (this.p.hasCollisionCommands) {
                 // TODO add event object with info on collision
                 var object = col.obj;
-                this.encounteredObjects.push(object);
-                if (this.lastEncounteredObjects.indexOf(object) === -1) {
-                    if (typeof object.getId !== 'undefined') {
-                        var id = object.getId();
-                        var category = object.getCategory();
-                        // 1st check collision commands with this object
-                        if (typeof this.spriteCollisionCommands !== 'undefined' && this.spriteCollisionCommands.hasCommands(id)) {
-                            this.spriteCollisionCommands.executeCommands({'field':id});
-                        }
-                        // 2nd check collision commands with object's category
-                        if (typeof this.categoryCollisionCommands !== 'undefined' && this.categoryCollisionCommands.hasCommands(category)) {
-                            this.categoryCollisionCommands.executeCommands({'field':category});
-                        }
-                        // 3rd check general collision commands
-                        if (typeof this.collisionCommands !== 'undefined' && this.collisionCommands.hasCommands()) {
-                            this.collisionCommands.executeCommands();
-                        }
-                        // add the col for reciprocalCollision later
-                        this.reciprocalCol.push(col);
+                if (typeof object.getId !== 'undefined') {
+                    var id = object.getId();
+                    var category = object.getCategory();
+                    // 1st check collision commands with this object
+                    if (typeof this.spriteCollisionCommands !== 'undefined' && this.spriteCollisionCommands.hasCommands(id)) {
+                        this.spriteCollisionCommands.executeCommands({'field':id});
+                    }
+                    // 2nd check collision commands with object's category
+                    if (typeof this.categoryCollisionCommands !== 'undefined' && this.categoryCollisionCommands.hasCommands(category)) {
+                        this.categoryCollisionCommands.executeCommands({'field':category});
+                    }
+                    // 3rd check general collision commands
+                    if (typeof this.collisionCommands !== 'undefined' && this.collisionCommands.hasCommands()) {
+                        this.collisionCommands.executeCommands();
                     }
                 }
             }
