@@ -6,7 +6,7 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
         this.transparentColors = new Array();
         this.displayedImage = "";
         this.displayedSet = "";
-        this.displayedIndex = "";
+        this.displayedIndex = -1;
         if (typeof name === 'string') {
           this._setImage(name);
         }
