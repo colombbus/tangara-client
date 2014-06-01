@@ -3,6 +3,7 @@ body, html {
     min-height:100%;
     margin:0;
     padding:0;
+    font-family:'Arial', sans-serif;
 }
 
 /* TFrame */
@@ -77,10 +78,46 @@ body, html {
     width:100%;
 }
 
-#teditor-text {
-    margin:10px;
+#teditor-sidebar {
+    background-color:#DEDEDE;
+    width:200px;
+    float:right;
     height:100%;
-    width:100%;
+    font-family:'Monaco','Menlo','Ubuntu Mono','Consolas','source-code-pro',monospace;
+}
+
+.teditor-sidebar-program {
+    padding:10px;
+    color:#333435;
+    cursor:pointer;
+    position:relative;
+}
+
+.teditor-sidebar-edited {
+    color:/*#19469D*/#0000CD;
+}
+
+.teditor-sidebar-current {
+    background-color:#FFFFFF;
+}
+
+.teditor-sidebar-close {
+    position:absolute;
+    right:10px;
+    top:10px;
+    height:20px;
+    width:20px;
+    background-image:url('../images/close.png');
+    display:none;
+}
+
+.teditor-sidebar-program:hover .teditor-sidebar-close {
+    display:block;
+}
+
+#teditor-text {
+    height:100%;
+    margin-right:200px;
 }
 
 .tangara_error {    
@@ -110,7 +147,6 @@ body, html {
 
 #ttoolbar {
     background-color:#FFFFFF;
-    font-family:'Arial', sans-serif;
     font-size:10pt;
     font-weight:normal;
     display:table;
@@ -211,7 +247,7 @@ body, html {
     z-index:1;  
     width:100%;
     height:100%;
-    background-color:#C8C8C8;
+    background-color:#DEDEDE;
     overflow:hidden;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
