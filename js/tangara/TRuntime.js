@@ -259,42 +259,44 @@ define(['jquery', 'TError', 'quintus'], function($, TError, Quintus) {
         
         this.tweakQuintus = function() {
             // Tweak Quintus to be able to look for sprites while skipping some of them
-            
-              Q._Tdetect = function(obj,iterator,context,arg1,arg2,skip) {
-                    var result;
-                    if (obj == null) { return; }
-                    if (obj.length === +obj.length) {
-                      for (var i = 0, l = obj.length; i < l; i++) {
-                        result = iterator.call(context, obj[i], i, arg1, arg2);
-                        if(result) { 
-                            skip--;
-                            if (skip<0) {
-                                return result;
-                            }
-                        }
-                      }
-                      return false;
-                    } else {
-                      for (var key in obj) {
-                        result = iterator.call(context, obj[key], key, arg1, arg2);
-                        if(result) { 
-                            skip--;
-                            if (skip<0) {
-                                return result;
-                            }
-                        }
-                      }
-                      return false;
-                    }
-                  };
 
-            
-            quintusInstance.Stage.prototype._TgridCellCheck = function(type,id,obj,collisionMask, skip) {
-                if(Q._isUndefined(collisionMask) || collisionMask & type) {
+            Q._Tdetect = function(obj, iterator, context, arg1, arg2, skip) {
+                var result;
+                if (obj == null) {
+                    return;
+                }
+                if (obj.length === +obj.length) {
+                    for (var i = 0, l = obj.length; i < l; i++) {
+                        result = iterator.call(context, obj[i], i, arg1, arg2);
+                        if (result) {
+                            skip--;
+                            if (skip < 0) {
+                                return result;
+                            }
+                        }
+                    }
+                    return false;
+                } else {
+                    for (var key in obj) {
+                        result = iterator.call(context, obj[key], key, arg1, arg2);
+                        if (result) {
+                            skip--;
+                            if (skip < 0) {
+                                return result;
+                            }
+                        }
+                    }
+                    return false;
+                }
+            };
+
+
+            quintusInstance.Stage.prototype._TgridCellCheck = function(type, id, obj, collisionMask, skip) {
+                if (Q._isUndefined(collisionMask) || collisionMask & type) {
                     var obj2 = this.index[id];
-                    if(obj2 && obj2 !== obj && Q.overlap(obj,obj2)) {
-                        var col= Q.collision(obj,obj2);
-                        if(col) {
+                    if (obj2 && obj2 !== obj && Q.overlap(obj, obj2)) {
+                        var col = Q.collision(obj, obj2);
+                        if (col) {
                             col.obj = obj2;
                             return col;
                         } else {
@@ -303,42 +305,47 @@ define(['jquery', 'TError', 'quintus'], function($, TError, Quintus) {
                     }
                 }
             };
-            
-            quintusInstance.Stage.prototype.Tsearch = function(obj,collisionMask, skip) {
-              var col;
 
-              // If the object doesn't have a grid, regrid it
-              // so we know where to search
-              // and skip adding it to the grid only if it's not on this stage
-              if(!obj.grid) { this.regrid(obj,obj.stage !== this); }
+            quintusInstance.Stage.prototype.Tsearch = function(obj, collisionMask, skip) {
+                var col;
 
-              var grid = obj.grid, gridCell, col;
-              if (typeof skip === 'undefined') {
-                  skip = 0;
-              }
-
-              for(var y = grid.Y1;y <= grid.Y2;y++) {
-                if(this.grid[y]) {
-                  for(var x = grid.X1;x <= grid.X2;x++) {
-                    gridCell = this.grid[y][x];
-                    if(gridCell) { 
-                      col = Q._Tdetect(gridCell,this._gridCellCheck,this,obj,collisionMask, skip);
-                      if(col) { return col; }
-                    }
-                  }
+                // If the object doesn't have a grid, regrid it
+                // so we know where to search
+                // and skip adding it to the grid only if it's not on this stage
+                if (!obj.grid) {
+                    this.regrid(obj, obj.stage !== this);
                 }
-              }
-              return false;
+
+                var grid = obj.grid, gridCell, col;
+                if (typeof skip === 'undefined') {
+                    skip = 0;
+                }
+
+                for (var y = grid.Y1; y <= grid.Y2; y++) {
+                    if (this.grid[y]) {
+                        for (var x = grid.X1; x <= grid.X2; x++) {
+                            gridCell = this.grid[y][x];
+                            if (gridCell) {
+                                col = Q._Tdetect(gridCell, this._gridCellCheck, this, obj, collisionMask, skip);
+                                if (col) {
+                                    return col;
+                                }
+                            }
+                        }
+                    }
+                }
+                return false;
             };
         };
 
-    };
-    
-    
+    }
+    ;
 
-    
+
+
+
     var runtimeInstance = new TRuntime();
-    
+
     return runtimeInstance;
 });
 
