@@ -1,4 +1,4 @@
-define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TParser'], function($, TUI, TEnvironment, TRuntime, TUtils, TObject, TParser) {
+define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink'], function($, TUI, TEnvironment, TRuntime, TUtils, TObject, TLink) {
     var Tangara = function() {
         // Do not call parent constructor, as we don't want this object to be erased when clearing the
         // Runtime
@@ -19,22 +19,10 @@ define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TPars
     };
 
     Tangara.prototype._loadScript = function(name) {
-        // TODO : get parsed version directly
         name = TUtils.getString(name);
-        var scriptUrl = TEnvironment.getUserResource(name);
-        var parent = this;
-        $.ajax({
-            dataType: "text",
-            url: scriptUrl,
-            async: false,
-            success: function(data) {
-                TRuntime.setCurrentProgramName(name);
-                var statements = TParser.parse(data);
-                TRuntime.executeStatements(statements);
-            }
-        }).fail(function(jqxhr, textStatus, error) {
-            throw new Error(parent.getMessage("script unreachable", name));
-        });
+        var statements = TLink.getProgramStatements(name);
+        TRuntime.setCurrentProgramName(name);
+        TRuntime.executeStatements(statements);
     };
 
     Tangara.prototype._pause = function() {
