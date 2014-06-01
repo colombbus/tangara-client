@@ -46,11 +46,14 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'T
                     // no destinationY other than y can be set
                     this.p.destinationY = this.p.y;
                 }
-                // Search for blocks
-                var maxCol = 1, collided = false;
-                while((collided = this.stage.search(this, TGraphicalObject.TYPE_BLOCK)) && maxCol > 0) {
+                // Look for blocks
+                var skip = 0;
+                var collided = this.stage.Tsearch(this, TGraphicalObject.TYPE_BLOCK, skip);
+                // Max 2 overlapping blocks are searched
+                while(collided !== false && skip<2) {
                     this.checkBlocks(collided);
-                    maxCol--;
+                    skip++;
+                    collided = this.stage.Tsearch(this, TGraphicalObject.TYPE_BLOCK, skip);
                 }
             }
         },
