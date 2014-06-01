@@ -165,6 +165,12 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 log.addMessage(text);
             }
         };
+        
+        this.addLogError = function(error) {
+            if (typeof log !== 'undefined') {
+                log.addError(error);
+            }
+        };
 
         this.clearLog = function() {
             if (typeof log !== 'undefined') {
@@ -220,7 +226,14 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 editor.editProgram(error.getProgramName());
                 editor.setError(error.getLines());
             }
-                
+        };
+        
+        this.saveProgram = function() {
+            editor.saveProgram();
+        };
+
+        this.newProgram = function() {
+            editor.newProgram();
         };
     };
     
