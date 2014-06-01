@@ -17,6 +17,8 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'T
                 jumping:false,
                 vy:0,
                 gravity:9.8*100,
+                jumpDelay:10,
+                jumpAvailable:0,
                 jumpSpeed: -300
             },props),defaultProps);
             this.blocks = new Array();
@@ -29,8 +31,10 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'T
                 }
                 this._super(dt);
                 if (this.p.mayFall) {
+                    if (this.p.jumpAvailable>0)
+                        this.p.jumpAvailable--;
                     if (this.p.jumping) {
-                        if (this.p.vy === 0) {
+                        if (this.p.jumpAvailable>0) {
                             // perform a jump
                             this.p.vy = this.p.jumpSpeed;
                         }
@@ -62,6 +66,7 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'T
                     if (col.normalY < -0.3 && this.p.vy>0 ) {
                         // landed
                         this.p.vy = 0;
+                        this.p.jumpAvailable = this.p.jumpDelay;
                     } else if (col.normalY > 0.3 && this.p.vy<0) {
                         // bumped top
                         this.p.vy = 0;
