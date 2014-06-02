@@ -36,7 +36,7 @@ define(['jquery', 'TEnvironment'], function($, TEnvironment) {
         };
 
         this.getMessage = function() {
-            if (programName !== null && lines.length>0) {
+            if (programName !== null && typeof lines !=='undefined' && lines.length>0) {
                 if (lines.length === 2 && lines[0] !== lines[1]) {
                     return message + " (lignes "+lines[0]+" à "+lines[1]+")";
                 } else {
