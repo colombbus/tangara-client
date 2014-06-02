@@ -49,7 +49,7 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
                 this.encounteredObjects = [];
                 this.reciprocalCol = false;
                 var skip = 0;
-                var collided = this.stage.Tsearch(this, TGraphicalObject.TYPE_SPRITE, skip);
+                var collided = this.stage.TsearchSkip(this, TGraphicalObject.TYPE_SPRITE, skip);
                 var collision = false, object;
                 while(collided && !collision) {
                     object = collided.obj;
@@ -60,7 +60,7 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
                     } else {
                         // look for another sprite
                         skip++;
-                        collided = this.stage.Tsearch(this, TGraphicalObject.TYPE_SPRITE, skip);
+                        collided = this.stage.TsearchSkip(this, TGraphicalObject.TYPE_SPRITE, skip);
                     }
                 }
                 this.lastEncounteredObjects = this.encounteredObjects.slice(0);
