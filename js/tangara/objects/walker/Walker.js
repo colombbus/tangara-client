@@ -48,12 +48,12 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'T
                 }
                 // Look for blocks
                 var skip = 0;
-                var collided = this.stage.Tsearch(this, TGraphicalObject.TYPE_BLOCK, skip);
+                var collided = this.stage.TsearchSkip(this, TGraphicalObject.TYPE_BLOCK, skip);
                 // Max 2 overlapping blocks are searched
                 while(collided !== false && skip<2) {
                     this.checkBlocks(collided);
                     skip++;
-                    collided = this.stage.Tsearch(this, TGraphicalObject.TYPE_BLOCK, skip);
+                    collided = this.stage.TsearchSkip(this, TGraphicalObject.TYPE_BLOCK, skip);
                 }
             }
         },
