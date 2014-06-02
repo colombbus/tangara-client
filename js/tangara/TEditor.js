@@ -114,6 +114,7 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
             session.setUndoManager(new AceUndoManager());             
             editing[program.getName()]['session'] = session;
             aceEditor.setSession(session);
+            codeChanged =true;
         }
         
         this.openProgram = function(name) {
@@ -137,28 +138,40 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
         };
         
         this.closeProgram = function(name) {
+            if (typeof editing[name] === 'undefined') {
+                return;
+            }
+            var deletedProgram = editing[name]['program'];
             var editedPrograms = Object.keys(editing);
             editedPrograms = sortArray(editedPrograms);
             var deletedIndex = editedPrograms.indexOf(name);
-            if (currentProgram.isModified()) {
+            if (deletedProgram.isModified()) {
                 var goOn = window.confirm(TEnvironment.getMessage('close-confirm', name));
                 if (!goOn) {
                     aceEditor.focus();
                     return;
                 }
             }
+            var newCurrent = (deletedProgram === currentProgram);
+            
             delete editing[name];
-            currentProgram = null;
-            // Find program to display
-            if (deletedIndex > 0) {
-                this.editProgram(editedPrograms[deletedIndex-1]);
-            } else if (editedPrograms.length>1) {
-                // deleted was first: display following
-                this.editProgram(editedPrograms[1]);
+            
+            if (newCurrent) {
+                currentProgram = null;
+                // Find program to display
+                if (deletedIndex > 0) {
+                    this.editProgram(editedPrograms[deletedIndex-1]);
+                } else if (editedPrograms.length>1) {
+                    // deleted was first: display following
+                    this.editProgram(editedPrograms[1]);
+                } else {
+                    // there are no more edited program: create one
+                    this.newProgram();
+                }
             } else {
-                // there are no more edited program: create one
-                this.newProgram();
+                this.updateSidebar();
             }
+            
             aceEditor.focus();
         };
         
