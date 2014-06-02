@@ -3,7 +3,7 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TUI', 'TError', 'TParser'], functio
         
         this.getProgramList = function() {
             // TODO: plug with backend
-            return ["bob.tgr", "pomme.tgr"];
+            return ["bob.tgr", "pomme.tgr", "cubeQuest.tgr"];
         };
 
         this.getProgramCode = function(name) {
@@ -29,8 +29,16 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TUI', 'TError', 'TParser'], functio
 
         this.getProgramStatements = function(name) {
             // TODO: plug with backend
-            var code = this.getProgramCode(name);
-            return TParser.parse(code);
+            try {
+                var code = this.getProgramCode(name);
+                return TParser.parse(code);
+            } 
+            catch (e) {
+                var error = new TError(e);
+                error.setProgramName(name);
+                error.setCode(code);
+                throw error;
+            }
         };
 
         this.saveProgram = function(name, code, statements) {
