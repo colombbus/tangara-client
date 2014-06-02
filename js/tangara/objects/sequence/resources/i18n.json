@@ -7,7 +7,7 @@
             {"name":"_unpause","translated":"reprendre","displayed":"reprendre()"},
             {"name":"_start","translated":"d\u00e9marrer","displayed":"d\u00e9marrer()"},
             {"name":"_stop","translated":"arr\u00eater","displayed":"arr\u00eater()"},
-            {"name":"_loop","translated":"boucler","displayed":"boucler(false)"},
+            {"name":"_loop","translated":"r\u00e9p\u00e9ter","displayed":"r\u00e9p\u00e9ter(false)"},
             {"name":"_displayCommands","translated":"afficherCommandes","displayed":"afficherCommandes(true)"}
         ]
     }
