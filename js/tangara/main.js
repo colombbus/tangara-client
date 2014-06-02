@@ -2,7 +2,7 @@ require.config({
     "baseUrl":'js/tangara',
 
     paths: {
-        "jquery":'../libs/jquery-1.9.0/jquery.min',
+        "jquery":'../libs/jquery-1.11.1/jquery-1.11.1.min',
         "jquery_animate_enhanced":'../libs/jquery.animate-enhanced/jquery.animate-enhanced.min',
         "ace":'../libs/ace',
         "split-pane":'../libs/split-pane/split-pane',
