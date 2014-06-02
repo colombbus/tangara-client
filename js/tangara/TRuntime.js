@@ -344,39 +344,36 @@ define(['jquery', 'TError', 'quintus'], function($, TError, Quintus) {
             Q.touchType = 0;
 
             Q._TdetectTouch = function(obj, iterator, context, arg1, arg2) {
-                var result = false, col, id = -1;
+                var result = false, id = -1, col;
                 if (obj == null) {
                     return;
                 }
+                
                 if (obj.length === +obj.length) {
                     for (var i = 0, l = obj.length; i < l; i++) {
-                        col = iterator.call(context, obj[i], i, arg1, arg2);
+                        col = iterator.call(context, obj[i], i, arg1, arg2, id);
                         if (col) {
-                            if (col.obj.p.id > id) {
-                                id = col.obj.p.id;
-                                result = col;
-                            }
+                            id = col.obj.p.id;
+                            result = col;
                         }
                     }
                     return result;
                 } else {
                     for (var key in obj) {
-                        col = iterator.call(context, obj[key], key, arg1, arg2);
+                        col = iterator.call(context, obj[key], key, arg1, arg2, id);
                         if (col) {
-                            if (col.obj.p.id > id) {
-                                id = col.obj.p.id;
-                                result = col;
-                            }
+                            id = col.obj.p.id;
+                            result = col;
                         }
                     }
                     return result;
                 }
             };
 
-            quintusInstance.Stage.prototype._TgridCellCheckTouch = function(type, id, obj, collisionMask) {
+            quintusInstance.Stage.prototype._TgridCellCheckTouch = function(type, id, obj, collisionMask, minId) {
                 if (Q._isUndefined(collisionMask) || collisionMask & type) {
                     var obj2 = this.index[id];
-                    if (obj2 && obj2 !== obj && Q.overlap(obj, obj2)) {
+                    if (obj2 && obj2 !== obj && !obj2.p.hidden && obj2.p.id > minId && Q.overlap(obj, obj2)) {
                         var col = Q.collision(obj, obj2);
                         if (col) {
                             col.obj = obj2;
