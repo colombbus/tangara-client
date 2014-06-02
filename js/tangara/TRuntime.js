@@ -10,15 +10,15 @@ define(['jquery', 'TError', 'quintus'], function($, TError, Quintus) {
         var tObjects = new Array();
         var tGraphicalObjects = new Array();
         var currentProgramName;
-        
+
         var designMode = false;
         var frozen = false;
         var Q = Quintus();
-        
+
         this.load = function(language, objectListUrl) {
             // create runtime frame
             this.initRuntimeFrame();
-            
+
             // create quintusInstance;
             quintusInstance = Q.include("Sprites, Scenes, 2D, UI, Anim, Input, Touch");
             this.tweakQuintus();
@@ -40,7 +40,7 @@ define(['jquery', 'TError', 'quintus'], function($, TError, Quintus) {
                     });
                 }
             });
-            
+
             // declare global variables
             require(libs, function() {
                 for(var i= 0; i < translatedNames.length; i++) {
@@ -49,7 +49,7 @@ define(['jquery', 'TError', 'quintus'], function($, TError, Quintus) {
                 }
             });
         };
-        
+
         this.initRuntimeFrame = function() {
             if (typeof runtimeFrame === 'undefined') {
                 var runtime = this;
@@ -109,7 +109,7 @@ define(['jquery', 'TError', 'quintus'], function($, TError, Quintus) {
             }
             return true;
         };
-        
+
         this.executeStatements = function(statements) {
             for (var i = 0; i<statements.length; i++) {
                 var statement = statements[i];
@@ -117,7 +117,7 @@ define(['jquery', 'TError', 'quintus'], function($, TError, Quintus) {
                     return false;
             }
         };
-        
+
         this.executeFrom = function(object) {
             try {
                 var statements = object.getStatements();
@@ -131,7 +131,7 @@ define(['jquery', 'TError', 'quintus'], function($, TError, Quintus) {
                 this.logError(error);
             }
         };
-        
+
         this.setQuintusInstance = function(instance) {
             quintusInstance = instance;
         };
@@ -143,17 +143,17 @@ define(['jquery', 'TError', 'quintus'], function($, TError, Quintus) {
         this.setCanvas = function(element) {
             canvas = element;
         };
-        
+
         this.setLog = function(element) {
             log = element;
         };
-        
+
         this.logCommand = function(command) {
             if (typeof log !== 'undefined') {
                 log.addCommand(command);
             }
         };
-        
+
         this.logError = function(error) {
             if (typeof log !== 'undefined') {
                 log.addError(error);
@@ -202,7 +202,7 @@ define(['jquery', 'TError', 'quintus'], function($, TError, Quintus) {
             object.freeze(frozen);
             object.setDesignMode(designMode);
         };
-        
+
         this.removeGraphicalObject = function(object) {
             var index = tGraphicalObjects.indexOf(object);
             if (index > -1) {
@@ -238,7 +238,7 @@ define(['jquery', 'TError', 'quintus'], function($, TError, Quintus) {
             }
             designMode = value;
         };
-        
+
         this.freeze = function(value) {
             for (var i = 0; i<tGraphicalObjects.length; i++) {
                 tGraphicalObjects[i].freeze(value);
@@ -248,19 +248,20 @@ define(['jquery', 'TError', 'quintus'], function($, TError, Quintus) {
             }
             frozen = value;
         };
-        
+
         this.setCurrentProgramName = function(name) {
             currentProgramName = name;
         };
-        
+
         this.getCurrentProgramName = function() {
             return currentProgramName;
         };
-        
-        this.tweakQuintus = function() {
-            // Tweak Quintus to be able to look for sprites while skipping some of them
 
-            Q._Tdetect = function(obj, iterator, context, arg1, arg2, skip) {
+        this.tweakQuintus = function() {
+
+
+            // Tweak Quintus to be able to look for sprites while skipping some of them
+            Q._TdetectSkip = function(obj, iterator, context, arg1, arg2, skip) {
                 var result;
                 if (obj == null) {
                     return;
@@ -290,8 +291,7 @@ define(['jquery', 'TError', 'quintus'], function($, TError, Quintus) {
                 }
             };
 
-
-            quintusInstance.Stage.prototype._TgridCellCheck = function(type, id, obj, collisionMask, skip) {
+            quintusInstance.Stage.prototype._TgridCellCheckSkip = function(type, id, obj, collisionMask, skip) {
                 if (Q._isUndefined(collisionMask) || collisionMask & type) {
                     var obj2 = this.index[id];
                     if (obj2 && obj2 !== obj && Q.overlap(obj, obj2)) {
@@ -305,8 +305,9 @@ define(['jquery', 'TError', 'quintus'], function($, TError, Quintus) {
                     }
                 }
             };
+            
 
-            quintusInstance.Stage.prototype.Tsearch = function(obj, collisionMask, skip) {
+            quintusInstance.Stage.prototype.TsearchSkip = function(obj, collisionMask, skip) {
                 var col;
 
                 // If the object doesn't have a grid, regrid it
@@ -326,7 +327,7 @@ define(['jquery', 'TError', 'quintus'], function($, TError, Quintus) {
                         for (var x = grid.X1; x <= grid.X2; x++) {
                             gridCell = this.grid[y][x];
                             if (gridCell) {
-                                col = Q._Tdetect(gridCell, this._gridCellCheck, this, obj, collisionMask, skip);
+                                col = Q._TdetectSkip(gridCell, this._TgridCellCheckSkip, this, obj, collisionMask, skip);
                                 if (col) {
                                     return col;
                                 }
@@ -336,10 +337,154 @@ define(['jquery', 'TError', 'quintus'], function($, TError, Quintus) {
                 }
                 return false;
             };
+
+
+            // Tweak Quintus to be able to look for sprite with highest id
+            Q.touchStage = [0];
+            Q.touchType = 0;
+
+            Q._TdetectTouch = function(obj, iterator, context, arg1, arg2) {
+                var result = false, col, id = -1;
+                if (obj == null) {
+                    return;
+                }
+                if (obj.length === +obj.length) {
+                    for (var i = 0, l = obj.length; i < l; i++) {
+                        col = iterator.call(context, obj[i], i, arg1, arg2);
+                        if (col) {
+                            if (col.obj.p.id > id) {
+                                id = col.obj.p.id;
+                                result = col;
+                            }
+                        }
+                    }
+                    return result;
+                } else {
+                    for (var key in obj) {
+                        col = iterator.call(context, obj[key], key, arg1, arg2);
+                        if (col) {
+                            if (col.obj.p.id > id) {
+                                id = col.obj.p.id;
+                                result = col;
+                            }
+                        }
+                    }
+                    return result;
+                }
+            };
+
+            quintusInstance.Stage.prototype._TgridCellCheckTouch = function(type, id, obj, collisionMask) {
+                if (Q._isUndefined(collisionMask) || collisionMask & type) {
+                    var obj2 = this.index[id];
+                    if (obj2 && obj2 !== obj && Q.overlap(obj, obj2)) {
+                        var col = Q.collision(obj, obj2);
+                        if (col) {
+                            col.obj = obj2;
+                            return col;
+                        } else {
+                            return false;
+                        }
+                    }
+                }
+            };
+
+
+            quintusInstance.Stage.prototype.TsearchTouch = function(obj, collisionMask) {
+                var col;
+
+                // If the object doesn't have a grid, regrid it
+                // so we know where to search
+                // and skip adding it to the grid only if it's not on this stage
+                if (!obj.grid) {
+                    this.regrid(obj, obj.stage !== this);
+                }
+
+                var grid = obj.grid, gridCell, col;
+                
+                for (var y = grid.Y1; y <= grid.Y2; y++) {
+                    if (this.grid[y]) {
+                        for (var x = grid.X1; x <= grid.X2; x++) {
+                            gridCell = this.grid[y][x];
+                            if (gridCell) {
+                                col = Q._TdetectTouch(gridCell, this._TgridCellCheckTouch, this, obj, collisionMask);
+                                if (col) {
+                                    return col;
+                                }
+                            }
+                        }
+                    }
+                }
+                return false;
+            };
+
+
+            Q.TouchSystem.prototype.touch = function(e) {
+                var touches = e.changedTouches || [e];
+
+                for (var i = 0; i < touches.length; i++) {
+
+                    for (var stageIdx = 0; stageIdx < Q.touchStage.length; stageIdx++) {
+                        var touch = touches[i],
+                                stage = Q.stage(Q.touchStage[stageIdx]);
+
+                        if (!stage) {
+                            continue;
+                        }
+
+                        touch.identifier = touch.identifier || 0;
+                        var pos = this.normalizeTouch(touch, stage);
+
+                        stage.regrid(pos, true);
+                        var col = stage.TsearchTouch(pos, Q.touchType), obj;
+
+                        if (col || stageIdx === Q.touchStage.length - 1) {
+                            obj = col && col.obj;
+                            pos.obj = obj;
+                            this.trigger("touch", pos);
+                        }
+
+                        if (obj && !this.touchedObjects[obj]) {
+                            this.activeTouches[touch.identifier] = {
+                                x: pos.p.px,
+                                y: pos.p.py,
+                                origX: obj.p.x,
+                                origY: obj.p.y,
+                                sx: pos.p.ox,
+                                sy: pos.p.oy,
+                                identifier: touch.identifier,
+                                obj: obj,
+                                stage: stage
+                            };
+                            this.touchedObjects[obj.p.id] = true;
+                            obj.trigger('touch', this.activeTouches[touch.identifier]);
+                            break;
+                        }
+
+                    }
+
+                }
+                //e.preventDefault();
+            };
+
+            Q.touch = function(type, stage) {
+                Q.untouch();
+                Q.touchType = type || Q.SPRITE_UI;
+                Q.touchStage = stage || [2, 1, 0];
+                if (!Q._isArray(Q.touchStage)) {
+                    touchStage = [Q.touchStage];
+                }
+
+                if (!Q._touch) {
+                    Q.touchInput = new Q.TouchSystem();
+                }
+                return Q;
+            };
+
+
+
         };
 
-    }
-    ;
+    };
 
 
 
