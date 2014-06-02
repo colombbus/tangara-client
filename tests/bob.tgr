@@ -1,13 +1,13 @@
-bRecommencer = new Bouton("Recommencer");
-bRecommencer.cacher();
-bRecommencer.définirPosition(356,276);
-bRecommencer.ajouterCommande("démarrer()");
-
 porte = new Animation("porte.png");
 porte.ajouterImage("porte_ouverte.png");
 
 fond = new Bloc("fond.png");
 fond.rendreTransparent("blanc");
+
+bRecommencer = new Bouton("Recommencer");
+bRecommencer.cacher();
+bRecommencer.définirPosition(356,276);
+bRecommencer.ajouterCommande("démarrer()");
 
 // MECHANTS
 
@@ -99,7 +99,7 @@ déplacementMéchant.ajouterDélai(2400);
 déplacementMéchant.ajouterCommande("méchant.allerA(254,512)");
 déplacementMéchant.ajouterDélai(2400);
 déplacementMéchant.afficherCommandes(false);
-déplacementMéchant.boucler(true);
+déplacementMéchant.répéter(true);
 
 // BAT
 bat.ajouterImage("bat1.png");
@@ -116,7 +116,7 @@ déplacementBat.ajouterDélai(3000);
 déplacementBat.ajouterCommande("bat.allerA(92,183)");
 déplacementBat.ajouterDélai(3000);
 déplacementBat.afficherCommandes(false);
-déplacementBat.boucler(true);
+déplacementBat.répéter(true);
 
 mouvementBat = new Minuteur();
 mouvementBat.ajouterCommande("bat.afficherImageSuivante()");

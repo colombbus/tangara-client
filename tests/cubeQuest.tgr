@@ -1,0 +1,265 @@
+menu = new Animation("menujeu.png");
+jouer = new Bouton("JOUER");
+bonus = new Bouton("BONUS");
+jouer.définirPosition(263,238);
+bonus.définirPosition(260,340);
+jouer.ajouterCommande("démarrer()");
+bonus.ajouterCommande("démarrer()");
+
+function démarrer(){
+    menu.cacher();
+    jouer.cacher();
+    bonus.cacher();
+    comclave.activer();
+    perso.montrer();
+    arrivée.montrer();
+    niveau1();
+}
+
+//Clavier
+comclave = new CommandesClavier();
+comclave.ajouterCommande("droite","perso.avancer()");
+comclave.ajouterCommande("gauche","perso.reculer()");
+comclave.ajouterCommande("bas","perso.descendre()");
+comclave.ajouterCommande("haut","perso.monter()");
+comclave.ajouterCommande("d","perso.avancer()");
+comclave.ajouterCommande("q","perso.reculer()");
+comclave.ajouterCommande("z","perso.monter()");
+comclave.ajouterCommande("s","perso.descendre()");
+comclave.ajouterCommandeRepos("perso.arrêter()");
+comclave.afficherCommandes(false);
+
+//Fond du niveau
+fond = new Bloc();
+fond.ajouterImage("niveau1.png");
+fond.ajouterImage("niveau2.png");
+fond.ajouterImage("niveau3.png");
+fond.ajouterImage("niveau4.png");
+fond.ajouterImage("niveau5.png");
+fond.ajouterImage("niveau6.png");
+fond.ajouterImage("niveau7.png");
+fond.ajouterImage("niveau8.png");
+fond.rendreTransparent("blanc");
+
+//Notre perso
+perso = new Promeneur("perso.png");
+perso.ajouterBloc(fond);
+perso.définirVitesse(150);
+perso.cacher();
+
+//Gameover fond
+fin = new Animation("gameover.png");
+fin.cacher();
+
+//Bouton Recommencer
+boutonRecommencer = new Bouton();
+boutonRecommencer.définirTexte("Recommencer");
+boutonRecommencer.cacher();
+boutonRecommencer.ajouterCommande("recommencer()");
+boutonRecommencer.définirPosition(238,28);
+
+//Point d'arrivée
+arrivée = new Animation("arrivee.png");
+arrivée.cacher();
+
+// méchants
+méchant1 = new Animation("ennemi.png");
+méchant1.cacher();
+méchant1.définirCatégorie("méchant");
+méchant1.définirPosition(-100,-100);
+méchant2 = new Animation("ennemi2.png");
+méchant2.cacher();
+méchant2.définirPosition(-100,-100);
+méchant2.définirCatégorie("méchant");
+méchant3 = new Animation("ennemi3.png");
+méchant3.cacher();
+méchant3.définirPosition(-100,-100);
+méchant3.définirCatégorie("méchant");
+mouvementMéchant1 = new Séquence();
+mouvementMéchant1.ajouterCommande("méchant1.allerA(x2Méchant1, y2Méchant1)");
+mouvementMéchant1.ajouterDélai(1000);
+mouvementMéchant1.ajouterCommande("méchant1.allerA(x1Méchant1, y1Méchant1)");
+mouvementMéchant1.ajouterDélai(1000);
+mouvementMéchant1.répéter(true);
+mouvementMéchant1.afficherCommandes(false);
+mouvementMéchant2 = new Séquence();
+mouvementMéchant2.ajouterCommande("méchant2.allerA(x2Méchant2, y2Méchant2)");
+mouvementMéchant2.ajouterDélai(1000);
+mouvementMéchant2.ajouterCommande("méchant2.allerA(x1Méchant2, y1Méchant2)");
+mouvementMéchant2.ajouterDélai(1000);
+mouvementMéchant2.répéter(true);
+mouvementMéchant2.afficherCommandes(false);
+mouvementMéchant3 = new Séquence();
+mouvementMéchant3.ajouterCommande("méchant3.allerA(x2Méchant3, y2Méchant3)");
+mouvementMéchant3.ajouterDélai(1000);
+mouvementMéchant3.ajouterCommande("méchant3.allerA(x1Méchant3, y1Méchant3)");
+mouvementMéchant3.ajouterDélai(1000);
+mouvementMéchant3.répéter(true);
+mouvementMéchant3.afficherCommandes(false);
+
+
+// collisions
+perso.siCollision("gameover()", "méchant");
+perso.siCollision("niveauSuivant()", arrivée);
+
+var niveau = 1;
+
+function démarrerNiveau(combien) {
+    comclave.activer();
+    arrivée.montrer();
+    switch(combien) {
+        case 1: 
+            niveau1();
+            break;
+        case 2:
+            niveau2();
+            break;
+        case 3:
+            niveau3();
+            break;
+        case 4:
+            niveau3();
+            break;
+        case 5:
+            niveau3();
+            break;
+        case 6:
+            niveau3();
+            break;
+        case 7:
+            niveau3();
+            break;
+        case 8:
+            niveau3();
+            break;
+    }
+    niveau = combien;
+}
+
+function niveauSuivant() {
+    niveau++;
+    if (niveau<9) {
+        démarrerNiveau(niveau);
+    }
+}
+
+function recommencer() {
+    fin.cacher();
+    boutonRecommencer.cacher();
+    démarrerNiveau(niveau);
+}
+
+function niveau1() {
+    fond.afficherImage("niveau1.png");
+    perso.définirPosition(28,48);
+    x1Méchant1 = 139;
+    y1Méchant1 = 218;
+    x2Méchant1 = 273;
+    y2Méchant1 = 218;
+    méchant1.définirPosition(x1Méchant1,y1Méchant1);
+    méchant1.montrer();
+    méchant2.cacher();
+    méchant3.cacher();
+    arrivée.définirPosition(338,276);
+    mouvementMéchant1.démarrer();
+}
+
+function niveau2() {
+    fond.afficherImage("niveau2.png");
+    perso.définirPosition(28,65);
+    x1Méchant1 = 415;
+    y1Méchant1 = 158;
+    x2Méchant1 = 288;
+    y2Méchant1 = 158;
+    méchant1.définirPosition(x1Méchant1,y1Méchant1);
+    méchant1.montrer();
+    méchant2.cacher();
+    méchant3.cacher();
+    arrivée.définirPosition(557,366);
+    mouvementMéchant1.démarrer();
+}
+
+function niveau3() {
+
+
+}
+
+function gameover(){
+    comclave.désactiver();
+    mouvementMéchant1.arrêter();
+    mouvementMéchant2.arrêter();
+    mouvementMéchant3.arrêter();
+    méchant1.arrêter();
+    méchant2.arrêter();
+    méchant3.arrêter();
+    méchant1.cacher();
+    méchant2.cacher();
+    méchant3.cacher();
+    arrivée.cacher();
+    fin.montrer();	
+    boutonRecommencer.montrer();
+}
+
+
+/*
+
+//Compteur pour avancer
+minuteurAvancer = new Minuteur();
+minuteurAvancer.définirDélai(2000);
+minuteurAvancer.répéter(true);
+
+//Compteur pour reculer
+minuteurReculer = new Minuteur();
+minuteurReculer.définirDélai(2000);
+minuteurReculer.définirPremierDélai(1000);
+minuteurReculer.répéter(true);
+
+
+minuteurReculer.démarrer();
+minuteurAvancer.démarrer();
+minuteurAvancer.ajouterCommande("avancerTout()");
+minuteurReculer.ajouterCommande("reculerTout()");
+
+avancerTout(){
+	suiveur1.avancer(100);
+}
+
+reculerTout(){
+	suiveur1.reculer(100);
+}
+
+suivant(){
+	tangara.initialiser();
+	tangara.chargerProgramme("niveau2.tgr");
+}
+
+gameover(){
+	comclave.désactiver();
+	minuteurAvancer.arrêter();
+	minuteurReculer.arrêter();
+	suiveur.arrêter();
+	suiveur1.cacher();
+	suiveur.cacher();
+	arrive.cacher();
+	gameover.définirTransparence(0);	
+	boutonRecommencer.montrer();
+}
+
+recommencer(){
+	suiveur.définirPosition(28,48);
+	suiveur.avancer(1);
+	suiveur.montrer();
+	
+    suiveur1.définirPosition(230,200);
+    suiveur1.avancer(1);
+    suiveur1.montrer();
+    
+    arrive.montrer();
+    
+    comclave.activer();
+    minuteurAvancer.démarrer();
+	minuteurReculer.démarrer();
+	boutonRecommencer.cacher();
+	gameover.définirTransparence(100);
+}
+*/
