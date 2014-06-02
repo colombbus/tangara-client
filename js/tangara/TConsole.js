@@ -10,7 +10,7 @@ define(['TUI', 'TParser', 'TLog', 'jquery','ace/ace'], function(TUI, TParser, TL
         domConsoleText.id = "tconsole-text";
         // for iOS to show keyboard
         // TODO: add this only for iOS devices
-        domConsoleText.setAttribute("contenteditable", "true");
+        //domConsoleText.setAttribute("contenteditable", "true");
         domConsole.appendChild(domConsoleText);
 
         var aceEditor;
