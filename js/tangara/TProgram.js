@@ -22,7 +22,7 @@ define(['TParser', 'TLink', 'TEnvironment'], function(TParser, TLink, TEnvironme
         };
         
         this.load = function() {
-            this.setCode(TLink.getProgramCode(name));
+            code = TLink.getProgramCode(name);
             loaded = true;
         };
         
