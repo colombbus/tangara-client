@@ -56,7 +56,7 @@ define(['jquery','TEnvironment', 'TObject', 'TUtils', 'TRuntime'], function($, T
     Sequence.prototype._start = function() {
         if (this.running) {
             // Sequence is already running: restart it
-            this.stop();
+            this._stop();
         }
         this.running = true;
         this.index = -1;
