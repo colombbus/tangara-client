@@ -4,16 +4,14 @@ bonus = new Bouton("BONUS");
 jouer.définirPosition(263,238);
 bonus.définirPosition(260,340);
 jouer.ajouterCommande("démarrer()");
-bonus.ajouterCommande("démarrer()");
+bonus.ajouterCommande("niveauBonus()");
 
 function démarrer(){
     menu.cacher();
     jouer.cacher();
     bonus.cacher();
-    comclave.activer();
     perso.montrer();
-    arrivée.montrer();
-    niveau1();
+    démarrerNiveau(niveau)
 }
 
 //Clavier
@@ -39,6 +37,8 @@ fond.ajouterImage("niveau5.png");
 fond.ajouterImage("niveau6.png");
 fond.ajouterImage("niveau7.png");
 fond.ajouterImage("niveau8.png");
+fond.ajouterImage("fini.png");
+fond.ajouterImage("niveau10.png");
 fond.rendreTransparent("blanc");
 
 //Notre perso
@@ -118,19 +118,22 @@ function démarrerNiveau(combien) {
             niveau3();
             break;
         case 4:
-            niveau3();
+            niveau4();
             break;
         case 5:
-            niveau3();
+            niveau5();
             break;
         case 6:
-            niveau3();
+            niveau6();
             break;
         case 7:
-            niveau3();
+            niveau7();
             break;
         case 8:
-            niveau3();
+            niveau8();
+            break;
+        case 10:
+            niveau10();
             break;
     }
     niveau = combien;
@@ -140,6 +143,10 @@ function niveauSuivant() {
     niveau++;
     if (niveau<9) {
         démarrerNiveau(niveau);
+    } else if (niveau == 10) {
+        démarrerNiveau(niveau);
+    } else {
+        merci();
     }
 }
 
@@ -180,8 +187,166 @@ function niveau2() {
 }
 
 function niveau3() {
+    fond.afficherImage("niveau3.png");
+    perso.définirPosition(71,57);
+    x1Méchant1 = 150;
+    y1Méchant1 = 171;
+    x2Méchant1 = 415;
+    y2Méchant1 = 171;
+    x1Méchant2 = 415;
+    y1Méchant2 = 274;
+    x2Méchant2 = 150;
+    y2Méchant2 = 274;
+    x1Méchant3 = 150;
+    y1Méchant3 = 386;
+    x2Méchant3 = 415;
+    y2Méchant3 = 386;
+    méchant1.montrer();
+    méchant2.montrer();
+    méchant3.montrer();
+    méchant1.définirPosition(x1Méchant1,y1Méchant1);
+    méchant2.définirPosition(x1Méchant2,y1Méchant2);
+    méchant3.définirPosition(x1Méchant3,y1Méchant3);
+    arrivée.définirPosition(265,464);
+    mouvementMéchant1.démarrer();
+    mouvementMéchant2.démarrer();
+    mouvementMéchant3.démarrer();
+}
 
+function niveau4() {
+    fond.afficherImage("niveau4.png");
+    perso.définirPosition(56,42);
+    x1Méchant1 = 285;
+    y1Méchant1 = 63;
+    x2Méchant1 = 285;
+    y2Méchant1 = 217;
+    méchant1.montrer();
+    méchant2.cacher();
+    méchant3.cacher();
+    méchant1.définirPosition(x1Méchant1,y1Méchant1);
+    arrivée.définirPosition(265,464);
+    mouvementMéchant1.démarrer();
+    mouvementMéchant2.arrêter();
+    mouvementMéchant3.arrêter();
+}
 
+function niveau5() {
+    fond.afficherImage("niveau5.png");
+    perso.définirPosition(32,530);
+    x1Méchant1 = 106;
+    y1Méchant1 = 394;
+    x2Méchant1 = 310;
+    y2Méchant1 = 394;
+    méchant1.montrer();
+    méchant2.cacher();
+    méchant3.cacher();
+    méchant1.définirPosition(x1Méchant1,y1Méchant1);
+    arrivée.définirPosition(395,538);
+    mouvementMéchant1.démarrer();
+    mouvementMéchant2.arrêter();
+    mouvementMéchant3.arrêter();
+}
+
+function niveau6() {
+    fond.afficherImage("niveau6.png");
+    perso.définirPosition(75,269);
+    x1Méchant1 = 294;
+    y1Méchant1 = 217;
+    x2Méchant1 = 294;
+    y2Méchant1 = 371;
+    x1Méchant2 = 186;
+    y1Méchant2 = 266;
+    x2Méchant2 = 383;
+    y2Méchant2 = 266;
+    méchant1.montrer();
+    méchant2.montrer();
+    méchant3.cacher();
+    méchant1.définirPosition(x1Méchant1,y1Méchant1);
+    méchant2.définirPosition(x1Méchant2,y1Méchant2);
+    arrivée.définirPosition(289,492);
+    mouvementMéchant1.démarrer();
+    mouvementMéchant2.démarrer();
+    mouvementMéchant3.arrêter();
+}
+
+function niveau7() {
+    fond.afficherImage("niveau7.png");
+    perso.définirPosition(28,488);
+    x1Méchant1 = 379;
+    y1Méchant1 = 172;
+    x2Méchant1 = 379;
+    y2Méchant1 = 326;
+    x1Méchant2 = 119;
+    y1Méchant2 = 443;
+    x2Méchant2 = 345;
+    y2Méchant2 = 443;
+    méchant1.montrer();
+    méchant2.montrer();
+    méchant3.cacher();
+    méchant1.définirPosition(x1Méchant1,y1Méchant1);
+    méchant2.définirPosition(x1Méchant2,y1Méchant2);
+    arrivée.définirPosition(390,534);
+    mouvementMéchant1.démarrer();
+    mouvementMéchant2.démarrer();
+    mouvementMéchant3.arrêter();
+}
+
+function niveau8() {
+    fond.afficherImage("niveau8.png");
+    perso.définirPosition(263,52);
+    x1Méchant1 = 385;
+    y1Méchant1 = 142;
+    x2Méchant1 = 231;
+    y2Méchant1 = 296;
+    x1Méchant2 = 316;
+    y1Méchant2 = 316;
+    x2Méchant2 = 152;
+    y2Méchant2 = 152;
+    méchant1.montrer();
+    méchant2.montrer();
+    méchant3.cacher();
+    méchant1.définirPosition(x1Méchant1,y1Méchant1);
+    méchant2.définirPosition(x1Méchant2,y1Méchant2);
+    arrivée.définirPosition(263,420);
+    mouvementMéchant1.démarrer();
+    mouvementMéchant2.démarrer();
+    mouvementMéchant3.arrêter();
+}
+
+function niveau10() {
+    fond.afficherImage("niveau10.png");
+    perso.définirPosition(42,354);
+    x1Méchant1 = 286;
+    y1Méchant1 = 253;
+    x2Méchant1 = 119;
+    y2Méchant1 = 253;
+    x1Méchant2 = 533;
+    y1Méchant2 = 100;
+    x2Méchant2 = 533;
+    y2Méchant2 = 400;
+    x1Méchant3 = 739;
+    y1Méchant3 = 172;
+    x2Méchant3 = 739;
+    y2Méchant3 = 300;
+    méchant1.montrer();
+    méchant2.montrer();
+    méchant3.montrer();
+    méchant1.définirPosition(x1Méchant1,y1Méchant1);
+    méchant2.définirPosition(x1Méchant2,y1Méchant2);
+    méchant3.définirPosition(x1Méchant3,y1Méchant3);
+    arrivée.définirPosition(886,240);
+    mouvementMéchant1.démarrer();
+    mouvementMéchant2.démarrer();
+    mouvementMéchant3.démarrer();
+}
+
+function niveauBonus() {
+    niveau = 10;
+    menu.cacher();
+    jouer.cacher();
+    bonus.cacher();
+    perso.montrer();
+    démarrerNiveau(niveau);
 }
 
 function gameover(){
@@ -189,6 +354,7 @@ function gameover(){
     mouvementMéchant1.arrêter();
     mouvementMéchant2.arrêter();
     mouvementMéchant3.arrêter();
+    perso.arrêter();
     méchant1.arrêter();
     méchant2.arrêter();
     méchant3.arrêter();
@@ -200,66 +366,26 @@ function gameover(){
     boutonRecommencer.montrer();
 }
 
+mouvementMerci = new Séquence();
+mouvementMerci.ajouterCommande("perso.allerA(33,350)");
+mouvementMerci.ajouterDélai(2000);
+mouvementMerci.ajouterCommande("perso.allerA(516,350)");
+mouvementMerci.ajouterDélai(2000);
+mouvementMerci.répéter(true);
 
-/*
-
-//Compteur pour avancer
-minuteurAvancer = new Minuteur();
-minuteurAvancer.définirDélai(2000);
-minuteurAvancer.répéter(true);
-
-//Compteur pour reculer
-minuteurReculer = new Minuteur();
-minuteurReculer.définirDélai(2000);
-minuteurReculer.définirPremierDélai(1000);
-minuteurReculer.répéter(true);
-
-
-minuteurReculer.démarrer();
-minuteurAvancer.démarrer();
-minuteurAvancer.ajouterCommande("avancerTout()");
-minuteurReculer.ajouterCommande("reculerTout()");
-
-avancerTout(){
-	suiveur1.avancer(100);
+function merci() {
+    comclave.désactiver();
+    mouvementMéchant1.arrêter();
+    mouvementMéchant2.arrêter();
+    mouvementMéchant3.arrêter();
+    perso.arrêter();
+    méchant1.arrêter();
+    méchant2.arrêter();
+    méchant3.arrêter();
+    méchant1.cacher();
+    méchant2.cacher();
+    méchant3.cacher();
+    arrivée.cacher();
+    fond.afficherImage("fini.png");
+    mouvementMerci.démarrer();
 }
-
-reculerTout(){
-	suiveur1.reculer(100);
-}
-
-suivant(){
-	tangara.initialiser();
-	tangara.chargerProgramme("niveau2.tgr");
-}
-
-gameover(){
-	comclave.désactiver();
-	minuteurAvancer.arrêter();
-	minuteurReculer.arrêter();
-	suiveur.arrêter();
-	suiveur1.cacher();
-	suiveur.cacher();
-	arrive.cacher();
-	gameover.définirTransparence(0);	
-	boutonRecommencer.montrer();
-}
-
-recommencer(){
-	suiveur.définirPosition(28,48);
-	suiveur.avancer(1);
-	suiveur.montrer();
-	
-    suiveur1.définirPosition(230,200);
-    suiveur1.avancer(1);
-    suiveur1.montrer();
-    
-    arrive.montrer();
-    
-    comclave.activer();
-    minuteurAvancer.démarrer();
-	minuteurReculer.démarrer();
-	boutonRecommencer.cacher();
-	gameover.définirTransparence(100);
-}
-*/
