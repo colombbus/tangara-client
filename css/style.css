@@ -94,7 +94,7 @@ body, html {
 }
 
 .teditor-sidebar-edited {
-    color:/*#19469D*/#0000CD;
+    color:/*#19469D*//*#0000CD*/#E47637;
 }
 
 .teditor-sidebar-current {
@@ -227,8 +227,8 @@ body, html {
 }
 
 .ttoolbar-button-execute {
-    background-color:#5CB85C;
-    border-color:#398439;
+    background-color:#6DBEA9;
+    border-color:#4D9E89;
     color:#ffffff;
 }
 
