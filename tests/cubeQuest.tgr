@@ -107,6 +107,9 @@ var niveau = 1;
 function démarrerNiveau(combien) {
     comclave.activer();
     arrivée.montrer();
+    méchant1.définirPosition(-100,-100);
+    méchant2.définirPosition(-100,-100);
+    méchant3.définirPosition(-100,-100);
     switch(combien) {
         case 1: 
             niveau1();
