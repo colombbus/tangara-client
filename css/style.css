@@ -237,7 +237,7 @@ body, html {
 }
 
 .ttoolbar-button-execute:active {
-    background-color:#47A447;
+    background-color:#4D9E89;
 }
 
 /* TLog */
@@ -278,7 +278,7 @@ body, html {
 }
             
 .tlog-success {
-    color:#009900;
+    /*color:#009900;*/color:#0D7E49;
 }
             
 .tlog-failure {
