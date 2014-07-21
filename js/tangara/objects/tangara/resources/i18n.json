@@ -5,7 +5,8 @@
             {"name":"_alert","translated":"alerter","displayed":"alerter(\"texte\")"},
             {"name":"_pause","translated":"suspendre","displayed":"suspendre()"},
             {"name":"_unpause","translated":"reprendre","displayed":"reprendre()"},
-            {"name":"_loadScript","translated":"chargerProgramme","displayed":"chargerProgramme(\"programme\")"}
+            {"name":"_loadScript","translated":"chargerProgramme","displayed":"chargerProgramme(\"programme\")"},
+            {"name":"_ask","translated":"demander","displayed":"demander(\"question\")"}
         ]
     }
 }
