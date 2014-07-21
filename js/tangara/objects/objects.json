@@ -78,5 +78,13 @@
             "es": "TBT",
             "en": "Text"
         }
+    },
+    "Random": {
+        "path": "random",
+        "translations": {
+            "fr": "Hasard",
+            "es": "TBT",
+            "en": "Random"
+        }
     }
 }
