@@ -17,8 +17,18 @@ define(['TParser', 'TLink', 'TEnvironment'], function(TParser, TLink, TEnvironme
         }
         
         this.save = function() {
-            TLink.saveProgram(name, code, statements);
-            modified = false;
+            var result = true;
+            if (newProgram) {
+                // First create program
+                result = TLink.createProgram(name);
+            }
+            if (result) {
+                newProgram = false;
+            }
+            result = TLink.saveProgram(name, code, statements);
+            if (result) {
+                modified = false;
+            }
         };
         
         this.load = function() {
@@ -60,6 +70,23 @@ define(['TParser', 'TLink', 'TEnvironment'], function(TParser, TLink, TEnvironme
         
         this.setName = function(value) {
             name = value;            
+        };
+        
+        this.rename = function(value) {
+            var result;
+            if (!newProgram) {
+                result = TLink.renameProgram(name, value);
+                if (result) {
+                    name = value;
+                }
+            } else {
+                // New Program: we try to create the program
+                result = TLink.createProgram(value);
+                if (result) {
+                    name = value;
+                    newProgram = false;
+                }
+            }
         };
         
         this.getId = function() {
