@@ -1,5 +1,7 @@
 {
     "fr": {
-        "Syntax error":"Erreur de syntaxe"
+        "Syntax error":"Erreur de syntaxe",
+        "Internal Server Error":"Erreur interne du serveur",
+        "backend-error-project_not_set":"Aucun projet en cours"
     }
 }
