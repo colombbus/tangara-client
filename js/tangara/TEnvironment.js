@@ -6,6 +6,7 @@ define(['jquery'], function($) {
 
         // TODO: change this
         this.language = "fr";
+        this.debug = false;
 
         this.load = function() {
             window.console.log("*** Loading Tangara Environment ***");
@@ -40,6 +41,15 @@ define(['jquery'], function($) {
 
         this.getObjectListUrl = function() {
             return this.getObjectsUrl() + "/objects.json";
+        };
+        
+        this.getBackendUrl = function(module) {
+            var url = window.location.protocol + "//" + window.location.host + window.location.pathname.split("/").slice(0, -2).join("/");
+            url += "/tangara-ui/web/app_dev.php/tangarajs/";
+            if (typeof module !== "undefined"){
+                url = url + module;
+            }
+            return url;
         };
 
         this.getLanguage = function() {
