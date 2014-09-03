@@ -7,24 +7,27 @@ define(['jquery', 'TEnvironment'], function($, TEnvironment) {
         
         // Initialization from error object
         if (typeof e !== 'undefined') {
-            if (typeof e.message !== 'undefined') {
-                message = translate(e.message);
-            }
-            
-            if (typeof e.loc !== 'undefined') {
-               // e.loc set by acorn parser
-               lines[0] = e.loc.line;
-               lines[1] = e.loc.line;
+            if (typeof e === 'string') {
+                message = translate(e);
+            } else {
+                if (typeof e.message !== 'undefined') {
+                    message = translate(e.message);
+                }
+                if (typeof e.loc !== 'undefined') {
+                   // e.loc set by acorn parser
+                   lines[0] = e.loc.line;
+                   lines[1] = e.loc.line;
+               }
            }
         }
         
+        
         function translate(text) {
-            /*if (typeof this.constructor.errors[text] !== 'undefined') {
-                return this.constructor.errors[text];
+           if (typeof TError.errors !== 'undefined' && TError.errors[text] !== 'undefined') {
+                return TError.errors[text];
             } else {
                 return text;
-            }*/
-            return text;
+            }
         }
         
         this.setLines = function(value) {
@@ -74,7 +77,7 @@ define(['jquery', 'TEnvironment'], function($, TEnvironment) {
         async: false,
         success: function(data) {
             if (typeof data[language] !== 'undefined') {
-                TError.constructor.errors = data[language];
+                TError.errors = data[language];
                 window.console.log("found errors translated in language: " + language);
             } else {
                 window.console.log("found no translated errors for language: " + language);
