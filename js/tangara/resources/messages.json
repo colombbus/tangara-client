@@ -11,6 +11,7 @@
         "close-confirm":"Attention : le programme '{0}' a des modifications non enregistrées. Etes-vous sûr(e) de vouloir le fermer ?",
         "program-new":"nouveau {0}",
         "program-modified":"{0} *",
+        "program-saved":"Programme '{0}' enregistré",
         "color-noir":"black",
         "color-blanc":"white",
         "color-rouge":"red",
