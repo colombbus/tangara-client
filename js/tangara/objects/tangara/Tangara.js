@@ -36,10 +36,10 @@ define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink
 
     Tangara.prototype._ask = function(text) {
         var answer = window.prompt(text);
-        if (answer)
-            return answer;
-        else
+        if (answer === null || answer.length === 0)
             return false;
+        else
+            return answer;
     };
 
     TEnvironment.internationalize(Tangara);
