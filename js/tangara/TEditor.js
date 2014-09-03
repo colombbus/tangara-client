@@ -91,9 +91,64 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
                     this.openProgram(name);
                     this.updateSidebar();
                 }
+                aceEditor.focus();            
+            } else {
+                // Click occured on the currently opened program: allow to rename it
+                var element = $("#teditor-sidebar-program-"+TProgram.findId(name));
+                // remove click handler
+                element.parent().off("click");
+                element.empty();
+                var renameElement = document.createElement("input");
+                renameElement.type="text";
+                renameElement.class="teditor-sidebar-rename";
+                renameElement.value = name;
+                var editor = this;
+                $(renameElement).keydown(function (e) {
+                    if (e.which === 13) {
+                        // Enter was pressed
+                        editor.renameProgram(name);
+                    }
+                    if (e.which === 27) {
+                        // Escape was pressed
+                        editor.cancelRename(name);
+                    }
+                });
+                renameElement.onblur = function() {editor.renameProgram(name);};
+                element.append(renameElement);
+                renameElement.focus();
             }
-            aceEditor.focus();            
         };
+        
+        this.renameProgram = function(name) {
+            var element = $("#teditor-sidebar-program-"+TProgram.findId(name));
+            var newName = element.children().first().val();
+            var program = editing[name]['program'];
+            program.rename(newName);
+            // Delete current session
+            delete editing[name];
+            // Create new session
+            // (get again new name as change may not have occured
+            newName = currentProgram.getName();
+            editing[newName] = new Array();
+            editing[newName]['session'] = aceEditor.getSession();
+            editing[newName]['program'] = currentProgram;
+            element.empty();
+            // Update element id
+            element.attr('id', "teditor-sidebar-program-"+currentProgram.getId());
+            element.text(program.getDisplayedName());
+            var editor = this;
+            element.parent().click(function(e){ editor.editProgram(name);e.stopPropagation();});
+        };
+
+        this.cancelRename = function(name) {
+            var element = $("#teditor-sidebar-program-"+TProgram.findId(name));
+            element.empty();
+            var program = editing[name]['program'];
+            element.text(program.getDisplayedName());
+            var editor = this;
+            element.parent().click(function(e){ editor.editProgram(name);e.stopPropagation();});
+        };
+
         
         function saveSession() {
             if (currentProgram !== null) {
@@ -224,7 +279,8 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
                 if (typeof current !== 'undefined' && current) {
                     element.className += " teditor-sidebar-current";
                 }
-                element.onclick = function() { editor.editProgram(name);};
+                // Use jQuery click in order to be able to remove the handler later on
+                $(element).click(function(e){ editor.editProgram(name);e.stopPropagation();});
                 var nameElement = document.createElement("div");
                 nameElement.id = "teditor-sidebar-program-"+TProgram.findId(name);
                 nameElement.appendChild(document.createTextNode(displayedName));
