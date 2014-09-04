@@ -110,7 +110,7 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TUI', 'TError', 'TParser'], functio
                 var input = {'name':name, 'code':code, 'statements':JSON.stringify(statements)};
                 var result = false;
                 $.ajax({
-                    dataType: "text",
+                    dataType: "json",
                     url: url,
                     type: "POST",
                     global:false,
