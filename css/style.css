@@ -222,6 +222,12 @@ body, html {
     border-color:#CCCCCC;
 }
 
+.ttoolbar-option[disabled],.ttoolbar-option[disabled]:active {
+    opacity:0.5;
+    background-color:#FFFFFF;
+    border-color:#CCCCCC;
+}
+
 .ttoolbar-option:active {
     background-color:#EBEBEB;
     border-color:#ADADAD;
