@@ -51,7 +51,11 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
                 }
             });
             
-            this.newProgram();
+            this.updateSidebar();
+            if (!domEditorSidebar.hasChildNodes()) {
+                // No more program: we create one
+                this.newProgram();
+            }
         };
         
         this.show = function() {
@@ -296,7 +300,7 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
 
             var currentName = "";
             
-            if (typeof currentProgram !== 'undefined') {
+            if (typeof currentProgram !== 'undefined' && currentProgram !== null) {
                 currentName = currentProgram.getName();
             }
 
