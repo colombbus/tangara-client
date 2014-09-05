@@ -1,4 +1,4 @@
-define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 'TProgram', 'TEnvironment', 'TLink'], function($,ace, ace_edit_session, ace_range, ace_undo_manager, TProgram, TEnvironment, TLink) {
+define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 'TProgram', 'TEnvironment', 'TLink', 'TUI'], function($,ace, ace_edit_session, ace_range, ace_undo_manager, TProgram, TEnvironment, TLink, TUI) {
 
     function TEditor() {
         var domEditor = document.createElement("div");
@@ -236,10 +236,17 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
         
         this.saveProgram = function() {
             saveSession();
-            currentProgram.save();
-            this.updateProgramName();
-            var undo = aceEditor.getSession().getUndoManager();
-            undo.reset();
+            try
+            {
+                currentProgram.save();
+                TUI.addLogMessage(TEnvironment.getMessage('program-saved', name));
+                this.updateProgramName();
+                var undo = aceEditor.getSession().getUndoManager();
+                undo.reset();
+            } 
+            catch(error) {
+                TUI.addLogError(e);
+            }
         };
         
         this.removeError = function() {
@@ -264,7 +271,13 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
         };
         
         this.updateSidebar = function() {
-            var programList = TLink.getProgramList();
+            var programList = [];
+            try {
+                programList = TLink.getProgramList();
+            }
+            catch (error) {
+                TUI.setSaveEnabled(false);
+            }
             var editedPrograms = Object.keys(editing);
             
             // Sort programs alphabetically

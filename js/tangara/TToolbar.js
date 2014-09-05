@@ -118,6 +118,10 @@ define(['jquery','TEnvironment', 'TUI'], function($,TEnvironment, TUI) {
             domOptions.removeChild(optionNewProgram);
             domButtons.removeChild(buttonExecute);
         };
+        
+        this.setSaveEnabled = function(value) {
+            optionSaveProgram.disabled = !value;
+        };
     };
     return TToolbar;
 });

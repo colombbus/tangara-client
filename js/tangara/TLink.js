@@ -14,12 +14,12 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TUI', 'TError', 'TParser'], functio
                     global:false,
                     async: false,
                     success: function(data) {
-                        if (checkError(data))
-                            list = data['programs'];
+                        checkError(data);
+                        list = data['programs'];
                     },
                     error: function(data, status, error) {
                         var e = new TError(error);
-                        TUI.addLogError(e);
+                        throw e;
                     }
                 });
                 return list;
@@ -42,7 +42,7 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TUI', 'TError', 'TParser'], functio
                     },
                     error: function(data, status, error) {
                         var e = new TError(error);
-                        TUI.addLogError(e);
+                        throw e;
                     }
                 });
             } else {
@@ -56,12 +56,12 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TUI', 'TError', 'TParser'], functio
                     async: false,
                     data:input,
                     success: function(data) {
-                        if (checkError(data))
-                            code = data['code'];
+                        checkError(data);
+                        code = data['code'];
                     },
                     error: function(data, status, error) {
                         var e = new TError(error);
-                        TUI.addLogError(e);
+                        throw e;
                     }
                 });
             }
@@ -92,12 +92,12 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TUI', 'TError', 'TParser'], functio
                     async: false,
                     data:input,
                     success: function(data) {
-                        if (checkError(data))
-                            statements = data['statements'];
+                        checkError(data);
+                        statements = data['statements'];
                     },
                     error: function(data, status, error) {
                         var e = new TError(error);
-                        TUI.addLogError(e);
+                        throw e;
                     }
                 });
             }
@@ -108,7 +108,6 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TUI', 'TError', 'TParser'], functio
             if (!TEnvironment.debug) {
                 var url = TEnvironment.getBackendUrl('setprogramcontent');
                 var input = {'name':name, 'code':code, 'statements':JSON.stringify(statements)};
-                var result = false;
                 $.ajax({
                     dataType: "json",
                     url: url,
@@ -117,26 +116,18 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TUI', 'TError', 'TParser'], functio
                     async: false,
                     data:input,
                     success: function(data) {
-                        result = checkError(data);
-                        if (result)
-                            TUI.addLogMessage(TEnvironment.getMessage('program-saved', name));
+                        checkError(data);
                     },
                     error: function(data, status, error) {
                         var e = new TError(error);
-                        TUI.addLogError(e);
+                        throw e;
                     }
                 });
-                return result;
-            } else {
-                return true;
             }
         };
 
         this.createProgram = function(name) {
-            var result;
-            if (TEnvironment.debug) {
-                result = true;
-            } else {
+            if (!TEnvironment.debug) {
                 var url = TEnvironment.getBackendUrl('createprogram');
                 var input = {'name':name};
                 $.ajax({
@@ -147,23 +138,18 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TUI', 'TError', 'TParser'], functio
                     async: false,
                     data:input,
                     success: function(data) {
-                        result = checkError(data);
+                        checkError(data);
                     },
                     error: function(data, status, error) {
                         var e = new TError(error);
-                        TUI.addLogError(e);
-                        result = false;
+                        throw e;
                     }
                 });
             }
-            return result;
         };
 
         this.renameProgram = function(name, newName) {
-            var result;
-            if (TEnvironment.debug) {
-                result = true;
-            } else {
+            if (!TEnvironment.debug) {
                 var url = TEnvironment.getBackendUrl('renameprogram');
                 var input = {'name':name, 'new':newName};
                 $.ajax({
@@ -174,25 +160,21 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TUI', 'TError', 'TParser'], functio
                     async: false,
                     data:input,
                     success: function(data) {
-                        result = checkError(data);
+                        checkError(data);
                     },
                     error: function(data, status, error) {
                         var e = new TError(error);
-                        TUI.addLogError(e);
-                        result = false;
+                        throw e;
                     }
                 });
             }
-            return result;
         };
 
         function checkError(data) {
             if (typeof data !=='undefined' && typeof data['error'] !== 'undefined') {
                 var e = new TError(TEnvironment.getMessage("backend-error-"+data['error']));
-                TUI.addLogError(e);
-                return false;
+                throw e;
             }
-            return true;
         }
 
     };

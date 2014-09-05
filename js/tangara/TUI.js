@@ -235,6 +235,10 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
         this.newProgram = function() {
             editor.newProgram();
         };
+        
+        this.setSaveEnabled = function(value) {
+            toolbar.setSaveEnabled(value);
+        };
     };
     
     var uiInstance = new TUI();
