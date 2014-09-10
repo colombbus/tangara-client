@@ -239,7 +239,7 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
             try
             {
                 currentProgram.save();
-                TUI.addLogMessage(TEnvironment.getMessage('program-saved', name));
+                TUI.addLogMessage(TEnvironment.getMessage('program-saved', currentProgram.getName()));
                 this.updateProgramName();
                 var undo = aceEditor.getSession().getUndoManager();
                 undo.reset();
