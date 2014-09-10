@@ -6,17 +6,35 @@ define(['jquery'], function($) {
 
         // TODO: change this
         this.language = "fr";
-        // TODO: put this in config file
+
+        // Config parameters: default values
         this.debug = false;
-        this.dev = false;
+        this.backendPath = "/tangara-ui/web/app.php/";
 
         this.load = function() {
             window.console.log("*** Loading Tangara Environment ***");
+            window.console.log("* Loading config");
+            var configFile = this.getResource("config.json");
+            var parent = this;
+            $.ajax({
+                dataType: "json",
+                url: configFile,
+                async: false,
+                success: function(data) {
+                    if (typeof data['debug'] !== 'undefined') {
+                        parent.debug = data['debug'];
+                        window.console.log("Set debug to "+data['debug']);
+                    } 
+                    if (typeof data['backend-path'] !== 'undefined') {
+                        parent.backendPath = data['backend-path'];
+                        window.console.log("Set back-end path to "+data['backend-path']);
+                    }
+                }
+            });
             window.console.log("* Retrieving translated messages");
             var messageFile = this.getResource("messages.json");
             window.console.log("getting messages from: " + messageFile);
             var language = this.language;
-            var parent = this;
             $.ajax({
                 dataType: "json",
                 url: messageFile,
@@ -47,11 +65,7 @@ define(['jquery'], function($) {
         
         this.getBackendUrl = function(module) {
             var url = window.location.protocol + "//" + window.location.host + window.location.pathname.split("/").slice(0, -2).join("/");
-            if (this.dev) {
-                url += "/tangara-ui/web/app_dev.php/tangarajs/";
-            } else {
-                url += "/tangara-ui/web/app.php/tangarajs/";
-            }
+            url += this.backendPath + "tangarajs/";
             if (typeof module !== "undefined"){
                 url = url + module;
             }
