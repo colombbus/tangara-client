@@ -34,6 +34,7 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
             //aceEditor.renderer.setShowGutter(false);
             aceEditor.setFontSize("20px");
             aceEditor.setHighlightActiveLine(false);
+            aceEditor.setBehavioursEnabled(false);
             var self = this;
             aceEditor.on('input', function() {
                 if (!currentProgram.isModified()) {
