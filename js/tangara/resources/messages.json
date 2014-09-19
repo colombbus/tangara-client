@@ -36,6 +36,7 @@
         "wrong string":"{0} n'est pas un texte",
         "wrong function":"{0} n'est pas une fonction",
         "wrong object":"{0} n'est pas un objet",
+        "wrong array":"{0} n'est pas une liste",
         "wrong command":"{0} n'est pas une commande valide",
         "wrong color string":"{0} n'est pas une couleur connue",
         "wrong color":"impossible de définir une couleur à partir de {0} {1} {2}"

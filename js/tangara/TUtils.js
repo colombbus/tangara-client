@@ -211,6 +211,17 @@ define(['TEnvironment'], function(TEnvironment) {
             }
             return value;
         };
+
+        this.checkArray = function(value) {
+            return (value instanceof Array);
+        };
+
+        this.getArray = function(value) {
+            if (!this.checkArray(value)) {
+                throw new Error(TEnvironment.getMessage("wrong array", value));
+            }
+            return value;
+        };
         
         this.getkeyCode = function(value) {
             if (this.checkString(value)) {
