@@ -1,18 +1,27 @@
-define(['TParser', 'TLink', 'TEnvironment'], function(TParser, TLink, TEnvironment) {
+define(['TParser', 'TLink', 'TEnvironment', 'TUtils'], function(TParser, TLink, TEnvironment, TUtils) {
 
-    function TProgram(aName) {
+    function TProgram(value) {
         var statements = new Array();
         var code = "";
         var name = null;
         var loaded = false;
         var newProgram = false;
         var modified = false;
+        var codeChanged = false;
         
-        if (typeof (aName) !== 'undefined') {
-            name = aName;
+        if (TUtils.checkString(value)) {
+            name = value;
         } else {
-            name = TEnvironment.getMessage('program-new',TProgram.newIndex);
-            TProgram.newIndex++;
+            var used = [];
+            if (TUtils.checkArray(value)) {
+                used = value;
+            }
+            var index = 0;
+            do {
+                index++;
+                name = TEnvironment.getMessage('program-new',index);
+            } while (used.indexOf(name) > -1)
+            window.console.log("New name : "+name);
             newProgram = true;
         }
         
@@ -28,16 +37,22 @@ define(['TParser', 'TLink', 'TEnvironment'], function(TParser, TLink, TEnvironme
         
         this.load = function() {
             code = TLink.getProgramCode(name);
+            codeChanged = true;
             loaded = true;
         };
         
         function parse() {
-            statements = TParser.parse(code);
+            if (code.trim().length > 0) {
+                statements = TParser.parse(code);
+            } else {
+                statements = [];
+            }
+            codeChanged = false;
         }
 
         this.setCode = function(value) {
             code = value;
-            parse();
+            codeChanged = true;
         };
 
         this.getCode = function() {
@@ -48,6 +63,9 @@ define(['TParser', 'TLink', 'TEnvironment'], function(TParser, TLink, TEnvironme
         };
         
         this.getStatements = function() {
+            if (codeChanged) {
+                parse();
+            }
             return statements;
         };
         
@@ -91,6 +109,9 @@ define(['TParser', 'TLink', 'TEnvironment'], function(TParser, TLink, TEnvironme
             return modified;
         };
 
+        this.isNew = function() {
+            return newProgram;
+        };
     }
     
     TProgram.findId = function(name) {
@@ -98,8 +119,6 @@ define(['TParser', 'TLink', 'TEnvironment'], function(TParser, TLink, TEnvironme
         id = id.replace(/[\.\s]/g,"_");
         return id;
     };
-    
-    TProgram.newIndex = 1;
     
     return TProgram;
 });
