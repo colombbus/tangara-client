@@ -89,6 +89,7 @@ define(['jquery','TEnvironment', 'TUI'], function($,TEnvironment, TUI) {
         };
         
         this.displayed = function() {
+            this.setSaveEnabled(TEnvironment.isUserLogged());
         };
         
         this.enableConsole = function() {
