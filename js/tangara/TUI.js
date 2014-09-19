@@ -254,28 +254,36 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
         this.newProgram = function() {
             var project = TEnvironment.getProject();
             var program = project.createProgram();
-            this.editProgram(program.getName());
+            project.setSession(program, editor.createSession(program));
+            editor.setProgram(program);
+            editor.setSession(project.getSession(program));
+            this.updateSidebar();
+            editor.giveFocus();
         };
 
         this.editProgram = function(name) {
-            var project = TEnvironment.getProject();
-            // save previous session if any
-            var previousProgram = editor.getProgram();
-            if (typeof previousProgram !== 'undefined') {
-                project.updateSession(previousProgram,editor.getSession());
+            try {
+                var project = TEnvironment.getProject();
+                // save previous session if any
+                var previousProgram = editor.getProgram();
+                if (typeof previousProgram !== 'undefined') {
+                    project.updateSession(previousProgram,editor.getSession());
+                }
+                var newProgram;
+                if (!project.isProgramEdited(name)) {
+                    // Program has to be loaded
+                    sidebar.showLoading(name);
+                    project.editProgram(name);
+                    newProgram = project.getEditedProgram(name);
+                    project.setSession(newProgram, editor.createSession(newProgram));
+                } else {
+                    newProgram = project.getEditedProgram(name);
+                }
+                editor.setProgram(newProgram);
+                editor.setSession(project.getSession(newProgram));
+            } catch (error) {
+                this.addLogError(error);
             }
-            var newProgram;
-            if (!project.isProgramEdited(name)) {
-                // Program has to be loaded
-                sidebar.showLoading(name);
-                project.editProgram(name);
-                newProgram = project.getEditedProgram(name);
-                project.setSession(newProgram, editor.createSession(newProgram));
-            } else {
-                newProgram = project.getEditedProgram(name);
-            }
-            editor.setProgram(newProgram);
-            editor.setSession(project.getSession(newProgram));
             //update sidebar
             this.updateSidebar();
             editor.giveFocus();
