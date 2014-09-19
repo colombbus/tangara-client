@@ -75,34 +75,34 @@ body, html {
 
 #teditor {
     height:100%;
-    width:100%;
+    margin-right:200px;
 }
 
-#teditor-sidebar {
+#tsidebar {
     background-color:#DEDEDE;
     width:200px;
     float:right;
     height:100%;
     font-family:'Monaco','Menlo','Ubuntu Mono','Consolas','source-code-pro',monospace;
-    overflow-y:scroll;
+    overflow-y:auto;
 }
 
-.teditor-sidebar-program {
+.tsidebar-program {
     padding:10px;
     color:#333435;
     cursor:pointer;
     position:relative;
 }
 
-.teditor-sidebar-edited {
+.tsidebar-edited {
     color:/*#19469D*//*#0000CD*/#E47637;
 }
 
-.teditor-sidebar-current {
+.tsidebar-current {
     background-color:#FFFFFF;
 }
 
-.teditor-sidebar-close {
+.tsidebar-close {
     position:absolute;
     right:10px;
     top:10px;
@@ -112,14 +112,31 @@ body, html {
     display:none;
 }
 
-.teditor-sidebar-program:hover .teditor-sidebar-close {
+.tsidebar-program:hover .tsidebar-close {
     display:block;
 }
 
-#teditor-text {
-    height:100%;
-    margin-right:200px;
+.tsidebar-program.tsidebar-renaming:hover .tsidebar-close {
+    display:none;
 }
+
+.tsidebar-renaming > div:first-child {
+    display:none;
+}
+
+.tsidebar-loading {
+    position:absolute;
+    right:12px;
+    top:12px;
+    height:16px;
+    width:16px;
+    background-image:url('../images/loader.gif');
+}
+
+.tsidebar-renaming .tsidebar-loading {
+    background-image:url('../images/loader2.gif');
+}
+
 
 .tangara_error {    
     background: rgba(255, 0, 0, 0.1);
