@@ -3,6 +3,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
         var frame;
         var canvas;
         var editor;
+        var sidebar;
         var toolbar;
         var console;
         var editorEnabled = false;
@@ -23,6 +24,11 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
 
         this.setEditor = function(element) {
             editor = element;
+            return;
+        };
+
+        this.setSidebar = function(element) {
+            sidebar = element;
             return;
         };
 
@@ -97,6 +103,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 TRuntime.stop();
                 canvas.hide();
                 editor.show();
+                sidebar.show();
                 editorEnabled = true;
             }
         };
@@ -105,6 +112,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
             if (editorEnabled) {
                 toolbar.disableEditor();
                 editor.hide();
+                sidebar.hide();
                 canvas.show();
                 editorEnabled = false;
                 // if console was enabled, enable it
@@ -208,7 +216,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 this.disableEditor();
                 this.disableDesignMode();
                 console.clear();
-                TRuntime.setCurrentProgramName(editor.getCurrentProgramName());
+                TRuntime.setCurrentProgramName(editor.getProgramName());
                 TRuntime.executeFrom(editor);
             }
         };
@@ -229,16 +237,103 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
         };
         
         this.saveProgram = function() {
-            editor.saveProgram();
+            var project = TEnvironment.getProject();
+            var program = editor.getProgram();
+            try
+            {
+                project.saveProgram(program, editor.getSession());
+                this.addLogMessage(TEnvironment.getMessage('program-saved', program.getName()));
+                this.updateProgramInfo(program);
+                editor.reset();
+            } 
+            catch(error) {
+                this.addLogError(error);
+            }
         };
 
         this.newProgram = function() {
-            editor.newProgram();
+            var project = TEnvironment.getProject();
+            var program = project.createProgram();
+            this.editProgram(program.getName());
+        };
+
+        this.editProgram = function(name) {
+            var project = TEnvironment.getProject();
+            // save previous session if any
+            var previousProgram = editor.getProgram();
+            if (typeof previousProgram !== 'undefined') {
+                project.updateSession(previousProgram,editor.getSession());
+            }
+            var newProgram;
+            if (!project.isProgramEdited(name)) {
+                // Program has to be loaded
+                sidebar.showLoading(name);
+                project.editProgram(name);
+                newProgram = project.getEditedProgram(name);
+                project.setSession(newProgram, editor.createSession(newProgram));
+            } else {
+                newProgram = project.getEditedProgram(name);
+            }
+            editor.setProgram(newProgram);
+            editor.setSession(project.getSession(newProgram));
+            //update sidebar
+            this.updateSidebar();
+            editor.giveFocus();
+        };
+
+        this.closeProgram = function(name) {
+            var project = TEnvironment.getProject();
+            var result = project.closeProgram(name);
+            if (result) {
+                // close performed
+                // check if program was current editing program in editor, in which case we set next editing program as current program
+                if (name === editor.getProgramName()) {
+                    var program = project.findPreviousEditedProgram(name);
+                    if (program) {
+                        editor.setProgram(program);
+                        editor.setSession(project.getSession(program));
+                        editor.giveFocus();
+                    } else {
+                        editor.disable();
+                    }
+                }
+                // update sidebar
+                this.updateSidebar();
+            } else {
+                // close cancelled
+                editor.giveFocus();
+            }
+        };
+        
+        this.renameProgram = function(oldName, newName) {
+            if (newName !== oldName) {
+                var project = TEnvironment.getProject();
+                try {
+                    sidebar.showRenaming(oldName);
+                    project.renameProgram(oldName, newName);
+                } catch(error) {
+                    this.addLogError(error);
+                }
+            }
+            this.updateSidebar();
         };
         
         this.setSaveEnabled = function(value) {
             toolbar.setSaveEnabled(value);
         };
+        
+        this.updateSidebar = function() {
+            sidebar.update();
+        };
+        
+        this.updateProgramInfo = function(program) {
+            sidebar.updateProgramInfo(program);
+        };
+        
+        this.getCurrentProgram = function() {
+            return editor.getProgram();
+        };
+
     };
     
     var uiInstance = new TUI();
