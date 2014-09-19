@@ -16,11 +16,26 @@ require.config({
 //window.location.protocol + "//" + window.location.host+ window.location.pathname.split("/").slice(0, -1).join("/")+"/js/tangara",
 //baseUrl: 'js/tangara',
 // Start the main app logic.
-require(['jquery', 'TEnvironment', 'TRuntime', 'TFrame'],function($, TEnvironment, TRuntime, TFrame) {
+require(['jquery', 'TEnvironment', 'TRuntime', 'TFrame', 'TProject'],function($, TEnvironment, TRuntime, TFrame, TProject) {
+    window.console.log("*******************");
+    window.console.log("* Loading Runtime *");
+    window.console.log("*******************");
     TRuntime.load(TEnvironment.getLanguage(), TEnvironment.getObjectListUrl());
+    
+    window.console.log("***************************");
+    window.console.log("* Building User Interface *");
+    window.console.log("***************************");
     frame = new TFrame();
     domFrame = frame.getElement();
     $("body").append(domFrame);
+
+    window.console.log("*******************");
+    window.console.log("* Initiating link *");
+    window.console.log("*******************");
+    var currentProject = new TProject();
+    currentProject.update();
+    TEnvironment.setProject(currentProject);
+    
     $(document).ready( function() {
         frame.displayed();
     });
