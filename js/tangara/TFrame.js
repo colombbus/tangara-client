@@ -1,4 +1,4 @@
-define(['jquery', 'split-pane','TCanvas', 'TEditor', 'TUI', 'TConsole', 'TToolbar','TLog', 'TRuntime'], function($, SplitPane, TCanvas, TEditor, TUI, TConsole, TToolbar, TLog, TRuntime) {
+define(['jquery', 'split-pane','TCanvas', 'TEditor', 'TSidebar', 'TUI', 'TConsole', 'TToolbar','TLog', 'TRuntime'], function($, SplitPane, TCanvas, TEditor, TSidebar, TUI, TConsole, TToolbar, TLog, TRuntime) {
     function TFrame() {
         var initialized = false;
         var domFrame = document.createElement("div");
@@ -10,6 +10,9 @@ define(['jquery', 'split-pane','TCanvas', 'TEditor', 'TUI', 'TConsole', 'TToolba
         // Add Canvas
         var canvas = new TCanvas();
         topDiv.appendChild(canvas.getElement());
+        // Add Sidebar
+        var sidebar = new TSidebar();
+        topDiv.appendChild(sidebar.getElement());
         // Add Editor
         var editor = new TEditor();
         topDiv.appendChild(editor.getElement());
@@ -44,6 +47,7 @@ define(['jquery', 'split-pane','TCanvas', 'TEditor', 'TUI', 'TConsole', 'TToolba
         TUI.setFrame(this);
         TUI.setCanvas(canvas);
         TUI.setEditor(editor);
+        TUI.setSidebar(sidebar);
         TUI.setToolbar(toolbar);
         TUI.setConsole(console);
         TUI.setLog(log);
@@ -59,7 +63,9 @@ define(['jquery', 'split-pane','TCanvas', 'TEditor', 'TUI', 'TConsole', 'TToolba
         this.displayed = function() {
             canvas.displayed();
             editor.displayed();
+            sidebar.displayed();
             console.displayed();
+            toolbar.displayed();
             log.displayed();
             $('.split-pane').splitPane();
             // Start with console enabled
