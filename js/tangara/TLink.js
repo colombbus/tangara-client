@@ -1,4 +1,4 @@
-define(['jquery', 'TUtils', 'TEnvironment', 'TUI', 'TError', 'TParser'], function($, TUtils, TEnvironment, TUI, TError, TParser) {
+define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TUtils, TEnvironment, TError, TParser) {
     var TLink = function() {
         
         this.getProgramList = function() {
@@ -169,7 +169,7 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TUI', 'TError', 'TParser'], functio
                 });
             }
         };
-
+        
         function checkError(data) {
             if (typeof data !=='undefined' && typeof data['error'] !== 'undefined') {
                 var e = new TError(TEnvironment.getMessage("backend-error-"+data['error']));
