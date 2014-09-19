@@ -53,8 +53,11 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils'], function(TLink, TProgram
 
         this.createProgram = function() {
             var program = new TProgram(programs);
-            programs.push(program);
+            var name = program.getName();
+            programs.push(name);
             sortArray(programs);
+            editedPrograms[name] = program;
+            updateEditedPrograms();
             return program;
         };
         
