@@ -1,7 +1,9 @@
 define(['jquery'], function($) {
     var TEnvironment = function() {
         var translated = new Array();
-
+        var project;
+        var userLogged = false;
+        
         this.messages;
 
         // TODO: change this
@@ -182,6 +184,22 @@ define(['jquery'], function($) {
             } else {
                 return code;
             }
+        };
+        
+        this.setProject = function(value) {
+            project = value;
+        };
+        
+        this.getProject = function() {
+            return project;
+        };
+        
+        this.setUserLogged = function(value) {
+            userLogged = value;
+        };
+        
+        this.isUserLogged = function() {
+            return userLogged;
         };
 
     };
