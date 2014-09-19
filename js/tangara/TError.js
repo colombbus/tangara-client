@@ -23,7 +23,7 @@ define(['jquery', 'TEnvironment'], function($, TEnvironment) {
         
         
         function translate(text) {
-           if (typeof TError.errors !== 'undefined' && TError.errors[text] !== 'undefined') {
+            if (typeof TError.errors !== 'undefined' && typeof TError.errors[text] !== 'undefined') {
                 return TError.errors[text];
             } else {
                 return text;
