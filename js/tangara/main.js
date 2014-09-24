@@ -9,7 +9,10 @@ require.config({
         "quintus":'../libs/quintus-0.2.0/quintus-all.min',
         "acorn":'../libs/acorn/acorn',
         "TObject":'objects/tobject/TObject',
-        "TGraphicalObject":'objects/tgraphicalobject/TGraphicalObject'
+        "TGraphicalObject":'objects/tgraphicalobject/TGraphicalObject',
+        "fileupload":'../libs/jquery-file-upload/jquery.fileupload',
+        "iframe-transport":'../libs/jquery-file-upload/jquery.iframe-transport',
+        "jquery.ui.widget":'../libs/jquery-file-upload/vendor/jquery.ui.widget'
     }
 });
 

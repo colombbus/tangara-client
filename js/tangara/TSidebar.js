@@ -1,26 +1,88 @@
-define(['TUI', 'TEnvironment', 'TProgram', 'jquery'], function(TUI, TEnvironment, TProgram, $) {
+define(['TUI', 'TEnvironment', 'TProgram', 'jquery', 'jquery.ui.widget', 'iframe-transport', 'fileupload'], function(TUI, TEnvironment, TProgram, $) {
 
     function TSidebar() {
         var domSidebar = document.createElement("div");
         domSidebar.id = "tsidebar";
+        
+        var domSwitch = document.createElement("div");
+        domSwitch.id = "tsidebar-switch";
+        var switchPrograms = document.createElement("div");
+        switchPrograms.id = "tsidebar-switch-programs";
+        switchPrograms.title = TEnvironment.getMessage("switch-programs");
+        var switchResources = document.createElement("div");
+        switchResources.id = "tsidebar-switch-resources";
+        switchResources.title = TEnvironment.getMessage("switch-resources");
+        domSwitch.appendChild(switchPrograms);
+        domSwitch.appendChild(switchResources);
+        domSidebar.appendChild(domSwitch);
+        switchPrograms.onclick = function(e) { TUI.displayPrograms();};
+        switchResources.onclick = function(e) { TUI.displayResources();};
+
+        var domSidebarPrograms = document.createElement("div");
+        domSidebarPrograms.id = "tsidebar-programs";
+        domSidebar.appendChild(domSidebarPrograms);
+
+        var domSidebarResources = document.createElement("div");
+        domSidebarResources.id = "tsidebar-resources";
+        var domSidebarFiles = document.createElement("input");
+        domSidebarFiles.id = "tsidebar-upload";
+        domSidebarFiles.setAttribute("type", "file");
+        domSidebarFiles.setAttribute("name", "files[]");
+        domSidebarFiles.setAttribute("data-url", "TO_BE_DEFINED");
+        domSidebarFiles.setAttribute("multiple", "multiple");
+        domSidebarResources.appendChild(domSidebarFiles);
+        var domProgress = document.createElement("div");
+        domProgress.id = "progress";
+        var domBar = document.createElement("div");
+        domBar.className = "bar";
+        domProgress.appendChild(domBar);
+        domSidebarResources.appendChild(domProgress);
+        
+        domSidebar.appendChild(domSidebarResources);
+    
+        var programsVisible = false;
     
         this.getElement = function() {
             return domSidebar;
         };
         
         this.displayed = function() {
+            this.displayPrograms();
             this.update();
+            // Set up blueimp fileupload plugin
+            $(domSidebarResources).fileupload({
+                dataType: 'json',
+                add: function (e, data) {
+                    data.context = $('<p/>').text('Uploading...').appendTo(domSidebarFiles);
+                    data.submit();
+                },
+                done: function (e, data) {
+                    data.context.text('Upload finished.');
+                    /*$.each(data.result.files, function (index, file) {
+                        $('<p/>').text(file.name).appendTo(document.body);
+                    });*/
+                },
+                progressall: function (e, data) {
+                    
+                    var progress = parseInt(data.loaded / data.total * 100, 10);
+                    $('#progress .bar').css('width',progress + '%');
+                }
+            });
         };
-    
+        
         this.update = function() {
+            this.updatePrograms();
+            this.updateResources();
+        };
+        
+        this.updatePrograms = function() {
             var project = TEnvironment.getProject();
             var programList = project.getProgramsNames();
             var editedPrograms = project.getEditedPrograms();
             var currentProgram = TUI.getCurrentProgram();
             var editedNames = [];
-            var sidebar = this;
             
-            domSidebar.innerHTML = "";
+            domSidebarPrograms.innerHTML = "";
 
             function addElement(name, id, displayedName, edited, current) {
                 var element = document.createElement("div");
@@ -70,7 +132,7 @@ define(['TUI', 'TEnvironment', 'TProgram', 'jquery'], function(TUI, TEnvironment
                     closeElement.onclick = function(e) { TUI.closeProgram(name);e.stopPropagation();};
                     element.appendChild(closeElement);
                 }
-                domSidebar.appendChild(element);
+                domSidebarPrograms.appendChild(element);
             }
 
             var currentName = "";
@@ -92,6 +154,10 @@ define(['TUI', 'TEnvironment', 'TProgram', 'jquery'], function(TUI, TEnvironment
                     addElement(name, TProgram.findId(name), name, false);
                 }
             }
+        };
+        
+        this.updateResources = function() {
+        
         };
         
         this.updateProgramInfo = function(program) {
@@ -122,6 +188,27 @@ define(['TUI', 'TEnvironment', 'TProgram', 'jquery'], function(TUI, TEnvironment
             $(domSidebar).hide();
         };
         
+        this.displayPrograms = function() {
+            if (!programsVisible) {
+                $(domSidebarPrograms).show();
+                $(switchPrograms).addClass("active");
+                $(domSidebarResources).hide();
+                $(switchResources).removeClass("active");
+                $(domSidebar).animate({width:"250px"}, 500);
+                programsVisible = true;
+            }
+        };
+        
+        this.displayResources = function() {
+            if (programsVisible) {
+                $(domSidebarPrograms).hide();
+                $(switchPrograms).removeClass("active");
+                $(domSidebarResources).show();
+                $(switchResources).addClass("active");
+                $(domSidebar).animate({width:"400px"}, 500);
+                programsVisible = false;
+            }
+        };
     }
     
     return TSidebar;

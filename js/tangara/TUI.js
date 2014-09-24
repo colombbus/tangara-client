@@ -257,7 +257,8 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
             project.setSession(program, editor.createSession(program));
             editor.setProgram(program);
             editor.setSession(project.getSession(program));
-            this.updateSidebar();
+            this.updateSidebarPrograms();
+            sidebar.displayPrograms();
             editor.giveFocus();
         };
 
@@ -285,7 +286,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 this.addLogError(error);
             }
             //update sidebar
-            this.updateSidebar();
+            this.updateSidebarPrograms();
             editor.giveFocus();
         };
 
@@ -306,7 +307,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                     }
                 }
                 // update sidebar
-                this.updateSidebar();
+                this.updateSidebarPrograms();
             } else {
                 // close cancelled
                 editor.giveFocus();
@@ -323,16 +324,17 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                     this.addLogError(error);
                 }
             }
-            this.updateSidebar();
+            this.updateSidebarPrograms();
         };
         
         this.setSaveEnabled = function(value) {
             toolbar.setSaveEnabled(value);
         };
         
-        this.updateSidebar = function() {
-            sidebar.update();
+        this.updateSidebarPrograms = function() {
+            sidebar.updatePrograms();
         };
+
         
         this.updateProgramInfo = function(program) {
             sidebar.updateProgramInfo(program);
@@ -341,7 +343,14 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
         this.getCurrentProgram = function() {
             return editor.getProgram();
         };
+        
+        this.displayPrograms = function() {
+            sidebar.displayPrograms();
+        };
 
+        this.displayResources = function() {
+            sidebar.displayResources();
+        };
     };
     
     var uiInstance = new TUI();

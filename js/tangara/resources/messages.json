@@ -12,6 +12,8 @@
         "program-new":"nouveau {0}",
         "program-modified":"{0} *",
         "program-saved":"Programme '{0}' enregistré",
+        "switch-programs":"Programmes",
+        "switch-resources":"Médias",
         "color-noir":"black",
         "color-blanc":"white",
         "color-rouge":"red",
