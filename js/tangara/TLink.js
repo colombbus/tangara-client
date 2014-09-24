@@ -170,6 +170,33 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
             }
         };
         
+        this.getResources = function() {
+            if (TEnvironment.debug) {
+                return {"arbre.gif":{"type":"image"}, "arrivee.png":{"type":"image"}, "bat1.png":{"type":"image"}, "bat2.png":{"type":"image"}, "bob.png":{"type":"image"}, "bob_droite_1.png":{"type":"image"}, "bob_droite_2.png":{"type":"image"}, "bob_droite_3.png":{"type":"image"}, "bob_droite_4.png":{"type":"image"}, "bob_droite_5.png":{"type":"image"}, "bob_droite_6.png":{"type":"image"}, "bob_face_1.png":{"type":"image"}, "bob_gauche_1.png":{"type":"image"}, "bob_gauche_2.png":{"type":"image"}, "bob_gauche_3.png":{"type":"image"}, "bob_gauche_4.png":{"type":"image"}, "bob_gauche_5.png":{"type":"image"}, "bob_gauche_6.png":{"type":"image"}, "boum.png":{"type":"image"}, "cle.png":{"type":"image"}, "ennemi.png":{"type":"image"}, "ennemi2.png":{"type":"image"}, "ennemi3.png":{"type":"image"}, "fini.png":{"type":"image"}, "fond.png":{"type":"image"}, "game over.png":{"type":"image"}, "gameover.png":{"type":"image"}, "maison.gif":{"type":"image"}, "mechant1.png":{"type":"image"}, "mechant2.png":{"type":"image"}, "menujeu.png":{"type":"image"}, "niveau1.png":{"type":"image"}, "niveau2.png":{"type":"image"}, "niveau3.png":{"type":"image"}, "niveau4.png":{"type":"image"}, "niveau5.png":{"type":"image"}, "niveau6.png":{"type":"image"}, "niveau7.png":{"type":"image"}, "niveau8.png":{"type":"image"}, "nok1.png":{"type":"image"}, "nok2.png":{"type":"image"}, "nok3.png":{"type":"image"}, "ok.png":{"type":"image"}, "perso.png":{"type":"image"}, "pomme.gif":{"type":"image"}, "porte.png":{"type":"image"}, "porte_ouverte.png":{"type":"image"}, "sol.gif":{"type":"image"}};
+            } else {  
+                var url = TEnvironment.getBackendUrl('getresources');
+                var list = [];
+                $.ajax({
+                    dataType: "json",
+                    url: url,
+                    type: "POST",
+                    global:false,
+                    async: false,
+                    success: function(data) {
+                        checkError(data);
+                        list = data['resources'];
+                    },
+                    error: function(data, status, error) {
+                        var e = new TError(error);
+                        throw e;
+                    }
+                });
+                return list;
+            }
+        };
+
+
+        
         function checkError(data) {
             if (typeof data !=='undefined' && typeof data['error'] !== 'undefined') {
                 var e = new TError(TEnvironment.getMessage("backend-error-"+data['error']));

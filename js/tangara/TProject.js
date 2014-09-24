@@ -4,7 +4,8 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils'], function(TLink, TProgram
         var name;
         var id;
         var programs = [];
-        var resources = new Array();
+        var resourcesNames = [];
+        var resources = {};
         var editedPrograms = {};
         var sessions = {};
         var editedProgramsNames = [];
@@ -158,16 +159,37 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils'], function(TLink, TProgram
         };
         
         this.update = function() {
-            // TODO: update resources as well
             programs = [];
+            resources = {};
+            resourcesNames = [];
             try {
                 programs = TLink.getProgramList();
-                // sort programs alphabetically
+                resources = TLink.getResources();
+                resourcesNames = Object.keys(resources);
+                // sort programs and resources alphabetically
                 programs = sortArray(programs);
+                resourcesNames = sortArray(resourcesNames);
                 TEnvironment.setUserLogged(true);
             }
             catch (error) {
                 TEnvironment.setUserLogged(false);
+            }
+        };
+
+        this.getResourcesNames = function() {
+            return resourcesNames;
+        };
+        
+        this.getResources = function() {
+            return resources;
+        };
+
+        this.getResourceInfo = function(name) {
+            if (typeof resources[name] !== 'undefined') {
+                return resources[name];
+            } else {
+                var e = new TError(TEnvironment.getMessage("resource-unknown"+name));
+                throw e;
             }
         };
         

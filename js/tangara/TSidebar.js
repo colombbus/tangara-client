@@ -24,19 +24,22 @@ define(['TUI', 'TEnvironment', 'TProgram', 'jquery', 'jquery.ui.widget', 'iframe
 
         var domSidebarResources = document.createElement("div");
         domSidebarResources.id = "tsidebar-resources";
-        var domSidebarFiles = document.createElement("input");
-        domSidebarFiles.id = "tsidebar-upload";
-        domSidebarFiles.setAttribute("type", "file");
-        domSidebarFiles.setAttribute("name", "files[]");
-        domSidebarFiles.setAttribute("data-url", "TO_BE_DEFINED");
-        domSidebarFiles.setAttribute("multiple", "multiple");
-        domSidebarResources.appendChild(domSidebarFiles);
-        var domProgress = document.createElement("div");
+        var domSidebarUpload = document.createElement("form");
+        domSidebarUpload.id = "tsidebar-upload";
+        domSidebarUpload.setAttribute("method", "post");
+        //domSidebarUpload.setAttribute("name", "files[]");
+        domSidebarUpload.setAttribute("action", "TO_BE_DEFINED");
+        domSidebarUpload.setAttribute("enctype", "multipart/form-data");
+        var domSidebarFiles = document.createElement("div");
+        domSidebarFiles.id = "tsidebar-files";
+        domSidebarUpload.appendChild(domSidebarFiles);
+        domSidebarResources.appendChild(domSidebarUpload);
+        /*var domProgress = document.createElement("div");
         domProgress.id = "progress";
         var domBar = document.createElement("div");
         domBar.className = "bar";
         domProgress.appendChild(domBar);
-        domSidebarResources.appendChild(domProgress);
+        domSidebarResources.appendChild(domProgress);*/
         
         domSidebar.appendChild(domSidebarResources);
     
@@ -50,7 +53,7 @@ define(['TUI', 'TEnvironment', 'TProgram', 'jquery', 'jquery.ui.widget', 'iframe
             this.displayPrograms();
             this.update();
             // Set up blueimp fileupload plugin
-            $(domSidebarResources).fileupload({
+            $(domSidebarUpload).fileupload({
                 dataType: 'json',
                 add: function (e, data) {
                     data.context = $('<p/>').text('Uploading...').appendTo(domSidebarFiles);
@@ -157,7 +160,31 @@ define(['TUI', 'TEnvironment', 'TProgram', 'jquery', 'jquery.ui.widget', 'iframe
         };
         
         this.updateResources = function() {
-        
+            var project = TEnvironment.getProject();
+            var resourcesNames = project.getResourcesNames();
+            var resources = project.getResources();
+            
+            function addElement(name, type) {
+                var resourceDiv = document.createElement("div");
+                resourceDiv.className = "tsidebar-file tsidebar-type-"+type;
+                resourceDiv.innerHTML = name;
+                resourceDiv.onclick = function(e) {
+                    $('.tsidebar-file').removeClass('current');
+                    $(this).addClass('current');
+                    //window.alert("Resource : "+name);
+                };
+                resourceDiv.setAttribute("draggable", "true");
+                resourceDiv.ondrag = function(e) {
+                    e.dataTransfer.setData("text/plain", e.target.innerHTML);
+                };
+                domSidebarFiles.appendChild(resourceDiv);
+            }
+            
+            domSidebarFiles.innerHTML = "";
+            for (var i=0; i<resourcesNames.length; i++) {
+                var name = resourcesNames[i];
+                addElement(name, resources[name].type);
+            }
         };
         
         this.updateProgramInfo = function(program) {
