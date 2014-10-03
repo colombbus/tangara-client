@@ -182,32 +182,46 @@ body, html {
     padding:4px;
     width:90px;
     height:90px;
-    border:1px solid black;
+    border:1px solid transparent;
     overflow:hidden;
     font-size:0.8em;
+    background-color:#FFFFFF;
     background-image:url('../images/file.png');
     background-repeat:no-repeat;
     background-position:50% 60%;
     word-wrap: break-word;
     border-radius:5px;
     cursor:pointer;
+    text-align:center;
 }
 
 .tsidebar-type-image {
     background-image:url('../images/picture.png');    
 } 
 
+.tsidebar-type-image.current {
+    background-image:url('../images/picture_white.png');    
+}
+
 .tsidebar-type-audio {
     background-image:url('../images/music.png');    
+}
+
+.tsidebar-type-audio.current {
+    background-image:url('../images/music_white.png');    
 }
 
 .tsidebar-type-video {
     background-image:url('../images/video.png');    
 }
 
+.tsidebar-type-video.current {
+    background-image:url('../images/video_white.png');
+}
+
 .tsidebar-file.current {
-    color:#E47637;
-    background-color:#FFFFFF;
+    color:#FFFFFF;
+    background-color:#E47637;
 }
 
 .tsidebar-loading {
