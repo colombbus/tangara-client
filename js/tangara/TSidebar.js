@@ -1,4 +1,4 @@
-define(['TUI', 'TEnvironment', 'TProgram', 'jquery', 'jquery.ui.widget', 'iframe-transport', 'fileupload'], function(TUI, TEnvironment, TProgram, $) {
+define(['TUI', 'TEnvironment', 'TProgram', 'jquery', 'jquery.ui.widget', 'iframe-transport', 'fileupload', 'fancybox'], function(TUI, TEnvironment, TProgram, $) {
 
     function TSidebar() {
         var domSidebar = document.createElement("div");
@@ -169,13 +169,19 @@ define(['TUI', 'TEnvironment', 'TProgram', 'jquery', 'jquery.ui.widget', 'iframe
                 resourceDiv.className = "tsidebar-file tsidebar-type-"+type;
                 resourceDiv.innerHTML = name;
                 resourceDiv.onclick = function(e) {
-                    $('.tsidebar-file').removeClass('current');
-                    $(this).addClass('current');
+                    if ($(this).hasClass('current')) {
+                        // already selected: open using fancybox
+                        $.fancybox(TEnvironment.getUserResource(name));
+                    } else {
+                        // set as current
+                        $('.tsidebar-file').removeClass('current');
+                        $(this).addClass('current');
+                    }
                     //window.alert("Resource : "+name);
                 };
                 resourceDiv.setAttribute("draggable", "true");
-                resourceDiv.ondrag = function(e) {
-                    e.dataTransfer.setData("text/plain", e.target.innerHTML);
+                resourceDiv.ondragstart = function(e) {
+                    e.dataTransfer.setData("text/plain", "\""+e.target.innerHTML+"\"");
                 };
                 domSidebarFiles.appendChild(resourceDiv);
             }
@@ -232,7 +238,7 @@ define(['TUI', 'TEnvironment', 'TProgram', 'jquery', 'jquery.ui.widget', 'iframe
                 $(switchPrograms).removeClass("active");
                 $(domSidebarResources).show();
                 $(switchResources).addClass("active");
-                $(domSidebar).animate({width:"400px"}, 500);
+                $(domSidebar).animate({width:"440px"}, 500);
                 programsVisible = false;
             }
         };
