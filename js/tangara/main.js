@@ -12,7 +12,8 @@ require.config({
         "TGraphicalObject":'objects/tgraphicalobject/TGraphicalObject',
         "fileupload":'../libs/jquery-file-upload/jquery.fileupload',
         "iframe-transport":'../libs/jquery-file-upload/jquery.iframe-transport',
-        "jquery.ui.widget":'../libs/jquery-file-upload/vendor/jquery.ui.widget'
+        "jquery.ui.widget":'../libs/jquery-file-upload/vendor/jquery.ui.widget',
+        "fancybox":'../libs/fancybox-2.1.5/jquery.fancybox.pack'
     }
 });
 
