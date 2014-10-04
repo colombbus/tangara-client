@@ -34,16 +34,17 @@ define(['TUI', 'TEnvironment', 'TProgram', 'jquery', 'jquery.ui.widget', 'iframe
         domSidebarFiles.id = "tsidebar-files";
         domSidebarUpload.appendChild(domSidebarFiles);
         domSidebarResources.appendChild(domSidebarUpload);
-        /*var domProgress = document.createElement("div");
-        domProgress.id = "progress";
-        var domBar = document.createElement("div");
-        domBar.className = "bar";
-        domProgress.appendChild(domBar);
-        domSidebarResources.appendChild(domProgress);*/
+        var domEmptyMedia = document.createElement("div");
+        domEmptyMedia.id="tsidebar-resources-empty";
+        var domEmptyMediaP = document.createElement("p");
+        domEmptyMediaP.appendChild(document.createTextNode(TEnvironment.getMessage("empty-media-library")));
+        domEmptyMedia.appendChild(domEmptyMediaP);
+        domSidebarResources.appendChild(domEmptyMedia);
         
         domSidebar.appendChild(domSidebarResources);
     
         var programsVisible = false;
+        var empty = true;    
     
         this.getElement = function() {
             return domSidebar;
@@ -56,8 +57,59 @@ define(['TUI', 'TEnvironment', 'TProgram', 'jquery', 'jquery.ui.widget', 'iframe
             $(domSidebarUpload).fileupload({
                 dataType: 'json',
                 add: function (e, data) {
-                    data.context = $('<p/>').text('Uploading...').appendTo(domSidebarFiles);
-                    data.submit();
+                    var newDivs=[];
+                    var newNames=[];
+                    try {
+                        // Insert div corresponding to loading files
+                        var files = data.files;
+                        var project = TEnvironment.getProject();
+                        var div;
+                        var $domSidebarFiles = $(domSidebarFiles);
+                        for (var i=0; i<files.length; i++) {
+                            var file = files[i];
+                            div = getResourceDiv(file.name, 'uploading', false);
+                            // add progress bar
+                            var domProgress = document.createElement("div");
+                            domProgress.className = "progress-bar-wrapper";
+                            var domBar = document.createElement("div");
+                            domBar.className = "progress-bar";
+                            domProgress.appendChild(domBar);
+                            div.appendChild(domProgress);
+                            var index = project.uploadingResource(file.name);
+                            var where = $domSidebarFiles.find('.tsidebar-file:eq('+index+')');
+                            if (where.length > 0)
+                                where.before(div);
+                            else 
+                                $domSidebarFiles.append(div);
+                            newDivs.push(div);
+                            
+                        }
+                        if (empty) {
+                            domSidebarResources.removeChild(domEmptyMedia);
+                            empty = false;
+                        }
+                        var $domSidebarResources = $(domSidebarResources);
+                        $domSidebarResources.animate({scrollTop: $domSidebarResources.scrollTop()+$(div).position().top}, 1000);
+                        data.submit();
+                    } catch (error) {
+                        // error
+                        // 1st remove loading resources
+                        for (var i=0; i<newNames.length;i++) {
+                            project.removeUploadingResource(newNames[i]);
+                        }
+                        // 2nd remove loading resources div
+                        for (var i=0; i<newDivs.length;i++) {
+                            domSidebarFiles.removeChild(newDivs[i]);
+                        }
+                        // 3rd check if there is some file left, otherwise add "empty" message
+                        if (!domSidebarFiles.hasChildNodes() && !empty) {
+                            domSidebarResources.appendChild(domEmptyMedia);
+                            empty = true;
+                        }
+                        
+                        // 4th display error
+                        TUI.addLogError(error);
+                    }
                 },
                 done: function (e, data) {
                     data.context.text('Upload finished.');
@@ -65,8 +117,8 @@ define(['TUI', 'TEnvironment', 'TProgram', 'jquery', 'jquery.ui.widget', 'iframe
                         $('<p/>').text(file.name).appendTo(document.body);
                     });*/
                 },
-                progressall: function (e, data) {
-                    
+                progress: function (e, data) {
+                    // TODO : update given progress bar 
                     var progress = parseInt(data.loaded / data.total * 100, 10);
                     $('#progress .bar').css('width',progress + '%');
                 }
@@ -159,37 +211,56 @@ define(['TUI', 'TEnvironment', 'TProgram', 'jquery', 'jquery.ui.widget', 'iframe
             }
         };
         
+        
+        function getResourceDiv(name, type, loading) {
+            var resourceDiv = document.createElement("div");
+            resourceDiv.className = "tsidebar-file tsidebar-type-"+type;
+            resourceDiv.innerHTML = name;
+            resourceDiv.onclick = function(e) {
+                if ($(this).hasClass('current')) {
+                    // already selected: open using fancybox
+                    $.fancybox(TEnvironment.getUserResource(name));
+                } else {
+                    // set as current
+                    $('.tsidebar-file').removeClass('current');
+                    $(this).addClass('current');
+                }
+                //window.alert("Resource : "+name);
+            };
+            resourceDiv.setAttribute("draggable", "true");
+            resourceDiv.ondragstart = function(e) {
+                e.dataTransfer.setData("text/plain", "\""+e.target.innerHTML+"\"");
+            };
+            return resourceDiv;
+        }
+        
         this.updateResources = function() {
             var project = TEnvironment.getProject();
             var resourcesNames = project.getResourcesNames();
             var resources = project.getResources();
             
             function addElement(name, type) {
-                var resourceDiv = document.createElement("div");
-                resourceDiv.className = "tsidebar-file tsidebar-type-"+type;
-                resourceDiv.innerHTML = name;
-                resourceDiv.onclick = function(e) {
-                    if ($(this).hasClass('current')) {
-                        // already selected: open using fancybox
-                        $.fancybox(TEnvironment.getUserResource(name));
-                    } else {
-                        // set as current
-                        $('.tsidebar-file').removeClass('current');
-                        $(this).addClass('current');
-                    }
-                    //window.alert("Resource : "+name);
-                };
-                resourceDiv.setAttribute("draggable", "true");
-                resourceDiv.ondragstart = function(e) {
-                    e.dataTransfer.setData("text/plain", "\""+e.target.innerHTML+"\"");
-                };
-                domSidebarFiles.appendChild(resourceDiv);
+                var div = getResourceDiv(name, type, false);
+                domSidebarFiles.appendChild(div);
             }
             
             domSidebarFiles.innerHTML = "";
-            for (var i=0; i<resourcesNames.length; i++) {
-                var name = resourcesNames[i];
-                addElement(name, resources[name].type);
+            if (resourcesNames.length === 0) {
+                // no media: add message
+                if (!empty) {
+                    domSidebarResources.appendChild(domEmptyMedia);
+                    empty = true;
+                }
+            } else {
+                if (empty) {
+                    domSidebarResources.removeChild(domEmptyMedia);
+                    empty = false;
+                }
+                for (var i=0; i<resourcesNames.length; i++) {
+                    var name = resourcesNames[i];
+                    addElement(name, resources[name].type);
+                }
+                empty = false;
             }
         };
         
