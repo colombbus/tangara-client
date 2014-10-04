@@ -1,4 +1,4 @@
-define(['TUI', 'TEnvironment', 'TProgram', 'jquery', 'jquery.ui.widget', 'iframe-transport', 'fileupload', 'fancybox'], function(TUI, TEnvironment, TProgram, $) {
+define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'jquery', 'jquery.ui.widget', 'iframe-transport', 'fileupload', 'fancybox'], function(TUI, TEnvironment, TProgram, TError, $) {
 
     function TSidebar() {
         var domSidebar = document.createElement("div");
@@ -28,7 +28,7 @@ define(['TUI', 'TEnvironment', 'TProgram', 'jquery', 'jquery.ui.widget', 'iframe
         domSidebarUpload.id = "tsidebar-upload";
         domSidebarUpload.setAttribute("method", "post");
         //domSidebarUpload.setAttribute("name", "files[]");
-        domSidebarUpload.setAttribute("action", "TO_BE_DEFINED");
+        //domSidebarUpload.setAttribute("action", TEnvironment.getBackendUrl('addresource'));
         domSidebarUpload.setAttribute("enctype", "multipart/form-data");
         var domSidebarFiles = document.createElement("div");
         domSidebarFiles.id = "tsidebar-files";
@@ -44,7 +44,8 @@ define(['TUI', 'TEnvironment', 'TProgram', 'jquery', 'jquery.ui.widget', 'iframe
         domSidebar.appendChild(domSidebarResources);
     
         var programsVisible = false;
-        var empty = true;    
+        var empty = true;
+        var uploadingDivs = {};
     
         this.getElement = function() {
             return domSidebar;
@@ -54,8 +55,11 @@ define(['TUI', 'TEnvironment', 'TProgram', 'jquery', 'jquery.ui.widget', 'iframe
             this.displayPrograms();
             this.update();
             // Set up blueimp fileupload plugin
+            // TODO: make use of acceptFileTypes and maxFileSize
             $(domSidebarUpload).fileupload({
                 dataType: 'json',
+                url:TEnvironment.getBackendUrl('addresource'),
+                paramName:'resources[]',
                 add: function (e, data) {
                     var newDivs=[];
                     var newNames=[];
@@ -82,7 +86,7 @@ define(['TUI', 'TEnvironment', 'TProgram', 'jquery', 'jquery.ui.widget', 'iframe
                             else 
                                 $domSidebarFiles.append(div);
                             newDivs.push(div);
-                            
+                            uploadingDivs[file.name] = $(div);
                         }
                         if (empty) {
                             domSidebarResources.removeChild(domEmptyMedia);
@@ -96,6 +100,7 @@ define(['TUI', 'TEnvironment', 'TProgram', 'jquery', 'jquery.ui.widget', 'iframe
                         // 1st remove loading resources
                         for (var i=0; i<newNames.length;i++) {
                             project.removeUploadingResource(newNames[i]);
+                            delete uploadingDivs[newNames[i]];
                         }
                         // 2nd remove loading resources div
                         for (var i=0; i<newDivs.length;i++) {
@@ -112,15 +117,58 @@ define(['TUI', 'TEnvironment', 'TProgram', 'jquery', 'jquery.ui.widget', 'iframe
                     }
                 },
                 done: function (e, data) {
-                    data.context.text('Upload finished.');
-                    /*$.each(data.result.files, function (index, file) {
-                        $('<p/>').text(file.name).appendTo(document.body);
-                    });*/
+                    var result = data.result;
+                    if (typeof result !== 'undefined') {
+                        if (typeof result.error !== 'undefined') {
+                            // an error occured
+                            // First remove corresponding divs
+                            var project = TEnvironment.getProject();
+                            for (var i=0; i<data.files.length; i++) {
+                                var name = data.files[i].name;
+                                var $div = uploadingDivs[name];
+                                $div.remove();
+                                project.removeUploadingResource(name);
+                                delete uploadingDivs[name];
+                            }
+                            // Then display error
+                            var message;
+                            if (typeof result.error.message !== 'undefined' && typeof result.error.name !== 'undefined') {
+                                message = TEnvironment.getMessage(result.error.message, result.error.name);
+                            } else {
+                                message = TEnvironment.getMessage(result.error);
+                            }
+                            var error = new TError(message);
+                            TUI.addLogError(error);                            
+                        } else if (typeof result.created !== 'undefined') {
+                            // files where created
+                            var project = TEnvironment.getProject();
+
+                            for (var i=0; i<result.created.length; i++) {
+                                var name = result.created[i].name;
+                                var $div = uploadingDivs[name];
+                                if (typeof $div !== 'undefined') {
+                                    $div.find(".progress-bar-wrapper").fadeOut(2000, function() {$(this).remove()});
+                                }
+                                $div.removeClass('tsidebar-type-uploading');
+                                var type = '';
+                                if (typeof result.created[i].type !== 'undefined') {
+                                    $div.addClass('tsidebar-type-'+result.created[i].type);
+                                }
+                                delete uploadingDivs[name];
+                                project.resourceUploaded(name, type);
+                            }
+                        }
+                    }
                 },
                 progress: function (e, data) {
-                    // TODO : update given progress bar 
                     var progress = parseInt(data.loaded / data.total * 100, 10);
-                    $('#progress .bar').css('width',progress + '%');
+                    for (var i=0; i<data.files.length; i++) {
+                        var name = data.files[i].name;
+                        var $div = uploadingDivs[name];
+                        if (typeof $div !== 'undefined') {
+                            $div.find(".progress-bar").css('width',progress + '%');
+                        }
+                    }
                 }
             });
         };
@@ -219,7 +267,7 @@ define(['TUI', 'TEnvironment', 'TProgram', 'jquery', 'jquery.ui.widget', 'iframe
             resourceDiv.onclick = function(e) {
                 if ($(this).hasClass('current')) {
                     // already selected: open using fancybox
-                    $.fancybox(TEnvironment.getUserResource(name));
+                    $.fancybox(TEnvironment.getProjectResource(name));
                 } else {
                     // set as current
                     $('.tsidebar-file').removeClass('current');
