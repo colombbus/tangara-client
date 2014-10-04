@@ -39,10 +39,18 @@ require(['jquery', 'TEnvironment', 'TRuntime', 'TFrame', 'TProject'],function($,
     var currentProject = new TProject();
     currentProject.update();
     TEnvironment.setProject(currentProject);
-    
-    $(document).ready( function() {
-        frame.displayed();
+        $(document).ready( function() {
+            frame.displayed();
+            if (!TEnvironment.debug) {
+            window.onbeforeunload = function(e) {
+                var message = TEnvironment.getMessage("confirm-leaving");
+                var e = e || window.event;
+                if (e) {
+                    e.returnValue = message;
+                }
+                return message;
+            };
+        }
     });
-   
 });
 
