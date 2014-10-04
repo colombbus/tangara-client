@@ -1,4 +1,4 @@
-define(['TLink', 'TProgram', 'TEnvironment', 'TUtils'], function(TLink, TProgram, TEnvironment, TUtils) {
+define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError'], function(TLink, TProgram, TEnvironment, TUtils, TError) {
     function TProject() {
         
         var name;
@@ -188,8 +188,46 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils'], function(TLink, TProgram
             if (typeof resources[name] !== 'undefined') {
                 return resources[name];
             } else {
-                var e = new TError(TEnvironment.getMessage("resource-unknown"+name));
+                var e = new TError(TEnvironment.getMessage("resource-unknown",name));
                 throw e;
+            }
+        };
+        
+        this.getNewResourceIndex = function(name) {
+            var i;
+            for (i=0; i< resourcesNames.length; i++) {
+                var current = resourcesNames[i];
+                var result = current.toLowerCase().localeCompare(name.toLowerCase());
+                if (result === 0) {
+                    // problem: resource name already exists
+                    var e = new TError(TEnvironment.getMessage("resource-name-exists",name));
+                    throw e;
+                }
+                if (result > 0) {
+                    break;
+                }
+            }
+            return i;
+        };
+        
+        this.uploadingResource = function(name) {
+            if (typeof(resources[name]) !== 'undefined') {
+                var e = new TError(TEnvironment.getMessage("resource-name-exists",name));
+                throw e;
+            }
+            resources[name] = {'type':'uploading'};
+            var i = this.getNewResourceIndex(name);
+            resourcesNames.splice(i, 0, name);
+            return i;
+        };
+        
+        this.removeUploadingResource = function(name) {
+            if (typeof(resources[name] !== 'undefined')) {
+                resources[name] = undefined;
+            }
+            var i = resourcesNames.indexOf(name);
+            if (i > -1) {
+                resourcesNames.splice(i, 1);
             }
         };
         
