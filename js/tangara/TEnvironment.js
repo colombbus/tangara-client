@@ -160,13 +160,12 @@ define(['jquery'], function($) {
             return initialClass;
         };
 
-        this.getResource = function(location) {
-            return this.getBaseUrl() + "/js/tangara/resources/" + location;
+        this.getResource = function(name) {
+            return this.getBaseUrl() + "/js/tangara/resources/" + name;
         };
 
-        this.getUserResource = function(location) {
-            // TODO: to be replaced with user directory management
-            return this.getBaseUrl() + "/tests/" + location;
+        this.getProjectResource = function(name) {
+            return project.getResourceLocation(name);
         };
 
         this.getMessage = function(code) {
