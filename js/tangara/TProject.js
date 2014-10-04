@@ -170,6 +170,7 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError'], function(TLink
                 programs = sortArray(programs);
                 resourcesNames = sortArray(resourcesNames);
                 TEnvironment.setUserLogged(true);
+                this.preloadImages();
             }
             catch (error) {
                 TEnvironment.setUserLogged(false);
@@ -212,13 +213,22 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError'], function(TLink
         
         this.uploadingResource = function(name) {
             if (typeof(resources[name]) !== 'undefined') {
-                var e = new TError(TEnvironment.getMessage("resource-name-exists",name));
+                var e = new TError(TEnvironment.getMessage("resource-already-exists",name));
                 throw e;
             }
             resources[name] = {'type':'uploading'};
             var i = this.getNewResourceIndex(name);
             resourcesNames.splice(i, 0, name);
             return i;
+        };
+        
+        this.resourceUploaded = function(name, type) {
+            resources[name].type = type;
+            if (type === 'image') {
+                // preload image
+                var img = new Image();
+                img.src = this.getResourceLocation(name);
+            }
         };
         
         this.removeUploadingResource = function(name) {
@@ -228,6 +238,20 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError'], function(TLink
             var i = resourcesNames.indexOf(name);
             if (i > -1) {
                 resourcesNames.splice(i, 1);
+            }
+        };
+        
+        this.getResourceLocation = function(name) {
+            return TLink.getResourceLocation(name);
+        };
+        
+        this.preloadImages = function() {
+            for (var i=0; i<resourcesNames.length; i++) {
+                var name = resourcesNames[i];
+                if (resources[name].type === 'image') {
+                    var img = new Image();
+                    img.src = this.getResourceLocation(name);
+                }
             }
         };
         
