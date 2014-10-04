@@ -46,8 +46,18 @@ define(['jquery', 'TUI'], function($, TUI) {
         };
 
         this.addError = function(error) {
-            var code = error.getCode();
-            var message = error.getMessage();
+            var code, message;
+            if (typeof error.getCode !== 'undefined') {
+                code = error.getCode();
+            }
+            if (typeof error.getMessage !== 'undefined') {
+                message = error.getMessage();
+            } else if (typeof error.message !== 'undefined') {
+                message = error.message;
+            } else {
+                message = 'undefined error';
+                window.console.debug(error);
+            }
             var index = errors.push(error) -1;
             var wrapper = document.createElement("div");
             wrapper.onclick = function() { TUI.handleError(index); };
