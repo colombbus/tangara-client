@@ -195,7 +195,13 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
             }
         };
 
-
+        this.getResourceLocation = function(name) {
+            if (TEnvironment.debug) {
+                return TEnvironment.getBaseUrl() + "/tests/" + name;
+            } else {
+                return TEnvironment.getBackendUrl('getresource')+"/"+encodeURIComponent(name);
+            }
+        };
         
         function checkError(data) {
             if (typeof data !=='undefined' && typeof data['error'] !== 'undefined') {
