@@ -78,6 +78,33 @@ body, html {
     margin-right:200px;
 }
 
+#teditor.editor-disabled {
+    background-color:#EFEFEF;
+}
+
+#teditor.editor-disabled .ace_cursor {
+    border-color:transparent;
+}
+
+#teditor.editor-disabled #disabled-message {
+    position:absolute;
+    z-index:10;
+    height:100%;
+    width:100%;
+    text-align:center;
+}
+
+#teditor.editor-disabled #disabled-message p {
+    margin:0;
+    padding:0;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    color:#333435;
+    font-size:0.8em;
+    opacity:0.3;
+}
+
 #tsidebar {
     background-color:#DEDEDE;
     width:250px;
@@ -121,23 +148,13 @@ body, html {
     overflow-y:auto;
     height:100%;
     margin-right:40px;
+    position:relative;
 }
 
 /*#tsidebar-upload {
     background-color:#91FF00;
     opacity:0;
 }*/
-
-#progress {
-    height:18px;
-    background-color:black;
-}
-
-#progress .bar {
-    height:18px;
-    background-color:greenyellow;
-    width:0%;
-}
 
 .tsidebar-program {
     padding:10px;
@@ -176,6 +193,24 @@ body, html {
     display:none;
 }
 
+#tsidebar-resources-empty {
+    position:absolute;
+    z-index:10;
+    height:100%;
+    width:100%;
+    text-align:center;
+}
+
+#tsidebar-resources-empty p {
+    margin:0;
+    padding:0px 10px;
+    position:relative;
+    top:50%;
+    transform: translateY(-50%);
+    color:#333435;
+    opacity:0.3;
+}
+
 .tsidebar-file {
     float:left;
     margin:10px;
@@ -193,6 +228,7 @@ body, html {
     border-radius:5px;
     cursor:pointer;
     text-align:center;
+    position:relative;
 }
 
 .tsidebar-type-image {
@@ -222,6 +258,21 @@ body, html {
 .tsidebar-file.current {
     color:#FFFFFF;
     background-color:#E47637;
+}
+
+.progress-bar-wrapper {
+    height:8px;
+    background-color:black;
+    position:absolute;
+    bottom:5px;
+    left:5px;
+    right:5px;
+}
+
+.progress-bar-wrapper .progress-bar {
+    height:8px;
+    background-color:greenyellow;
+    width:0%;
 }
 
 .tsidebar-loading {
