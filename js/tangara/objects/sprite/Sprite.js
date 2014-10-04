@@ -383,7 +383,7 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
         name = TUtils.getString(name);
         // add image only if not already added
         if (typeof this.images[name] === 'undefined') {
-            var asset = TEnvironment.getUserResource(name);
+            var asset = TEnvironment.getProjectResource(name);
             this.images[name] = asset;
             if (typeof set === 'undefined') {
                 set = "";
