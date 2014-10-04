@@ -10,6 +10,14 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
         var AceUndoManager = ace_undo_manager.UndoManager;
         var AceRange = ace_range.Range;
         var errorMarker = null;
+        var disabled = false;
+        var disabledSession = new AceEditSession('');
+        var disabledMessage = document.createElement("div");
+        disabledMessage.id =  "disabled-message";
+        var disabledP = document.createElement("p");
+        var disabledText = TEnvironment.getMessage("editor-disabled");
+        disabledP.appendChild(document.createTextNode(disabledText));
+        disabledMessage.appendChild(disabledP);
 
         this.getElement = function() {
             return domEditor;
@@ -39,6 +47,8 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
                 }
             });
             
+            // disable editor, waiting for a program to edit
+            this.disable();
         };
         
         this.show = function() {
@@ -77,6 +87,13 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
         };
         
         this.setSession = function(session) {
+             if (disabled) {
+                aceEditor.setReadOnly(false);
+                aceEditor.renderer.setShowGutter(true);
+                $(domEditor).removeClass('editor-disabled');
+                domEditor.removeChild(disabledMessage);
+                disabled = false;
+             }
             aceEditor.setSession(session);
         };
         
@@ -95,8 +112,12 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
         };
 
         this.disable = function() {
-            // TODO: create a "disabled" session in constructor
-            aceEditor.setSession(new AceEditSession(''));
+            aceEditor.setSession(disabledSession);
+            aceEditor.setReadOnly(true);
+            aceEditor.renderer.setShowGutter(false);
+            $(domEditor).addClass('editor-disabled');
+            domEditor.appendChild(disabledMessage);
+            disabled = true;
         };
 
         this.removeError = function() {
