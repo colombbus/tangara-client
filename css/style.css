@@ -259,6 +259,15 @@ body, html {
     display:none;
 }
 
+.tsidebar-renaming .tsidebar-loading {
+    background-image:url('../images/loader2.gif');
+}
+
+textarea.tsidebar-rename {
+    width:100%;
+    height:50px;
+}
+
 #tsidebar-resources-empty {
     position:absolute;
     z-index:10;
@@ -287,9 +296,6 @@ body, html {
     overflow:hidden;
     font-size:0.8em;
     background-color:#FFFFFF;
-    background-image:url('../images/file.png');
-    background-repeat:no-repeat;
-    background-position:50% 60%;
     word-wrap: break-word;
     border-radius:5px;
     cursor:pointer;
@@ -297,27 +303,43 @@ body, html {
     position:relative;
 }
 
-.tsidebar-type-image {
+.tsidebar-file-name {
+    width:90px;
+    height:56px;
+    margin-bottom:4px;
+    overflow:hidden;
+}
+
+.tsidebar-file-icon {
+    width:90px;
+    height:30px;
+    overflow:hidden;
+    background-image:url('../images/file.png');
+    background-repeat:no-repeat;
+    background-position:50% 0%;
+}
+
+.tsidebar-type-image  .tsidebar-file-icon {
     background-image:url('../images/picture.png');    
 } 
 
-.tsidebar-type-image.current {
+.tsidebar-type-image.current  .tsidebar-file-icon {
     background-image:url('../images/picture_white.png');    
 }
 
-.tsidebar-type-audio {
+.tsidebar-type-audio .tsidebar-file-icon {
     background-image:url('../images/music.png');    
 }
 
-.tsidebar-type-audio.current {
+.tsidebar-type-audio.current  .tsidebar-file-icon {
     background-image:url('../images/music_white.png');    
 }
 
-.tsidebar-type-video {
+.tsidebar-type-video  .tsidebar-file-icon {
     background-image:url('../images/video.png');    
 }
 
-.tsidebar-type-video.current {
+.tsidebar-type-video.current  .tsidebar-file-icon {
     background-image:url('../images/video_white.png');
 }
 
@@ -349,11 +371,6 @@ body, html {
     width:16px;
     background-image:url('../images/loader.gif');
 }
-
-.tsidebar-renaming .tsidebar-loading {
-    background-image:url('../images/loader2.gif');
-}
-
 
 .tangara_error {    
     background: rgba(255, 0, 0, 0.1);
