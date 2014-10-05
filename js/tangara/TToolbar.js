@@ -84,40 +84,51 @@ define(['jquery','TEnvironment', 'TUI'], function($,TEnvironment, TUI) {
         optionNewProgram.appendChild(document.createTextNode(TEnvironment.getMessage('option-new-program')));
         optionNewProgram.onclick = function() { TUI.newProgram(); };
 
+        // Start with editor mode disabled
+        domOptions.appendChild(optionClear);
+        domOptions.appendChild(optionDesignMode);
+        var editorMode = false;
+
+
         this.getElement = function() {
             return domToolbar;
         };
         
         this.displayed = function() {
-            this.setSaveEnabled(TEnvironment.isUserLogged());
         };
         
         this.enableConsole = function() {
             domConsole.className = "ttoolbar-mode active";
-            domOptions.appendChild(optionClear);
-            domOptions.appendChild(optionDesignMode);
             domButtons.appendChild(buttonExecute);
         };
         
         this.disableConsole = function() {
             domConsole.className = "ttoolbar-mode";
-            domOptions.removeChild(optionClear);
-            domOptions.removeChild(optionDesignMode);
             domButtons.removeChild(buttonExecute);
         };
         
         this.enableEditor = function() {
-            domEditor.className = "ttoolbar-mode active";
-            domOptions.appendChild(optionSaveProgram);
-            domOptions.appendChild(optionNewProgram);
-            domButtons.appendChild(buttonExecute);
+            if (!editorMode) {
+                domEditor.className = "ttoolbar-mode active";
+                domOptions.removeChild(optionClear);
+                domOptions.removeChild(optionDesignMode);            
+                domOptions.appendChild(optionSaveProgram);
+                domOptions.appendChild(optionNewProgram);
+                domButtons.appendChild(buttonExecute);
+                editorMode = true;
+            }
         };
         
         this.disableEditor = function() {
-            domEditor.className = "ttoolbar-mode";
-            domOptions.removeChild(optionSaveProgram);
-            domOptions.removeChild(optionNewProgram);
-            domButtons.removeChild(buttonExecute);
+            if (editorMode) {
+                domEditor.className = "ttoolbar-mode";
+                domOptions.removeChild(optionSaveProgram);
+                domOptions.removeChild(optionNewProgram);
+                domOptions.appendChild(optionClear);
+                domOptions.appendChild(optionDesignMode);
+                domButtons.removeChild(buttonExecute);
+                editorMode = false;
+            }
         };
         
         this.setSaveEnabled = function(value) {
