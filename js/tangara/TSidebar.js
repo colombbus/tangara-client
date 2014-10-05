@@ -369,12 +369,18 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'jquery', 'jquery.ui.widget
         
         this.displayResources = function() {
             if (programsVisible) {
-                $(domSidebarPrograms).hide();
-                $(switchPrograms).removeClass("active");
-                $(domSidebarResources).show();
-                $(switchResources).addClass("active");
-                $(domSidebar).animate({width:"440px"}, 500);
-                programsVisible = false;
+                if (!TEnvironment.isUserLogged()) {
+                    // User is not logged: we cannot manage resources
+                    var error = new TError(TEnvironment.getMessage('resources-unavailable-user-not-logged'));
+                    TUI.addLogError(error);
+                } else {
+                    $(domSidebarPrograms).hide();
+                    $(switchPrograms).removeClass("active");
+                    $(domSidebarResources).show();
+                    $(switchResources).addClass("active");
+                    $(domSidebar).animate({width:"440px"}, 500);
+                    programsVisible = false;
+                }
             }
         };
     }
