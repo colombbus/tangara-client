@@ -16,7 +16,7 @@
         "program-modified":"{0} *",
         "program-saved":"Programme '{0}' enregistré",
         "switch-programs":"Programmes",
-        "switch-resources":"Médias",
+        "switch-resources":"Médiathèque",
         "color-noir":"black",
         "color-blanc":"white",
         "color-rouge":"red",
@@ -50,6 +50,6 @@
         "resource_not_uploaded":"Le fichier '{0}' n'a pas pu être enregistré",
         "resource_file_too_large":"Le fichier '{0}' ne peut pas être enregistré car il est trop volumineux",
         "resource-already-exists":"Il existe déjà un fichier avec le nom {0}",
-        "resources-unavailable-user-not-logged":"Vous devez être connecté pour voir les médias"
+        "resources-unavailable-user-not-logged":"Vous devez être connecté pour utiliser la médiathèque"
     }
 }
