@@ -318,7 +318,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
             if (newName !== oldName) {
                 var project = TEnvironment.getProject();
                 try {
-                    sidebar.showRenaming(oldName);
+                    sidebar.showRenamingProgram(oldName);
                     project.renameProgram(oldName, newName);
                 } catch(error) {
                     this.addLogError(error);
@@ -326,6 +326,19 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
             }
             this.updateSidebarPrograms();
         };
+
+        this.renameResource = function(oldName, newName) {
+            if (newName !== oldName) {
+                var project = TEnvironment.getProject();
+                try {
+                    sidebar.showRenamingResource(oldName);
+                    project.renameResource(oldName, newName);
+                } catch(error) {
+                    this.addLogError(error);
+                }
+            }
+            this.updateSidebarResources();
+        };        
         
         this.setSaveEnabled = function(value) {
             if (value && TEnvironment.isUserLogged()) {
@@ -339,6 +352,9 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
             sidebar.updatePrograms();
         };
 
+        this.updateSidebarResources = function() {
+            sidebar.updateResources();
+        };
         
         this.updateProgramInfo = function(program) {
             sidebar.updateProgramInfo(program);
