@@ -27,9 +27,25 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'jquery', 'jquery.ui.widget
         var domSidebarUpload = document.createElement("form");
         domSidebarUpload.id = "tsidebar-upload";
         domSidebarUpload.setAttribute("method", "post");
-        //domSidebarUpload.setAttribute("name", "files[]");
-        //domSidebarUpload.setAttribute("action", TEnvironment.getBackendUrl('addresource'));
         domSidebarUpload.setAttribute("enctype", "multipart/form-data");
+        var domSidebarUploadHeader = document.createElement("div");
+        domSidebarUploadHeader.id = "tsidebar-upload-header";
+        var domSidebarUploadInput = document.createElement("input");
+        domSidebarUploadInput.id = "tsidebar-upload-input";
+        domSidebarUploadInput.setAttribute("type", "file");
+        domSidebarUploadInput.setAttribute("multiple", "multiple");
+        domSidebarUploadHeader.appendChild(domSidebarUploadInput);
+        var domSidebarUploadButton = document.createElement("div");
+        domSidebarUploadButton.id = "tsidebar-upload-button";
+        var imageUpload = document.createElement("img");
+        imageUpload.src = TEnvironment.getBaseUrl() + "/images/upload.png";
+        domSidebarUploadButton.appendChild(imageUpload);
+        domSidebarUploadButton.appendChild(document.createTextNode(TEnvironment.getMessage("resource_upload_files")));
+        $(domSidebarUploadButton).click(function() {
+            $(domSidebarUploadInput).click();
+        });
+        domSidebarUploadHeader.appendChild(domSidebarUploadButton);
+        domSidebarUpload.appendChild(domSidebarUploadHeader);
         var domSidebarFiles = document.createElement("div");
         domSidebarFiles.id = "tsidebar-files";
         domSidebarUpload.appendChild(domSidebarFiles);
