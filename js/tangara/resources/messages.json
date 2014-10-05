@@ -45,6 +45,7 @@
         "wrong command":"{0} n'est pas une commande valide",
         "wrong color string":"{0} n'est pas une couleur connue",
         "wrong color":"impossible de définir une couleur à partir de {0} {1} {2}",
+        "resource_upload_files":"Ajouter des fichiers",
         "resource_mime_type_not_allowed":"Le fichier '{0}' n'est pas un média valide (type non accepté)",
         "resource_not_uploaded":"Le fichier '{0}' n'a pas pu être enregistré",
         "resource_file_too_large":"Le fichier '{0}' ne peut pas être enregistré car il est trop volumineux",
