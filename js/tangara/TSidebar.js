@@ -220,7 +220,7 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'jquery', 'jquery.ui.widget
                         $(this).addClass('tsidebar-renaming');
                         var renameElement = document.createElement("input");
                         renameElement.type="text";
-                        renameElement.class="tsidebar-rename";
+                        renameElement.className="tsidebar-rename";
                         renameElement.value = name;
                         $(renameElement).keydown(function (e) {
                             if (e.which === 13) {
@@ -276,21 +276,59 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'jquery', 'jquery.ui.widget
         };
         
         
-        function getResourceDiv(name, type, loading) {
+        function getResourceDiv(name, type) {
             var resourceDiv = document.createElement("div");
             resourceDiv.className = "tsidebar-file tsidebar-type-"+type;
-            resourceDiv.innerHTML = name;
+            var nameDiv = document.createElement("div");
+            nameDiv.className = "tsidebar-file-name";
+            var innerDiv = document.createElement("div");
+            innerDiv.appendChild(document.createTextNode(name));
+            nameDiv.appendChild(innerDiv);
+            resourceDiv.appendChild(nameDiv);
+            var imgDiv = document.createElement("div");
+            imgDiv.className = "tsidebar-file-icon";
+            resourceDiv.appendChild(imgDiv);            
             resourceDiv.onclick = function(e) {
-                if ($(this).hasClass('current')) {
-                    // already selected: open using fancybox
-                    $.fancybox(TEnvironment.getProjectResource(name));
-                } else {
-                    // set as current
+                // set as current
+                if (!$(this).hasClass('current')) {
                     $('.tsidebar-file').removeClass('current');
                     $(this).addClass('current');
                 }
-                //window.alert("Resource : "+name);
             };
+            // preview
+            imgDiv.onclick = function(e) {
+                var parent = $(this).parent();
+                if (parent.hasClass('current') && parent.hasClass('tsidebar-type-image')) {
+                    // already selected: open using fancybox
+                    $.fancybox(TEnvironment.getProjectResource(name));
+                }
+            };
+            // rename
+            nameDiv.onclick = function(e) {
+                var parent = $(this).parent();
+                if (parent.hasClass('current')) {
+                    $(this).addClass('tsidebar-renaming');
+                    var renameElement = document.createElement("textarea");
+                    /*renameElement.type="text";*/
+                    renameElement.className="tsidebar-rename";
+                    renameElement.value = name;
+                    $(renameElement).keydown(function (e) {
+                        if (e.which === 13) {
+                            // Enter was pressed
+                            TUI.renameResource(name, renameElement.value);
+                            e.preventDefault();
+                        }
+                        if (e.which === 27) {
+                            // Escape was pressed
+                            $(this).parent().removeClass('tsidebar-renaming');
+                            $(renameElement).remove();
+                        }
+                    });
+                    renameElement.onblur = function() {TUI.renameResource(name, renameElement.value);};
+                    $(this).append(renameElement);
+                    renameElement.focus();
+                }
+            }
             resourceDiv.setAttribute("draggable", "true");
             resourceDiv.ondragstart = function(e) {
                 e.dataTransfer.setData("text/plain", "\""+e.target.innerHTML+"\"");
@@ -340,13 +378,19 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'jquery', 'jquery.ui.widget
             $(id).append(loadElement);
         };
 
-        this.showRenaming = function(name) {
+        this.showRenamingProgram = function(name) {
             var id = "#tsidebar-program-"+TProgram.findId(name);
             var loadElement = document.createElement("div");
             loadElement.className = "tsidebar-loading";
             $(id).parent().append(loadElement);
         };
 
+        this.showRenamingResource = function(name) {
+            var nameDiv = $(".tsidebar-renaming");
+            var loadElement = document.createElement("div");
+            loadElement.className = "tsidebar-loading";
+            nameDiv.parent().append(loadElement);
+        };
         
         this.show = function() {
             $(domSidebar).show();
