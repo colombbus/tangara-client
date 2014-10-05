@@ -328,7 +328,11 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
         };
         
         this.setSaveEnabled = function(value) {
-            toolbar.setSaveEnabled(value);
+            if (value && TEnvironment.isUserLogged()) {
+                toolbar.setSaveEnabled(true);                
+            } else {
+                toolbar.setSaveEnabled(false);
+            }
         };
         
         this.updateSidebarPrograms = function() {
