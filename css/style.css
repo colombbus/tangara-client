@@ -126,7 +126,7 @@ body, html {
     cursor:pointer;
     width:100%;
     height:45px;
-    background-image:url('../images/cogwheel.png');
+    background-image:url('../images/programs.png');
     background-repeat:no-repeat;
     background-position:50% 50%;
 }
@@ -135,7 +135,7 @@ body, html {
     cursor:pointer;
     width:100%;
     height:45px;
-    background-image:url('../images/film.png');
+    background-image:url('../images/resources.png');
     background-repeat:no-repeat;
     background-position:50% 50%;
 }
