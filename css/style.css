@@ -151,10 +151,70 @@ body, html {
     position:relative;
 }
 
-/*#tsidebar-upload {
-    background-color:#91FF00;
-    opacity:0;
-}*/
+#tsidebar-upload {
+    padding-top:30px;
+}
+
+#tsidebar-upload-header {
+    text-align:center;
+    background-color:#DEDEDE;
+    margin-top:-28px;
+}
+
+#tsidebar-upload-input {
+    visibility:hidden;
+    width:0;
+    height:0;
+}
+
+#tsidebar-upload-button {
+    font-family:'Arial', sans-serif;
+    display:inline-block;
+    font-size:10pt;
+    margin-left:auto;
+    margin-right:auto;
+    margin-top:5px;
+    margin-bottom:5px;
+    padding-top:3px;
+    padding-bottom:3px;
+    padding-left:8px;
+    padding-right:8px;
+    color:#000000;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border-style:solid;
+    border-width:1px;
+    border-color:#CCCCCC;
+    background-color:transparent;
+    cursor:pointer;
+}
+
+#tsidebar-upload-button:hover {
+    color:#990000;
+    background-color:#DEDEDE;
+}
+
+#tsidebar-upload-button:disabled:hover {
+    color:#000000;
+    background-color:transparent;
+}
+
+
+#tsidebar-upload-button img {
+    margin-right:8px;
+    vertical-align:text-bottom;
+    height:16px;
+    opacity:0.6;
+}
+
+#tsidebar-upload-button:hover img {
+    opacity:1;
+}
+
+#tsidebar-upload-button:disabled:hover img {
+    opacity:0.6;
+}
 
 .tsidebar-program {
     padding:10px;
@@ -178,11 +238,17 @@ body, html {
     height:20px;
     width:20px;
     background-image:url('../images/close.png');
+    background-size:20px 20px;
     display:none;
+    opacity:0.6;
 }
 
 .tsidebar-program:hover .tsidebar-close {
     display:block;
+}
+
+.tsidebar-program:hover .tsidebar-close:hover {
+    opacity:1;
 }
 
 .tsidebar-program.tsidebar-renaming:hover .tsidebar-close {
@@ -368,15 +434,32 @@ body, html {
 .ttoolbar-mode-image,
 .ttoolbar-button-image,
 .ttoolbar-option-image {
-    margin-right:5px;
+    margin-right:8px;
     vertical-align:text-bottom;
     height:16px;
+    opacity:0.6;
 }
 
 .ttoolbar-mode:hover,
 .ttoolbar-option:hover {
     color:#990000;
     background-color:#DEDEDE;
+}
+
+.ttoolbar-mode:hover .ttoolbar-mode-image,
+.ttoolbar-option:hover .ttoolbar-option-image,
+.ttoolbar-button:hover .ttoolbar-button-image,
+.ttoolbar-mode.active .ttoolbar-mode-image {
+    opacity:1;    
+}
+
+.ttoolbar-option:disabled:hover .ttoolbar-option-image {
+    opacity:0.5;
+}
+
+.ttoolbar-option:disabled:hover {
+    color:#000000;
+    background-color:transparent;
 }
 
 .ttoolbar-mode.active {
@@ -403,12 +486,16 @@ body, html {
 
 .ttoolbar-button-execute {
     background-color:#6DBEA9;
-    border-color:#4D9E89;
+    /*border-color:#4D9E89;*/
     color:#ffffff;
 }
 
+.ttoolbar-button-execute .ttoolbar-button-image {
+    opacity:1;
+}
+
 .ttoolbar-button-execute:hover {
-    /*color:#398439;*/
+    color:#FF0000;
 }
 
 .ttoolbar-button-execute:active {
