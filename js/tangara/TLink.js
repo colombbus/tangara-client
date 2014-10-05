@@ -203,6 +203,29 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
             }
         };
         
+        this.renameResource = function(name, newName) {
+            if (!TEnvironment.debug) {
+                var url = TEnvironment.getBackendUrl('renameresource');
+                var input = {'name':name, 'new':newName};
+                $.ajax({
+                    dataType: "json",
+                    url: url,
+                    type: "POST",
+                    global:false,
+                    async: false,
+                    data:input,
+                    success: function(data) {
+                        checkError(data);
+                    },
+                    error: function(data, status, error) {
+                        var e = new TError(error);
+                        throw e;
+                    }
+                });
+            }
+        };
+
+        
         function checkError(data) {
             if (typeof data !=='undefined' && typeof data['error'] !== 'undefined') {
                 var e = new TError(TEnvironment.getMessage("backend-error-"+data['error']));
