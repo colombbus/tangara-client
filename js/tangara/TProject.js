@@ -167,8 +167,8 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError'], function(TLink
                 resources = TLink.getResources();
                 resourcesNames = Object.keys(resources);
                 // sort programs and resources alphabetically
-                programs = sortArray(programs);
-                resourcesNames = sortArray(resourcesNames);
+                sortArray(programs);
+                sortArray(resourcesNames);
                 TEnvironment.setUserLogged(true);
                 this.preloadImages();
             }
@@ -240,17 +240,50 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError'], function(TLink
                 resourcesNames.splice(i, 1);
             }
         };
+
+        this.renameResource = function(oldName, newName) {
+            var i = resourcesNames.indexOf(oldName);
+            if (i > -1) {
+                // resource exists
+                var resource = resources[oldName];
+                // check that resource is not uploading
+                var type = resource.type;
+                if (type === 'uploading') {
+                    throw new TError(TEnvironment.getMessage('resource-not-uploaded'));
+                }
+                TLink.renameResource(oldName, newName);
+                // remove old name
+                resourcesNames.splice(i, 1);
+                // add new name
+                resourcesNames.push(newName);
+                resources[newName] = resources[oldName];
+                delete resources[oldName];
+                
+                // update programs lists
+                sortArray(resourcesNames);
+                
+                // preload image if required with new name
+                if (type === 'image') {
+                    this.preloadImage(newName);
+                }
+            }
+        };
+
         
         this.getResourceLocation = function(name) {
             return TLink.getResourceLocation(name);
+        };
+        
+        this.preloadImage = function(name) {
+            var img = new Image();
+            img.src = this.getResourceLocation(name);
         };
         
         this.preloadImages = function() {
             for (var i=0; i<resourcesNames.length; i++) {
                 var name = resourcesNames[i];
                 if (resources[name].type === 'image') {
-                    var img = new Image();
-                    img.src = this.getResourceLocation(name);
+                    this.preloadImage(name);
                 }
             }
         };
