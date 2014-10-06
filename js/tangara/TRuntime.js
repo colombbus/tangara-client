@@ -1,4 +1,4 @@
-define(['jquery', 'TError', 'quintus'], function($, TError, Quintus) {
+define(['jquery', 'TError', 'quintus', 'TParser'], function($, TError, Quintus, TParser) {
     function TRuntime() {
         var libs = new Array();
         var translatedNames = new Array();
@@ -48,6 +48,9 @@ define(['jquery', 'TError', 'quintus'], function($, TError, Quintus) {
                     runtimeFrame[translatedNames[i]] = arguments[i];
                 }
             });
+            
+            // Ask parser to protect translated names
+            TParser.protectIdentifiers(translatedNames);
         };
 
         this.initRuntimeFrame = function() {
