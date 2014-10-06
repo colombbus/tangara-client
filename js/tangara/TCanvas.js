@@ -1,4 +1,4 @@
-define(['jquery', 'TRuntime'], function($, TRuntime) {
+define(['jquery', 'TRuntime', ], function($, TRuntime) {
 
     function TCanvas() {
         var domCanvasOut = document.createElement("div");
@@ -36,17 +36,29 @@ define(['jquery', 'TRuntime'], function($, TRuntime) {
         
         this.displayed = function() {
             var qInstance = TRuntime.getQuintusInstance();
-            //QInstance.setup("tcanvas",{ height:domCanvas.style.height, width:domCanvas.style.width});
             qInstance.setup("tcanvas", {maximize: true }).touch(qInstance.SPRITE_ALL);
             qInstance.stageScene(null);
             qStage = qInstance.stage();
-            // remove fixed width and height set up by quintus
-            var canvas = document.getElementById("tcanvas");
-            /*canvas.removeAttribute("style");
-            canvas.removeAttribute("width");
-            canvas.removeAttribute("height");
-            var container = document.getElementById("tcanvas_container");
-            container.removeAttribute("style");*/
+
+            // resize canvas and its container when window is resized
+            $(window).resize(function(e) {
+                var outer = $(domCanvasOut);
+                var width = outer.width();
+                var height = outer.height();
+                var Q = TRuntime.getQuintusInstance();
+                Q.el.style.height = height + "px";
+                Q.el.style.width = width + "px";
+                Q.el.width = width;
+                Q.el.height = height;
+                Q.wrapper.style.width = width + "px";
+                Q.wrapper.style.height = height + "px";
+                Q.width = width;
+                Q.height = height;
+                Q.cssWidth = width;
+                Q.cssHeight = height;
+                qStage.defaults['w'] = width;
+                qStage.defaults['h'] = height;
+            });
         };
         
         this.show = function() {
