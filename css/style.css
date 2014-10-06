@@ -324,7 +324,7 @@ textarea.tsidebar-rename {
     background-image:url('../images/picture.png');    
 } 
 
-.tsidebar-type-image.current  .tsidebar-file-icon {
+.tsidebar-type-image.tsidebar-current  .tsidebar-file-icon {
     background-image:url('../images/picture_white.png');    
 }
 
@@ -332,7 +332,7 @@ textarea.tsidebar-rename {
     background-image:url('../images/music.png');    
 }
 
-.tsidebar-type-audio.current  .tsidebar-file-icon {
+.tsidebar-type-audio.tsidebar-current  .tsidebar-file-icon {
     background-image:url('../images/music_white.png');    
 }
 
@@ -340,11 +340,11 @@ textarea.tsidebar-rename {
     background-image:url('../images/video.png');    
 }
 
-.tsidebar-type-video.current  .tsidebar-file-icon {
+.tsidebar-type-video.tsidebar-current  .tsidebar-file-icon {
     background-image:url('../images/video_white.png');
 }
 
-.tsidebar-file.current {
+.tsidebar-file.tsidebar-current {
     color:#FFFFFF;
     background-color:#E47637;
 }
