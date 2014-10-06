@@ -347,11 +347,11 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
             this.updateSidebarResources();
         };        
         
-        this.setSaveEnabled = function(value) {
+        this.setEditionEnabled = function(value) {
             if (value && TEnvironment.isUserLogged()) {
-                toolbar.setSaveEnabled(true);                
+                toolbar.setEditionEnabled(true);                
             } else {
-                toolbar.setSaveEnabled(false);
+                toolbar.setEditionEnabled(false);
             }
         };
         
@@ -373,10 +373,16 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
         
         this.displayPrograms = function() {
             sidebar.displayPrograms();
+            toolbar.enableProgramOptions();
         };
 
         this.displayResources = function() {
             sidebar.displayResources();
+            toolbar.enableResourceOptions();
+        };
+        
+        this.delete = function() {
+            //TODO: write delete function
         };
     };
     
