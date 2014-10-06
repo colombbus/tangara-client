@@ -84,10 +84,20 @@ define(['jquery','TEnvironment', 'TUI'], function($,TEnvironment, TUI) {
         optionNewProgram.appendChild(document.createTextNode(TEnvironment.getMessage('option-new-program')));
         optionNewProgram.onclick = function() { TUI.newProgram(); };
 
+        var optionDelete = document.createElement("button");
+        optionDelete.className = "ttoolbar-option";
+        var imageDelete = document.createElement("img");
+        imageDelete.src = TEnvironment.getBaseUrl() + "/images/delete.png";
+        imageDelete.className = "ttoolbar-option-image";
+        optionDelete.appendChild(imageDelete);
+        optionDelete.appendChild(document.createTextNode(TEnvironment.getMessage('option-delete')));
+        optionDelete.onclick = function() { TUI.delete(); };
+
         // Start with editor mode disabled
         domOptions.appendChild(optionClear);
         domOptions.appendChild(optionDesignMode);
         var editorMode = false;
+        var programOptions = true;
 
 
         this.getElement = function() {
@@ -112,27 +122,74 @@ define(['jquery','TEnvironment', 'TUI'], function($,TEnvironment, TUI) {
                 domEditor.className = "ttoolbar-mode active";
                 domOptions.removeChild(optionClear);
                 domOptions.removeChild(optionDesignMode);            
-                domOptions.appendChild(optionSaveProgram);
-                domOptions.appendChild(optionNewProgram);
                 domButtons.appendChild(buttonExecute);
                 editorMode = true;
+                if (programOptions) {
+                    this.enableProgramOptions();
+                } else {
+                    this.enableResourceOptions();
+                }
             }
         };
         
         this.disableEditor = function() {
             if (editorMode) {
                 domEditor.className = "ttoolbar-mode";
-                domOptions.removeChild(optionSaveProgram);
-                domOptions.removeChild(optionNewProgram);
+                if (programOptions) {
+                    this.disableProgramOptions();
+                } else {
+                    this.disableResourceOptions();
+                }
                 domOptions.appendChild(optionClear);
                 domOptions.appendChild(optionDesignMode);
                 domButtons.removeChild(buttonExecute);
                 editorMode = false;
             }
         };
+
+        this.enableProgramOptions = function() {
+            this.disableResourceOptions();
+            if (!$.contains(domOptions, optionNewProgram)) {
+                domOptions.appendChild(optionNewProgram);
+            }
+            if (!$.contains(domOptions, optionSaveProgram)) {
+                domOptions.appendChild(optionSaveProgram);
+            }
+            if (!$.contains(domOptions, optionDelete)) {
+                domOptions.appendChild(optionDelete);
+            }
+            programOptions = true;
+        };
+
+        this.disableProgramOptions = function() {
+            if ($.contains(domOptions, optionNewProgram)) {
+                domOptions.removeChild(optionNewProgram);
+            }
+            if ($.contains(domOptions, optionSaveProgram)) {
+                domOptions.removeChild(optionSaveProgram);
+            }
+            if ($.contains(domOptions, optionDelete)) {
+                domOptions.removeChild(optionDelete);
+            }
+        };
+
+        this.enableResourceOptions = function(force) {
+            this.disableProgramOptions();;
+            if (!$.contains(domOptions, optionDelete)) {
+                domOptions.appendChild(optionDelete);
+            }
+            programOptions = false;
+        };
+
+        this.disableResourceOptions = function() {
+            if ($.contains(domOptions, optionDelete)) {
+                domOptions.removeChild(optionDelete);
+            }
+        };
         
-        this.setSaveEnabled = function(value) {
+        this.setEditionEnabled = function(value) {
             optionSaveProgram.disabled = !value;
+            optionDelete.disabled = !value;
         };
     };
     return TToolbar;
