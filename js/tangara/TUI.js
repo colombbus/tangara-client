@@ -239,6 +239,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
         this.saveProgram = function() {
             var project = TEnvironment.getProject();
             var program = editor.getProgram();
+            sidebar.showLoading(program.getName());
             try
             {
                 project.saveProgram(program, editor.getSession());
@@ -251,6 +252,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
             catch(error) {
                 this.addLogError(error);
             }
+            sidebar.removeLoading(program.getName());
         };
 
         this.newProgram = function() {
