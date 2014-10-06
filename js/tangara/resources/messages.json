@@ -10,6 +10,7 @@
         "option-clear":"Effacer",
         "option-save-program":"Enregistrer",
         "option-new-program":"Nouveau",
+        "option-delete":"Supprimer",
         "clear-confirm":"Attention : vous allez effacer l'écran et l'historique\nSouhaitez-vous continuer ?",
         "close-confirm":"Attention : le programme '{0}' a des modifications non enregistrées. Etes-vous sûr(e) de vouloir le fermer ?",
         "program-new":"nouveau {0}",
