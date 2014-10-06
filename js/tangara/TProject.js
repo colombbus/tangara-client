@@ -288,6 +288,16 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError'], function(TLink
             }
         };
         
+        this.isUnsaved = function() {
+            for (var i =0; i<editedPrograms.length; i++) {
+                var program = editedPrograms[i];
+                if (program.isModified()) {
+                    return true;
+                }
+            }
+            return false;
+        };
+        
         function updateEditedPrograms() {
             editedProgramsNames = Object.keys(editedPrograms);
             editedProgramsNames = sortArray(editedProgramsNames);

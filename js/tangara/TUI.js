@@ -245,6 +245,8 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 this.addLogMessage(TEnvironment.getMessage('program-saved', program.getName()));
                 this.updateProgramInfo(program);
                 editor.reset();
+                // check if project is still dirty
+                window.unsavedFiles = project.isUnsaved();
             } 
             catch(error) {
                 this.addLogError(error);
@@ -302,8 +304,11 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                         editor.setProgram(program);
                         editor.setSession(project.getSession(program));
                         editor.giveFocus();
+                        // check if project is still dirty
+                        window.unsavedFiles = project.isDirty();
                     } else {
                         editor.disable();
+                        window.unsavedFiles = false;
                     }
                 }
                 // update sidebar

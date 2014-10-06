@@ -34,6 +34,7 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
             aceEditor.on('input', function() {
                 if (!program.isModified()) {
                     program.setModified(true);
+                    window.unsavedFiles = true;
                     TUI.updateSidebarPrograms();
                 }
                 codeChanged = true;
