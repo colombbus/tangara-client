@@ -331,7 +331,8 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'jquery', 'jquery.ui.widget
             }
             resourceDiv.setAttribute("draggable", "true");
             resourceDiv.ondragstart = function(e) {
-                e.dataTransfer.setData("text/plain", "\""+e.target.innerHTML+"\"");
+                var element = $(e.target).find(".tsidebar-file-name > div");
+                e.dataTransfer.setData("text/plain", "\""+element.text()+"\"");
             };
             return resourceDiv;
         }
