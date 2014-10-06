@@ -94,7 +94,7 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
                 $(domEditor).removeClass('editor-disabled');
                 domEditor.removeChild(disabledMessage);
                 disabled = false;
-                TUI.setSaveEnabled(true);                
+                TUI.setEditionEnabled(true);                
              }
             aceEditor.setSession(session);
         };
@@ -119,7 +119,7 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
             aceEditor.renderer.setShowGutter(false);
             $(domEditor).addClass('editor-disabled');
             domEditor.appendChild(disabledMessage);
-            TUI.setSaveEnabled(false);
+            TUI.setEditionEnabled(false);
             disabled = true;
         };
 
