@@ -378,6 +378,11 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'jquery', 'jquery.ui.widget
             loadElement.className = "tsidebar-loading";
             $(id).append(loadElement);
         };
+        
+        this.removeLoading = function(name) {
+            var id = "#tsidebar-program-"+TProgram.findId(name);
+            $(id).find(".tsidebar-loading").remove();
+        };
 
         this.showRenamingProgram = function(name) {
             var id = "#tsidebar-program-"+TProgram.findId(name);
