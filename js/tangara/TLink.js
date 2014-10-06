@@ -31,7 +31,7 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
             var code = "";
             name = TUtils.getString(name);
             if (TEnvironment.debug) {
-                url = TEnvironment.getUserResource(name);
+                url = TEnvironment.getProjectResource(name);
                 $.ajax({
                     dataType: "text",
                     url: url,
