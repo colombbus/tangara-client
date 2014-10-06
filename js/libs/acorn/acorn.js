@@ -20,7 +20,7 @@
 // [dammit]: acorn_loose.js
 // [walk]: util/walk.js
 // 
-// ADDED TWEAKS FOR TANGARA: SEE LINES 410 AND 1138
+// ADDED TWEAKS FOR TANGARA: SEE LINES 412, 427, 1147 AND 1154
 // 
 
 (function(root, mod) {
@@ -406,8 +406,15 @@
 
   // ECMAScript 5 reserved words.
 
-  // TWEAK FOR TANGARA: added 'window', 'document' and 'eval' as reserved words
-  var isReservedWord5 = makePredicate("class enum extends super const export import window document eval");
+
+  var isReservedWord5 = makePredicate("class enum extends super const export import");
+
+  // TWEAK FOR TANGARA: added ability to add reserved words
+  // 
+  exports.addReservedWords = function(words) {
+      var wordsString = words.join(" ");
+      isReservedWord5 = makePredicate("class enum extends super const export import "+wordsString);
+  };
 
   // The additional reserved words in strict mode.
 
@@ -416,6 +423,14 @@
   // The forbidden variable names in strict mode.
 
   var isStrictBadIdWord = makePredicate("eval arguments");
+
+  // TWEAK FOR TANGARA: added ability to add reserved identifiers
+  // 
+  exports.addReservedIdentifiers = function(words) {
+      var wordsString = words.join(" ");
+      isStrictBadIdWord = makePredicate("eval arguments "+wordsString);
+  };
+
 
   // And the keywords.
 
@@ -1129,7 +1144,9 @@
     inFunction = strict = null;
     labels = [];
     readToken();
-
+    // TWEAK FOR TANGARA: set strict mode
+    strict = true;
+      
     var node = program || startNode(), first = true;
     if (!program) node.body = [];
     while (tokType !== _eof) {
