@@ -259,7 +259,8 @@ body, html {
     display:none;
 }
 
-.tsidebar-renaming .tsidebar-loading {
+.tsidebar-renaming .tsidebar-loading,
+.tsidebar-edited .tsidebar-loading {
     background-image:url('../images/loader2.gif');
 }
 
