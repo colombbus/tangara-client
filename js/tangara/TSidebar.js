@@ -290,15 +290,16 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'jquery', 'jquery.ui.widget
             resourceDiv.appendChild(imgDiv);            
             resourceDiv.onclick = function(e) {
                 // set as current
-                if (!$(this).hasClass('current')) {
-                    $('.tsidebar-file').removeClass('current');
-                    $(this).addClass('current');
+                if (!$(this).hasClass('tsidebar-current')) {
+                    $('.tsidebar-file').removeClass('tsidebar-current');
+                    $(this).addClass('tsidebar-current');
+                    TUI.setEditionEnabled(true);
                 }
             };
             // preview
             imgDiv.onclick = function(e) {
                 var parent = $(this).parent();
-                if (parent.hasClass('current') && parent.hasClass('tsidebar-type-image')) {
+                if (parent.hasClass('tsidebar-current') && parent.hasClass('tsidebar-type-image')) {
                     // already selected: open using fancybox
                     $.fancybox(TEnvironment.getProjectResource(name));
                 }
@@ -306,7 +307,7 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'jquery', 'jquery.ui.widget
             // rename
             nameDiv.onclick = function(e) {
                 var parent = $(this).parent();
-                if (parent.hasClass('current')) {
+                if (parent.hasClass('tsidebar-current')) {
                     $(this).addClass('tsidebar-renaming');
                     var renameElement = document.createElement("textarea");
                     /*renameElement.type="text";*/
@@ -414,6 +415,8 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'jquery', 'jquery.ui.widget
                 $(switchResources).removeClass("active");
                 $(domSidebar).animate({width:"250px"}, 500);
                 programsVisible = true;
+                var edition = ($(domSidebarPrograms).find(".tsidebar-current").length>0);
+                TUI.setEditionEnabled(edition);
             }
         };
         
@@ -430,6 +433,8 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'jquery', 'jquery.ui.widget
                     $(switchResources).addClass("active");
                     $(domSidebar).animate({width:"440px"}, 500);
                     programsVisible = false;
+                    var edition = ($(domSidebarResources).find(".tsidebar-current").length>0);
+                    TUI.setEditionEnabled(edition);
                 }
             }
         };
