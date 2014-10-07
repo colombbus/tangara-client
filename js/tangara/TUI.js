@@ -10,6 +10,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
         var consoleEnabled = false;
         var consoleState = false;
         var designModeEnabled = false;
+        var programsDisplayed = true;
         var log;
 
         this.setFrame = function(element) {
@@ -294,6 +295,21 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
             editor.giveFocus();
         };
 
+        function nextProgram(name) {
+            var project = TEnvironment.getProject();
+            var program = project.findPreviousEditedProgram(name);
+            if (program) {
+                editor.setProgram(program);
+                editor.setSession(project.getSession(program));
+                editor.giveFocus();
+                // check if project is still dirty
+                window.unsavedFiles = project.isUnsaved();
+            } else {
+                editor.disable();
+                window.unsavedFiles = false;
+            }
+        }
+        
         this.closeProgram = function(name) {
             var project = TEnvironment.getProject();
             var result = project.closeProgram(name);
@@ -301,17 +317,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 // close performed
                 // check if program was current editing program in editor, in which case we set next editing program as current program
                 if (name === editor.getProgramName()) {
-                    var program = project.findPreviousEditedProgram(name);
-                    if (program) {
-                        editor.setProgram(program);
-                        editor.setSession(project.getSession(program));
-                        editor.giveFocus();
-                        // check if project is still dirty
-                        window.unsavedFiles = project.isDirty();
-                    } else {
-                        editor.disable();
-                        window.unsavedFiles = false;
-                    }
+                    nextProgram(name);
                 }
                 // update sidebar
                 this.updateSidebarPrograms();
@@ -374,15 +380,47 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
         this.displayPrograms = function() {
             sidebar.displayPrograms();
             toolbar.enableProgramOptions();
+            programsDisplayed = true;
         };
 
         this.displayResources = function() {
             sidebar.displayResources();
             toolbar.enableResourceOptions();
+            programsDisplayed = false;
         };
         
         this.delete = function() {
-            //TODO: write delete function
+            var project = TEnvironment.getProject();
+            if (programsDisplayed) {
+                // Program deletion
+                var name = editor.getProgramName();
+                var goOn = window.confirm(TEnvironment.getMessage('delete-program-confirm', name));
+                if (goOn) {
+                    try {
+                        project.deleteProgram(name);
+                        nextProgram(name);
+                    } catch(error) {
+                        this.addLogError(error);
+                    }
+                }
+                //update sidebar
+                this.updateSidebarPrograms();
+                editor.giveFocus();
+            } else {
+                // Resource deletion
+                var name = sidebar.getCurrentResourceName();
+                var goOn = window.confirm(TEnvironment.getMessage('delete-resource-confirm', name));
+                if (goOn) {
+                    try {
+                        project.deleteResource(name);
+                        nextProgram(name);
+                    } catch(error) {
+                        this.addLogError(error);
+                    }
+                }
+                //update sidebar
+                this.updateSidebarResources();
+            }
         };
     };
     

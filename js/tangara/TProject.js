@@ -298,6 +298,43 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError'], function(TLink
             return false;
         };
         
+        this.deleteProgram = function(name) {
+            if (typeof editedPrograms[name] !== 'undefined') {
+                var program = editedPrograms[name];
+                program.delete();
+
+                // delete corresponding records
+                var i = programs.indexOf(name);
+                if (i>-1) {
+                    // Should always be the case
+                    programs.splice(i,1);
+                }
+                delete sessions[name];
+                delete editedPrograms[name];
+
+                // update programs lists
+                updateEditedPrograms();
+            }
+        };
+        
+        this.deleteResource = function(name) {
+            var i = resourcesNames.indexOf(name);
+            if (i > -1) {
+                // resource exists
+                var resource = resources[name];
+                // check that resource is not uploading
+                var type = resource.type;
+                if (type === 'uploading') {
+                    //TODO: find a way to cancel upload?
+                    throw new TError(TEnvironment.getMessage('resource-not-uploaded'));
+                }
+                TLink.deleteResource(name);
+                // remove name
+                resourcesNames.splice(i, 1);
+                delete resources[name];
+            }
+        };
+        
         function updateEditedPrograms() {
             editedProgramsNames = Object.keys(editedPrograms);
             editedProgramsNames = sortArray(editedProgramsNames);

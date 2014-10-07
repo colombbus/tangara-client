@@ -52,6 +52,8 @@
         "resource_file_too_large":"Le fichier '{0}' ne peut pas être enregistré car il est trop volumineux",
         "resource-already-exists":"Il existe déjà un fichier avec le nom {0}",
         "resources-unavailable-user-not-logged":"Vous devez être connecté pour utiliser la médiathèque",
-        "resource-not-uploaded":"Le fichier n'est pas encore enregistré"
+        "resource-not-uploaded":"Le fichier n'est pas encore enregistré",
+        "delete-program-confirm":"Etes-vous sûr de vouloir supprimer le programme '{0}' ?",
+        "delete-resource-confirm":"Etes-vous sûr de vouloir supprimer le média '{0}' ?"
     }
 }

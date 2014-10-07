@@ -112,6 +112,12 @@ define(['TParser', 'TLink', 'TEnvironment', 'TUtils'], function(TParser, TLink, 
         this.isNew = function() {
             return newProgram;
         };
+        
+        this.delete = function() {
+            if (!newProgram) {
+                TLink.deleteProgram(name);
+            }
+        };
     }
     
     TProgram.findId = function(name) {
