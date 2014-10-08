@@ -1,4 +1,4 @@
-define(['jquery', 'split-pane','TCanvas', 'TEditor', 'TSidebar', 'TUI', 'TConsole', 'TToolbar','TLog', 'TRuntime'], function($, SplitPane, TCanvas, TEditor, TSidebar, TUI, TConsole, TToolbar, TLog, TRuntime) {
+define(['jquery', 'split-pane','TCanvas', 'TEditor', 'TSidebar', 'TUI', 'TConsole', 'TToolbar','TLog', 'TRuntime', 'TEnvironment'], function($, SplitPane, TCanvas, TEditor, TSidebar, TUI, TConsole, TToolbar, TLog, TRuntime, TEnvironment) {
     function TFrame() {
         var initialized = false;
         var domFrame = document.createElement("div");
@@ -92,6 +92,14 @@ define(['jquery', 'split-pane','TCanvas', 'TEditor', 'TSidebar', 'TUI', 'TConsol
         this.raiseSeparator = function(value) {
             this.lowerSeparator(-value);
         };
+        
+        if (typeof window.updateEnvironment === 'undefined') {
+            // Declare global function
+            window.updateEnvironment = function() {
+                TEnvironment.getProject().update();
+                sidebar.update();
+            };
+        }        
 
     }
     
