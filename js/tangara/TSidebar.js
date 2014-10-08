@@ -310,7 +310,6 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'jquery', 'jquery.ui.widget
                 if (parent.hasClass('tsidebar-current')) {
                     $(this).addClass('tsidebar-renaming');
                     var renameElement = document.createElement("textarea");
-                    /*renameElement.type="text";*/
                     renameElement.className="tsidebar-rename";
                     renameElement.value = name;
                     $(renameElement).keydown(function (e) {
@@ -329,7 +328,7 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'jquery', 'jquery.ui.widget
                     $(this).append(renameElement);
                     renameElement.focus();
                 }
-            }
+            };
             resourceDiv.setAttribute("draggable", "true");
             resourceDiv.ondragstart = function(e) {
                 var element = $(e.target).find(".tsidebar-file-name > div");
@@ -437,6 +436,13 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'jquery', 'jquery.ui.widget
                     TUI.setEditionEnabled(edition);
                 }
             }
+        };
+        
+        this.getCurrentResourceName = function() {
+            var currentDiv = $(domSidebarResources).find('.tsidebar-current .tsidebar-file-name div');
+            if (currentDiv.length<0)
+                return false;
+            return currentDiv.text();
         };
     }
     
