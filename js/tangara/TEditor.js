@@ -18,18 +18,43 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
         var disabledText = TEnvironment.getMessage("editor-disabled");
         disabledP.appendChild(document.createTextNode(disabledText));
         disabledMessage.appendChild(disabledP);
-
+        
         this.getElement = function() {
             return domEditor;
         };
         
         this.displayed = function() {
-            aceEditor = ace.edit(domEditor.id);
+            aceEditor = ace.edit(domEditor.id);            
             aceEditor.setShowPrintMargin(false);
             //aceEditor.renderer.setShowGutter(false);
             aceEditor.setFontSize("20px");
             aceEditor.setHighlightActiveLine(false);
             aceEditor.setBehavioursEnabled(false);
+            
+            require(["ace/ext/language_tools"], function(langTools) {
+                aceEditor.setOptions({
+                    enableBasicAutocompletion: true,
+                    enableSnippets: false
+                });
+                var commandCompleter = {
+                    getCompletions: function(editor, session, pos, prefix, callback) {
+                        var completions = [];
+                        
+                        completions.push(
+                            { name: "tg1", value: "Tangara1", meta: "code1" },
+                            { name: "tg2", value: "Tangara2", meta: "code1" },
+                            { name: "tg3", value: "Tangara3", meta: "code1" },
+                            { name: "tg4", value: "Tangara4", meta: "code1" }
+                        );
+                        callback(null, completions);
+                    }
+                };
+                // Needs to clear completer in langTools here
+                
+                // add completion
+                langTools.addCompleter(commandCompleter);
+            });
+            
             var self = this;
             aceEditor.on('input', function() {
                 if (!program.isModified()) {
