@@ -19,6 +19,9 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
         disabledP.appendChild(document.createTextNode(disabledText));
         disabledMessage.appendChild(disabledP);
         
+        // Regex
+        //var 
+        
         this.getElement = function() {
             return domEditor;
         };
@@ -71,6 +74,24 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
                 exec: function(arg) {
                     TUI.saveProgram();
                 }
+            });
+            aceEditor.commands.addCommand({
+                name: "methodHelper",
+                bindKey: {win: '.',  mac: '.'},
+                exec: function(editor) {
+                    self.showMethodHelper();
+                    return false; // let default event perform
+                },
+                readOnly: true // false if this command should not apply in readOnly mode
+            });
+            aceEditor.commands.addCommand({
+                name: "methodHelper2",
+                bindKey: {win: 'Backspace',  mac: 'Backspace'},
+                exec: function(editor) {
+                    // TODO :
+                    return false;
+                },
+                readOnly: true // false if this command should not apply in readOnly mode
             });
             
             // disable editor, waiting for a program to edit
@@ -174,6 +195,18 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
             session.setMode("ace/mode/java");
             session.setUndoManager(new AceUndoManager());             
             return session;
+        };
+        
+        this.showMethodHelper = function() {
+            var cursor = aceEditor.selection.getCursor();
+            var token = aceEditor.getSession().getTokenAt(cursor.row, cursor.column-1);
+            if (token.type = "identifier") {
+                var name = token.value;
+                var range = new AceRange(0,0,cursor.row, cursor.column);
+                var valueBefore = aceEditor.getSession().getDocument().getTextRange(range);
+            }
+            console.log(test);
+            console.debug(valueBefore);
         };
         
     };
