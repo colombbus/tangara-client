@@ -1,4 +1,4 @@
-define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 'TProgram', 'TEnvironment', 'TLink', 'TUI'], function($,ace, ace_edit_session, ace_range, ace_undo_manager, TProgram, TEnvironment, TLink, TUI) {
+define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 'ace/autocomplete/popup', 'TProgram', 'TEnvironment', 'TLink', 'TUI'], function($,ace, ace_edit_session, ace_range, ace_undo_manager, ace_popup, TProgram, TEnvironment, TLink, TUI) {
 
     function TEditor() {
         var domEditor = document.createElement("div");
@@ -9,6 +9,7 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
         var AceEditSession = ace_edit_session.EditSession;
         var AceUndoManager = ace_undo_manager.UndoManager;
         var AceRange = ace_range.Range;
+        var AcePopup = ace_popup.AcePopup;
         var errorMarker = null;
         var disabled = false;
         var disabledSession = new AceEditSession('');
@@ -18,6 +19,7 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
         var disabledText = TEnvironment.getMessage("editor-disabled");
         disabledP.appendChild(document.createTextNode(disabledText));
         disabledMessage.appendChild(disabledP);
+        var popup;
         
         // Regex
         //var 
@@ -79,7 +81,7 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
                 name: "methodHelper",
                 bindKey: {win: '.',  mac: '.'},
                 exec: function(editor) {
-                    self.showMethodHelper();
+                    self.showMethodHelper(0);
                     return false; // let default event perform
                 },
                 readOnly: true // false if this command should not apply in readOnly mode
@@ -88,10 +90,25 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
                 name: "methodHelper2",
                 bindKey: {win: 'Backspace',  mac: 'Backspace'},
                 exec: function(editor) {
-                    // TODO :
+                    var cursor = editor.selection.getCursor();
+                    var token = editor.getSession().getTokenAt(cursor.row, cursor.column-1);
+                    if (token !== null && token.type === "punctuation.operator" && token.value === ".") {
+                        self.showMethodHelper(-2);
+                    }
                     return false;
                 },
                 readOnly: true // false if this command should not apply in readOnly mode
+            });
+            
+            // create popup
+            popup = new AcePopup(domEditor);
+            popup.on("click", function(e) {
+                var data = popup.getData(popup.getRow());
+                if (data) {
+                    aceEditor.getSession().insertText(data);
+                }
+                e.stop();
+                popup.hide();
             });
             
             // disable editor, waiting for a program to edit
@@ -192,21 +209,92 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
         
         this.createSession = function(program) {
             var session = new AceEditSession(program.getCode());
-            session.setMode("ace/mode/java");
-            session.setUndoManager(new AceUndoManager());             
+            session.setMode("ace/mode/javascript");
+            session.setUndoManager(new AceUndoManager());
+            // Disable JSHint
+            session.setUseWorker(false);
             return session;
         };
         
-        this.showMethodHelper = function() {
-            var cursor = aceEditor.selection.getCursor();
-            var token = aceEditor.getSession().getTokenAt(cursor.row, cursor.column-1);
-            if (token.type = "identifier") {
-                var name = token.value;
-                var range = new AceRange(0,0,cursor.row, cursor.column);
-                var valueBefore = aceEditor.getSession().getDocument().getTextRange(range);
+        toUnicode = function(text){
+            var result = "";
+            for(var i = 0; i < text.length; i++){
+                result += "\\u" + ("000" + text.charCodeAt(i).toString(16)).substr(-4);
             }
-            console.log(test);
-            console.debug(valueBefore);
+            return result;
+        };
+        
+        this.showMethodHelper = function(delta) {
+            var cursor = aceEditor.selection.getCursor();
+            var token = aceEditor.getSession().getTokenAt(cursor.row, cursor.column+delta);
+            console.debug(token);
+            var endToken = "(";
+            
+            if (token === null) {
+                return false;
+            }
+
+            var tokens = aceEditor.getSession().getTokens(cursor.row);
+            var index = token.index;
+
+            // TODO: see if we can handle this situation in js
+            /*if (token.type === "rparen") {
+                // Right parenthesis: try to find actual identifier
+                while (index >0 & token.type !== "identifier") {
+                    index--;
+                    token = tokens[index];
+                }
+                endToken = "[";
+            }*/
+
+            if (token.type !== "identifier" &&  token.type !== "text") {
+                return false;
+            }
+            
+            var name = token.value.trim();
+            
+            for (var i = index-1;i>=0;i--) {
+                token = tokens[i];
+                if (token.type !== "identifier" &&  token.type !== "text") {
+                    break;
+                }
+                name = token.value.trim()+name;
+            }
+            
+            if (name.trim().length === 0) {
+                return false;
+            }
+            
+            console.log("Name : "+name);
+            var range = new AceRange(0,0,cursor.row, cursor.column);
+            var valueBefore = aceEditor.getSession().getDocument().getTextRange(range);
+            // Since regex do not support unicode...
+            var unicodeName = toUnicode(name);
+            var regex = new RegExp("(?:^|\\s)"+unicodeName+"\\s*=\\s*new\\s*([\\S^\\"+endToken+"]*)\\s*\\"+endToken);
+
+            var result = regex.exec(valueBefore);
+            if (result !== null && result.length>0) {
+                var className = result[1];
+                var data = TEnvironment.getClassMethods(className);
+                var methods = [];
+                $.each(data, function(index, value) {
+                    methods.push(value.translated);
+                });
+                popup.setData(methods);
+                popup.setFontSize(aceEditor.getFontSize());
+                var renderer = aceEditor.renderer;
+                var lineHeight = renderer.layerConfig.lineHeight;
+                var base = aceEditor.getCursorPosition();
+                var pos = renderer.$cursorLayer.getPixelPosition(base, true);            
+                pos.left -= popup.getTextLeftOffset();
+                var rect = aceEditor.container.getBoundingClientRect();
+                pos.top += rect.top - renderer.layerConfig.offset;
+                pos.left += rect.left;
+                pos.left += renderer.$gutterLayer.gutterWidth;
+                popup.show(pos, lineHeight);
+
+                //console.debug(methods);
+            }
         };
         
     };

@@ -1,4 +1,4 @@
-define(['jquery', 'TError', 'quintus', 'TParser'], function($, TError, Quintus, TParser) {
+define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, TError, Quintus, TParser, TEnvironment) {
     function TRuntime() {
         var libs = new Array();
         var translatedNames = new Array();
@@ -23,25 +23,9 @@ define(['jquery', 'TError', 'quintus', 'TParser'], function($, TError, Quintus, 
             quintusInstance = Q.include("Sprites, Scenes, 2D, UI, Anim, Input, Touch");
             this.tweakQuintus();
 
-            // find objects and translate them
-            window.console.log("accessing objects list from: "+objectListUrl);
-            $.ajax({
-                dataType: "json",
-                url: objectListUrl,
-                async: false,
-                success: function(data) {
-                    $.each( data, function( key, val ) {
-                        var lib = "objects/"+val['path']+"/"+key;
-                        if (typeof val['translations'][language] !== 'undefined') {
-                            window.console.log("adding "+lib);
-                            libs.push(lib);
-                            translatedNames.push(val['translations'][language]);
-                        }
-                    });
-                }
-            });
-
             // declare global variables
+            var libs = TEnvironment.getObjectLibraries();
+            var translatedNames = TEnvironment.getTranslatedObjectNames();
             require(libs, function() {
                 for(var i= 0; i < translatedNames.length; i++) {
                     window.console.log("Declaring translated object '"+translatedNames[i]+"'");
