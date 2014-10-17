@@ -22,6 +22,7 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
         
         var popupTriggered = false;
         var popupTimeout;
+        var triggerPopup = false;
         
         
         this.getElement = function() {
@@ -45,6 +46,17 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
                 }
                 codeChanged = true;
                 self.removeError();
+                if (triggerPopup) {
+                    triggerPopup = false;
+                    popupTimeout = setTimeout(function() {
+                        popupTriggered = false;
+                        AceAutocomplete.startCommand.exec(aceEditor);
+                    }, 800);
+                    popupTriggered = true;
+                } else if (popupTriggered) {
+                    clearTimeout(popupTimeout);
+                    popupTriggered = false;
+                }
             });
             aceEditor.commands.addCommand({
                 name: "save",
@@ -57,7 +69,7 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
                 name: "methodHelper",
                 bindKey: {win: '.',  mac: '.'},
                 exec: function(editor) {
-                    triggerPopup();
+                    triggerPopup = true;;
                     return false; // let default event perform
                 },
                 readOnly: true // false if this command should not apply in readOnly mode
@@ -69,7 +81,7 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
                     var cursor = editor.selection.getCursor();
                     var token = editor.getSession().getTokenAt(cursor.row, cursor.column-1);
                     if (token !== null && token.type === "punctuation.operator" && token.value === ".") {
-                        triggerPopup();
+                        triggerPopup = true;
                     }
                     return false;
                 },
@@ -77,19 +89,10 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
             });
             
             aceEditor.commands.addCommand(AceAutocomplete.startCommand);
-            
             aceEditor.completers = [tangaraCompleter];
-            
-            
-            // link popup to editor
-            //popup.setEditor(aceEditor);
             
             // disable editor, waiting for a program to edit
             this.disable();
-        };
-        
-        triggerPopup = function() {
-            popupTimeout = setTimeout(function() { AceAutocomplete.startCommand.exec(aceEditor);}, 1000);
         };
         
         this.show = function() {
