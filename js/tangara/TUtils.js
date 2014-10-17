@@ -249,6 +249,12 @@ define(['TEnvironment'], function(TEnvironment) {
             throw new Error(TEnvironment.getMessage("wrong color"));
         };
         
+        this.sortArray = function(value) {
+            return value.sort(function (a, b) { return a.toLowerCase().localeCompare(b.toLowerCase());});
+        };
+
+        
+        
     };
     
     var utilInstance = new TUtils();
