@@ -11,3 +11,5 @@ bin-release/
 # information for Eclipse / Flash Builder.
 /nbproject/private/
 /js/tangara/resources/config.json
+
+/bower_components/*
