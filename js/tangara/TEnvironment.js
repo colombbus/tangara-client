@@ -1,6 +1,10 @@
 define(['jquery'], function($) {
     var TEnvironment = function() {
-        var translated = new Array();
+        var processedFiles = new Array();
+        var classMethods = new Array();
+        var objectLibraries = [];
+        var translatedObjectNames = [];
+        var tangaraObjects = {};
         var project;
         var userLogged = false;
         
@@ -50,6 +54,29 @@ define(['jquery'], function($) {
                     }
                 }
             });
+            window.console.log("* Retrieving list of translated objects");
+            // find objects and translate them
+            var objectListUrl = this.getObjectListUrl();
+            window.console.log("accessing objects list from: "+objectListUrl);
+            $.ajax({
+                dataType: "json",
+                url: objectListUrl,
+                async: false,
+                success: function(data) {
+                    $.each( data, function( key, val ) {
+                        var lib = "objects/"+val['path']+"/"+key;
+                        if (typeof val['translations'][language] !== 'undefined') {
+                            window.console.log("adding "+lib);
+                            objectLibraries.push(lib);
+                            var translatedName = val['translations'][language];
+                            translatedObjectNames.push(translatedName);
+                            tangaraObjects[translatedName] = key;
+                        }
+                    });
+                }
+            });
+
+            
         };
 
 
@@ -82,6 +109,14 @@ define(['jquery'], function($) {
             this.language = language;
         };
 
+        this.getObjectLibraries = function() {
+            return objectLibraries;
+        };
+
+        this.getTranslatedObjectNames = function() {
+            return translatedObjectNames;
+        };
+
         var addTranslatedMethod = function(aClass, name, translated) {
             aClass.prototype[translated] = aClass.prototype[name];
             //TODO: find a working way to prevent classes from being modified 
@@ -93,10 +128,12 @@ define(['jquery'], function($) {
         };
 
         var addTranslatedMethods = function(aClass, file, language) {
-            if (typeof translated[file] !== "undefined") {
+            if (typeof processedFiles[file] !== "undefined") {
                 // translation already loaded: we use it
-                $.each(translated[file], function(name, translated) {
-                    addTranslatedMethod(aClass, name, translated);
+                $.each(processedFiles[file], function(name, value) {
+                    addTranslatedMethod(aClass, name, value.translated);
+                    classMethods[aClass.prototype.className][value.translated] = value.displayed;
+                    //classMethods[aClass.prototype.className].push(value);
                 });
             }
             $.ajax({
@@ -104,12 +141,15 @@ define(['jquery'], function($) {
                 url: file,
                 async: false,
                 success: function(data) {
-                    translated[file] = new Array();
+                    processedFiles[file] = new Array();
                     window.console.log("traduction : " + file);
                     window.console.log("Language : " + language);
                     $.each(data[language]['methods'], function(key, val) {
                         addTranslatedMethod(aClass, val['name'], val['translated']);
-                        translated[file][val['name']] = val['translated'];
+                        var value = {'translated':val['translated'], 'displayed':val['displayed']};
+                        console.log("pushing method "+value+" for class "+aClass.prototype.className);
+                        classMethods[aClass.prototype.className][val.translated] = val.displayed;//.push(value);
+                        processedFiles[file][val['name']] = value;
                     });
                 },
                 error: function(data, status, error) {
@@ -143,6 +183,7 @@ define(['jquery'], function($) {
         this.internationalize = function(initialClass, parents) {
             // 1st load translated methods
             var translationFile = initialClass.prototype.getResource("i18n.json");
+            classMethods[initialClass.prototype.className] = {};
             addTranslatedMethods(initialClass, translationFile, this.language);
             if ((typeof parents !== 'undefined') && parents) {
                 // internationalize parents as well
@@ -199,6 +240,20 @@ define(['jquery'], function($) {
         
         this.isUserLogged = function() {
             return userLogged;
+        };
+        
+        this.getClassMethods = function(className) {
+            if (typeof tangaraObjects[className] === 'undefined') {
+                window.console.log("Error fetching methods for class '" + className + "': class unknown");
+                return [];
+            }
+            var baseClass = tangaraObjects[className];
+            if (typeof classMethods[baseClass] === 'undefined') {
+                window.console.log("Error fetching methods for class '" + className + "'");
+                return [];
+            } else {
+                return classMethods[baseClass];
+            }
         };
 
     };

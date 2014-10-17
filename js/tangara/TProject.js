@@ -47,7 +47,7 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError'], function(TLink
                 delete editedPrograms[oldName];
 
                 // update programs lists
-                sortArray(programs);
+                programs = TUtils.sortArray(programs);
                 updateEditedPrograms();
             }
         };
@@ -56,7 +56,7 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError'], function(TLink
             var program = new TProgram(programs);
             var name = program.getName();
             programs.push(name);
-            sortArray(programs);
+            programs = TUtils.sortArray(programs);
             editedPrograms[name] = program;
             updateEditedPrograms();
             return program;
@@ -167,8 +167,8 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError'], function(TLink
                 resources = TLink.getResources();
                 resourcesNames = Object.keys(resources);
                 // sort programs and resources alphabetically
-                sortArray(programs);
-                sortArray(resourcesNames);
+                programs = TUtils.sortArray(programs);
+                resourcesNames = TUtils.sortArray(resourcesNames);
                 TEnvironment.setUserLogged(true);
                 this.preloadImages();
             }
@@ -260,7 +260,7 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError'], function(TLink
                 delete resources[oldName];
                 
                 // update programs lists
-                sortArray(resourcesNames);
+                resourcesNames = TUtils.sortArray(resourcesNames);
                 
                 // preload image if required with new name
                 if (type === 'image') {
@@ -337,16 +337,12 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError'], function(TLink
         
         function updateEditedPrograms() {
             editedProgramsNames = Object.keys(editedPrograms);
-            editedProgramsNames = sortArray(editedProgramsNames);
+            editedProgramsNames = TUtils.sortArray(editedProgramsNames);
             editedProgramsArray = [];
             for (var i=0; i<editedProgramsNames.length ;i++)
             {
                 editedProgramsArray.push(editedPrograms[editedProgramsNames[i]]);
             }
-        }
-        
-        function sortArray(value) {
-            return value.sort(function (a, b) { return a.toLowerCase().localeCompare(b.toLowerCase());});
         }
         
     }
