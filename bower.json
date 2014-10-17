@@ -3,6 +3,10 @@
   "version": "0.1.2",
   "dependencies": {
     "requirejs": "~2.1.9",
-    "jquery": "~1.10.0"
+    "jquery": "~1.11.0",
+    "log4javascript": "~1.4.5",
+    "split-pane":"~0.4",
+    "benbarnett/jQuery-Animate-Enhanced":"~1.0.7",
+    "fancybox": "~2.1.5"
   }
 }
