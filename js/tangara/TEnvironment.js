@@ -132,7 +132,8 @@ define(['jquery'], function($) {
                 // translation already loaded: we use it
                 $.each(processedFiles[file], function(name, value) {
                     addTranslatedMethod(aClass, name, value.translated);
-                    classMethods[aClass.prototype.className].push(value);
+                    classMethods[aClass.prototype.className][value.translated] = value.displayed;
+                    //classMethods[aClass.prototype.className].push(value);
                 });
             }
             $.ajax({
@@ -147,7 +148,7 @@ define(['jquery'], function($) {
                         addTranslatedMethod(aClass, val['name'], val['translated']);
                         var value = {'translated':val['translated'], 'displayed':val['displayed']};
                         console.log("pushing method "+value+" for class "+aClass.prototype.className);
-                        classMethods[aClass.prototype.className].push(value);
+                        classMethods[aClass.prototype.className][val.translated] = val.displayed;//.push(value);
                         processedFiles[file][val['name']] = value;
                     });
                 },
@@ -182,7 +183,7 @@ define(['jquery'], function($) {
         this.internationalize = function(initialClass, parents) {
             // 1st load translated methods
             var translationFile = initialClass.prototype.getResource("i18n.json");
-            classMethods[initialClass.prototype.className] = new Array();
+            classMethods[initialClass.prototype.className] = {};
             addTranslatedMethods(initialClass, translationFile, this.language);
             if ((typeof parents !== 'undefined') && parents) {
                 // internationalize parents as well
