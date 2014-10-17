@@ -2,6 +2,7 @@
   "name": "tangara-js",
   "version": "0.1.2",
   "dependencies": {
-    "requirejs": "~2.1.9"
+    "requirejs": "~2.1.9",
+    "jquery": "~1.10.0"
   }
 }
