@@ -69,6 +69,16 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, T
             });
             return name;
         };
+        
+        this.getTObjectClassName = function(objectName) {
+            if (typeof runtimeFrame[objectName] === 'undefined') {
+                return false;
+            }
+            if (typeof runtimeFrame[objectName].className === 'undefined') {
+                return false;
+            }
+            return runtimeFrame[objectName].className;
+        };
 
         this.execute = function(commands, parameter, logCommands, lineNumbers) {
             if (typeof logCommands === 'undefined') {
