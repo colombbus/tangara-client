@@ -45,6 +45,9 @@ define(['TUI', 'TParser', 'TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jquery'
                     triggerPopup = false;
                     popupTimeout = setTimeout(function() {
                         popupTriggered = false;
+                        // Force Ace popup to not add gutter width when computing popup pos
+                        // since gutter is not shown
+                        aceEditor.renderer.$gutterLayer.gutterWidth = 0;                        
                         AceAutocomplete.startCommand.exec(aceEditor);
                     }, 800);
                     popupTriggered = true;
