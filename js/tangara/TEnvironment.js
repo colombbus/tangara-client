@@ -243,6 +243,15 @@ define(['jquery'], function($) {
         };
         
         this.getClassMethods = function(className) {
+            if (typeof classMethods[className] === 'undefined') {
+                window.console.log("Error fetching methods for class '" + className + "'");
+                return [];
+            } else {
+                return classMethods[className];
+            }
+        };
+
+        this.getTranslatedClassMethods = function(className) {
             if (typeof tangaraObjects[className] === 'undefined') {
                 window.console.log("Error fetching methods for class '" + className + "': class unknown");
                 return [];
