@@ -1,4 +1,4 @@
-define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 'TPopup', 'TProgram', 'TEnvironment', 'TLink', 'TUI'], function($,ace, ace_edit_session, ace_range, ace_undo_manager, TPopup, TProgram, TEnvironment, TLink, TUI) {
+define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 'ace/autocomplete', 'TPopup', 'TProgram', 'TEnvironment', 'TLink', 'TUI', 'TUtils'], function($,ace, ace_edit_session, ace_range, ace_undo_manager, ace_autocomplete, TPopup, TProgram, TEnvironment, TLink, TUI, TUtils) {
 
     function TEditor() {
         var domEditor = document.createElement("div");
@@ -9,6 +9,7 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
         var AceEditSession = ace_edit_session.EditSession;
         var AceUndoManager = ace_undo_manager.UndoManager;
         var AceRange = ace_range.Range;
+        var AceAutocomplete = ace_autocomplete.Autocomplete;
         var errorMarker = null;
         var disabled = false;
         var disabledSession = new AceEditSession('');
@@ -19,12 +20,9 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
         disabledP.appendChild(document.createTextNode(disabledText));
         disabledMessage.appendChild(disabledP);
         var popup = new TPopup(domEditor);
-        var triggerPopup = false;
         var popupTriggered = false;
         var popupTimeout;
         
-        // Regex
-        //var 
         
         this.getElement = function() {
             return domEditor;
@@ -38,30 +36,6 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
             aceEditor.setHighlightActiveLine(false);
             aceEditor.setBehavioursEnabled(false);
             
-            /*require(["ace/ext/language_tools"], function(langTools) {
-                aceEditor.setOptions({
-                    enableBasicAutocompletion: true,
-                    enableSnippets: false
-                });
-                var commandCompleter = {
-                    getCompletions: function(editor, session, pos, prefix, callback) {
-                        var completions = [];
-                        
-                        completions.push(
-                            { name: "tg1", value: "Tangara1", meta: "code1" },
-                            { name: "tg2", value: "Tangara2", meta: "code1" },
-                            { name: "tg3", value: "Tangara3", meta: "code1" },
-                            { name: "tg4", value: "Tangara4", meta: "code1" }
-                        );
-                        callback(null, completions);
-                    }
-                };
-                // Needs to clear completer in langTools here
-                
-                // add completion
-                langTools.addCompleter(commandCompleter);
-            });*/
-            
             var self = this;
             aceEditor.on('input', function() {
                 if (!program.isModified()) {
@@ -71,15 +45,6 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
                 }
                 codeChanged = true;
                 self.removeError();
-                if (triggerPopup) {
-                    triggerPopup = false;
-                    popupTimeout = setTimeout(function() { popupTriggered = false;popup.show(); }, 1000);
-                    popupTriggered = true;
-                } else if (popupTriggered) {
-                    clearTimeout(popupTimeout);
-                } else {
-                    popup.hide();
-                }
             });
             aceEditor.commands.addCommand({
                 name: "save",
@@ -92,8 +57,7 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
                 name: "methodHelper",
                 bindKey: {win: '.',  mac: '.'},
                 exec: function(editor) {
-                    console.log("dot");
-                    self.showMethodHelper(0);
+                    triggerPopup();
                     return false; // let default event perform
                 },
                 readOnly: true // false if this command should not apply in readOnly mode
@@ -105,18 +69,27 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
                     var cursor = editor.selection.getCursor();
                     var token = editor.getSession().getTokenAt(cursor.row, cursor.column-1);
                     if (token !== null && token.type === "punctuation.operator" && token.value === ".") {
-                        self.showMethodHelper(-2);
+                        triggerPopup();
                     }
                     return false;
                 },
                 readOnly: true // false if this command should not apply in readOnly mode
             });
             
+            aceEditor.commands.addCommand(AceAutocomplete.startCommand);
+            
+            aceEditor.completers = [tangaraCompleter];
+            
+            
             // link popup to editor
             popup.setEditor(aceEditor);
             
             // disable editor, waiting for a program to edit
             this.disable();
+        };
+        
+        triggerPopup = function() {
+            popupTimeout = setTimeout(function() { AceAutocomplete.startCommand.exec(aceEditor);}, 1000);
         };
         
         this.show = function() {
@@ -227,69 +200,78 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
             }
             return result;
         };
-        
-        this.showMethodHelper = function(delta) {
-            var cursor = aceEditor.selection.getCursor();
-            var token = aceEditor.getSession().getTokenAt(cursor.row, cursor.column+delta);
-            var endToken = "(";
-            
-            if (token === null) {
-                return false;
-            }
 
-            var tokens = aceEditor.getSession().getTokens(cursor.row);
-            var index = token.index;
+        var tangaraCompleter = {
+            getCompletions: function(editor, session, pos, prefix, callback) {
+                pos.column--;
+                var token = session.getTokenAt(pos.row, pos.column);
+                var endToken = "(";
 
-            // TODO: see if we can handle this situation in js
-            /*if (token.type === "rparen") {
-                // Right parenthesis: try to find actual identifier
-                while (index >0 & token.type !== "identifier") {
-                    index--;
-                    token = tokens[index];
+                if (token === null) {
+                    return false;
                 }
-                endToken = "[";
-            }*/
 
-            if (token.type !== "identifier" &&  token.type !== "text") {
-                return false;
-            }
-            
-            var name = token.value.trim();
-            
-            for (var i = index-1;i>=0;i--) {
-                token = tokens[i];
+                var tokens = session.getTokens(pos.row);
+                var index = token.index;
+
+                // TODO: see if we can handle this situation in js
+                /*if (token.type === "rparen") {
+                    // Right parenthesis: try to find actual identifier
+                    while (index >0 & token.type !== "identifier") {
+                        index--;
+                        token = tokens[index];
+                    }
+                    endToken = "[";
+                }*/
+
                 if (token.type !== "identifier" &&  token.type !== "text") {
-                    break;
+                    return false;
                 }
-                var part = token.value.trim();
-                if (part.length === 0) {
-                    break;
-                }
-                    
-                name = part+name;
-            }
-            
-            if (name.length === 0) {
-                return false;
-            }
-            
-            console.log("Name : "+name);
-            var range = new AceRange(0,0,cursor.row, cursor.column);
-            var valueBefore = aceEditor.getSession().getDocument().getTextRange(range);
-            // Since regex do not support unicode...
-            var unicodeName = toUnicode(name);
-            var regex = new RegExp("(?:^|\\s)"+unicodeName+"\\s*=\\s*new\\s*([\\S^\\"+endToken+"]*)\\s*\\"+endToken);
 
-            var result = regex.exec(valueBefore);
-            if (result !== null && result.length>0) {
-                var className = result[1];
-                var data = TEnvironment.getClassMethods(className);
-                popup.setMethods(data);
-                //popup.show();
-                triggerPopup = true;
+                var name = token.value.trim();
+
+                for (var i = index-1;i>=0;i--) {
+                    token = tokens[i];
+                    if (token.type !== "identifier" &&  token.type !== "text") {
+                        break;
+                    }
+                    var part = token.value.trim();
+                    if (part.length === 0) {
+                        break;
+                    }
+
+                    name = part+name;
+                }
+
+                if (name.length === 0) {
+                    return false;
+                }
+
+                var range = new AceRange(0,0,pos.row, pos.column);
+                var valueBefore = session.getDocument().getTextRange(range);
+                // Since regex do not support unicode...
+                var unicodeName = toUnicode(name);
+                var regex = new RegExp("(?:^|\\s)"+unicodeName+"\\s*=\\s*new\\s*([\\S^\\"+endToken+"]*)\\s*\\"+endToken);
+
+                var result = regex.exec(valueBefore);
+
+                var completions = [];
+
+                if (result !== null && result.length>0) {
+                    var className = result[1];
+                    var methods = TEnvironment.getClassMethods(className);
+                    var methodNames = Object.keys(methods);
+                    methodNames = TUtils.sortArray(methodNames);
+                    for (var i=0;i<methodNames.length;i++) {
+                        completions.push({
+                            caption: methodNames[i],
+                            value: methods[methodNames[i]]
+                        });
+                    }
+                }
+                callback(null, completions);
             }
         };
-        
     };
     
     return TEditor;
