@@ -1,4 +1,4 @@
-define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 'ace/autocomplete', 'TPopup', 'TProgram', 'TEnvironment', 'TLink', 'TUI', 'TUtils'], function($,ace, ace_edit_session, ace_range, ace_undo_manager, ace_autocomplete, TPopup, TProgram, TEnvironment, TLink, TUI, TUtils) {
+define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 'ace/autocomplete', 'TProgram', 'TEnvironment', 'TLink', 'TUI', 'TUtils'], function($,ace, ace_edit_session, ace_range, ace_undo_manager, ace_autocomplete, TProgram, TEnvironment, TLink, TUI, TUtils) {
 
     function TEditor() {
         var domEditor = document.createElement("div");
@@ -19,7 +19,7 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
         var disabledText = TEnvironment.getMessage("editor-disabled");
         disabledP.appendChild(document.createTextNode(disabledText));
         disabledMessage.appendChild(disabledP);
-        var popup = new TPopup(domEditor);
+        
         var popupTriggered = false;
         var popupTimeout;
         
@@ -82,7 +82,7 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
             
             
             // link popup to editor
-            popup.setEditor(aceEditor);
+            //popup.setEditor(aceEditor);
             
             // disable editor, waiting for a program to edit
             this.disable();
