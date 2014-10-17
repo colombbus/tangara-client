@@ -1,4 +1,4 @@
-define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 'ace/autocomplete/popup', 'TProgram', 'TEnvironment', 'TLink', 'TUI'], function($,ace, ace_edit_session, ace_range, ace_undo_manager, ace_popup, TProgram, TEnvironment, TLink, TUI) {
+define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 'TPopup', 'TProgram', 'TEnvironment', 'TLink', 'TUI'], function($,ace, ace_edit_session, ace_range, ace_undo_manager, TPopup, TProgram, TEnvironment, TLink, TUI) {
 
     function TEditor() {
         var domEditor = document.createElement("div");
@@ -9,7 +9,6 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
         var AceEditSession = ace_edit_session.EditSession;
         var AceUndoManager = ace_undo_manager.UndoManager;
         var AceRange = ace_range.Range;
-        var AcePopup = ace_popup.AcePopup;
         var errorMarker = null;
         var disabled = false;
         var disabledSession = new AceEditSession('');
@@ -19,7 +18,10 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
         var disabledText = TEnvironment.getMessage("editor-disabled");
         disabledP.appendChild(document.createTextNode(disabledText));
         disabledMessage.appendChild(disabledP);
-        var popup;
+        var popup = new TPopup(domEditor);
+        var triggerPopup = false;
+        var popupTriggered = false;
+        var popupTimeout;
         
         // Regex
         //var 
@@ -36,7 +38,7 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
             aceEditor.setHighlightActiveLine(false);
             aceEditor.setBehavioursEnabled(false);
             
-            require(["ace/ext/language_tools"], function(langTools) {
+            /*require(["ace/ext/language_tools"], function(langTools) {
                 aceEditor.setOptions({
                     enableBasicAutocompletion: true,
                     enableSnippets: false
@@ -58,7 +60,7 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
                 
                 // add completion
                 langTools.addCompleter(commandCompleter);
-            });
+            });*/
             
             var self = this;
             aceEditor.on('input', function() {
@@ -69,6 +71,15 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
                 }
                 codeChanged = true;
                 self.removeError();
+                if (triggerPopup) {
+                    triggerPopup = false;
+                    popupTimeout = setTimeout(function() { popupTriggered = false;popup.show(); }, 1000);
+                    popupTriggered = true;
+                } else if (popupTriggered) {
+                    clearTimeout(popupTimeout);
+                } else {
+                    popup.hide();
+                }
             });
             aceEditor.commands.addCommand({
                 name: "save",
@@ -81,6 +92,7 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
                 name: "methodHelper",
                 bindKey: {win: '.',  mac: '.'},
                 exec: function(editor) {
+                    console.log("dot");
                     self.showMethodHelper(0);
                     return false; // let default event perform
                 },
@@ -100,16 +112,8 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
                 readOnly: true // false if this command should not apply in readOnly mode
             });
             
-            // create popup
-            popup = new AcePopup(domEditor);
-            popup.on("click", function(e) {
-                var data = popup.getData(popup.getRow());
-                if (data) {
-                    aceEditor.getSession().insertText(data);
-                }
-                e.stop();
-                popup.hide();
-            });
+            // link popup to editor
+            popup.setEditor(aceEditor);
             
             // disable editor, waiting for a program to edit
             this.disable();
@@ -227,7 +231,6 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
         this.showMethodHelper = function(delta) {
             var cursor = aceEditor.selection.getCursor();
             var token = aceEditor.getSession().getTokenAt(cursor.row, cursor.column+delta);
-            console.debug(token);
             var endToken = "(";
             
             if (token === null) {
@@ -258,10 +261,15 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
                 if (token.type !== "identifier" &&  token.type !== "text") {
                     break;
                 }
-                name = token.value.trim()+name;
+                var part = token.value.trim();
+                if (part.length === 0) {
+                    break;
+                }
+                    
+                name = part+name;
             }
             
-            if (name.trim().length === 0) {
+            if (name.length === 0) {
                 return false;
             }
             
@@ -276,24 +284,9 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
             if (result !== null && result.length>0) {
                 var className = result[1];
                 var data = TEnvironment.getClassMethods(className);
-                var methods = [];
-                $.each(data, function(index, value) {
-                    methods.push(value.translated);
-                });
-                popup.setData(methods);
-                popup.setFontSize(aceEditor.getFontSize());
-                var renderer = aceEditor.renderer;
-                var lineHeight = renderer.layerConfig.lineHeight;
-                var base = aceEditor.getCursorPosition();
-                var pos = renderer.$cursorLayer.getPixelPosition(base, true);            
-                pos.left -= popup.getTextLeftOffset();
-                var rect = aceEditor.container.getBoundingClientRect();
-                pos.top += rect.top - renderer.layerConfig.offset;
-                pos.left += rect.left;
-                pos.left += renderer.$gutterLayer.gutterWidth;
-                popup.show(pos, lineHeight);
-
-                //console.debug(methods);
+                popup.setMethods(data);
+                //popup.show();
+                triggerPopup = true;
             }
         };
         
