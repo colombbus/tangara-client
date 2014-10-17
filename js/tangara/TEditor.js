@@ -24,7 +24,6 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
         var popupTimeout;
         var triggerPopup = false;
         
-        
         this.getElement = function() {
             return domEditor;
         };
@@ -65,31 +64,10 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
                     TUI.saveProgram();
                 }
             });
-            aceEditor.commands.addCommand({
-                name: "methodHelper",
-                bindKey: {win: '.',  mac: '.'},
-                exec: function(editor) {
-                    triggerPopup = true;;
-                    return false; // let default event perform
-                },
-                readOnly: true // false if this command should not apply in readOnly mode
-            });
-            aceEditor.commands.addCommand({
-                name: "methodHelper2",
-                bindKey: {win: 'Backspace',  mac: 'Backspace'},
-                exec: function(editor) {
-                    var cursor = editor.selection.getCursor();
-                    var token = editor.getSession().getTokenAt(cursor.row, cursor.column-1);
-                    if (token !== null && token.type === "punctuation.operator" && token.value === ".") {
-                        triggerPopup = true;
-                    }
-                    return false;
-                },
-                readOnly: true // false if this command should not apply in readOnly mode
-            });
+
+            aceEditor.completers = [editorCompleter];
             
-            aceEditor.commands.addCommand(AceAutocomplete.startCommand);
-            aceEditor.completers = [tangaraCompleter];
+            this.enableMethodHelper();
             
             // disable editor, waiting for a program to edit
             this.disable();
@@ -203,8 +181,20 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
             }
             return result;
         };
+        
+        this.enableMethodHelper = function() {
+            aceEditor.commands.addCommand(dotCommand);
+            aceEditor.commands.addCommand(backspaceCommand);
+            aceEditor.commands.addCommand(AceAutocomplete.startCommand);
+        };
 
-        var tangaraCompleter = {
+        this.disableMethodHelper = function() {
+            aceEditor.commands.removeCommand(dotCommand);
+            aceEditor.commands.removeCommand(backspaceCommand);
+            aceEditor.commands.removeCommand(AceAutocomplete.startCommand);
+        };
+
+        var editorCompleter = {
             getCompletions: function(editor, session, pos, prefix, callback) {
                 pos.column--;
                 var token = session.getTokenAt(pos.row, pos.column);
@@ -275,6 +265,31 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
                 callback(null, completions);
             }
         };
+        
+        var dotCommand = {
+            name: "methodHelper",
+            bindKey: {win: '.',  mac: '.'},
+            exec: function(editor) {
+                triggerPopup = true;;
+                return false; // let default event perform
+            },
+            readOnly: true // false if this command should not apply in readOnly mode
+        };
+        
+        var backspaceCommand = {
+            name: "methodHelper2",
+            bindKey: {win: 'Backspace',  mac: 'Backspace'},
+            exec: function(editor) {
+                var cursor = editor.selection.getCursor();
+                var token = editor.getSession().getTokenAt(cursor.row, cursor.column-1);
+                if (token !== null && token.type === "punctuation.operator" && token.value === ".") {
+                    triggerPopup = true;
+                }
+                return false;
+            },
+            readOnly: true // false if this command should not apply in readOnly mode
+        };
+        
     };
     
     return TEditor;
