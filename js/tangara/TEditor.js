@@ -174,14 +174,6 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
             return session;
         };
         
-        toUnicode = function(text){
-            var result = "";
-            for(var i = 0; i < text.length; i++){
-                result += "\\u" + ("000" + text.charCodeAt(i).toString(16)).substr(-4);
-            }
-            return result;
-        };
-        
         this.enableMethodHelper = function() {
             aceEditor.commands.addCommand(dotCommand);
             aceEditor.commands.addCommand(backspaceCommand);
@@ -243,7 +235,7 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
                 var range = new AceRange(0,0,pos.row, pos.column);
                 var valueBefore = session.getDocument().getTextRange(range);
                 // Since regex do not support unicode...
-                var unicodeName = toUnicode(name);
+                var unicodeName = TUtils.toUnicode(name);
                 var regex = new RegExp("(?:^|\\s)"+unicodeName+"\\s*=\\s*new\\s*([\\S^\\"+endToken+"]*)\\s*\\"+endToken);
 
                 var result = regex.exec(valueBefore);

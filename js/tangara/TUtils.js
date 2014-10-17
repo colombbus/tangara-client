@@ -253,7 +253,15 @@ define(['TEnvironment'], function(TEnvironment) {
             return value.sort(function (a, b) { return a.toLowerCase().localeCompare(b.toLowerCase());});
         };
 
+        this.toUnicode = function(text){
+            var result = "";
+            for(var i = 0; i < text.length; i++){
+                result += "\\u" + ("000" + text.charCodeAt(i).toString(16)).substr(-4);
+            }
+            return result;
+        };
         
+
         
     };
     
