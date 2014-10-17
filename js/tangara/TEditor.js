@@ -244,7 +244,7 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
 
                 if (result !== null && result.length>0) {
                     var className = result[1];
-                    var methods = TEnvironment.getClassMethods(className);
+                    var methods = TEnvironment.getTranslatedClassMethods(className);
                     var methodNames = Object.keys(methods);
                     methodNames = TUtils.sortArray(methodNames);
                     for (var i=0;i<methodNames.length;i++) {
