@@ -480,7 +480,8 @@ textarea.tsidebar-rename {
     background-color:transparent;
 }
 
-.ttoolbar-mode.active {
+.ttoolbar-mode.active, 
+.ttoolbar-option.active {
     color:#FFFFFF;
     background-color:#929292;
 }
@@ -537,6 +538,7 @@ textarea.tsidebar-rename {
 }
 
 #tlog-inner {
+    position:relative;
     padding:5px;
     height:100%;
     -webkit-box-sizing: border-box;
@@ -572,6 +574,37 @@ textarea.tsidebar-rename {
 
 .tlog-message {
     color:#0000FF;
+}
+
+/* TDesignLog */
+#tdesign-log {
+    position:absolute;
+    z-index:2;
+    width:40%;
+    left:100%;
+    height:100%;
+    top:0;
+    background-color:white;
+}
+
+#tdesign-log-handle {
+    position:absolute;
+    left:-30px;
+    top:10px;
+    width:40px;
+    height:26px;
+    background-color:white;
+    background-image:url(../images/chevron_left.png);
+    background-repeat:no-repeat;
+    background-position:8px 2px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    cursor:pointer;
+}
+
+#tdesign-log-handle.open {
+    background-image:url(../images/chevron_right.png);
 }
 
 /* TRuntinme */
