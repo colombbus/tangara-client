@@ -96,6 +96,7 @@ define(['jquery','TEnvironment', 'TUI'], function($,TEnvironment, TUI) {
         // Start with editor mode disabled
         domOptions.appendChild(optionClear);
         domOptions.appendChild(optionDesignMode);
+        
         var editorMode = false;
         var programOptions = true;
 
@@ -117,6 +118,14 @@ define(['jquery','TEnvironment', 'TUI'], function($,TEnvironment, TUI) {
             domButtons.removeChild(buttonExecute);
         };
         
+        this.enableDesignMode = function() {
+            optionDesignMode.className = "ttoolbar-option active";
+        };
+
+        this.disableDesignMode = function() {
+            optionDesignMode.className = "ttoolbar-option";
+        };
+
         this.enableEditor = function() {
             if (!editorMode) {
                 domEditor.className = "ttoolbar-mode active";

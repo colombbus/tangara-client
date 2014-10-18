@@ -10,6 +10,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
         var consoleEnabled = false;
         var consoleState = false;
         var designModeEnabled = false;
+        var designLogEnabled = false;
         var programsDisplayed = true;
         var log;
 
@@ -137,6 +138,9 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 canvas.setDesignMode(true);
                 TRuntime.setDesignMode(true);
                 designModeEnabled = true;
+                if (!designLogEnabled) {
+                    this.toggleDesignLog();
+                }
             }
         };
 
@@ -146,14 +150,27 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 canvas.setDesignMode(false);
                 TRuntime.setDesignMode(false);
                 designModeEnabled = false;
+                designLogEnabled = !log.hideDesignLogIfEmpty();
             }
         };
 
         this.toggleDesignMode = function() {
             if (designModeEnabled) {
                 this.disableDesignMode();
+                toolbar.disableDesignMode();
             } else {
                 this.enableDesignMode();
+                toolbar.enableDesignMode();
+            }
+        };
+        
+        this.toggleDesignLog = function() {
+            if (designLogEnabled) {
+                log.hideDesignLog();
+                designLogEnabled = false;
+            } else {
+                log.showDesignLog();
+                designLogEnabled = true;
             }
         };
         

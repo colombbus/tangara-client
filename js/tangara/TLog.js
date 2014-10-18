@@ -1,4 +1,4 @@
-define(['jquery', 'TUI'], function($, TUI) {
+define(['jquery', 'TUI', 'TDesignLog'], function($, TUI, TDesignLog) {
     function TLog() {
         var domOuterLog = document.createElement("div");
         domOuterLog.id = "tlog-outer";
@@ -8,6 +8,10 @@ define(['jquery', 'TUI'], function($, TUI) {
         domLog.id = "tlog";
         domInnerLog.appendChild(domLog);
         domOuterLog.appendChild(domInnerLog);
+        var designLog = new TDesignLog();
+        var domDesignLog = designLog.getElement();
+        domInnerLog.appendChild(domDesignLog);
+        
         var rowCount = 0;
         var currentRow = 0;
         var scrollTop = 0;
@@ -26,6 +30,7 @@ define(['jquery', 'TUI'], function($, TUI) {
             var height = $("#tframe-bottom-top").height();
             domOuterLog.style.marginTop = "-"+height+"px";
             domOuterLog.style.paddingTop = height+"px";
+            //domDesignLog.style.top = height+"px";
         };
 
         this.addCommand = function(text) {
@@ -149,6 +154,18 @@ define(['jquery', 'TUI'], function($, TUI) {
                return errors[index];
            }
            return null;           
+        };
+        
+        this.showDesignLog = function() {
+            designLog.show();
+        };
+        
+        this.hideDesignLog = function() {
+            designLog.hide();
+        };
+        
+        this.hideDesignLogIfEmpty = function() {
+            return designLog.hideIfEmpty();
         };
 
     } 
