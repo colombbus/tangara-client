@@ -19,7 +19,7 @@ define(['jquery', 'TEnvironment'], function($, TEnvironment) {
             if ($element.length > 0) {
                 // element already exists
                 $element.find(".tdesign-log-name").text(name);
-                $element.find(".tdesign-log-location").addClass("active").delay(500).queue(function() {
+                $element.find(".tdesign-log-location").addClass("active").text(locationText).delay(500).queue(function() {
                     $(this).removeClass("active");
                     $(this).dequeue();
                 });
