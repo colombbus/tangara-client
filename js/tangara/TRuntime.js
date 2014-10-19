@@ -13,6 +13,7 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, T
 
         var designMode = false;
         var frozen = false;
+        var wasFrozen = false;
         var Q = Quintus();
 
         this.load = function(language, objectListUrl) {
@@ -171,6 +172,7 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, T
             if (quintusInstance.loop) {
                 quintusInstance.pauseGame();
             }
+            wasFrozen = frozen;
             this.freeze(true);
         };
 
@@ -178,7 +180,9 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, T
             if (!quintusInstance.loop) {
                 quintusInstance.unpauseGame();
             }
-            this.freeze(false);
+            if (!wasFrozen) {
+                this.freeze(false);
+            }
         };
 
         this.addObject = function(object) {
