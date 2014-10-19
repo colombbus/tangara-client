@@ -10,7 +10,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
         var consoleEnabled = false;
         var consoleState = false;
         var designModeEnabled = false;
-        var designLogEnabled = false;
+        var designLogDisplayed = false;
         var programsDisplayed = true;
         var log;
 
@@ -137,9 +137,10 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 TRuntime.freeze(true);
                 canvas.setDesignMode(true);
                 TRuntime.setDesignMode(true);
+                toolbar.enableDesignMode();
                 designModeEnabled = true;
-                if (!designLogEnabled) {
-                    this.toggleDesignLog();
+                if (!designLogDisplayed) {
+                    this.showDesignLog();
                 }
             }
         };
@@ -149,36 +150,35 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 TRuntime.freeze(false);
                 canvas.setDesignMode(false);
                 TRuntime.setDesignMode(false);
+                toolbar.disableDesignMode();
                 designModeEnabled = false;
-                designLogEnabled = !log.hideDesignLogIfEmpty();
+                designLogDisplayed = !log.hideDesignLogIfEmpty();
             }
         };
 
         this.toggleDesignMode = function() {
             if (designModeEnabled) {
                 this.disableDesignMode();
-                toolbar.disableDesignMode();
             } else {
                 this.enableDesignMode();
-                toolbar.enableDesignMode();
             }
         };
         
-        this.enableDesignLog = function() {
+        this.showDesignLog = function() {
             log.showDesignLog();
-            designLogEnabled = true;
+            designLogDisplayed = true;
         };
 
-        this.disableDesignLog = function() {
+        this.hideDesignLog = function() {
             log.hideDesignLog();
-            designLogEnabled = false;
+            designLogDisplayed = false;
         };
         
         this.toggleDesignLog = function() {
-            if (designLogEnabled) {
-                this.disableDesignLog();
+            if (designLogDisplayed) {
+                this.hideDesignLog();
             } else {
-                this.enableDesignLog();
+                this.showDesignLog();
             }
         };
         
@@ -446,6 +446,11 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 //update sidebar
                 this.updateSidebarResources();
             }
+        };
+        
+        this.recordObjectLocation = function(tObject, location) {
+            var name = TRuntime.getTObjectName(tObject);
+            log.addObjectLocation(name, location);
         };
     };
     
