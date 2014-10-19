@@ -4,6 +4,7 @@ define(['jquery','TEnvironment', 'TObject', 'TUtils', 'TRuntime'], function($, T
         this.actions = new Array();
         this.index = -1;
         this.running = false;
+        this.frozen = false;
         this.timeout = null;
         this.loop = false;
         this.wasRunning = false;
@@ -110,12 +111,16 @@ define(['jquery','TEnvironment', 'TObject', 'TUtils', 'TRuntime'], function($, T
     
     Sequence.prototype.freeze = function(value) {
         TObject.prototype.freeze.call(value);
-        if (value) {
-            this.wasRunning = this.running;
-            this._pause();
-        } else {
-            if (this.wasRunning) {
-                this._unpause();
+        if (value !== this.frozen) {
+            if (value) {
+                this.wasRunning = this.running;
+                this._pause();
+                this.frozen = true;
+            } else {
+                if (this.wasRunning) {
+                    this._unpause();
+                }
+                this.frozen = false;
             }
         }
     };
