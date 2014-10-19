@@ -4,7 +4,7 @@ require.config({
     paths: {
         "jquery":'../libs/jquery-1.11.1/jquery-1.11.1.min',
         "jquery_animate_enhanced":'../libs/jquery.animate-enhanced/jquery.animate-enhanced.min',
-        "ace":'../libs/ace',
+        "ace":'../libs/ace-1.1.7',
         "split-pane":'../libs/split-pane/split-pane',
         "quintus":'../libs/quintus-0.2.0/quintus-all.min',
         "acorn":'../libs/acorn/acorn',
