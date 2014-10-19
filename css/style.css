@@ -554,7 +554,7 @@ textarea.tsidebar-rename {
     overflow:auto;
 }
             
-.tlog-row {
+.tlog-row, .tdesign-log-row {
     font-family:'Monaco','Menlo','Ubuntu Mono','Consolas','source-code-pro',monospace;
     font-size:20px;
 }
@@ -581,6 +581,24 @@ textarea.tsidebar-rename {
     height:100%;
     overflow:auto;
 }
+
+.tdesign-log-name, .tdesign-log-location {
+    display:inline-block;
+}
+
+.tdesign-log-name {
+    color:#000000;
+}
+
+.tdesign-log-location {
+    margin-left:10px;
+    color:rgb(0,0,205);
+}
+
+.tdesign-log-location.active {
+    color:#E47637;
+}
+
 
 #tlog-switch {
     float:right;
