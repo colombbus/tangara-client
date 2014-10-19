@@ -8,6 +8,7 @@ define(['jquery','TEnvironment', 'TObject', 'TUtils', 'CommandManager'], functio
         this.wasRunning = false;
         this.timeout = null;
         this.loop = true;
+        this.frozen = false;
     };
     
     Clock.prototype = Object.create(TObject.prototype);
@@ -72,12 +73,16 @@ define(['jquery','TEnvironment', 'TObject', 'TUtils', 'CommandManager'], functio
     
     Clock.prototype.freeze = function(value) {
         TObject.prototype.freeze.call(value);
-        if (value) {
-            this.wasRunning = this.running;
-            this._stop();
-        } else {
-            if (this.wasRunning) {
-                this._start();
+        if (value !== this.frozen) {
+            if (value) {
+                this.wasRunning = this.running;
+                this._stop();
+                this.frozen = true;
+            } else {
+                if (this.wasRunning) {
+                    this._start();
+                }
+                this.frozen = false;
             }
         }
     };
