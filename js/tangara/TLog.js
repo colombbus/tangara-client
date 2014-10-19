@@ -1,16 +1,35 @@
-define(['jquery', 'TUI', 'TDesignLog'], function($, TUI, TDesignLog) {
+define(['jquery', 'TUI', 'TDesignLog', 'TEnvironment'], function($, TUI, TDesignLog, TEnvironment) {
     function TLog() {
         var domOuterLog = document.createElement("div");
         domOuterLog.id = "tlog-outer";
         var domInnerLog = document.createElement("div");
         domInnerLog.id = "tlog-inner";
+        var domSwitch = document.createElement("div");
+        domSwitch.id = "tlog-switch";
+        var switchLog = document.createElement("div");
+        switchLog.id = "tlog-switch-log";
+        switchLog.title = TEnvironment.getMessage("switch-log");
+        switchLog.className="active";
+        var switchDesign = document.createElement("div");
+        switchDesign.id = "tlog-switch-design";
+        switchDesign.title = TEnvironment.getMessage("switch-design");
+        switchLog.onclick = function(e) { TUI.disableDesignLog();};
+        switchDesign.onclick = function(e) { TUI.enableDesignLog();};
+        domSwitch.appendChild(switchLog);
+        domSwitch.appendChild(switchDesign);
+        domOuterLog.appendChild(domSwitch);
         var domLog = document.createElement("div");
         domLog.id = "tlog";
         domInnerLog.appendChild(domLog);
-        domOuterLog.appendChild(domInnerLog);
         var designLog = new TDesignLog();
         var domDesignLog = designLog.getElement();
         domInnerLog.appendChild(domDesignLog);
+        domOuterLog.appendChild(domInnerLog);
+        var $log = $(domLog); 
+        var $designLog = $(domDesignLog);
+        var $switch = $(domSwitch);
+        var $innerLog = $(domInnerLog); 
+        
         
         var rowCount = 0;
         var currentRow = 0;
@@ -23,6 +42,8 @@ define(['jquery', 'TUI', 'TDesignLog'], function($, TUI, TDesignLog) {
 
         this.displayed = function() {
             this.update();
+            $designLog.hide();
+            $switch.hide();
         };
         
         this.update = function() {
@@ -30,7 +51,6 @@ define(['jquery', 'TUI', 'TDesignLog'], function($, TUI, TDesignLog) {
             var height = $("#tframe-bottom-top").height();
             domOuterLog.style.marginTop = "-"+height+"px";
             domOuterLog.style.paddingTop = height+"px";
-            //domDesignLog.style.top = height+"px";
         };
 
         this.addCommand = function(text) {
@@ -157,15 +177,37 @@ define(['jquery', 'TUI', 'TDesignLog'], function($, TUI, TDesignLog) {
         };
         
         this.showDesignLog = function() {
-            designLog.show();
+            $log.hide();
+            $designLog.show();
+            $(switchLog).removeClass("active");
+            $(switchDesign).addClass("active");
+            this.showSwitch();
         };
         
         this.hideDesignLog = function() {
-            designLog.hide();
+            $designLog.hide();
+            $log.show();
+            $(switchDesign).removeClass("active");
+            $(switchLog).addClass("active");
+        };
+        
+        this.showSwitch = function() {
+            $switch.show();
+            $innerLog.css("margin-right", "40px");
+        };
+        
+        this.hideSwitch = function() {
+            $switch.hide();
+            $innerLog.css("margin-right", "0px");            
         };
         
         this.hideDesignLogIfEmpty = function() {
-            return designLog.hideIfEmpty();
+            var result = designLog.isEmpty();
+            if (result) {
+                this.hideDesignLog();
+                this.hideSwitch();
+            }
+            return result;
         };
 
     } 

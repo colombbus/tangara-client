@@ -164,13 +164,21 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
             }
         };
         
+        this.enableDesignLog = function() {
+            log.showDesignLog();
+            designLogEnabled = true;
+        };
+
+        this.disableDesignLog = function() {
+            log.hideDesignLog();
+            designLogEnabled = false;
+        };
+        
         this.toggleDesignLog = function() {
             if (designLogEnabled) {
-                log.hideDesignLog();
-                designLogEnabled = false;
+                this.disableDesignLog();
             } else {
-                log.showDesignLog();
-                designLogEnabled = true;
+                this.enableDesignLog();
             }
         };
         

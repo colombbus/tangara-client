@@ -578,33 +578,38 @@ textarea.tsidebar-rename {
 
 /* TDesignLog */
 #tdesign-log {
-    position:absolute;
-    z-index:2;
-    width:40%;
-    left:100%;
     height:100%;
-    top:0;
-    background-color:white;
+    overflow:auto;
 }
 
-#tdesign-log-handle {
-    position:absolute;
-    left:-30px;
-    top:10px;
+#tlog-switch {
+    float:right;
+    box-sizing:border-box;
+    height:100%;
     width:40px;
-    height:26px;
-    background-color:white;
-    background-image:url(../images/chevron_left.png);
-    background-repeat:no-repeat;
-    background-position:8px 2px;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-    cursor:pointer;
+    background-color: #929292;
 }
 
-#tdesign-log-handle.open {
-    background-image:url(../images/chevron_right.png);
+#tlog-switch-log {
+    cursor:pointer;
+    width:100%;
+    height:45px;
+    background-image:url('../images/output.png');
+    background-repeat:no-repeat;
+    background-position:50% 50%;
+}
+
+#tlog-switch-design {
+    cursor:pointer;
+    width:100%;
+    height:45px;
+    background-image:url('../images/design_mode.png');
+    background-repeat:no-repeat;
+    background-position:50% 50%;
+}
+
+#tlog-switch-log.active, #tlog-switch-design.active {
+    background-color: #dedede;
 }
 
 /* TRuntinme */
