@@ -60,6 +60,9 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, T
         };
 
         this.getTObjectName = function(reference) {
+            if (typeof reference.objectName !== 'undefined') {
+                return reference.objectName;
+            }
             var name;
             $.each(runtimeFrame, function(key, value) {
                 if (value === reference) {
@@ -67,6 +70,7 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, T
                     return false;
                 }
             });
+            reference.objectName = name;
             return name;
         };
         
