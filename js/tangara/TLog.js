@@ -13,8 +13,8 @@ define(['jquery', 'TUI', 'TDesignLog', 'TEnvironment'], function($, TUI, TDesign
         var switchDesign = document.createElement("div");
         switchDesign.id = "tlog-switch-design";
         switchDesign.title = TEnvironment.getMessage("switch-design");
-        switchLog.onclick = function(e) { TUI.disableDesignLog();};
-        switchDesign.onclick = function(e) { TUI.enableDesignLog();};
+        switchLog.onclick = function(e) { TUI.hideDesignLog();};
+        switchDesign.onclick = function(e) { TUI.showDesignLog();};
         domSwitch.appendChild(switchLog);
         domSwitch.appendChild(switchDesign);
         domOuterLog.appendChild(domSwitch);
@@ -208,6 +208,10 @@ define(['jquery', 'TUI', 'TDesignLog', 'TEnvironment'], function($, TUI, TDesign
                 this.hideSwitch();
             }
             return result;
+        };
+        
+        this.addObjectLocation = function(name, location) {
+            designLog.addObjectLocation(name, location);
         };
 
     } 
