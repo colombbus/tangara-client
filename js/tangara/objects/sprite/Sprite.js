@@ -432,16 +432,29 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
                     }
                     imageData.data = data;
                     ctx.putImageData(imageData,0,0);
+                    image.onload = function() {
+                        image.onload = null;
+                        // 2nd set asset for all sprites waiting for this image
+                        if (typeof Sprite.waitingForImage[name] !== 'undefined') {
+                            // in case _displayImage was called while loading, set image for waiting sprites
+                            while (Sprite.waitingForImage[name].length>0) {
+                                var sprite = Sprite.waitingForImage[name].pop();
+                                sprite.setDisplayedImage(name);
+                            }
+                            Sprite.waitingForImage[name] = undefined;
+                        }
+                    };
                     image.src = canvas.toDataURL();
-                }
-                // 2nd set asset for all sprites waiting for this image
-                if (typeof Sprite.waitingForImage[name] !== 'undefined') {
-                    // in case _displayImage was called while loading, set image for waiting sprites
-                    while (Sprite.waitingForImage[name].length>0) {
-                        var sprite = Sprite.waitingForImage[name].pop();
-                        sprite.setDisplayedImage(name);
+                } else {
+                    // 2nd set asset for all sprites waiting for this image
+                    if (typeof Sprite.waitingForImage[name] !== 'undefined') {
+                        // in case _displayImage was called while loading, set image for waiting sprites
+                        while (Sprite.waitingForImage[name].length>0) {
+                            var sprite = Sprite.waitingForImage[name].pop();
+                            sprite.setDisplayedImage(name);
+                        }
+                        Sprite.waitingForImage[name] = undefined;
                     }
-                    Sprite.waitingForImage[name] = undefined;
                 }
             });
         }
@@ -591,6 +604,17 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
         value = TUtils.getBoolean(value);
         this.qObject.watchCollisions(value);
     };
+    
+    Sprite.prototype.isReady = function(callback, arguments) {
+        if (this.qObject.p.initialized) {
+            return true;
+        } else {
+            if (typeof callback !== 'undefined') {
+                this.qObject.perform(callback, arguments);
+            }
+            return false;
+        }
+    };    
 
     TEnvironment.internationalize(Sprite, true);
     
