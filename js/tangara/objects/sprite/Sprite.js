@@ -401,9 +401,6 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
                 // function again.
                 var image = qInstance.asset(loadedAsset);
                 image.onload = null;
-                // store width and height as somehow, info may be lost afterwards (Safari)
-                image.width = image.naturalWidth;
-                image.height = image.naturalWidth;
 
                 // 1st handle transparency
                 // Note that transparency settings of current Sprite will affect image for every other Sprites
