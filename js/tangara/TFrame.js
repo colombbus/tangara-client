@@ -42,6 +42,13 @@ define(['jquery', 'split-pane','TCanvas', 'TEditor', 'TSidebar', 'TUI', 'TConsol
         var logElement = log.getElement();
         bottomDiv.appendChild(logElement);
         domFrame.appendChild(bottomDiv);
+        
+        var loadingDiv = document.createElement("div");
+        loadingDiv.id = "tframe-loading";
+        var loadingImg = document.createElement("img");
+        loadingImg.src = TEnvironment.getBaseUrl() + "/images/loader2.gif";
+        loadingDiv.appendChild(loadingImg);
+        domFrame.appendChild(loadingDiv);
 
         // Set UI
         TUI.setFrame(this);
@@ -71,6 +78,13 @@ define(['jquery', 'split-pane','TCanvas', 'TEditor', 'TSidebar', 'TUI', 'TConsol
             // Start with console enabled
             TUI.enableConsole();
             initialized = true;
+            this.ready();
+        };
+        
+        this.ready = function() {
+            TEnvironment.frameReady(function() {
+                $(loadingDiv).fadeOut(1000, function() {$(this).remove();});
+            });
         };
         
         this.lowerSeparator = function(value) {

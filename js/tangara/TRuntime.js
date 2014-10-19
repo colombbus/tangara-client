@@ -26,15 +26,21 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, T
             // declare global variables
             var libs = TEnvironment.getObjectLibraries();
             var translatedNames = TEnvironment.getTranslatedObjectNames();
+            var self = this;
             require(libs, function() {
                 for(var i= 0; i < translatedNames.length; i++) {
                     window.console.log("Declaring translated object '"+translatedNames[i]+"'");
                     runtimeFrame[translatedNames[i]] = arguments[i];
                 }
+                self.ready();
             });
-            
+            window.console.log("**** TRUNTIME INITIALIZED ****");
             // Ask parser to protect translated names
             TParser.protectIdentifiers(translatedNames);
+        };
+
+        this.ready = function() {
+            TEnvironment.runtimeReady();
         };
 
         this.initRuntimeFrame = function() {
