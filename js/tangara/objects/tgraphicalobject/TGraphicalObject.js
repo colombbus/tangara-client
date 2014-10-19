@@ -37,6 +37,7 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment', ], function(TObject, TU
         designTouchEnd: function(touch) {
             if (this.p.designMode) {
                 this.p.dragging = false;
+                this.p.designCallback(this.p.x, this.p.y);
             }
         },
         perform: function(action, parameters) {
@@ -109,6 +110,12 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment', ], function(TObject, TU
                 qObject.children[i].on("drag", qObject, "designDrag");
                 qObject.children[i].on("touchEnd", qObject, "designTouchEnd");
             }
+            var self = this;
+            qObject.p.designCallback = function(x,y) {
+                require(["TUI"], function(TUI) {
+                    TUI.recordObjectLocation(self, {x:Math.round(x), y:Math.round(y)});
+                });
+            };
             qObject.p.designMode = true;
         } else {
             qObject.off("drag", qObject, "designDrag");
@@ -117,6 +124,7 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment', ], function(TObject, TU
                 qObject.children[i].off("drag", qObject, "designDrag");
                 qObject.children[i].off("touchEnd", qObject, "designTouchEnd");
             }
+            qObject.p.designCallback = null;
             qObject.p.designMode = false;
         }
     };
