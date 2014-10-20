@@ -263,13 +263,14 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
             } else {
                 // error from program
                 this.enableEditor();
-                editor.editProgram(error.getProgramName());
+                this.editProgram(error.getProgramName());
                 editor.setError(error.getLines());
             }
         };
         
         this.saveProgram = function() {
             var project = TEnvironment.getProject();
+            editor.updateProgram();
             var program = editor.getProgram();
             sidebar.showLoading(program.getName());
             try
