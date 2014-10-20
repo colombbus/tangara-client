@@ -6,7 +6,12 @@ define(['jquery', 'TRuntime', ], function($, TRuntime) {
         
         var domCanvasDesign = document.createElement("div");
         domCanvasDesign.id = "tcanvas-design";
+        var domCanvasDesignMouse = document.createElement("div");
+        domCanvasDesignMouse.id = "tcanvas-design-mouse";
+        domCanvasDesign.appendChild(domCanvasDesignMouse);
+        var $domCanvasDesignMouse = $(domCanvasDesignMouse);
         // start with design mode off
+        
         domCanvasDesign.style.display="none";
 
         domCanvasOut.appendChild(domCanvasDesign);
@@ -19,6 +24,11 @@ define(['jquery', 'TRuntime', ], function($, TRuntime) {
         
         var qStage;
 
+        var designMouseHandler = function(event) {
+            var x = event.clientX+domCanvasOut.scrollLeft;
+            var y = event.clientY+domCanvasOut.scrollTop;
+            $domCanvasDesignMouse.text(x+","+y);
+        };
 
         this.addGraphicalObject = function(object) {
             if (typeof qStage !== 'undefined') {
@@ -72,8 +82,11 @@ define(['jquery', 'TRuntime', ], function($, TRuntime) {
         this.setDesignMode = function(value) {
             if (value) {
                 $(domCanvasDesign).show();
+                $(domCanvas).on("mousemove", designMouseHandler);
             } else {
                 $(domCanvasDesign).hide();
+                $domCanvasDesignMouse.text("");
+                $(domCanvas).off("mousemove", designMouseHandler);
             }
         };
         
