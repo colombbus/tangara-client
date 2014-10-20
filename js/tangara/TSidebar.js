@@ -1,4 +1,4 @@
-define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'jquery', 'jquery.ui.widget', 'iframe-transport', 'fileupload', 'fancybox'], function(TUI, TEnvironment, TProgram, TError, $) {
+define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'jquery', 'jquery.ui.widget', 'iframe-transport', 'fileupload'], function(TUI, TEnvironment, TProgram, TError, TViewer, $) {
 
     function TSidebar() {
         var domSidebar = document.createElement("div");
@@ -62,7 +62,9 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'jquery', 'jquery.ui.widget
         var programsVisible = false;
         var empty = true;
         var uploadingDivs = {};
-    
+        
+        var viewer = new TViewer;
+        
         this.getElement = function() {
             return domSidebar;
         };
@@ -301,7 +303,8 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'jquery', 'jquery.ui.widget
                 var parent = $(this).parent();
                 if (parent.hasClass('tsidebar-current') && parent.hasClass('tsidebar-type-image')) {
                     // already selected: open using fancybox
-                    $.fancybox(TEnvironment.getProjectResource(name));
+                    //$.fancybox([TEnvironment.getProjectResource(name),TEnvironment.getProjectResource(name)]);
+                    viewer.show(TEnvironment.getProjectResource(name));
                 }
             };
             // rename
