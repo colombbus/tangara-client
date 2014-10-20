@@ -14,7 +14,7 @@ define(['jquery'], function($) {
         
         
         
-        this.messages;
+        this.messages = {};
 
         // TODO: change this
         this.language = "fr";

@@ -58,6 +58,6 @@
         "delete-program-confirm":"Etes-vous sûr de vouloir supprimer le programme '{0}' ?",
         "delete-resource-confirm":"Etes-vous sûr de vouloir supprimer le média '{0}' ?",
         "design-name-text":"{0}.définirPosition",
-        "design-location-text":"({0},{1})",
+        "design-location-text":"({0},{1})"
     }
 }
