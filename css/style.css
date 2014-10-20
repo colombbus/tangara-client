@@ -34,6 +34,25 @@ body, html {
     z-index:2;
 }
 
+#tframe-loading {
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background-color:white;
+    z-index:100;
+}
+
+#tframe-loading img {
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    margin:auto;
+}
+
 .split-pane-divider  {
     height:5px;
     background:url("../images/handle.png") no-repeat scroll 50% 1px #EBEBEB;

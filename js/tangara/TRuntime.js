@@ -13,6 +13,7 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, T
 
         var designMode = false;
         var frozen = false;
+        var wasFrozen = false;
         var Q = Quintus();
 
         this.load = function(language, objectListUrl) {
@@ -26,15 +27,21 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, T
             // declare global variables
             var libs = TEnvironment.getObjectLibraries();
             var translatedNames = TEnvironment.getTranslatedObjectNames();
+            var self = this;
             require(libs, function() {
                 for(var i= 0; i < translatedNames.length; i++) {
                     window.console.log("Declaring translated object '"+translatedNames[i]+"'");
                     runtimeFrame[translatedNames[i]] = arguments[i];
                 }
+                self.ready();
             });
-            
+            window.console.log("**** TRUNTIME INITIALIZED ****");
             // Ask parser to protect translated names
             TParser.protectIdentifiers(translatedNames);
+        };
+
+        this.ready = function() {
+            TEnvironment.runtimeReady();
         };
 
         this.initRuntimeFrame = function() {
@@ -165,6 +172,7 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, T
             if (quintusInstance.loop) {
                 quintusInstance.pauseGame();
             }
+            wasFrozen = frozen;
             this.freeze(true);
         };
 
@@ -172,7 +180,9 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, T
             if (!quintusInstance.loop) {
                 quintusInstance.unpauseGame();
             }
-            this.freeze(false);
+            if (!wasFrozen) {
+                this.freeze(false);
+            }
         };
 
         this.addObject = function(object) {

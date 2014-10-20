@@ -7,6 +7,12 @@ define(['jquery'], function($) {
         var tangaraObjects = {};
         var project;
         var userLogged = false;
+        var ready_frame = false;
+        var ready_runtime = false;
+        var ready_environment = false;
+        var ready_callback = null;
+        
+        
         
         this.messages;
 
@@ -75,8 +81,7 @@ define(['jquery'], function($) {
                     });
                 }
             });
-
-            
+            this.ready();
         };
 
 
@@ -264,6 +269,29 @@ define(['jquery'], function($) {
                 return classMethods[baseClass];
             }
         };
+
+        this.frameReady = function(callback) {
+            ready_frame = true;
+            ready_callback = callback;
+            this.checkReady();
+        };
+        
+        this.runtimeReady = function() {
+            ready_runtime = true;
+            this.checkReady();
+        };
+        
+        this.ready = function() {
+            ready_environment = true;
+            this.checkReady();
+        };
+        
+        this.checkReady = function() {
+            if (ready_frame&&ready_runtime&&ready_environment) {
+                ready_callback();
+            }
+        };
+        
 
     };
 

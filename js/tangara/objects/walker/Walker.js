@@ -19,12 +19,13 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'T
                 gravity:9.8*100,
                 jumpDelay:10,
                 jumpAvailable:0,
-                jumpSpeed: -300
+                jumpSpeed: -300,
+                waitingForBlocks:0
             },props),defaultProps);
             this.blocks = new Array();
         },
         step: function(dt) {
-            if (!this.p.dragging && !this.p.frozen) {
+            if (!this.p.dragging && !this.p.frozen && this.p.waitingForBlocks === 0) {
                 if (this.p.mayFall && (this.p.direction === Sprite.DIRECTION_UP || this.p.direction === Sprite.DIRECTION_DOWN)) {
                     // cannot move upward or downward when walker may fall
                     this.p.direction = Sprite.DIRECTION_NONE;
@@ -102,6 +103,12 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'T
             this.perform(function(){
                 this.p.jumping = true;
             });
+        },
+        waitForBlock: function() {
+            this.p.waitingForBlocks++;
+        },
+        blockReady: function() {
+            this.p.waitingForBlocks--;
         }
     });
     
@@ -110,6 +117,13 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'T
     Walker.prototype._addBlock = function(block) {
         block = TUtils.getObject(block);
         this.qObject.addBlock(block);
+        var self = this;
+        if (!block.isReady(function () {
+            self.blockReady();
+        })) {
+            // wait for block to be loaded
+            this.qObject.waitForBlock();
+        }
     };
     
     Walker.prototype._mayFall = function(value) {
@@ -124,6 +138,10 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'T
 
     Walker.prototype._jump = function() {
         this.qObject.jump();
+    };
+
+    Walker.prototype.blockReady = function() {
+        this.qObject.blockReady();
     };
 
     Walker.prototype._setGravity = function(value) {
