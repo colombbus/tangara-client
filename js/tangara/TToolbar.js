@@ -97,6 +97,14 @@ define(['jquery','TEnvironment', 'TUI'], function($,TEnvironment, TUI) {
         domOptions.appendChild(optionClear);
         domOptions.appendChild(optionDesignMode);
         
+        // add double click handler for toggling log
+        var $domToolbar = $(domToolbar);
+        $domToolbar.dblclick(function() {
+            TUI.toggleLog();
+        });
+        // Prevent text selection
+        $domToolbar.mousedown(function(){return false;});
+        
         var editorMode = false;
         var programOptions = true;
 
