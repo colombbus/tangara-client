@@ -170,7 +170,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
         };
 
         this.hideDesignLog = function() {
-            log.hideDesignLog();
+            log.hideDesignLog(!designModeEnabled);
             designLogDisplayed = false;
         };
         
@@ -231,6 +231,12 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
         };
 
         this.execute = function() {
+            if (designModeEnabled) {
+                this.disableDesignMode();
+            }
+            if (designLogDisplayed) {
+                this.hideDesignLog();
+            }
             if (consoleEnabled) {
                 // execution from console
                 TRuntime.setCurrentProgramName(null);
@@ -240,7 +246,6 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 // execution from editor
                 this.clear(false);
                 this.disableEditor();
-                this.disableDesignMode();
                 console.clear();
                 TRuntime.setCurrentProgramName(editor.getProgramName());
                 TRuntime.executeFrom(editor);
