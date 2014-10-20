@@ -109,7 +109,7 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'jquery', 'jquery.ui.widget
                             empty = false;
                         }
                         var $domSidebarResources = $(domSidebarResources);
-                        $domSidebarResources.animate({scrollTop: $domSidebarResources.scrollTop()+$(div).position().top}, 1000);
+                        $domSidebarResources.stop().animate({scrollTop: $domSidebarResources.scrollTop()+$(div).position().top}, 1000);
                         data.submit();
                     } catch (error) {
                         // error
