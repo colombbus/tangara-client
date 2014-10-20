@@ -83,6 +83,17 @@ body, html {
     background-image:url('../images/design_back.png');
 }
 
+#tcanvas-design-mouse {
+    position:absolute;
+    bottom:0px;
+    right:0px;
+    font-family: "Arial", sans-serif;
+    color:#929292;
+    font-size:12pt;
+    background-color:white;
+    padding:2px;
+}
+
 #tcanvas_container {
     width:100%;
     height:100%;
@@ -601,23 +612,41 @@ textarea.tsidebar-rename {
     overflow:auto;
 }
 
+.tdesign-log-row {
+    background-color:#efefef;
+    padding:5px 10px 5px 10px;
+    margin:0px 0px 5px 0px;
+    cursor:pointer;
+}
+
+.tdesign-log-row.selected {
+   background-color:#428bca;
+}
+
 .tdesign-log-name, .tdesign-log-location {
     display:inline-block;
+    cursor:pointer;
 }
 
 .tdesign-log-name {
-    color:#000000;
+    color:#444444;
+}
+
+.selected .tdesign-log-name {
+    color:#FFFFFF;
 }
 
 .tdesign-log-location {
-    margin-left:10px;
-    color:rgb(0,0,205);
+    color:#428bca;
+}
+
+.selected .tdesign-log-location {
+    color:#FFFFFF;
 }
 
 .tdesign-log-location.active {
     color:#E47637;
 }
-
 
 #tlog-switch {
     float:right;
