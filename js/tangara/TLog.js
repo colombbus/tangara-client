@@ -124,6 +124,9 @@ define(['jquery', 'TUI', 'TDesignLog', 'TEnvironment'], function($, TUI, TDesign
             rowCount = 0;
             currentRow = 0;
             errors.length = 0;
+            designLog.clear();
+            this.hideDesignLog();
+            this.hideSwitch();
         };
         
         this.getPreviousRow = function() {
