@@ -184,11 +184,16 @@ define(['jquery', 'TUI', 'TDesignLog', 'TEnvironment'], function($, TUI, TDesign
             this.showSwitch();
         };
         
-        this.hideDesignLog = function() {
+        this.hideDesignLog = function(hideSwitchIfEmpty) {
             $designLog.hide();
             $log.show();
             $(switchDesign).removeClass("active");
             $(switchLog).addClass("active");
+            if (typeof hideSwitchIfEmpty !== 'undefined' && hideSwitchIfEmpty) {
+                if (designLog.isEmpty()) {
+                    this.hideSwitch();
+                }
+            }
         };
         
         this.showSwitch = function() {
