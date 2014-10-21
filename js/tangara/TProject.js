@@ -268,7 +268,10 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError'], function(TLink
                 }
             }
         };
-
+        
+        this.setResourceContent = function(name, data) {
+            return TLink.setResourceContent(name, data);
+        };
         
         this.getResourceLocation = function(name) {
             return TLink.getResourceLocation(name);
