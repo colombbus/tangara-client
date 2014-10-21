@@ -183,22 +183,23 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'jquery', 'jquer
                             var error = new TError(message);
                             TUI.addLogError(error);                            
                         } else if (typeof result.created !== 'undefined') {
-                            // files where created
+                            // files were created
                             var project = TEnvironment.getProject();
 
                             for (var i=0; i<result.created.length; i++) {
                                 var name = result.created[i].name;
+                                var data = result.created[i].data;
                                 var $div = uploadingDivs[name];
                                 if (typeof $div !== 'undefined') {
                                     $div.find(".progress-bar-wrapper").fadeOut(2000, function() {$(this).remove()});
                                 }
                                 $div.removeClass('tsidebar-type-uploading');
                                 var type = '';
-                                if (typeof result.created[i].type !== 'undefined') {
-                                    $div.addClass('tsidebar-type-'+result.created[i].type);
+                                if (typeof data.type !== 'undefined') {
+                                    $div.addClass('tsidebar-type-'+data.type);
                                 }
                                 delete uploadingDivs[name];
-                                project.resourceUploaded(name, type);
+                                project.resourceUploaded(name, data);
                             }
                         }
                     }
@@ -328,8 +329,7 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'jquery', 'jquer
             imgDiv.onclick = function(e) {
                 var parent = $(this).parent();
                 if (parent.hasClass('tsidebar-current') && parent.hasClass('tsidebar-type-image')) {
-                    // already selected: open using fancybox
-                    //$.fancybox([TEnvironment.getProjectResource(name),TEnvironment.getProjectResource(name)]);
+                    // already selected: open in viewer
                     viewer.show(name);
                 }
             };
@@ -340,7 +340,7 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'jquery', 'jquer
                     $(this).addClass('tsidebar-renaming');
                     var renameElement = document.createElement("textarea");
                     renameElement.className="tsidebar-rename";
-                    renameElement.value = name;
+                    renameElement.value = TEnvironment.getProject().getResourceBaseName(name);
                     $(renameElement).keydown(function (e) {
                         if (e.which === 13) {
                             // Enter was pressed
