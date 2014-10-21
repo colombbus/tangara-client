@@ -34,6 +34,9 @@ define(['jquery', 'TUI', 'TDesignLog', 'TEnvironment'], function($, TUI, TDesign
         var rowCount = 0;
         var currentRow = 0;
         var scrollTop = 0;
+        
+        var currentHeight = -1;
+        
         var errors = new Array();
         
         this.getElement = function() {
@@ -220,6 +223,22 @@ define(['jquery', 'TUI', 'TDesignLog', 'TEnvironment'], function($, TUI, TDesign
         
         this.addObjectLocation = function(name, location) {
             designLog.addObjectLocation(name, location);
+        };
+        
+        this.show = function() {
+            $(domOuterLog).show();
+        };
+        
+        this.hide = function() {
+            currentHeight = $innerLog.outerHeight(false);
+            $(domOuterLog).hide();
+        };
+        
+        this.getHeight = function() {
+            if (currentHeight === -1) {
+                currentHeight = $innerLog.outerHeight(false);
+            }
+            return currentHeight;
         };
 
     } 

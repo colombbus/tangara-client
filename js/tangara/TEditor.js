@@ -87,12 +87,16 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
         };
         
         this.getStatements = function() {
+            this.updateProgram();
+            return program.getStatements();
+        };
+        
+        this.updateProgram = function() {
             if (codeChanged) {
                 program.setCode(this.getValue());
                 codeChanged = false;
             }
-            return program.getStatements();
-        };
+       };
         
         this.getProgram = function() {
             return program;

@@ -1151,9 +1151,12 @@
     if (!program) node.body = [];
     while (tokType !== _eof) {
       var stmt = parseStatement();
-      // TWEAK FOR TANGARA: add body to statement
-      stmt.body = input.slice(stmt.start, stmt.end);
-      node.body.push(stmt);
+      // TWEAK FOR TANGARA: record only body, start and end to statement
+      var stmt2 = {};
+      stmt2.body = input.slice(stmt.start, stmt.end);
+      stmt2.start = stmt.loc.start.line;
+      stmt2.end = stmt.loc.end.line;
+      node.body.push(stmt2);
       if (first && isUseStrict(stmt)) setStrict(true);
       first = false;
     }

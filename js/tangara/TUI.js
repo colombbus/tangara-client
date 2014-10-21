@@ -10,6 +10,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
         var consoleEnabled = false;
         var consoleState = false;
         var designModeEnabled = false;
+        var logDisplayed = true;
         var designLogDisplayed = false;
         var programsDisplayed = true;
         var log;
@@ -262,13 +263,14 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
             } else {
                 // error from program
                 this.enableEditor();
-                editor.editProgram(error.getProgramName());
+                this.editProgram(error.getProgramName());
                 editor.setError(error.getLines());
             }
         };
         
         this.saveProgram = function() {
             var project = TEnvironment.getProject();
+            editor.updateProgram();
             var program = editor.getProgram();
             sidebar.showLoading(program.getName());
             try
@@ -456,6 +458,22 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
         this.recordObjectLocation = function(tObject, location) {
             var name = TRuntime.getTObjectName(tObject);
             log.addObjectLocation(name, location);
+        };
+        
+        this.toggleLog = function() {
+            if (logDisplayed) {
+                // hide console as well
+                this.disableConsole();
+                log.saveScroll();
+                log.hide();
+                frame.lowerSeparator(log.getHeight());
+                logDisplayed = false;
+            } else {
+                log.show();
+                frame.raiseSeparator(log.getHeight());
+                log.restoreScroll();
+                logDisplayed = true;
+            }
         };
     };
     

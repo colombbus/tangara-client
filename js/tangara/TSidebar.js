@@ -1,4 +1,4 @@
-define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'jquery', 'jquery.ui.widget', 'iframe-transport', 'fileupload', 'fancybox'], function(TUI, TEnvironment, TProgram, TError, $) {
+define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'jquery', 'jquery.ui.widget', 'iframe-transport', 'fileupload'], function(TUI, TEnvironment, TProgram, TError, TViewer, $) {
 
     function TSidebar() {
         var domSidebar = document.createElement("div");
@@ -58,11 +58,40 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'jquery', 'jquery.ui.widget
         domSidebarResources.appendChild(domEmptyMedia);
         
         domSidebar.appendChild(domSidebarResources);
+
+        var $domSidebarFiles = $(domSidebarFiles);
+        var $domSidebarResources = $(domSidebarResources);
     
         var programsVisible = false;
         var empty = true;
         var uploadingDivs = {};
-    
+        
+        var viewer = new TViewer;
+        
+        viewer.setNextHandler(function() {
+            var current = $domSidebarFiles.find('.tsidebar-current');
+            var nextImage = current.next('.tsidebar-type-image');
+            if (nextImage.length === 0)
+                nextImage = $domSidebarFiles.find('.tsidebar-type-image:first');
+            current.removeClass('tsidebar-current');
+            nextImage.addClass('tsidebar-current');
+            $domSidebarResources.stop().animate({scrollTop: $domSidebarResources.scrollTop()+nextImage.position().top}, 1000);
+            var name = nextImage.find('.tsidebar-file-name').text();
+            return name;
+        });
+
+        viewer.setPrevHandler(function() {
+            var current = $domSidebarFiles.find('.tsidebar-current');
+            var prevImage = current.prev('.tsidebar-type-image');
+            if (prevImage.length === 0)
+                prevImage = $domSidebarFiles.find('.tsidebar-type-image:last');
+            current.removeClass('tsidebar-current');
+            prevImage.addClass('tsidebar-current');
+            $domSidebarResources.stop().animate({scrollTop: $domSidebarResources.scrollTop()+prevImage.position().top}, 1000);
+            var name = prevImage.find('.tsidebar-file-name').text();
+            return name;
+        });        
+        
         this.getElement = function() {
             return domSidebar;
         };
@@ -84,7 +113,6 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'jquery', 'jquery.ui.widget
                         var files = data.files;
                         var project = TEnvironment.getProject();
                         var div;
-                        var $domSidebarFiles = $(domSidebarFiles);
                         for (var i=0; i<files.length; i++) {
                             var file = files[i];
                             div = getResourceDiv(file.name, 'uploading', false);
@@ -108,8 +136,7 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'jquery', 'jquery.ui.widget
                             domSidebarResources.removeChild(domEmptyMedia);
                             empty = false;
                         }
-                        var $domSidebarResources = $(domSidebarResources);
-                        $domSidebarResources.animate({scrollTop: $domSidebarResources.scrollTop()+$(div).position().top}, 1000);
+                        $domSidebarResources.stop().animate({scrollTop: $domSidebarResources.scrollTop()+$(div).position().top}, 1000);
                         data.submit();
                     } catch (error) {
                         // error
@@ -301,7 +328,8 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'jquery', 'jquery.ui.widget
                 var parent = $(this).parent();
                 if (parent.hasClass('tsidebar-current') && parent.hasClass('tsidebar-type-image')) {
                     // already selected: open using fancybox
-                    $.fancybox(TEnvironment.getProjectResource(name));
+                    //$.fancybox([TEnvironment.getProjectResource(name),TEnvironment.getProjectResource(name)]);
+                    viewer.show(name);
                 }
             };
             // rename
