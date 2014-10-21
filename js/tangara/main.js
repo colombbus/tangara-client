@@ -12,8 +12,37 @@ require.config({
         "TGraphicalObject":'objects/tgraphicalobject/TGraphicalObject',
         "fileupload":'../libs/jquery-file-upload/jquery.fileupload',
         "iframe-transport":'../libs/jquery-file-upload/jquery.iframe-transport',
-        "jquery.ui.widget":'../libs/jquery-file-upload/vendor/jquery.ui.widget',
-        "fancybox":'../libs/fancybox-2.1.5/jquery.fancybox.pack'
+        "jquery-ui":'../libs/jquery.ui-1.11.2',
+        "wPaint":'../libs/wpaint-2.5.0/wPaint.min',
+        "wColorPicker":'../libs/wpaint-2.5.0/wColorPicker.min',
+        "wPaint/plugins/file":'../libs/wpaint-2.5.0/plugins/file/wPaint.menu.main.file.min',
+        "wPaint/plugins/main":'../libs/wpaint-2.5.0/plugins/main/wPaint.menu.main.min',
+        "wPaint/plugins/shapes":'../libs/wpaint-2.5.0/plugins/shapes/wPaint.menu.main.shapes.min',
+        "wPaint/plugins/text":'../libs/wpaint-2.5.0/plugins/text/wPaint.menu.text.min',
+    },
+    
+    map:{
+        "fileupload": {
+            "jquery.ui.widget":'jquery-ui/widget'
+        }
+    },
+    
+    shim: {
+        'wPaint': {
+            deps: ['jquery', 'jquery-ui/core', 'jquery-ui/widget', 'jquery-ui/draggable', 'jquery-ui/mouse']
+        },
+        'wPaint/plugins/main': {
+            deps: ['wPaint']
+        },
+        'wPaint/plugins/file': {
+            deps: ['wPaint', 'wPaint/plugins/main']
+        },
+        'wPaint/plugins/shapes': {
+            deps: ['wPaint', 'wPaint/plugins/main']
+        },
+        'wPaint/plugins/text': {
+            deps: ['wPaint', 'wPaint/plugins/main']
+        }
     }
 });
 
