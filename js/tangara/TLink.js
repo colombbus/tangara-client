@@ -195,11 +195,11 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
             }
         };
 
-        this.getResourceLocation = function(name) {
+        this.getResourceLocation = function(name, version) {
             if (TEnvironment.debug) {
                 return TEnvironment.getBaseUrl() + "/tests/" + name;
             } else {
-                return TEnvironment.getBackendUrl('getresource')+"/"+encodeURIComponent(name);
+                return TEnvironment.getBackendUrl('getresource')+"/"+version+"/"+encodeURIComponent(name);
             }
         };
         
@@ -273,6 +273,7 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
             if (!TEnvironment.debug) {
                 var url = TEnvironment.getBackendUrl('setresource');
                 var input = {'name':name, 'data':data};
+                var version = 0;
                 $.ajax({
                     dataType: "json",
                     url: url,
@@ -282,6 +283,12 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
                     data:input,
                     success: function(data) {
                         checkError(data);
+                        if (typeof data['version'] !== 'undefined') {
+                            version = data['version'];
+                        } else {
+                            return false;
+                            console.log("error: no version provided");
+                        }
                     },
                     error: function(data, status, error) {
                         var e = new TError(error);
@@ -289,6 +296,7 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
                     }
                 });
             }
+            return version;
         };
         
         function checkError(data) {

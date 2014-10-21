@@ -270,11 +270,13 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError'], function(TLink
         };
         
         this.setResourceContent = function(name, data) {
-            return TLink.setResourceContent(name, data);
+            var newVersion = TLink.setResourceContent(name, data);
+            resources[name].version = newVersion;
         };
         
         this.getResourceLocation = function(name) {
-            return TLink.getResourceLocation(name);
+            console.log("version : ",resources[name].version);
+            return TLink.getResourceLocation(name, resources[name].version);
         };
         
         this.preloadImage = function(name) {

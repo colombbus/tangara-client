@@ -231,8 +231,7 @@ define(['TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPaint', 'wPaint/plugi
                 imageEdited = false;
                 imageDisplayed = true;
                 // refreshImage
-                image.src = TEnvironment.getProjectResource(currentName)+"?" + new Date().getTime();
-                //displayImage(currentName);
+                displayImage(currentName);
             } else {
                 if (appended) {
                     $domMain.fadeOut();
