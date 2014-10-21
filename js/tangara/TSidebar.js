@@ -58,12 +58,39 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'jquery', 'jquer
         domSidebarResources.appendChild(domEmptyMedia);
         
         domSidebar.appendChild(domSidebarResources);
+
+        var $domSidebarFiles = $(domSidebarFiles);
+        var $domSidebarResources = $(domSidebarResources);
     
         var programsVisible = false;
         var empty = true;
         var uploadingDivs = {};
         
         var viewer = new TViewer;
+        
+        viewer.setNextHandler(function() {
+            var current = $domSidebarFiles.find('.tsidebar-current');
+            var nextImage = current.next('.tsidebar-type-image');
+            if (nextImage.length === 0)
+                nextImage = $domSidebarFiles.find('.tsidebar-type-image:first');
+            current.removeClass('tsidebar-current');
+            nextImage.addClass('tsidebar-current');
+            $domSidebarResources.stop().animate({scrollTop: $domSidebarResources.scrollTop()+nextImage.position().top}, 1000);
+            var name = nextImage.find('.tsidebar-file-name').text();
+            return name;
+        });
+
+        viewer.setPrevHandler(function() {
+            var current = $domSidebarFiles.find('.tsidebar-current');
+            var prevImage = current.prev('.tsidebar-type-image');
+            if (prevImage.length === 0)
+                prevImage = $domSidebarFiles.find('.tsidebar-type-image:last');
+            current.removeClass('tsidebar-current');
+            prevImage.addClass('tsidebar-current');
+            $domSidebarResources.stop().animate({scrollTop: $domSidebarResources.scrollTop()+prevImage.position().top}, 1000);
+            var name = prevImage.find('.tsidebar-file-name').text();
+            return name;
+        });        
         
         this.getElement = function() {
             return domSidebar;
@@ -86,7 +113,6 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'jquery', 'jquer
                         var files = data.files;
                         var project = TEnvironment.getProject();
                         var div;
-                        var $domSidebarFiles = $(domSidebarFiles);
                         for (var i=0; i<files.length; i++) {
                             var file = files[i];
                             div = getResourceDiv(file.name, 'uploading', false);
@@ -110,7 +136,6 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'jquery', 'jquer
                             domSidebarResources.removeChild(domEmptyMedia);
                             empty = false;
                         }
-                        var $domSidebarResources = $(domSidebarResources);
                         $domSidebarResources.stop().animate({scrollTop: $domSidebarResources.scrollTop()+$(div).position().top}, 1000);
                         data.submit();
                     } catch (error) {
@@ -304,7 +329,7 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'jquery', 'jquer
                 if (parent.hasClass('tsidebar-current') && parent.hasClass('tsidebar-type-image')) {
                     // already selected: open using fancybox
                     //$.fancybox([TEnvironment.getProjectResource(name),TEnvironment.getProjectResource(name)]);
-                    viewer.show(TEnvironment.getProjectResource(name));
+                    viewer.show(name);
                 }
             };
             // rename
