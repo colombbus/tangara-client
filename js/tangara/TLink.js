@@ -203,10 +203,11 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
             }
         };
         
-        this.renameResource = function(name, newName) {
+        this.renameResource = function(name, newBaseName) {
+            var newName = name;
             if (!TEnvironment.debug) {
                 var url = TEnvironment.getBackendUrl('renameresource');
-                var input = {'name':name, 'new':newName};
+                var input = {'name':name, 'new':newBaseName};
                 $.ajax({
                     dataType: "json",
                     url: url,
@@ -216,6 +217,11 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
                     data:input,
                     success: function(data) {
                         checkError(data);
+                        if (typeof data['updated'] !== 'undefined') {
+                            newName = data['updated'];
+                        } else {
+                            console.log("error: no updated field provided");
+                        }
                     },
                     error: function(data, status, error) {
                         var e = new TError(error);
@@ -223,6 +229,7 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
                     }
                 });
             }
+            return newName;
         };
         
         this.deleteProgram = function(name) {
@@ -270,10 +277,10 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
         };
         
         this.setResourceContent = function(name, data) {
+            var version = 0;
             if (!TEnvironment.debug) {
                 var url = TEnvironment.getBackendUrl('setresource');
                 var input = {'name':name, 'data':data};
-                var version = 0;
                 $.ajax({
                     dataType: "json",
                     url: url,
@@ -286,7 +293,6 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
                         if (typeof data['version'] !== 'undefined') {
                             version = data['version'];
                         } else {
-                            return false;
                             console.log("error: no version provided");
                         }
                     },
