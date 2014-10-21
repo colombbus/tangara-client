@@ -711,14 +711,75 @@ textarea.tsidebar-rename {
   margin-right: -0.25em; /* Adjusts for spacing */
 }
 
-img.tviewer-image  {
+.tviewer-image  {
     max-width:80%;
     max-height:80%;
+    padding-left:50px;
+    padding-right:50px;
+    vertical-align:middle;
+    display:inline-block;
+    position:relative;
+}
+
+.tviewer-image img {
+    box-sizing:border-box;
     background-color:#FFFFFF;
     border:solid 5px #FFFFFF;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
-    border-radius: 5px;    
-    vertical-align:middle;
-    display:inline-block;
+    border-radius: 5px;
+}
+
+.tviewer-button-close {
+    position:absolute;
+    right:24px;
+    top:-26px;
+    background-image:url(../images/close.png);
+    height:26px;
+    width:26px;
+    cursor:pointer;
+}
+
+.tviewer-button-close:hover{
+    background-image:url(../images/close_white.png);    
+}
+
+.tviewer-button-left {
+    position:absolute;
+    left:0px;
+    top:50%;
+    margin-top:-13px;
+    background-image:url(../images/previous.png);
+    height:26px;
+    width:26px;
+    cursor:pointer;
+}
+
+.tviewer-button-left:hover {
+    background-image:url(../images/previous_white.png);
+}
+
+.tviewer-button-right {
+    position:absolute;
+    right:0px;
+    top:50%;
+    margin-top:-13px;
+    background-image:url(../images/next.png);
+    height:26px;
+    width:26px;
+    cursor:pointer;
+}
+
+.tviewer-button-right:hover {
+    background-image:url(../images/next_white.png);    
+}
+
+.tviewer-title {
+    position:absolute;
+    bottom:-22px;
+    left:-50px;
+    right:-50px;
+    text-align:center;
+    color:#FFFFFF;
+    font-size:12px;
 }
