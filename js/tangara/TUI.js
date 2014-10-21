@@ -372,12 +372,13 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
             this.updateSidebarPrograms();
         };
 
-        this.renameResource = function(oldName, newName) {
-            if (newName !== oldName) {
-                var project = TEnvironment.getProject();
+        this.renameResource = function(name, newBaseName) {
+            var project = TEnvironment.getProject();
+            var oldBaseName = project.getResourceBaseName(name);
+            if (newBaseName !== oldBaseName) {
                 try {
-                    sidebar.showRenamingResource(oldName);
-                    project.renameResource(oldName, newName);
+                    sidebar.showRenamingResource(name);
+                    project.renameResource(name, newBaseName);
                 } catch(error) {
                     this.addLogError(error);
                 }
