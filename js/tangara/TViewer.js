@@ -90,10 +90,14 @@ define(['TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPaint', 'wPaint/plugi
         
         var editorInitialized = false;
         
+        
+        // Configuration of wPaint
+        
         // remove load buttons from wPaint menu
         delete $.fn.wPaint.menus.main.items.loadBg;
         delete $.fn.wPaint.menus.main.items.loadFg;
         
+        // Set save handler
         $.extend($.fn.wPaint.defaults, {
             saveImg: function() {
                 var imageData = $domEditorImage.wPaint("image");
@@ -105,6 +109,95 @@ define(['TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPaint', 'wPaint/plugi
                 }
            }
         });
+        
+        // Set texts
+        $.extend($.fn.wPaint.menus.main.items.undo, {
+            title: TEnvironment.getMessage("wpaint-undo")
+        });
+        $.extend($.fn.wPaint.menus.main.items.redo, {
+            title: TEnvironment.getMessage("wpaint-redo")
+        });
+        $.extend($.fn.wPaint.menus.main.items.clear, {
+            title: TEnvironment.getMessage("wpaint-clear")
+        });
+        $.extend($.fn.wPaint.menus.main.items.rectangle, {
+            title: TEnvironment.getMessage("wpaint-rectangle")
+        });
+        $.extend($.fn.wPaint.menus.main.items.ellipse, {
+            title: TEnvironment.getMessage("wpaint-ellipse")
+        });
+        $.extend($.fn.wPaint.menus.main.items.line, {
+            title: TEnvironment.getMessage("wpaint-line")
+        });
+        $.extend($.fn.wPaint.menus.main.items.pencil, {
+            title: TEnvironment.getMessage("wpaint-pencil")
+        });
+        $.extend($.fn.wPaint.menus.main.items.eraser, {
+            title: TEnvironment.getMessage("wpaint-eraser")
+        });
+        $.extend($.fn.wPaint.menus.main.items.bucket, {
+            title: TEnvironment.getMessage("wpaint-bucket")
+        });
+        $.extend($.fn.wPaint.menus.main.items.fillStyle, {
+            title: TEnvironment.getMessage("wpaint-fill-style")
+        });
+        $.extend($.fn.wPaint.menus.main.items.lineWidth, {
+            title: TEnvironment.getMessage("wpaint-line-width")
+        });
+        $.extend($.fn.wPaint.menus.main.items.strokeStyle, {
+            title: TEnvironment.getMessage("wpaint-stroke-style")
+        });
+        $.extend($.fn.wPaint.menus.main.items.text, {
+            title: TEnvironment.getMessage("wpaint-text")
+        });
+        $.extend($.fn.wPaint.menus.text.items.bold, {
+            title: TEnvironment.getMessage("wpaint-bold")
+        });
+        $.extend($.fn.wPaint.menus.text.items.italic, {
+            title: TEnvironment.getMessage("wpaint-italic")
+        });
+        $.extend($.fn.wPaint.menus.text.items.fontSize, {
+            title: TEnvironment.getMessage("wpaint-font-size")
+        });
+        $.extend($.fn.wPaint.menus.text.items.fontFamily, {
+            title: TEnvironment.getMessage("wpaint-font-family")
+        });
+        $.extend($.fn.wPaint.menus.main.items.save, {
+            title: TEnvironment.getMessage("wpaint-save")
+        });
+        $.extend($.fn.wPaint.menus.main.items.roundedRect, {
+            title: TEnvironment.getMessage("wpaint-rounded-rectangle")
+        });
+        $.extend($.fn.wPaint.menus.main.items.square, {
+            title: TEnvironment.getMessage("wpaint-square")
+        });
+        $.extend($.fn.wPaint.menus.main.items.roundedSquare, {
+            title: TEnvironment.getMessage("wpaint-rounded-square")
+        });
+        $.extend($.fn.wPaint.menus.main.items.diamond, {
+            title: TEnvironment.getMessage("wpaint-diamond")
+        });
+        $.extend($.fn.wPaint.menus.main.items.circle, {
+            title: TEnvironment.getMessage("wpaint-circle")
+        });
+        $.extend($.fn.wPaint.menus.main.items.pentagon, {
+            title: TEnvironment.getMessage("wpaint-pentagon")
+        });
+        $.extend($.fn.wPaint.menus.main.items.hexagon, {
+            title: TEnvironment.getMessage("wpaint-hexagon")
+        });
+
+        $.extend($.fn.wPaint.defaults, {
+            lineWidth:   '1',
+            fillStyle:   '#FFFFFF',
+            strokeStyle: '#000000'
+        });
+        
+        
+        $.extend($.fn.wColorPicker.defaults, {
+            color: '#000000'
+        });
+
         
         var keyHandler = function(event) {
             switch(event.which){
@@ -192,6 +285,10 @@ define(['TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPaint', 'wPaint/plugi
                 $domEditorImage.wPaint('resize');
                 $domEditorImage.wPaint('image', TEnvironment.getProjectResource(currentName));
             }
+            var pos = $domEditorImage.position();
+            var menu = $(".wPaint-menu");
+            menu.css("top", 20-pos.top+"px");
+            menu.css("left", Math.round(currentWidth/2-menu.width()/2)+"px");
             imageDisplayed = false;
             imageEdited = true;
         };
