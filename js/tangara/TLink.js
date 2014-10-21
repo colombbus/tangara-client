@@ -267,7 +267,29 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
                     }
                 });
             }
-        };        
+        };
+        
+        this.setResourceContent = function(name, data) {
+            if (!TEnvironment.debug) {
+                var url = TEnvironment.getBackendUrl('setresource');
+                var input = {'name':name, 'data':data};
+                $.ajax({
+                    dataType: "json",
+                    url: url,
+                    type: "POST",
+                    global:false,
+                    async: false,
+                    data:input,
+                    success: function(data) {
+                        checkError(data);
+                    },
+                    error: function(data, status, error) {
+                        var e = new TError(error);
+                        throw e;
+                    }
+                });
+            }
+        };
         
         function checkError(data) {
             if (typeof data !=='undefined' && typeof data['error'] !== 'undefined') {
