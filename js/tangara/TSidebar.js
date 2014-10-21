@@ -1,4 +1,4 @@
-define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'jquery', 'jquery.ui.widget', 'iframe-transport', 'fileupload'], function(TUI, TEnvironment, TProgram, TError, TViewer, $) {
+define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'jquery', 'jquery-ui/widget', 'iframe-transport', 'fileupload'], function(TUI, TEnvironment, TProgram, TError, TViewer, $) {
 
     function TSidebar() {
         var domSidebar = document.createElement("div");
@@ -214,6 +214,7 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'jquery', 'jquer
                     }
                 }
             });
+            viewer.displayed();
         };
         
         this.update = function() {
