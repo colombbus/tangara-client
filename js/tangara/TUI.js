@@ -490,7 +490,10 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
         };
         
         this.duplicateResource = function(name) {
-            //TODO
+            var newName = TEnvironment.getProject().duplicateResource(name);
+            this.updateSidebarResources();
+            sidebar.selectResource(newName);
+            sidebar.viewResource(newName);
         };
     };
     

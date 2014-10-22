@@ -32,7 +32,11 @@ define(['TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPaint', 'wPaint/plugi
         domButtonDuplicate.className = "tviewer-button-duplicate";
         domButtonDuplicate.title = TEnvironment.getMessage("viewer-duplicate");
         domButtonDuplicate.onclick = function() {
-            TUI.duplicateResource(currentName);
+            try { 
+                TUI.duplicateResource(currentName);
+            } catch (error) {
+                message(error.getMessage());
+            }        
         };
         var domButtonClose = document.createElement("div");
         domButtonClose.className = "tviewer-button-close";
@@ -110,7 +114,7 @@ define(['TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPaint', 'wPaint/plugi
         $.extend($.fn.wPaint.defaults, {
             saveImg: function() {
                 var imageData = $domEditorImage.wPaint("image");
-                try {
+                try { 
                     currentName = TUI.setResourceContent(currentName, imageData);
                     message(TEnvironment.getMessage('image-editor-saved', currentName));
                 } catch (error) {

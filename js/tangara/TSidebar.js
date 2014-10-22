@@ -493,6 +493,10 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'jquery', 'jquer
             }
         };
         
+        this.viewResource = function(name) {
+            viewer.show(name);
+        };
+        
         this.getCurrentResourceName = function() {
             var currentDiv = $domSidebarResources.find('.tsidebar-current .tsidebar-file-name div');
             if (currentDiv.length<0)
