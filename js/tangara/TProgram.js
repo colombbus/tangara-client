@@ -31,6 +31,16 @@ define(['TParser', 'TLink', 'TEnvironment', 'TUtils'], function(TParser, TLink, 
                 TLink.createProgram(name);
                 newProgram = false;
             }
+            if (codeChanged) {
+                // Try to parse program
+                try {
+                    parse();
+                    codeChanged = false;
+                } catch (e) {
+                    statements = [];
+                    window.console.log("Error parsing program '"+name+"'");
+                }
+            }
             TLink.saveProgram(name, code, statements);
             modified = false;
         };

@@ -10,6 +10,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
         var consoleEnabled = false;
         var consoleState = false;
         var designModeEnabled = false;
+        var logDisplayed = true;
         var designLogDisplayed = false;
         var programsDisplayed = true;
         var log;
@@ -262,13 +263,14 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
             } else {
                 // error from program
                 this.enableEditor();
-                editor.editProgram(error.getProgramName());
+                this.editProgram(error.getProgramName());
                 editor.setError(error.getLines());
             }
         };
         
         this.saveProgram = function() {
             var project = TEnvironment.getProject();
+            editor.updateProgram();
             var program = editor.getProgram();
             sidebar.showLoading(program.getName());
             try
@@ -370,17 +372,20 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
             this.updateSidebarPrograms();
         };
 
-        this.renameResource = function(oldName, newName) {
-            if (newName !== oldName) {
-                var project = TEnvironment.getProject();
+        this.renameResource = function(name, newBaseName) {
+            var project = TEnvironment.getProject();
+            var oldBaseName = project.getResourceBaseName(name);
+            var newName = name;
+            if (newBaseName !== oldBaseName) {
                 try {
-                    sidebar.showRenamingResource(oldName);
-                    project.renameResource(oldName, newName);
+                    sidebar.showRenamingResource(name);
+                    newName = project.renameResource(name, newBaseName);
                 } catch(error) {
                     this.addLogError(error);
                 }
             }
             this.updateSidebarResources();
+            sidebar.selectResource(newName);
         };        
         
         this.setEditionEnabled = function(value) {
@@ -457,6 +462,51 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
             var name = TRuntime.getTObjectName(tObject);
             log.addObjectLocation(name, location);
         };
+        
+        this.toggleLog = function() {
+            if (logDisplayed) {
+                // hide console as well
+                this.disableConsole();
+                log.saveScroll();
+                log.hide();
+                frame.lowerSeparator(log.getHeight());
+                logDisplayed = false;
+            } else {
+                log.show();
+                frame.raiseSeparator(log.getHeight());
+                log.restoreScroll();
+                logDisplayed = true;
+            }
+        };
+        
+        this.setResourceContent = function(name, data) {
+            var newName = TEnvironment.getProject().setResourceContent(name, data);
+            if (newName !== name) {
+                // name has changed: update sidebar
+                this.updateSidebarResources();
+                sidebar.selectResource(newName);
+            }
+            return newName;
+        };
+        
+        this.duplicateResource = function(name) {
+            var newName = TEnvironment.getProject().duplicateResource(name);
+            this.updateSidebarResources();
+            sidebar.selectResource(newName);
+            sidebar.viewResource(newName);
+        };
+        
+        this.newResource = function() {
+            sidebar.createResource();
+        };
+
+        this.createResource = function(name, width, height) {
+            var newName = TEnvironment.getProject().createResource(name, width, height);
+            this.updateSidebarResources();
+            sidebar.selectResource(newName);
+            sidebar.viewResource(newName);
+        };
+
     };
     
     var uiInstance = new TUI();

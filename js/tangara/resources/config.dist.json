@@ -1,4 +1,5 @@
 {
     "debug": false,
-    "backend-path": "/tangara-ui/web/app.php/"
+    "backend-path": "/tangara-ui/web/app.php/",
+    "wpaint-path": "/js/libs/wpaint-2.5.0/"    
 }

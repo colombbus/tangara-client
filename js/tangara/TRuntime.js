@@ -121,7 +121,7 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, T
         this.executeStatements = function(statements) {
             for (var i = 0; i<statements.length; i++) {
                 var statement = statements[i];
-                if (!this.execute(statement.body, null, true, [statement.loc.start.line,statement.loc.end.line]))
+                if (!this.execute(statement.body, null, true, [statement.start,statement.end]))
                     return false;
             }
         };

@@ -195,18 +195,19 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
             }
         };
 
-        this.getResourceLocation = function(name) {
+        this.getResourceLocation = function(name, version) {
             if (TEnvironment.debug) {
                 return TEnvironment.getBaseUrl() + "/tests/" + name;
             } else {
-                return TEnvironment.getBackendUrl('getresource')+"/"+encodeURIComponent(name);
+                return TEnvironment.getBackendUrl('getresource')+"/"+version+"/"+encodeURIComponent(name);
             }
         };
         
-        this.renameResource = function(name, newName) {
+        this.renameResource = function(name, newBaseName) {
+            var newName = name;
             if (!TEnvironment.debug) {
                 var url = TEnvironment.getBackendUrl('renameresource');
-                var input = {'name':name, 'new':newName};
+                var input = {'name':name, 'new':newBaseName};
                 $.ajax({
                     dataType: "json",
                     url: url,
@@ -216,6 +217,11 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
                     data:input,
                     success: function(data) {
                         checkError(data);
+                        if (typeof data['updated'] !== 'undefined') {
+                            newName = data['updated'];
+                        } else {
+                            console.log("error: no updated field provided");
+                        }
                     },
                     error: function(data, status, error) {
                         var e = new TError(error);
@@ -223,6 +229,7 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
                     }
                 });
             }
+            return newName;
         };
         
         this.deleteProgram = function(name) {
@@ -267,7 +274,83 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
                     }
                 });
             }
-        };        
+        };
+        
+        this.setResourceContent = function(name, data) {
+            var resource={};
+            if (!TEnvironment.debug) {
+                var url = TEnvironment.getBackendUrl('setresource');
+                var input = {'name':name, 'data':data};
+                $.ajax({
+                    dataType: "json",
+                    url: url,
+                    type: "POST",
+                    global:false,
+                    async: false,
+                    data:input,
+                    success: function(data) {
+                        checkError(data);
+                        resource = {'name':data.updated, 'data':data.data};
+                    },
+                    error: function(data, status, error) {
+                        var e = new TError(error);
+                        throw e;
+                    }
+                });
+            }
+            return resource;
+        };
+        
+        this.duplicateResource = function(name) {
+            var resource={};
+            if (!TEnvironment.debug) {
+                var url = TEnvironment.getBackendUrl('duplicateresource');
+                var input = {'name':name};
+                $.ajax({
+                    dataType: "json",
+                    url: url,
+                    type: "POST",
+                    global:false,
+                    async: false,
+                    data:input,
+                    success: function(data) {
+                        checkError(data);
+                        resource = {'name':data.created, 'data':data.data};
+                    },
+                    error: function(data, status, error) {
+                        var e = new TError(error);
+                        throw e;
+                    }
+                });
+            }
+            return resource;
+        };
+
+        this.createResource = function(name, data) {
+            var resource={};
+            if (!TEnvironment.debug) {
+                var url = TEnvironment.getBackendUrl('createresource');
+                var input = {'name':name, 'data':data};
+                $.ajax({
+                    dataType: "json",
+                    url: url,
+                    type: "POST",
+                    global:false,
+                    async: false,
+                    data:input,
+                    success: function(data) {
+                        checkError(data);
+                        resource = {'name':data.created, 'data':data.data};
+                    },
+                    error: function(data, status, error) {
+                        var e = new TError(error);
+                        throw e;
+                    }
+                });
+            }
+            return resource;
+        };
+        
         
         function checkError(data) {
             if (typeof data !=='undefined' && typeof data['error'] !== 'undefined') {

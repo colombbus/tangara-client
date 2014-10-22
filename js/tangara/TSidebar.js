@@ -1,4 +1,4 @@
-define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'jquery', 'jquery.ui.widget', 'iframe-transport', 'fileupload', 'fancybox'], function(TUI, TEnvironment, TProgram, TError, $) {
+define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'jquery', 'jquery-ui/widget', 'iframe-transport', 'fileupload'], function(TUI, TEnvironment, TProgram, TError, TViewer, $) {
 
     function TSidebar() {
         var domSidebar = document.createElement("div");
@@ -57,12 +57,57 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'jquery', 'jquery.ui.widget
         domEmptyMedia.appendChild(domEmptyMediaP);
         domSidebarResources.appendChild(domEmptyMedia);
         
+        
         domSidebar.appendChild(domSidebarResources);
-    
+
+        var $domSidebarFiles = $(domSidebarFiles);
+        var $domSidebarResources = $(domSidebarResources);
+        
+        
+        // set tab index in order for the div to receive keyboard events
+        $domSidebarResources.attr("tabindex", "0");
+        $domSidebarResources.on("keydown", function(event) {
+            switch(event.which){
+                case 8: // backspace
+                case 46: // suppr
+                    if ($domSidebarResources.find(".tsidebar-renaming").length === 0 && $domSidebarResources.find(".tsidebar-current").length > 0 ) {
+                        // we are not renaming a resource
+                        TUI.delete();
+                    }
+                    break;
+            }            
+        });
+        
         var programsVisible = false;
         var empty = true;
         var uploadingDivs = {};
-    
+        
+        var viewer = new TViewer;
+        
+        viewer.setNextHandler(function() {
+            var current = $domSidebarFiles.find('.tsidebar-current');
+            var nextImage = current.next('.tsidebar-type-image');
+            if (nextImage.length === 0)
+                nextImage = $domSidebarFiles.find('.tsidebar-type-image:first');
+            current.removeClass('tsidebar-current');
+            nextImage.addClass('tsidebar-current');
+            $domSidebarResources.stop().animate({scrollTop: $domSidebarResources.scrollTop()+nextImage.position().top}, 1000);
+            var name = nextImage.find('.tsidebar-file-name').text();
+            return name;
+        });
+
+        viewer.setPrevHandler(function() {
+            var current = $domSidebarFiles.find('.tsidebar-current');
+            var prevImage = current.prev('.tsidebar-type-image');
+            if (prevImage.length === 0)
+                prevImage = $domSidebarFiles.find('.tsidebar-type-image:last');
+            current.removeClass('tsidebar-current');
+            prevImage.addClass('tsidebar-current');
+            $domSidebarResources.stop().animate({scrollTop: $domSidebarResources.scrollTop()+prevImage.position().top}, 1000);
+            var name = prevImage.find('.tsidebar-file-name').text();
+            return name;
+        });        
+        
         this.getElement = function() {
             return domSidebar;
         };
@@ -84,7 +129,6 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'jquery', 'jquery.ui.widget
                         var files = data.files;
                         var project = TEnvironment.getProject();
                         var div;
-                        var $domSidebarFiles = $(domSidebarFiles);
                         for (var i=0; i<files.length; i++) {
                             var file = files[i];
                             div = getResourceDiv(file.name, 'uploading', false);
@@ -108,8 +152,7 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'jquery', 'jquery.ui.widget
                             domSidebarResources.removeChild(domEmptyMedia);
                             empty = false;
                         }
-                        var $domSidebarResources = $(domSidebarResources);
-                        $domSidebarResources.animate({scrollTop: $domSidebarResources.scrollTop()+$(div).position().top}, 1000);
+                        $domSidebarResources.stop().animate({scrollTop: $domSidebarResources.scrollTop()+$(div).position().top}, 1000);
                         data.submit();
                     } catch (error) {
                         // error
@@ -156,22 +199,23 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'jquery', 'jquery.ui.widget
                             var error = new TError(message);
                             TUI.addLogError(error);                            
                         } else if (typeof result.created !== 'undefined') {
-                            // files where created
+                            // files were created
                             var project = TEnvironment.getProject();
 
                             for (var i=0; i<result.created.length; i++) {
                                 var name = result.created[i].name;
+                                var data = result.created[i].data;
                                 var $div = uploadingDivs[name];
                                 if (typeof $div !== 'undefined') {
                                     $div.find(".progress-bar-wrapper").fadeOut(2000, function() {$(this).remove()});
                                 }
                                 $div.removeClass('tsidebar-type-uploading');
                                 var type = '';
-                                if (typeof result.created[i].type !== 'undefined') {
-                                    $div.addClass('tsidebar-type-'+result.created[i].type);
+                                if (typeof data.type !== 'undefined') {
+                                    $div.addClass('tsidebar-type-'+data.type);
                                 }
                                 delete uploadingDivs[name];
-                                project.resourceUploaded(name, type);
+                                project.resourceUploaded(name, data);
                             }
                         }
                     }
@@ -187,6 +231,7 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'jquery', 'jquery.ui.widget
                     }
                 }
             });
+            viewer.displayed();
         };
         
         this.update = function() {
@@ -300,8 +345,8 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'jquery', 'jquery.ui.widget
             imgDiv.onclick = function(e) {
                 var parent = $(this).parent();
                 if (parent.hasClass('tsidebar-current') && parent.hasClass('tsidebar-type-image')) {
-                    // already selected: open using fancybox
-                    $.fancybox(TEnvironment.getProjectResource(name));
+                    // already selected: open in viewer
+                    viewer.show(name);
                 }
             };
             // rename
@@ -311,7 +356,7 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'jquery', 'jquery.ui.widget
                     $(this).addClass('tsidebar-renaming');
                     var renameElement = document.createElement("textarea");
                     renameElement.className="tsidebar-rename";
-                    renameElement.value = name;
+                    renameElement.value = TEnvironment.getProject().getResourceBaseName(name);
                     $(renameElement).keydown(function (e) {
                         if (e.which === 13) {
                             // Enter was pressed
@@ -438,12 +483,31 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'jquery', 'jquery.ui.widget
             }
         };
         
+        this.selectResource = function(name) {
+            var element = $(".tsidebar-file-name:contains("+name+")");
+            if (element.length>0) {
+                $('.tsidebar-file').removeClass('tsidebar-current');
+                var parent = element.first().parent();
+                parent.addClass('tsidebar-current');
+                $domSidebarResources.stop().animate({scrollTop: $domSidebarResources.scrollTop()+parent.position().top}, 1000);
+            }
+        };
+        
+        this.viewResource = function(name) {
+            viewer.show(name);
+        };
+        
         this.getCurrentResourceName = function() {
-            var currentDiv = $(domSidebarResources).find('.tsidebar-current .tsidebar-file-name div');
+            var currentDiv = $domSidebarResources.find('.tsidebar-current .tsidebar-file-name div');
             if (currentDiv.length<0)
                 return false;
             return currentDiv.text();
         };
+        
+        this.createResource = function() {
+            viewer.create();
+        };
+        
     }
     
     return TSidebar;
