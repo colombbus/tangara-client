@@ -287,7 +287,7 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError'], function(TLink
                 resourcesNames = TUtils.sortArray(resourcesNames);
                 name = newName;
             }
-            resources[name] = data;
+            resources[name] = newData['data'];
             // preload image
             this.preloadImage(name);
             return name;
