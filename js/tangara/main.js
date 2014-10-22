@@ -19,6 +19,7 @@ require.config({
         "wPaint/plugins/main":'../libs/wpaint-2.5.0/plugins/main/wPaint.menu.main.min',
         "wPaint/plugins/shapes":'../libs/wpaint-2.5.0/plugins/shapes/wPaint.menu.main.shapes.min',
         "wPaint/plugins/text":'../libs/wpaint-2.5.0/plugins/text/wPaint.menu.text.min',
+        "wPaint/plugins/flip":'plugins/wPaint.menu.main.flip',
     },
     
     map:{
@@ -41,6 +42,9 @@ require.config({
             deps: ['wPaint', 'wPaint/plugins/main']
         },
         'wPaint/plugins/text': {
+            deps: ['wPaint', 'wPaint/plugins/main']
+        },
+        'wPaint/plugins/flip': {
             deps: ['wPaint', 'wPaint/plugins/main']
         }
     }

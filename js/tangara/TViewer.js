@@ -1,4 +1,4 @@
-define(['TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPaint', 'wPaint/plugins/main','wPaint/plugins/text', 'wPaint/plugins/shapes', 'wPaint/plugins/file'], function(TUI, TEnvironment, $) {
+define(['TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPaint', 'wPaint/plugins/main','wPaint/plugins/text', 'wPaint/plugins/shapes', 'wPaint/plugins/file', 'wPaint/plugins/flip'], function(TUI, TEnvironment, $) {
     function TViewer() {
         var currentName = '';
         var currentWidth =0;
@@ -378,8 +378,8 @@ define(['TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPaint', 'wPaint/plugi
                 editorInitialized = true;
             } else {
                 $domEditorImage.wPaint('clear');
-                $domEditorImage.wPaint('resize');
                 $domEditorImage.wPaint('image', TEnvironment.getProjectResource(currentName));
+                $domEditorImage.wPaint('resize');
             }
             var pos = $domEditorImage.position();
             var menu = $(".wPaint-menu");
