@@ -362,6 +362,17 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError'], function(TLink
             }
         };
         
+        this.duplicateResource = function(name) {
+            var newData = TLink.duplicateResource(name);
+            var newName = newData['name'];
+            resourcesNames.push(newName);
+            resourcesNames = TUtils.sortArray(resourcesNames);
+            resources[newName] = newData['data'];
+            // preload image
+            this.preloadImage(newName);
+            return newName;
+        };
+        
         function updateEditedPrograms() {
             editedProgramsNames = Object.keys(editedPrograms);
             editedProgramsNames = TUtils.sortArray(editedProgramsNames);

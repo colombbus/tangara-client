@@ -488,6 +488,13 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
             }
             return newName;
         };
+        
+        this.duplicateResource = function(name) {
+            var newName = TEnvironment.getProject().duplicateResource(name);
+            this.updateSidebarResources();
+            sidebar.selectResource(newName);
+            sidebar.viewResource(newName);
+        };
     };
     
     var uiInstance = new TUI();

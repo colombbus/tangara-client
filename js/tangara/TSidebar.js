@@ -57,11 +57,27 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'jquery', 'jquer
         domEmptyMedia.appendChild(domEmptyMediaP);
         domSidebarResources.appendChild(domEmptyMedia);
         
+        
         domSidebar.appendChild(domSidebarResources);
 
         var $domSidebarFiles = $(domSidebarFiles);
         var $domSidebarResources = $(domSidebarResources);
-    
+        
+        
+        // set tab index in order for the div to receive keyboard events
+        $domSidebarResources.attr("tabindex", "0");
+        $domSidebarResources.on("keydown", function(event) {
+            switch(event.which){
+                case 8: // backspace
+                case 46: // suppr
+                    if ($domSidebarResources.find(".tsidebar-renaming").length === 0) {
+                        // we are not renaming a resource
+                        TUI.delete();
+                    }
+                    break;
+            }            
+        });
+        
         var programsVisible = false;
         var empty = true;
         var uploadingDivs = {};
@@ -477,12 +493,17 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'jquery', 'jquer
             }
         };
         
+        this.viewResource = function(name) {
+            viewer.show(name);
+        };
+        
         this.getCurrentResourceName = function() {
-            var currentDiv = $(domSidebarResources).find('.tsidebar-current .tsidebar-file-name div');
+            var currentDiv = $domSidebarResources.find('.tsidebar-current .tsidebar-file-name div');
             if (currentDiv.length<0)
                 return false;
             return currentDiv.text();
         };
+        
     }
     
     return TSidebar;
