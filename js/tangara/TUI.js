@@ -488,6 +488,10 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
             }
             return newName;
         };
+        
+        this.duplicateResource = function(name) {
+            //TODO
+        };
     };
     
     var uiInstance = new TUI();

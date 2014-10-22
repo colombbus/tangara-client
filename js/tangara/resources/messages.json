@@ -84,6 +84,9 @@
         "wpaint-diamond":"Losange",
         "wpaint-circle":"Cercle",
         "wpaint-pentagon":"Pentagone",         
-        "wpaint-hexagon":"Hexagone"         
+        "wpaint-hexagon":"Hexagone",
+        "viewer-duplicate":"Dupliquer",
+        "viewer-edit":"Modifier",
+        "viewer-close":"Fermer"
     }
 }

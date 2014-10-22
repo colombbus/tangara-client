@@ -733,7 +733,7 @@ textarea.tsidebar-rename {
 .tviewer-button-close {
     position:absolute;
     right:0px;
-    top:-26px;
+    top:-30px;
     background-image:url(../images/close.png);
     height:26px;
     width:26px;
@@ -777,7 +777,7 @@ textarea.tsidebar-rename {
 .tviewer-button-edit {
     position:absolute;
     left:0px;
-    top:-26px;
+    top:-30px;
     background-image:url(../images/edit.png);
     background-position:50% 50%;
     background-repeat:no-repeat;
@@ -789,6 +789,23 @@ textarea.tsidebar-rename {
 .tviewer-button-edit:hover {
     background-image:url(../images/edit_white.png);    
 }
+
+.tviewer-button-duplicate {
+    position:absolute;
+    left:-30px;
+    top:-30px;
+    background-image:url(../images/duplicate.png);
+    background-position:50% 50%;
+    background-repeat:no-repeat;
+    height:26px;
+    width:26px;
+    cursor:pointer;
+}
+
+.tviewer-button-duplicate:hover {
+    background-image:url(../images/duplicate_white.png);    
+}
+
 
 .tviewer-title {
     position:absolute;

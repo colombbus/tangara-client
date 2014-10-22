@@ -24,11 +24,19 @@ define(['TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPaint', 'wPaint/plugi
         domImage.appendChild(image);
         var domButtonEdit = document.createElement("div");
         domButtonEdit.className = "tviewer-button-edit";
+        domButtonEdit.title = TEnvironment.getMessage("viewer-edit");
         domButtonEdit.onclick = function() {
             edit();
         };
+        var domButtonDuplicate = document.createElement("div");
+        domButtonDuplicate.className = "tviewer-button-duplicate";
+        domButtonDuplicate.title = TEnvironment.getMessage("viewer-duplicate");
+        domButtonDuplicate.onclick = function() {
+            TUI.duplicateResource(currentName);
+        };
         var domButtonClose = document.createElement("div");
         domButtonClose.className = "tviewer-button-close";
+        domButtonClose.title = TEnvironment.getMessage("viewer-close");
         domButtonClose.onclick = function() {
             hide();
         };
@@ -49,6 +57,7 @@ define(['TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPaint', 'wPaint/plugi
         var domTitle = document.createElement("div");
         domTitle.className = "tviewer-title";
         domImage.appendChild(domButtonEdit);
+        domImage.appendChild(domButtonDuplicate);
         domImage.appendChild(domButtonClose);
         domImage.appendChild(domButtonLeft);
         domImage.appendChild(domButtonRight);
