@@ -1,13 +1,12 @@
 (function ($) {
-var img= 'plugins/main/img/icons-menu-main.png';
-//var img = '../../tangara/plugin/icons-menu-main-file.png';
+var img= '../../tangara/plugins/flip.png';
 // extend menu
 $.extend(true, $.fn.wPaint.menus.main.items, {
 horizontal: {
 icon: 'generic',
 title: 'Horizontal',
 img: img,
-index: 0,
+index: 1,
 callback: function () {
     this.horizontal();
 }
@@ -16,16 +15,11 @@ vertical: {
 icon: 'generic',
 title: 'Vertical',
 img: img,
-index: 1,
+index: 0,
 callback: function () {
     this.vertical();
 }
 }
-});
-// extend defaults
-$.extend($.fn.wPaint.defaults, {
-    imageWidth: 0, 
-    imageHeight: 0
 });
 // extend functions
 $.fn.wPaint.extend({
