@@ -1,4 +1,4 @@
-define(['TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPaint', 'wPaint/plugins/main','wPaint/plugins/text', 'wPaint/plugins/shapes', 'wPaint/plugins/file', 'wPaint/plugins/flip'], function(TUI, TEnvironment, $) {
+define(['TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPaint', 'wPaint/plugins/main','wPaint/plugins/text', 'wPaint/plugins/shapes', 'wPaint/plugins/flip', 'wPaint/plugins/file'], function(TUI, TEnvironment, $) {
     function TViewer() {
         var currentName = '';
         var currentWidth =0;
@@ -353,8 +353,14 @@ define(['TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPaint', 'wPaint/plugi
             // init max dimensions: they will be set in onload
             $image.css("max-width","");
             $image.css("max-height","");
-            image.src = TEnvironment.getProjectResource(name);
-            $domTitle.text("");
+            var src = TEnvironment.getProjectResource(name);
+            if (image.src === src) {
+                // image was the previous one: just call image.onload
+                image.onload();
+            } else {
+                $domTitle.text("");
+                image.src = src;
+            }
         };
         
         var updateImageSize = function() {
@@ -378,8 +384,8 @@ define(['TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPaint', 'wPaint/plugi
                 editorInitialized = true;
             } else {
                 $domEditorImage.wPaint('clear');
-                $domEditorImage.wPaint('image', TEnvironment.getProjectResource(currentName));
                 $domEditorImage.wPaint('resize');
+                $domEditorImage.wPaint('image', TEnvironment.getProjectResource(currentName));
             }
             var pos = $domEditorImage.position();
             var menu = $(".wPaint-menu");
