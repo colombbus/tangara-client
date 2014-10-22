@@ -698,7 +698,7 @@ textarea.tsidebar-rename {
 }
 
 .tviewer-main.loading {
-    background-image:url(../images/loader2.gif);
+    background-image:url(../images/loader3.gif);
     background-repeat:no-repeat;
     background-position:50% 50%;
 }
@@ -732,7 +732,7 @@ textarea.tsidebar-rename {
 
 .tviewer-button-close {
     position:absolute;
-    right:24px;
+    right:0px;
     top:-26px;
     background-image:url(../images/close.png);
     height:26px;
@@ -774,6 +774,22 @@ textarea.tsidebar-rename {
     background-image:url(../images/next_white.png);    
 }
 
+.tviewer-button-edit {
+    position:absolute;
+    left:0px;
+    top:-26px;
+    background-image:url(../images/edit.png);
+    background-position:50% 50%;
+    background-repeat:no-repeat;
+    height:26px;
+    width:26px;
+    cursor:pointer;
+}
+
+.tviewer-button-edit:hover {
+    background-image:url(../images/edit_white.png);    
+}
+
 .tviewer-title {
     position:absolute;
     bottom:-22px;
@@ -782,4 +798,38 @@ textarea.tsidebar-rename {
     text-align:center;
     color:#FFFFFF;
     font-size:12px;
+}
+
+.tviewer-editor {
+    min-width:80%;
+    min-height:80%;
+    vertical-align:middle;
+    display:inline-block;
+    position:relative;
+    background-color:#dedede;
+    border:solid 5px #FFFFFF;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.tviewer-editor-image {
+    border:solid 1px #000000;
+    position:absolute;
+    top:50%;
+    left:50%;
+}
+
+.tviewer-editor .tviewer-button-close {
+    top:-30px;
+    right:-30px;
+}
+
+.tviewer-editor-message {
+    position:absolute;
+    text-align:center;
+    bottom:5px;
+    left:5px;
+    right:5px;
+    color:#e47637;
 }

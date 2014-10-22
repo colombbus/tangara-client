@@ -222,9 +222,9 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError'], function(TLink
             return i;
         };
         
-        this.resourceUploaded = function(name, type) {
-            resources[name].type = type;
-            if (type === 'image') {
+        this.resourceUploaded = function(name, data) {
+            resources[name] = data;
+            if (data.type === 'image') {
                 // preload image
                 var img = new Image();
                 img.src = this.getResourceLocation(name);
@@ -241,23 +241,25 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError'], function(TLink
             }
         };
 
-        this.renameResource = function(oldName, newName) {
-            var i = resourcesNames.indexOf(oldName);
+        this.renameResource = function(name, newBaseName) {
+            var i = resourcesNames.indexOf(name);
+            newName = name;
             if (i > -1) {
                 // resource exists
-                var resource = resources[oldName];
+                var resource = resources[name];
                 // check that resource is not uploading
                 var type = resource.type;
                 if (type === 'uploading') {
                     throw new TError(TEnvironment.getMessage('resource-not-uploaded'));
                 }
-                TLink.renameResource(oldName, newName);
+                var newName = TLink.renameResource(name, newBaseName);
                 // remove old name
                 resourcesNames.splice(i, 1);
                 // add new name
                 resourcesNames.push(newName);
-                resources[newName] = resources[oldName];
-                delete resources[oldName];
+                resources[newName] = resources[name];
+                resources[newName]['base-name'] = newBaseName;
+                delete resources[name];
                 
                 // update programs lists
                 resourcesNames = TUtils.sortArray(resourcesNames);
@@ -267,11 +269,36 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError'], function(TLink
                     this.preloadImage(newName);
                 }
             }
+            return newName;
         };
-
+        
+        this.setResourceContent = function(name, data) {
+            var newData = TLink.setResourceContent(name, data);
+            var newName = newData['name'];
+            if (newName !== name) {
+                // name has changed
+                // remove old name
+                var i = resourcesNames.indexOf(name);
+                resourcesNames.splice(i, 1);
+                // add new name
+                resourcesNames.push(newName);
+                delete resources[name];
+                // update programs lists
+                resourcesNames = TUtils.sortArray(resourcesNames);
+                name = newName;
+            }
+            resources[name] = data;
+            // preload image
+            this.preloadImage(name);
+            return name;
+        };
         
         this.getResourceLocation = function(name) {
-            return TLink.getResourceLocation(name);
+            return TLink.getResourceLocation(name, resources[name].version);
+        };
+
+        this.getResourceBaseName = function(name) {
+            return resources[name]['base-name'];
         };
         
         this.preloadImage = function(name) {

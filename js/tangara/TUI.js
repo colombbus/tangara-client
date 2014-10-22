@@ -372,17 +372,20 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
             this.updateSidebarPrograms();
         };
 
-        this.renameResource = function(oldName, newName) {
-            if (newName !== oldName) {
-                var project = TEnvironment.getProject();
+        this.renameResource = function(name, newBaseName) {
+            var project = TEnvironment.getProject();
+            var oldBaseName = project.getResourceBaseName(name);
+            var newName = name;
+            if (newBaseName !== oldBaseName) {
                 try {
-                    sidebar.showRenamingResource(oldName);
-                    project.renameResource(oldName, newName);
+                    sidebar.showRenamingResource(name);
+                    newName = project.renameResource(name, newBaseName);
                 } catch(error) {
                     this.addLogError(error);
                 }
             }
             this.updateSidebarResources();
+            sidebar.selectResource(newName);
         };        
         
         this.setEditionEnabled = function(value) {
@@ -474,6 +477,16 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 log.restoreScroll();
                 logDisplayed = true;
             }
+        };
+        
+        this.setResourceContent = function(name, data) {
+            var newName = TEnvironment.getProject().setResourceContent(name, data);
+            if (newName !== name) {
+                // name has changed: update sidebar
+                this.updateSidebarResources();
+                sidebar.selectResource(newName);
+            }
+            return newName;
         };
     };
     

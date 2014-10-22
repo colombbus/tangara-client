@@ -20,8 +20,8 @@ define(['jquery'], function($) {
         this.language = "fr";
 
         // Config parameters: default values
-        this.debug = false;
-        this.backendPath = "/tangara-ui/web/app.php/";
+        this.config = {"debug":false, "backend-path":"/tangara-ui/web/app.php/"};
+        this.debug;
 
         this.load = function() {
             window.console.log("*** Loading Tangara Environment ***");
@@ -33,7 +33,8 @@ define(['jquery'], function($) {
                 url: configFile,
                 async: false,
                 success: function(data) {
-                    if (typeof data['debug'] !== 'undefined') {
+                    $.extend(parent.config, data);
+                    /*if (typeof data['debug'] !== 'undefined') {
                         parent.debug = data['debug'];
                         window.console.log("Set debug to "+data['debug']);
                     } 
@@ -41,6 +42,11 @@ define(['jquery'], function($) {
                         parent.backendPath = data['backend-path'];
                         window.console.log("Set back-end path to "+data['backend-path']);
                     }
+                    if (typeof data['wpaint-path'] !== 'undefined') {
+                        parent.wpaintPath = data['wpaint-path'];
+                        window.console.log("Set wPaint path to "+data['wpaint-path']);
+                    }*/
+                    parent.debug = parent.config['debug'];
                 }
             });
             window.console.log("* Retrieving translated messages");
@@ -99,7 +105,7 @@ define(['jquery'], function($) {
         
         this.getBackendUrl = function(module) {
             var url = window.location.protocol + "//" + window.location.host + window.location.pathname.split("/").slice(0, -2).join("/");
-            url += this.backendPath + "tangarajs/";
+            url += this.config['backend-path'] + "tangarajs/";
             if (typeof module !== "undefined"){
                 url = url + module;
             }
@@ -290,6 +296,10 @@ define(['jquery'], function($) {
             if (ready_frame&&ready_runtime&&ready_environment) {
                 ready_callback();
             }
+        };
+        
+        this.getConfig = function(value) {
+            return this.config[value];
         };
         
 
