@@ -102,7 +102,7 @@ define(['TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPaint', 'wPaint/plugi
             saveImg: function() {
                 var imageData = $domEditorImage.wPaint("image");
                 try {
-                    TEnvironment.getProject().setResourceContent(currentName, imageData);
+                    currentName = TUI.setResourceContent(currentName, imageData);
                     message(TEnvironment.getMessage('image-editor-saved', currentName));
                 } catch (error) {
                     message(error.getMessage());
@@ -206,13 +206,13 @@ define(['TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPaint', 'wPaint/plugi
                     break;   
                 case 39: // right arrow
                 case 40: // down arrow
-                    if (nextHandler !== null) {
+                    if (!imageEdited && nextHandler !== null) {
                         displayImage(nextHandler());
                     }
                     break;
                 case 37: //left arrow
                 case 38: // up arrow
-                    if (prevHandler !== null) {
+                    if (!imageEdited && prevHandler !== null) {
                         displayImage(prevHandler());
                     }
                     break;                    
@@ -272,7 +272,8 @@ define(['TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPaint', 'wPaint/plugi
             $domEditorImage.width(currentWidth);
             $domEditorImage.height(currentHeight);
             $domEditorImage.css("margin-left","-"+Math.round(currentWidth/2)+"px");
-            $domEditorImage.css("margin-top","-"+Math.round(currentHeight/2)+"px");
+            var marginTop = Math.round(currentHeight/2);
+            $domEditorImage.css("margin-top","-"+marginTop+"px");
             if (!editorInitialized) {
                 $domEditorImage.wPaint({
                     path: TEnvironment.getBaseUrl()+TEnvironment.getConfig('wpaint-path'),
@@ -286,7 +287,7 @@ define(['TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPaint', 'wPaint/plugi
             }
             var pos = $domEditorImage.position();
             var menu = $(".wPaint-menu");
-            menu.css("top", 20-pos.top+"px");
+            menu.css("top", marginTop-pos.top+10+"px");
             menu.css("left", Math.round(currentWidth/2-menu.width()/2)+"px");
             imageDisplayed = false;
             imageEdited = true;

@@ -243,6 +243,7 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError'], function(TLink
 
         this.renameResource = function(name, newBaseName) {
             var i = resourcesNames.indexOf(name);
+            newName = name;
             if (i > -1) {
                 // resource exists
                 var resource = resources[name];
@@ -268,11 +269,28 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError'], function(TLink
                     this.preloadImage(newName);
                 }
             }
+            return newName;
         };
         
         this.setResourceContent = function(name, data) {
-            var newVersion = TLink.setResourceContent(name, data);
-            resources[name].version = newVersion;
+            var newData = TLink.setResourceContent(name, data);
+            var newName = newData['name'];
+            if (newName !== name) {
+                // name has changed
+                // remove old name
+                var i = resourcesNames.indexOf(name);
+                resourcesNames.splice(i, 1);
+                // add new name
+                resourcesNames.push(newName);
+                delete resources[name];
+                // update programs lists
+                resourcesNames = TUtils.sortArray(resourcesNames);
+                name = newName;
+            }
+            resources[name] = data;
+            // preload image
+            this.preloadImage(name);
+            return name;
         };
         
         this.getResourceLocation = function(name) {

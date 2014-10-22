@@ -277,7 +277,7 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
         };
         
         this.setResourceContent = function(name, data) {
-            var version = 0;
+            var resource={};
             if (!TEnvironment.debug) {
                 var url = TEnvironment.getBackendUrl('setresource');
                 var input = {'name':name, 'data':data};
@@ -290,11 +290,7 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
                     data:input,
                     success: function(data) {
                         checkError(data);
-                        if (typeof data['version'] !== 'undefined') {
-                            version = data['version'];
-                        } else {
-                            console.log("error: no version provided");
-                        }
+                        resource = {'name':data.updated, 'data':data.data};
                     },
                     error: function(data, status, error) {
                         var e = new TError(error);
@@ -302,7 +298,7 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
                     }
                 });
             }
-            return version;
+            return resource;
         };
         
         function checkError(data) {

@@ -467,6 +467,16 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'jquery', 'jquer
             }
         };
         
+        this.selectResource = function(name) {
+            var element = $(".tsidebar-file-name:contains("+name+")");
+            if (element.length>0) {
+                $('.tsidebar-file').removeClass('tsidebar-current');
+                var parent = element.first().parent();
+                parent.addClass('tsidebar-current');
+                $domSidebarResources.stop().animate({scrollTop: $domSidebarResources.scrollTop()+parent.position().top}, 1000);
+            }
+        };
+        
         this.getCurrentResourceName = function() {
             var currentDiv = $(domSidebarResources).find('.tsidebar-current .tsidebar-file-name div');
             if (currentDiv.length<0)
