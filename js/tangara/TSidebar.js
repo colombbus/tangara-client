@@ -504,6 +504,10 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'jquery', 'jquer
             return currentDiv.text();
         };
         
+        this.createResource = function() {
+            viewer.create();
+        };
+        
     }
     
     return TSidebar;

@@ -498,7 +498,7 @@ textarea.tsidebar-rename {
 .ttoolbar-option:hover .ttoolbar-option-image,
 .ttoolbar-button:hover .ttoolbar-button-image,
 .ttoolbar-mode.active .ttoolbar-mode-image {
-    opacity:1;    
+    opacity:1;
 }
 
 .ttoolbar-option:disabled:hover .ttoolbar-option-image {
@@ -849,4 +849,93 @@ textarea.tsidebar-rename {
     left:5px;
     right:5px;
     color:#e47637;
+}
+
+.tviewer-creation {
+    background-color:#FFFFFF;
+    border:solid 5px #FFFFFF;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    position:absolute;
+    top:50%;
+    left:50%;
+    width:300px;
+    min-height:200px;
+    padding:10px;
+    margin-left:-150px;
+    margin-top:-150px;
+    font-size:0.8em;
+    box-sizing:border-box;
+}
+
+.tviewer-creation-title {
+    margin-bottom:20px;
+    text-align:center;
+    font-size:1.2em;
+}
+
+.tviewer-creation-label {
+    float:left;
+    width:130px;
+    text-align:right;
+    margin-bottom:5px;
+    padding-top:3px;
+}
+
+.tviewer-creation-input {
+    margin-left:135px;
+    padding:2px;
+    width:125px;
+    display:block;
+    margin-bottom:10px;
+}
+
+.tviewer-creation-button {
+    font-size:10pt;
+    min-width:100px;
+    margin-left:10px;
+    margin-right:10px;
+    margin-top:20px;
+    margin-bottom:5px;
+    padding-top:3px;
+    padding-bottom:3px;
+    padding-left:8px;
+    padding-right:8px;
+    color:#000000;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border-style:solid;
+    border-width:1px;
+    border-color:#CCCCCC;
+    background-color:transparent;
+    cursor:pointer;
+}
+
+.tviewer-creation-button:hover {
+    color:#990000;
+    background-color:#DEDEDE;
+}
+
+.ttoolbar-creation-button-image {
+    margin-right:8px;
+    vertical-align:middle;
+    height:14px;
+    opacity:0.6;
+}
+
+.tviewer-creation-button:hover .ttoolbar-creation-button-image {
+    opacity:1;
+}
+
+.tviewer-creation-message {
+    text-align:center;
+    margin-top:10px;
+    margin-bottom:-5px;
+    color:#e47637;
+}
+
+.clear-fix {
+    clear:both;
 }

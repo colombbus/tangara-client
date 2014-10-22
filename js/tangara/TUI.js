@@ -495,6 +495,18 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
             sidebar.selectResource(newName);
             sidebar.viewResource(newName);
         };
+        
+        this.newResource = function() {
+            sidebar.createResource();
+        };
+
+        this.createResource = function(name, width, height) {
+            var newName = TEnvironment.getProject().createResource(name, width, height);
+            this.updateSidebarResources();
+            sidebar.selectResource(newName);
+            sidebar.viewResource(newName);
+        };
+
     };
     
     var uiInstance = new TUI();

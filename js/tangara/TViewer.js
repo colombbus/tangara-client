@@ -80,13 +80,80 @@ define(['TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPaint', 'wPaint/plugi
             hide();
         };
         
+        var domCreation = document.createElement("div");
+        domCreation.className = "tviewer-creation";
+        var titleCreation = document.createElement("div");
+        titleCreation.className = "tviewer-creation-title";
+        titleCreation.appendChild(document.createTextNode(TEnvironment.getMessage("viewer-creation-title")));
+        var labelName = document.createElement("label");
+        labelName.className = "tviewer-creation-label-name tviewer-creation-label";
+        labelName.appendChild(document.createTextNode(TEnvironment.getMessage("viewer-creation-name")));
+        var inputName = document.createElement("input");
+        inputName.type="text";
+        inputName.className = "tviewer-creation-name tviewer-creation-input";
+        var labelWidth = document.createElement("label");
+        labelWidth.className = "tviewer-creation-label-width tviewer-creation-label";
+        labelWidth.appendChild(document.createTextNode(TEnvironment.getMessage("viewer-creation-width")));
+        var inputWidth = document.createElement("input");
+        inputWidth.type="text";
+        inputWidth.className = "tviewer-creation-width tviewer-creation-input";
+        var labelHeight = document.createElement("label");
+        labelHeight.className = "tviewer-creation-label-height tviewer-creation-label";
+        labelHeight.appendChild(document.createTextNode(TEnvironment.getMessage("viewer-creation-height")));
+        var inputHeight = document.createElement("input");
+        inputHeight.type="text";
+        inputHeight.className = "tviewer-creation-height tviewer-creation-input";
+        var divClear = document.createElement("div");
+        divClear.className = "clear-fix";
+        var buttonCancel = document.createElement("button");
+        buttonCancel.className = "tviewer-creation-cancel tviewer-creation-button";
+        buttonCancel.onclick = function() {
+            hide();
+        };
+        var imageCancel = document.createElement("img");
+        imageCancel.src = TEnvironment.getBaseUrl() + "/images/cancel.png";
+        imageCancel.className = "ttoolbar-creation-button-image";
+        buttonCancel.appendChild(imageCancel);
+        buttonCancel.appendChild(document.createTextNode(TEnvironment.getMessage("viewer-creation-cancel")));
+        var buttonCreate = document.createElement("button");
+        buttonCreate.className = "tviewer-creation-create tviewer-creation-button";
+        var imageCreate = document.createElement("img");
+        imageCreate.src = TEnvironment.getBaseUrl() + "/images/ok.png";
+        imageCreate.className = "ttoolbar-creation-button-image";
+        buttonCreate.appendChild(imageCreate);
+        buttonCreate.appendChild(document.createTextNode(TEnvironment.getMessage("viewer-creation-create")));
+        buttonCreate.onclick = function() {
+            if (checkCreation()) {
+                try { 
+                    TUI.createResource(inputName.value, inputWidth.value, inputHeight.value);
+                } catch (error) {
+                    message(error.getMessage());
+                }
+            }
+        };
+        var domMessageCreation = document.createElement("div");
+        domMessageCreation.className = "tviewer-creation-message";
+        domCreation.appendChild(titleCreation);
+        domCreation.appendChild(labelName);
+        domCreation.appendChild(inputName);
+        domCreation.appendChild(labelWidth);
+        domCreation.appendChild(inputWidth);
+        domCreation.appendChild(labelHeight);
+        domCreation.appendChild(inputHeight);
+        domCreation.appendChild(divClear);
+        domCreation.appendChild(domMessageCreation);
+        domCreation.appendChild(buttonCancel);
+        domCreation.appendChild(buttonCreate);
+        
         var domMessage = document.createElement("div");
         domMessage.className = "tviewer-editor-message";
         
         domEditor.appendChild(domEditorImage);
         domEditor.appendChild(domButtonClose2);
         domEditor.appendChild(domMessage);
+        
         domMain.appendChild(domEditor);
+        domMain.appendChild(domCreation);
         
         var $domMain = $(domMain);
         var $domTitle = $(domTitle);
@@ -94,12 +161,17 @@ define(['TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPaint', 'wPaint/plugi
         var $image = $(image);
         var $domEditor = $(domEditor);
         var $domEditorImage = $(domEditorImage);
+        var $domCreation = $(domCreation);
         var $domMessage = $(domMessage);
+        var $domMessageCreation = $(domMessageCreation);
+        
         
         $domMain.hide();
         $domImage.hide();
         $domEditor.hide();
+        $domCreation.hide();
         $domMessage.hide();
+        $domMessageCreation.hide();
         
         var editorInitialized = false;
         
@@ -214,27 +286,33 @@ define(['TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPaint', 'wPaint/plugi
         
         var keyHandler = function(event) {
             switch(event.which){
-                case 27: //ESC
+                case 27: // ESC
                     hide();
                     break;   
                 case 39: // right arrow
                 case 40: // down arrow
-                    if (!imageEdited && nextHandler !== null) {
+                    if (!imageEdited && !imageCreation && nextHandler !== null) {
                         displayImage(nextHandler());
                     }
                     break;
-                case 37: //left arrow
+                case 37: // left arrow
                 case 38: // up arrow
-                    if (!imageEdited && prevHandler !== null) {
+                    if (!imageEdited && !imageCreation  && prevHandler !== null) {
                         displayImage(prevHandler());
                     }
-                    break;                    
+                    break;
+                case 13: // return
+                    if (imageCreation) {
+                        $(buttonCreate).click();
+                    }
+                    break;
             }
         };
         
         var appended = false;
         var imageDisplayed = false;
         var imageEdited = false;
+        var imageCreation = false;
         
         var hide = function() {
             if (imageEdited) {
@@ -256,6 +334,11 @@ define(['TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPaint', 'wPaint/plugi
                     $domImage.hide();
                     imageDisplayed = false;
                 }
+                if (imageCreation) {
+                    $domCreation.hide();
+                    imageCreation = false;
+                }
+                    
             }
         };
         
@@ -307,7 +390,11 @@ define(['TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPaint', 'wPaint/plugi
         };
         
         var message = function(text) {
-            $domMessage.text(text).show().delay(2000).fadeOut();
+            if (imageEdited) {
+                $domMessage.stop().text(text).show().delay(2000).fadeOut();
+            } else if (imageCreation) {
+                $domMessageCreation.stop().text(text).show().delay(2000).fadeOut();
+            }
         };
         
         this.displayed = function() {
@@ -326,18 +413,71 @@ define(['TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPaint', 'wPaint/plugi
             prevHandler = value;
         };
         
-        this.show = function(name) {
+        var append = function() {
             if (!appended) {
                 document.body.appendChild(domMain);
                 $(window).on('keydown', keyHandler);
                 appended = true;
                 $domMain.fadeIn();
             }
-            displayImage(name);
+        };
+        
+        this.show = function(name) {
+            append();
+            if (imageCreation) {
+                $domCreation.hide();
+                imageCreation = false;
+            }
+           displayImage(name);
         };
         
         this.hide = function() {
             hide();
+        };
+        
+        this.create = function() {
+            append();
+            inputName.value="";
+            inputWidth.value="";
+            inputHeight.value="";
+            $domCreation.show();
+            imageCreation = true;        
+        };
+        
+        var checkCreation = function() {
+            var name = inputName.value;
+            var width = inputWidth.value;
+            var height = inputHeight.value;
+            // check name
+            if (name.trim().length === 0) {
+                message(TEnvironment.getMessage("viewer-creation-name-empty"));
+                return false;
+            }
+            // check width
+            if (width.trim().length === 0) {
+                message(TEnvironment.getMessage("viewer-creation-width-empty"));
+                return false;
+            }
+            var actualWidth = parseInt(width);
+            if (isNaN(actualWidth)) {
+                message(TEnvironment.getMessage("viewer-creation-width-nan"));
+                return false;
+            }
+            inputWidth.value = actualWidth;
+            
+            // check height
+            if (height.trim().length === 0) {
+                message(TEnvironment.getMessage("viewer-creation-height-empty"));
+                return false;
+            }
+            var actualHeight = parseInt(height);
+            if (isNaN(actualHeight)) {
+                message(TEnvironment.getMessage("viewer-creation-height-nan"));
+                return false;
+            }
+            inputHeight.value = actualHeight;
+            
+            return true;
         };
         
     }

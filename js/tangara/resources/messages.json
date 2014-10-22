@@ -10,6 +10,7 @@
         "option-clear":"Effacer",
         "option-save-program":"Enregistrer",
         "option-new-program":"Nouveau",
+        "option-new-resource":"Nouvelle image",
         "option-delete":"Supprimer",
         "clear-confirm":"Attention : vous allez effacer l'écran et l'historique\nSouhaitez-vous continuer ?",
         "close-confirm":"Attention : le programme '{0}' a des modifications non enregistrées. Etes-vous sûr(e) de vouloir le fermer ?",
@@ -87,6 +88,18 @@
         "wpaint-hexagon":"Hexagone",
         "viewer-duplicate":"Dupliquer",
         "viewer-edit":"Modifier",
-        "viewer-close":"Fermer"
+        "viewer-close":"Fermer",
+        "viewer-creation-title":"Nouvelle image",
+        "viewer-creation-name":"Nom",
+        "viewer-creation-width":"Largeur (en pixels)",
+        "viewer-creation-height":"Hauteur (en pixels)",
+        "viewer-creation-cancel":"Annuler",
+        "viewer-creation-create":"Créer",
+        "viewer-creation-name-empty":"Nom vide",
+        "viewer-creation-width-empty":"Largeur vide",
+        "viewer-creation-width-nan":"La largeur doit être un nombre entier",
+        "viewer-creation-height-empty":"Hauteur vide",
+        "viewer-creation-height-nan":"La hauteur doit être un nombre entier",
+        "backend-error-resource_already_exists":"Il existe déjà un média avec ce nom"
     }
 }

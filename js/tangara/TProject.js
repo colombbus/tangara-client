@@ -373,12 +373,28 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError'], function(TLink
             return newName;
         };
         
+        this.createResource = function(name, width, height) {
+            // create image
+            var canvas = document.createElement("canvas");
+            canvas.width = width;
+            canvas.height = height;
+            var imageData = canvas.toDataURL();
+            
+            var newData = TLink.createResource(name, imageData);
+            var newName = newData['name'];
+            resourcesNames.push(newName);
+            resourcesNames = TUtils.sortArray(resourcesNames);
+            resources[newName] = newData['data'];
+            // preload image
+            this.preloadImage(newName);
+            return newName;
+        };
+        
         function updateEditedPrograms() {
             editedProgramsNames = Object.keys(editedPrograms);
             editedProgramsNames = TUtils.sortArray(editedProgramsNames);
             editedProgramsArray = [];
-            for (var i=0; i<editedProgramsNames.length ;i++)
-            {
+            for (var i=0; i<editedProgramsNames.length ;i++) {
                 editedProgramsArray.push(editedPrograms[editedProgramsNames[i]]);
             }
         }

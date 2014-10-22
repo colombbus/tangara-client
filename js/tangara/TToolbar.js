@@ -84,6 +84,15 @@ define(['jquery','TEnvironment', 'TUI'], function($,TEnvironment, TUI) {
         optionNewProgram.appendChild(document.createTextNode(TEnvironment.getMessage('option-new-program')));
         optionNewProgram.onclick = function() { TUI.newProgram(); };
 
+        var optionNewResource = document.createElement("button");
+        optionNewResource.className = "ttoolbar-option";
+        var imageNewResource = document.createElement("img");
+        imageNewResource.src = TEnvironment.getBaseUrl() + "/images/new.png";
+        imageNewResource.className = "ttoolbar-option-image";
+        optionNewResource.appendChild(imageNewResource);
+        optionNewResource.appendChild(document.createTextNode(TEnvironment.getMessage('option-new-resource')));
+        optionNewResource.onclick = function() { TUI.newResource(); };
+
         var optionDelete = document.createElement("button");
         optionDelete.className = "ttoolbar-option";
         var imageDelete = document.createElement("img");
@@ -190,8 +199,11 @@ define(['jquery','TEnvironment', 'TUI'], function($,TEnvironment, TUI) {
             }
         };
 
-        this.enableResourceOptions = function(force) {
-            this.disableProgramOptions();;
+        this.enableResourceOptions = function() {
+            this.disableProgramOptions();
+            if (!$.contains(domOptions, optionNewResource)) {
+                domOptions.appendChild(optionNewResource);
+            }
             if (!$.contains(domOptions, optionDelete)) {
                 domOptions.appendChild(optionDelete);
             }
@@ -199,6 +211,9 @@ define(['jquery','TEnvironment', 'TUI'], function($,TEnvironment, TUI) {
         };
 
         this.disableResourceOptions = function() {
+            if ($.contains(domOptions, optionNewResource)) {
+                domOptions.removeChild(optionNewResource);
+            }
             if ($.contains(domOptions, optionDelete)) {
                 domOptions.removeChild(optionDelete);
             }

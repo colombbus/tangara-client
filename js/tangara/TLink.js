@@ -325,6 +325,32 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
             }
             return resource;
         };
+
+        this.createResource = function(name, data) {
+            var resource={};
+            if (!TEnvironment.debug) {
+                var url = TEnvironment.getBackendUrl('createresource');
+                var input = {'name':name, 'data':data};
+                $.ajax({
+                    dataType: "json",
+                    url: url,
+                    type: "POST",
+                    global:false,
+                    async: false,
+                    data:input,
+                    success: function(data) {
+                        checkError(data);
+                        resource = {'name':data.created, 'data':data.data};
+                    },
+                    error: function(data, status, error) {
+                        var e = new TError(error);
+                        throw e;
+                    }
+                });
+            }
+            return resource;
+        };
+        
         
         function checkError(data) {
             if (typeof data !=='undefined' && typeof data['error'] !== 'undefined') {
