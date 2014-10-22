@@ -70,7 +70,7 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'jquery', 'jquer
             switch(event.which){
                 case 8: // backspace
                 case 46: // suppr
-                    if ($domSidebarResources.find(".tsidebar-renaming").length === 0) {
+                    if ($domSidebarResources.find(".tsidebar-renaming").length === 0 && $domSidebarResources.find(".tsidebar-current").length > 0 ) {
                         // we are not renaming a resource
                         TUI.delete();
                     }
