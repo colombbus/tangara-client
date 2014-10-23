@@ -358,6 +358,10 @@ textarea.tsidebar-rename {
     background-image:url('../images/picture_white.png');    
 }
 
+.tsidebar-type-image .tsidebar-file-icon:hover {
+    background-image:url('../images/picture_red.png');
+}
+
 .tsidebar-type-audio .tsidebar-file-icon {
     background-image:url('../images/music.png');    
 }
