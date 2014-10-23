@@ -37,7 +37,7 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment', ], function(TObject, TU
         designTouchEnd: function(touch) {
             if (this.p.designMode) {
                 this.p.dragging = false;
-                this.p.designCallback(this.p.x, this.p.y);
+                this.p.designCallback(this.p.x-this.p.w/2, this.p.y-this.p.h/2);
             }
         },
         perform: function(action, parameters) {
