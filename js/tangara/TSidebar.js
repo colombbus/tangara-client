@@ -332,7 +332,7 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'jquery', 'jquer
             resourceDiv.appendChild(nameDiv);
             var imgDiv = document.createElement("div");
             imgDiv.className = "tsidebar-file-icon";
-            resourceDiv.appendChild(imgDiv);            
+            resourceDiv.appendChild(imgDiv);
             resourceDiv.onclick = function(e) {
                 // set as current
                 if (!$(this).hasClass('tsidebar-current')) {
@@ -344,9 +344,10 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'jquery', 'jquer
             // preview
             imgDiv.onclick = function(e) {
                 var parent = $(this).parent();
-                if (parent.hasClass('tsidebar-current') && parent.hasClass('tsidebar-type-image')) {
-                    // already selected: open in viewer
-                    viewer.show(name);
+                if (parent.hasClass('tsidebar-type-image')) {
+                    // select and open in viewer
+                    var clickedName = parent.find('.tsidebar-file-name div').text();
+                    viewer.show(clickedName);
                 }
             };
             // rename
@@ -490,8 +491,9 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'jquery', 'jquer
                 var parent = element.first().parent();
                 parent.addClass('tsidebar-current');
                 $domSidebarResources.stop().animate({scrollTop: $domSidebarResources.scrollTop()+parent.position().top}, 1000);
-            }
-        };
+                TUI.setEditionEnabled(true);
+             }
+        }
         
         this.viewResource = function(name) {
             viewer.show(name);
