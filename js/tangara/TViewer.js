@@ -271,6 +271,12 @@ define(['TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPaint', 'wPaint/plugi
         $.extend($.fn.wPaint.menus.main.items.hexagon, {
             title: TEnvironment.getMessage("wpaint-hexagon")
         });
+        $.extend($.fn.wPaint.menus.main.items.horizontal, {
+            title: TEnvironment.getMessage("wpaint-horizontal")
+        });
+        $.extend($.fn.wPaint.menus.main.items.vertical, {
+            title: TEnvironment.getMessage("wpaint-vertical")
+        });
 
         $.extend($.fn.wPaint.defaults, {
             lineWidth:   '1',

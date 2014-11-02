@@ -86,6 +86,8 @@
         "wpaint-circle":"Cercle",
         "wpaint-pentagon":"Pentagone",         
         "wpaint-hexagon":"Hexagone",
+        "wpaint-horizontal":"Retourner horizontalement",
+        "wpaint-vertical":"Retourner verticalement",
         "viewer-duplicate":"Dupliquer",
         "viewer-edit":"Modifier",
         "viewer-close":"Fermer",
