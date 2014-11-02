@@ -1,5 +1,11 @@
 define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TUtils, TEnvironment, TError, TParser) {
     var TLink = function() {
+        var projectId = false;
+        
+        this.setProjectId = function(value) {
+            projectId = value;
+        };
+        
         
         this.getProgramList = function() {
             if (TEnvironment.debug)
@@ -7,9 +13,14 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
             else {
                 var url = TEnvironment.getBackendUrl('getprograms');
                 var list = [];
+                var input = [];
+                if (projectId) {
+                    input['project_id'] = projectId;
+                }
                 $.ajax({
                     dataType: "json",
                     url: url,
+                    data:input,
                     type: "POST",
                     global:false,
                     async: false,
@@ -48,6 +59,9 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
             } else {
                 url = TEnvironment.getBackendUrl('getcode');
                 var input = {'name':name};
+                if (projectId) {
+                    input['project_id'] = projectId;
+                }
                 $.ajax({
                     dataType: "json",
                     url: url,
@@ -84,6 +98,9 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
             } else {
                 var url = TEnvironment.getBackendUrl('getstatements');
                 var input = {'name':name};
+                if (projectId) {
+                    input['project_id'] = projectId;
+                }
                 $.ajax({
                     dataType: "json",
                     url: url,
@@ -108,6 +125,9 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
             if (!TEnvironment.debug) {
                 var url = TEnvironment.getBackendUrl('setprogramcontent');
                 var input = {'name':name, 'code':code, 'statements':JSON.stringify(statements)};
+                if (projectId) {
+                    input['project_id'] = projectId;
+                }
                 $.ajax({
                     dataType: "json",
                     url: url,
@@ -130,6 +150,9 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
             if (!TEnvironment.debug) {
                 var url = TEnvironment.getBackendUrl('createprogram');
                 var input = {'name':name};
+                if (projectId) {
+                    input['project_id'] = projectId;
+                }
                 $.ajax({
                     dataType: "json",
                     url: url,
@@ -152,6 +175,9 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
             if (!TEnvironment.debug) {
                 var url = TEnvironment.getBackendUrl('renameprogram');
                 var input = {'name':name, 'new':newName};
+                if (projectId) {
+                    input['project_id'] = projectId;
+                }
                 $.ajax({
                     dataType: "json",
                     url: url,
@@ -176,9 +202,14 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
             } else {  
                 var url = TEnvironment.getBackendUrl('getresources');
                 var list = [];
+                var input = []
+                if (projectId) {
+                    input['project_id'] = projectId;
+                }
                 $.ajax({
                     dataType: "json",
                     url: url,
+                    data: input,
                     type: "POST",
                     global:false,
                     async: false,
@@ -208,6 +239,9 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
             if (!TEnvironment.debug) {
                 var url = TEnvironment.getBackendUrl('renameresource');
                 var input = {'name':name, 'new':newBaseName};
+                if (projectId) {
+                    input['project_id'] = projectId;
+                }
                 $.ajax({
                     dataType: "json",
                     url: url,
@@ -236,6 +270,9 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
             if (!TEnvironment.debug) {
                 var url = TEnvironment.getBackendUrl('removeprogram');
                 var input = {'name':name};
+                if (projectId) {
+                    input['project_id'] = projectId;
+                }
                 $.ajax({
                     dataType: "json",
                     url: url,
@@ -258,6 +295,9 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
             if (!TEnvironment.debug) {
                 var url = TEnvironment.getBackendUrl('removeresource');
                 var input = {'name':name};
+                if (projectId) {
+                    input['project_id'] = projectId;
+                }
                 $.ajax({
                     dataType: "json",
                     url: url,
@@ -281,6 +321,9 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
             if (!TEnvironment.debug) {
                 var url = TEnvironment.getBackendUrl('setresource');
                 var input = {'name':name, 'data':data};
+                if (projectId) {
+                    input['project_id'] = projectId;
+                }
                 $.ajax({
                     dataType: "json",
                     url: url,
@@ -306,6 +349,9 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
             if (!TEnvironment.debug) {
                 var url = TEnvironment.getBackendUrl('duplicateresource');
                 var input = {'name':name};
+                if (projectId) {
+                    input['project_id'] = projectId;
+                }
                 $.ajax({
                     dataType: "json",
                     url: url,
@@ -331,6 +377,9 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
             if (!TEnvironment.debug) {
                 var url = TEnvironment.getBackendUrl('createresource');
                 var input = {'name':name, 'data':data};
+                if (projectId) {
+                    input['project_id'] = projectId;
+                }
                 $.ajax({
                     dataType: "json",
                     url: url,
