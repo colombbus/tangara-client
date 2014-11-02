@@ -13,7 +13,7 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
             else {
                 var url = TEnvironment.getBackendUrl('getprograms');
                 var list = [];
-                var input = [];
+                var input = {};
                 if (projectId) {
                     input['project_id'] = projectId;
                 }
@@ -202,7 +202,7 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
             } else {  
                 var url = TEnvironment.getBackendUrl('getresources');
                 var list = [];
-                var input = []
+                var input = {};
                 if (projectId) {
                     input['project_id'] = projectId;
                 }
@@ -230,7 +230,11 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
             if (TEnvironment.debug) {
                 return TEnvironment.getBaseUrl() + "/tests/" + name;
             } else {
-                return TEnvironment.getBackendUrl('getresource')+"/"+version+"/"+encodeURIComponent(name);
+                if (projectId) {
+                    return TEnvironment.getBackendUrl('getresource')+"/"+projectId+"/"+version+"/"+encodeURIComponent(name);
+                } else {
+                    return TEnvironment.getBackendUrl('getresource')+"/"+version+"/"+encodeURIComponent(name);
+                }
             }
         };
         
