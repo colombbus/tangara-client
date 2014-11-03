@@ -23,6 +23,8 @@ function load() {
         TRuntime.setCanvas(canvas);
         $(document).ready( function() {
             canvas.displayed();
+            // trigger resize in order for canvas to update its size (and remove the 5px bottom margin)
+            $(window).resize();
             TEnvironment.frameReady(function() {
                 TLink.setProjectId(init_projectId);
                 currentProject.update();
