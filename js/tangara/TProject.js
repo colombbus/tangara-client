@@ -307,12 +307,12 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError'], function(TLink
         };
         
         this.preloadImages = function() {
-            for (var i=0; i<resourcesNames.length; i++) {
+            /*for (var i=0; i<resourcesNames.length; i++) {
                 var name = resourcesNames[i];
                 if (resources[name].type === 'image') {
                     this.preloadImage(name);
                 }
-            }
+            }*/
         };
         
         this.isUnsaved = function() {
