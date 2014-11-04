@@ -1,0 +1,7 @@
+{
+    "images": {
+            "forward":["tangaraman1.png", "tangaraman2.png", "tangaraman3.png", "tangaraman4.png", "tangaraman5.png", "tangaraman6.png", "tangaraman7.png", "tangaraman8.png", "tangaraman9.png", "tangaraman10.png", "tangaraman11.png", "tangaraman12.png", "tangaraman13.png", "tangaraman14.png", "tangaraman15.png", "tangaraman16.png", "tangaraman17.png", "tangaraman18.png", "tangaraman19.png", "tangaraman20.png", "tangaraman21.png", "tangaraman22.png", "tangaraman23.png", "tangaraman24.png"],
+            "backward":["tangaraman1.png", "tangaraman2.png", "tangaraman3.png", "tangaraman4.png", "tangaraman5.png", "tangaraman6.png", "tangaraman7.png", "tangaraman8.png", "tangaraman9.png", "tangaraman10.png", "tangaraman11.png", "tangaraman12.png", "tangaraman13.png", "tangaraman14.png", "tangaraman15.png", "tangaraman16.png", "tangaraman17.png", "tangaraman18.png", "tangaraman19.png", "tangaraman20.png", "tangaraman21.png", "tangaraman22.png", "tangaraman23.png", "tangaraman24.png"],
+            "front":["tangaraman1.png"]
+        }
+}
