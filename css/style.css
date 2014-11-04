@@ -555,6 +555,19 @@ textarea.tsidebar-rename {
     background-color:#4D9E89;
 }
 
+#ttoolbar-help {
+    -webkit-border-radius: 0px 5px 5px 0px;
+    -moz-border-radius: 0px 5px 5px 0px;
+    border-radius: 0px 5px 5px 0px;
+    min-width:0px;
+    margin-left:0px;
+    
+}
+
+#ttoolbar-help .ttoolbar-mode-image {
+    margin-right:0;
+}
+
 /* TLog */
 
 #tlog-outer {

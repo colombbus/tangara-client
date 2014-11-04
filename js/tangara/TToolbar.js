@@ -6,6 +6,21 @@ define(['jquery','TEnvironment', 'TUI'], function($,TEnvironment, TUI) {
         // MODES
         var domModes = document.createElement("div");
         domModes.className = "ttoolbar-modes";
+
+        var domHelp = document.createElement("button");
+        domHelp.className = "ttoolbar-mode";
+        domHelp.id = "ttoolbar-help";
+        domHelp.title = TEnvironment.getMessage('button-help');
+        var imageHelp = document.createElement("img");
+        imageHelp.src = TEnvironment.getBaseUrl() + "/images/help.png";
+        imageHelp.className = "ttoolbar-mode-image";
+        domHelp.appendChild(imageHelp);
+        var $domHelp = $(domHelp);
+        domHelp.onclick = function() { 
+            $domHelp.toggleClass("active");
+            parent.toggleHelp();
+        };
+
         
         var domConsole = document.createElement("button");
         var imageConsole = document.createElement("img");
@@ -23,6 +38,7 @@ define(['jquery','TEnvironment', 'TUI'], function($,TEnvironment, TUI) {
         domEditor.appendChild(document.createTextNode(TEnvironment.getMessage('mode-editor')));
         domEditor.className = "ttoolbar-mode";
         domEditor.onclick = function() { TUI.toggleEditor(); };
+        domModes.appendChild(domHelp);
         domModes.appendChild(domConsole);
         domModes.appendChild(domEditor);
         domToolbar.appendChild(domModes);
@@ -101,6 +117,8 @@ define(['jquery','TEnvironment', 'TUI'], function($,TEnvironment, TUI) {
         optionDelete.appendChild(imageDelete);
         optionDelete.appendChild(document.createTextNode(TEnvironment.getMessage('option-delete')));
         optionDelete.onclick = function() { TUI.delete(); };
+
+        
 
         // Start with editor mode disabled
         domOptions.appendChild(optionClear);
