@@ -102,6 +102,7 @@
         "viewer-creation-width-nan":"La largeur doit être un nombre entier",
         "viewer-creation-height-empty":"Hauteur vide",
         "viewer-creation-height-nan":"La hauteur doit être un nombre entier",
-        "backend-error-resource_already_exists":"Il existe déjà un média avec ce nom"
+        "backend-error-resource_already_exists":"Il existe déjà un média avec ce nom",
+        "button-help":"Aide"
     }
 }
