@@ -307,6 +307,12 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
                 ctx.putImageData(imageData,0,0);
                 image.src = canvas.toDataURL();
             }, [red, green, blue]);
+        },
+        removeAsset: function() {
+            this.p.asset = null;
+            this.p.w = 0;
+            this.p.h = 0;
+            qInstance._generatePoints(this,true);
         }
       });
     
@@ -382,6 +388,7 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
     Sprite.prototype._addImage = function(name, set) {
         name = TUtils.getString(name);
         // add image only if not already added
+        // TODO: allow using the same image in several sets
         if (typeof this.images[name] === 'undefined') {
             var asset = TEnvironment.getProjectResource(name);
             this.images[name] = asset;
@@ -454,6 +461,68 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
                     }
                 }
             });
+        }
+    };
+    
+    Sprite.prototype._removeImage = function (name, set) {
+        if (typeof set === 'undefined') {
+            set = "";
+        } else {
+            set = TUtils.getString(set);
+        }
+        name = TUtils.getString(name);
+        if (typeof this.imageSets[set] === 'undefined') {
+            throw new Error(this.getMessage("wrong set"));
+        }
+        
+        var index = this.imageSets[set].indexOf(name);
+        console.log("index : "+index);
+        
+        if (index <0 ) {
+            throw new Error(this.getMessage("resource not found", name));
+        }
+        
+        this.imageSets[set].splice(index,1);
+        console.debug(this.imageSets[set]);
+        
+        // if removed image was current image, try to display another one
+        if (this.displayedImage === name) {
+            // remove sprite from waitingForImage if ever
+            if (typeof Sprite.waitingForImage[name] !== 'undefined') {
+                var index2 = Sprite.waitingForImage[name].indexOf(this);
+                if (index2 > -1) {
+                    Sprite.waitingForImage[name].splice(index2,1);
+                }
+            }
+            // remove asset
+            this.qObject.removeAsset();
+            this.displayedImage = "";
+            this.displayedIndex = "";
+        }
+        
+        // TODO: remove from  images ONLY IF image not used in other set
+        delete this.images[name];
+    };
+
+    Sprite.prototype._removeImageSet = function (name) {
+        name = TUtils.getString(name);
+
+        if (typeof this.imageSets[name] === 'undefined') {
+            throw new Error(this.getMessage("wrong set"));
+        }
+        
+        for (var i = 0; i<this.imageSets[name].length; i++) {
+            var imageName = this.imageSets[name][i];
+            delete this.images[imageName];
+        }
+        
+        delete this.imageSets[name];
+        if (this.displayedSet === name) {
+            // set was the currently used: remove image from sprite
+            this.qObject.removeAsset();
+            this.displayedImage = "";
+            this.displayedSet = "";
+            this.displayedIndex = "";            
         }
     };
     
