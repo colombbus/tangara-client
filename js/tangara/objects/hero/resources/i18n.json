@@ -1,7 +1,9 @@
 {
     "fr": {
         "methods":[
-            {"name":"_setCharacter","translated":"changer","displayed":"changer(\"garçon\")"}
+            {"name":"_setCharacter","translated":"changer","displayed":"changer(\"garçon\")"},
+            {"name":"_stopAutoAsset","translated":"arrêterMouvement","displayed":"arrêterMouvement()"},
+            {"name":"_startAutoAsset","translated":"démarrerMouvement","displayed":"démarrerMouvement()"}
         ]
     }
 }
