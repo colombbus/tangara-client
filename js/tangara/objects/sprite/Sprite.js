@@ -310,12 +310,6 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
         },
         removeAsset: function() {
             this.p.asset = null;
-            this.p.x = Math.round(this.p.x-this.p.w/2);
-            this.p.y = Math.round(this.p.y-this.p.h/2);
-            this.p.w = 0;
-            this.p.h = 0;
-            this.stop();
-            qInstance._generatePoints(this,true);
         }
       });
     
@@ -504,15 +498,16 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
         
         this.imageSets[set].splice(index,1);
         
-        // if removed image was current image, try to display another one
-        if (this.displayedImage === name) {
-            // remove sprite from waitingForImage if ever
-            if (typeof Sprite.waitingForImage[name] !== 'undefined') {
-                var index2 = Sprite.waitingForImage[name].indexOf(this);
-                if (index2 > -1) {
-                    Sprite.waitingForImage[name].splice(index2,1);
-                }
+        // remove sprite from waitingForImage if ever
+        if (typeof Sprite.waitingForImage[name] !== 'undefined') {
+            var index2 = Sprite.waitingForImage[name].indexOf(this);
+            if (index2 > -1) {
+                Sprite.waitingForImage[name].splice(index2,1);
             }
+        }
+
+        // if removed image was current image, remove asset
+        if (this.displayedImage === name) {
             // remove asset
             this.qObject.removeAsset();
             this.displayedImage = "";
@@ -533,10 +528,7 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
             throw new Error(this.getMessage("wrong set"));
         }
         
-        for (var i = 0; i<this.imageSets[name].length; i++) {
-            var imageName = this.imageSets[name][i];
-            delete this.images[imageName];
-        }
+        this.emptyImageSet(name);
         
         delete this.imageSets[name];
         if (this.displayedSet === name) {
@@ -548,20 +540,33 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
         }
     };
     
+    Sprite.prototype.emptyImageSet = function(name) {
+        for (var i = 0; i<this.imageSets[name].length; i++) {
+            var imageName = this.imageSets[name][i];
+            if (typeof Sprite.waitingForImage[imageName] !== 'undefined') {
+                var index2 = Sprite.waitingForImage[imageName].indexOf(this);
+                if (index2 > -1) {
+                    Sprite.waitingForImage[imageName].splice(index2,1);
+                }
+            }
+            
+            if (this.displayedImage === imageName) {
+                // remove asset
+                this.qObject.removeAsset();
+                this.displayedImage = "";
+                this.displayedIndex = "";
+            }
+            delete this.images[imageName];
+        }
+    };
+    
     Sprite.prototype.setDisplayedImage = function(name) {
         var asset = this.images[name];
         var qObject = this.qObject;
         this.displayedImage = name;
         // check if image actually loaded
         if (qInstance.assets[asset]) {
-            /*var currentLocation = false;
-            if (qObject.p.initialized) {
-                var currentLocation = qObject.getLocation();
-            }*/
             qObject.asset(asset, true);
-            /*if (currentLocation !== false) {
-                qObject.setLocation(currentLocation.x, currentLocation.y);
-            }*/
             if (!qObject.p.initialized) {
                 qObject.initialized();
             }
