@@ -4,9 +4,9 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/block/Block', 'TUt
         if (typeof(name)==='undefined') {
             name = "nature";
         }
-        this.backgroundAsset="";
+        this.backgroundName="";
         this.blockName="";
-        this.displayBlock=true;
+        this.displayBlock=false;
         this._setScene(name);
     };
     
@@ -17,6 +17,21 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/block/Block', 'TUt
     var qInstance = Scene.prototype.qInstance;
     
     Scene.prototype.qSprite = qInstance.TBlock;
+    
+    
+    Scene.prototype.setDisplayedImage = function(name) {
+        if (Sprite.prototype.setDisplayedImage.call(this, name)) {
+            // compute transparency mask
+            if (name === this.blockName) {
+                var asset = this.images[name];
+                this.computeTransparencyMask(asset);
+            }
+            if (!this.displayBlock) {
+                // display background
+                this.setDisplayedImage(this.backgroundName);
+            }
+        }
+    };
     
     Scene.prototype.setDisplayedImage = function(name) {
         if (Block.prototype.setDisplayedImage.call(this, name)) {
@@ -48,13 +63,14 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/block/Block', 'TUt
                 try {
                     parent._removeImageSet("elements");
                 } catch (e) {}
-                parent.backgroundAsset = parent.addImage(name+"/"+backImage, "elements", false);
+                parent.backgroundName = name+"/"+backImage;
                 parent.blockName = name+"/"+blockImage;
+                parent.addImage(parent.backgroundName, "elements", false);
                 parent.addImage(parent.blockName, "elements", false);
                 // set initialized to false, to be sure that location will be set after next image is displayed
                 // (and width and height are correctly set)
                 parent.qObject.p.initialized = false;
-                parent._displayImage(parent.blockName);
+                parent.setDisplayedImage(parent.blockName);
                 if (currentLocation !== false) {
                     parent.qObject.setLocation(currentLocation.x, currentLocation.y);
                 }
@@ -71,7 +87,7 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/block/Block', 'TUt
 
     Scene.prototype._hideBlock = function() {
         this.displayBlock = false;
-        this.setDisplayedImage(this.blockName);
+        this.setDisplayedImage(this.backgroundName);
     };
 
     TEnvironment.internationalize(Scene, true);
