@@ -1,6 +1,6 @@
 define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/block/Block', 'TUtils'], function($, TEnvironment, TGraphicalObject, Block, TUtils) {
     var Scene = function(name) {
-        Block.call(this,name);
+        Block.call(this);
         if (typeof(name)==='undefined') {
             name = "nature";
         }
@@ -82,7 +82,7 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/block/Block', 'TUt
         this.displayBlock = false;
         this.setDisplayedImage(this.blockName);
     };
-    
+
     TEnvironment.internationalize(Scene, true);
     
     return Scene;
