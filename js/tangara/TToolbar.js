@@ -20,7 +20,14 @@ define(['jquery','TEnvironment', 'TUI'], function($,TEnvironment, TUI) {
             $domHelp.toggleClass("active");
             parent.toggleHelp();
         };
+        
+        window.setHelpOpened = function() {
+            $domHelp.addClass("active");
+        };
 
+        window.setHelpClosed = function() {
+            $domHelp.removeClass("active");
+        };
         
         var domConsole = document.createElement("button");
         var imageConsole = document.createElement("img");
