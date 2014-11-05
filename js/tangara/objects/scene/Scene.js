@@ -6,7 +6,7 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/block/Block', 'TUt
         }
         this.backgroundAsset="";
         this.blockName="";
-        this.displayBlock=false;
+        this.displayBlock=true;
         this._setScene(name);
     };
     
@@ -16,16 +16,7 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/block/Block', 'TUt
     
     var qInstance = Scene.prototype.qInstance;
     
-    qInstance.TBlock.extend("TScene", {
-        setBackAsset:function(asset) {
-            this.p.asset = asset;
-        },
-        setBlockAsset:function(asset) {
-            
-        }
-    });
-    
-    Scene.prototype.qSprite = qInstance.TScene;
+    Scene.prototype.qSprite = qInstance.TBlock;
     
     Scene.prototype.setDisplayedImage = function(name) {
         if (Block.prototype.setDisplayedImage.call(this, name)) {
