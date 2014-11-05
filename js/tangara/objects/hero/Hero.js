@@ -1,4 +1,4 @@
-define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Walker', 'TUtils'], function($, TEnvironment, TGraphicalObject, Walker, TUtils) {
+define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'objects/walker/Walker', 'TUtils'], function($, TEnvironment, TGraphicalObject, Sprite, Walker, TUtils) {
     var Hero = function(name) {
         Walker.call(this);
         if (typeof(name)==='undefined') {
@@ -11,116 +11,120 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Walker', 'T
     Hero.prototype.constructor = Hero;
     Hero.prototype.className = "Hero";
     
-    /*var qInstance = Hero.prototype.qInstance;
+    var qInstance = Hero.prototype.qInstance;
     
     qInstance.TWalker.extend("THero", {
         init: function(props,defaultProps) {
             this._super(qInstance._extend({
-                type:TGraphicalObject.TYPE_WALKER | TGraphicalObject.TYPE_SPRITE,
-                mayFall:false,
-                jumping:false,
-                vy:0,
-                gravity:9.8*100,
-                jumpDelay:10,
-                jumpAvailable:0,
-                jumpSpeed: -300,
-                waitingForBlocks:0
+                dtMovement:0,
+                dtPause:0,
+                imgIndex:0,
+                lastX:0,
+                lastMove:Hero.DIRECTION_NONE,
+                frontAssetsCount:0,
+                forwardAssetsCount:0,
+                backwardAssetsCount:0,
+                durationMove:0,
+                durationPause:0,
+                ellapsed:0.0
             },props),defaultProps);
-            this.blocks = new Array();
+            this.frontAssets = [];
+            this.forwardAssets = [];
+            this.backwardAssets = [];
         },
         step: function(dt) {
-            if (!this.p.dragging && !this.p.frozen && this.p.waitingForBlocks === 0) {
-                if (this.p.mayFall && (this.p.direction === Sprite.DIRECTION_UP || this.p.direction === Sprite.DIRECTION_DOWN)) {
-                    // cannot move upward or downward when walker may fall
-                    this.p.direction = Sprite.DIRECTION_NONE;
-                }
-                this._super(dt);
-                if (this.p.mayFall) {
-                    if (this.p.jumpAvailable>0)
-                        this.p.jumpAvailable--;
-                    if (this.p.jumping) {
-                        if (this.p.jumpAvailable>0) {
-                            // perform a jump
-                            this.p.vy = this.p.jumpSpeed;
+            this._super(dt);
+            var p = this.p;
+            dt+=p.ellapsed;
+            if (p.moving && p.x !== p.lastX) {
+                // we are moving
+                if (dt>p.dtMovement) {
+                    p.ellapsed = 0;
+                    // display next image
+                    if (p.x > p.lastX && p.frontAssetsCount > 0) {
+                        // moving right
+                        if (p.lastMove === Sprite.DIRECTION_RIGHT) {
+                            p.imgIndex = Math.round(p.imgIndex+1) % p.forwardAssetsCount;
+                        } else {
+                            // direction changed
+                            p.imgIndex = 0;
                         }
-                        this.p.jumping = false;
-                    } else {
-                        this.p.vy += this.p.gravity * dt;
+                        this.asset(this.forwardAssets[p.imgIndex], false);
+                        p.lastMove = Sprite.DIRECTION_RIGHT;
+                    } else if (p.backwardAssetsCount >0) {
+                        // moving left
+                        if (p.lastMove === Sprite.DIRECTION_LEFT) {
+                            p.imgIndex = Math.round(p.imgIndex+1) % p.backwardAssetsCount;
+                        } else {
+                            // direction changed
+                            p.imgIndex = 0;
+                        }
+                        this.asset(this.backwardAssets[p.imgIndex], false);
+                        p.lastMove = Sprite.DIRECTION_LEFT;
                     }
-                    this.p.y += this.p.vy * dt;
-                    // no destinationY other than y can be set
-                    this.p.destinationY = this.p.y;
+                } else {
+                    p.ellapsed = dt;
                 }
-                // Look for blocks
-                var skip = 0;
-                var collided = this.stage.TsearchSkip(this, TGraphicalObject.TYPE_BLOCK, skip);
-                // Max 2 overlapping blocks are searched
-                while(collided !== false && skip<2) {
-                    this.checkBlocks(collided);
-                    skip++;
-                    collided = this.stage.TsearchSkip(this, TGraphicalObject.TYPE_BLOCK, skip);
-                }
-            }
-        },
-        checkBlocks: function(col) {
-            var object = col.obj;
-            var id = object.getId();
-            if (object.p.type === TGraphicalObject.TYPE_BLOCK && this.blocks.indexOf(id)>-1 && !object.checkTransparency(this,col)) {
-                // block encountered
-                this.p.x -= col.separate[0];
-                this.p.y -= col.separate[1];
-                if(this.p.mayFall) {
-                    this.p.destinationY = this.p.y;
-                    if (col.normalY < -0.3 && this.p.vy>0 ) {
-                        // landed
-                        this.p.vy = 0;
-                        this.p.jumpAvailable = this.p.jumpDelay;
-                    } else if (col.normalY > 0.3 && this.p.vy<0) {
-                        // bumped top
-                        this.p.vy = 0;
+            } else {
+                // not moving forward nor backward
+                if (dt>p.dtPause) {
+                    p.ellapsed = 0;
+                    if (p.frontAssetsCount >0) {
+                        if (p.lastMove === Sprite.DIRECTION_NONE) {
+                            p.imgIndex = (p.imgIndex+1) % p.frontAssetsCount;
+                        } else {
+                            // direction changed
+                            p.imgIndex = 0;
+                        }
+                        this.asset(this.frontAssets[p.imgIndex], false);
                     }
+                    p.lastMove = Sprite.DIRECTION_NONE;
+                } else {
+                    p.ellapsed = dt;
                 }
             }
+            p.lastX = p.x;
         },
-        addBlock: function(block) {
-            var objId = block.getQObject().getId();
-            if (this.blocks.indexOf(objId) === -1) {
-                this.blocks.push(objId);
+        setForwardAssets: function(assets) {
+            this.forwardAssets = assets;
+            this.p.forwardAssetsCount = assets.length;
+        },
+        setBackwardAssets: function(assets) {
+            this.backwardAssets = assets;
+            this.p.backwardAssetsCount = assets.length;
+        },
+        setFrontAssets: function(assets) {
+            this.frontAssets = assets;
+            this.p.frontAssetsCount = assets.length;
+        },
+        setVelocity: function(value) {
+            this._super(value);
+            // compute base dt
+            this.computeDts();
+        },
+        setDurations: function(valueMove, valuePause) {
+            this.p.durationMove = valueMove;
+            this.p.durationPause = valuePause;
+            this.computeDts();
+        },
+        computeDts: function() {
+            var p = this.p;
+            if (p.forwardAssetsCount>0) {
+                // we assume that forwardAssetsCount is equal to backwardAssetsCount
+                p.dtMovement = (p.durationMove/p.forwardAssetsCount)*200/p.velocity;
             }
-        },
-        mayFall: function(value) {
-            this.perform(function(){
-                this.p.mayFall = value;
-            });
-        },
-        setJumpSpeed: function(value) {
-            this.perform(function(){
-                this.p.jumpSpeed = -3*value;
-            });
-        },
-        setGravity: function(value) {
-            this.perform(function(){
-                this.p.gravity = 9.8*value;
-            });
-        },
-        jump: function() {
-            this.perform(function(){
-                this.p.jumping = true;
-            });
-        },
-        waitForBlock: function() {
-            this.p.waitingForBlocks++;
-        },
-        blockReady: function() {
-            this.p.waitingForBlocks--;
+            if (p.frontAssetsCount>0) {
+                p.dtPause = (p.durationPause/p.frontAssetsCount)*200/p.velocity;
+            }
         }
-    });*/
+    });
     
     Hero.prototype.qSprite = qInstance.THero;
     
     
     Hero.prototype._setCharacter = function(name) {
         name = TUtils.getString(name);
+        name = this.getMessage(name);
         var baseCharacterUrl = this.getResource(name)+"/";
         var configUrl = baseCharacterUrl+"config.json";
         var parent = this;
@@ -129,35 +133,41 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Walker', 'T
             url: configUrl,
             async: true,
             success: function(data) {
-                var forwardTranslated = TEnvironment.getMessage("forward");
-                var forwardImages = data['images']['forward'];
-                try {
-                    parent._removeImageSet(forwardTranslated);
-                } catch (e) {}
-                for (var i=0; i<forwardImages.length; i++) {
-                    parent._addImage(forwardImages[i], forwardTranslated);
-                }
-                var backwardTranslated = TEnvironment.getMessage("backward");
-                var backwardImages = data['images']['backward'];
-                try {
-                    parent._removeImageSet(backwardTranslated);
-                } catch (e) {}
-                for (var i=0; i<backwardImages.length; i++) {
-                    parent._addImage(backwardImages[i], backwardTranslated);
-                }
                 var frontTranslated = TEnvironment.getMessage("front");
                 var frontImages = data['images']['front'];
+                var frontAssets = [];
                 try {
                     parent._removeImageSet(frontTranslated);
                 } catch (e) {}
                 for (var i=0; i<frontImages.length; i++) {
-                    parent._addImage(frontImages[i], frontTranslated);
+                    frontAssets.push(parent.addImage(name+"/"+frontImages[i], frontTranslated, false));
                 }
+                parent.qObject.setFrontAssets(frontAssets);
+                var forwardTranslated = TEnvironment.getMessage("forward");
+                var forwardImages = data['images']['forward'];
+                var forwardAssets = [];
+                try {
+                    parent._removeImageSet(forwardTranslated);
+                } catch (e) {}
+                for (var i=0; i<forwardImages.length; i++) {
+                    forwardAssets.push(parent.addImage(name+"/"+forwardImages[i], forwardTranslated, false));
+                }
+                parent.qObject.setForwardAssets(forwardAssets);
+                var backwardTranslated = TEnvironment.getMessage("backward");
+                var backwardImages = data['images']['backward'];
+                var backwardAssets = [];
+                try {
+                    parent._removeImageSet(backwardTranslated);
+                } catch (e) {}
+                for (var i=0; i<backwardImages.length; i++) {
+                    backwardAssets.push(parent.addImage(name+"/"+backwardImages[i], backwardTranslated, false));
+                }
+                parent.qObject.setBackwardAssets(backwardAssets);
                 parent._displayNextImage(frontTranslated);
-                
+                parent.qObject.setDurations(data['durationMove'], data['durationPause']);
             }
         }).fail(function(jqxhr, textStatus, error) {
-            throw new Error(TUtils.format(parent.getMessage("unknwon skeleton"), name));
+            throw new Error(TUtils.format(parent.getMessage("unknwon character"), name));
         });
 
     };
@@ -165,7 +175,7 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Walker', 'T
     Hero.prototype._setScene = function(object) {
         
     };
-
+    
     /*Walker.prototype._addBlock = function(block) {
         block = TUtils.getObject(block);
         this.qObject.addBlock(block);

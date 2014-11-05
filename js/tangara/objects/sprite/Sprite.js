@@ -310,8 +310,11 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
         },
         removeAsset: function() {
             this.p.asset = null;
+            this.p.x = Math.round(this.p.x-this.p.w/2);
+            this.p.y = Math.round(this.p.y-this.p.h/2);
             this.p.w = 0;
             this.p.h = 0;
+            this.stop();
             qInstance._generatePoints(this,true);
         }
       });
@@ -384,13 +387,24 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
     // IMAGES MANAGEMENT
     
     Sprite.waitingForImage = new Array();
-        
+    
     Sprite.prototype._addImage = function(name, set) {
+        this.addImage(name, set, true);
+    };
+    
+    Sprite.prototype.addImage = function(name, set, project) {
         name = TUtils.getString(name);
+        var asset;
         // add image only if not already added
         // TODO: allow using the same image in several sets
         if (typeof this.images[name] === 'undefined') {
-            var asset = TEnvironment.getProjectResource(name);
+            if (project) {
+                // asset from project
+                asset = TEnvironment.getProjectResource(name);
+            } else {
+                // asset from object itself
+                asset = this.getResource(name);
+            }
             this.images[name] = asset;
             if (typeof set === 'undefined') {
                 set = "";
@@ -461,7 +475,10 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
                     }
                 }
             });
+        } else {
+            asset = this.images[name];
         }
+        return asset;
     };
     
     Sprite.prototype._removeImage = function (name, set) {
@@ -476,14 +493,12 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
         }
         
         var index = this.imageSets[set].indexOf(name);
-        console.log("index : "+index);
         
         if (index <0 ) {
             throw new Error(this.getMessage("resource not found", name));
         }
         
         this.imageSets[set].splice(index,1);
-        console.debug(this.imageSets[set]);
         
         // if removed image was current image, try to display another one
         if (this.displayedImage === name) {
@@ -532,7 +547,9 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
         this.displayedImage = name;
         // check if image actually loaded
         if (qInstance.assets[asset]) {
+            var currentLocation = qObject.getLocation();
             qObject.asset(asset, true);
+            qObject.setLocation(currentLocation.x, currentLocation.y);
             if (!qObject.p.initialized) {
                 qObject.initialized();
             }
