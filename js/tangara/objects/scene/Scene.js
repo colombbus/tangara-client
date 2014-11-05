@@ -1,4 +1,4 @@
-define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/block/Block', 'TUtils'], function($, TEnvironment, TGraphicalObject, Block, TUtils) {
+define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'objects/block/Block', 'TUtils'], function($, TEnvironment, TGraphicalObject, Sprite, Block, TUtils) {
     var Scene = function(name) {
         Block.call(this);
         if (typeof(name)==='undefined') {
@@ -25,23 +25,14 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/block/Block', 'TUt
             if (name === this.blockName) {
                 var asset = this.images[name];
                 this.computeTransparencyMask(asset);
-            }
-            if (!this.displayBlock) {
-                // display background
-                this.setDisplayedImage(this.backgroundName);
-            }
-        }
-    };
-    
-    Scene.prototype.setDisplayedImage = function(name) {
-        if (Block.prototype.setDisplayedImage.call(this, name)) {
-            if (!this.displayBlock) {
-                // display background
-                this.qObject.asset(this.backgroundAsset, true);
+                if (!this.displayBlock) {
+                    // display background
+                    this.setDisplayedImage(this.backgroundName);
+                }
             }
         }
     };
-
+   
     
     Scene.prototype._setScene = function(name) {
         name = TUtils.getString(name);
