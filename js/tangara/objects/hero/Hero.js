@@ -190,6 +190,14 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
             this.p.durationPause = valuePause;
             this.computeDts();
         },
+        setMovementDuration: function(value) {
+            this.p.durationMove = value;
+            this.computeDts();            
+        },
+        setPauseDuration: function(value) {
+            this.p.durationPause = value;
+            this.computeDts();            
+        },
         computeDts: function() {
             this.addAssetOperation(function() {
                 var p = this.p;
@@ -389,6 +397,13 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
         }
     };
     
+    Hero.prototype._setMovementDuration = function(value) {
+        this.qObject.setMovementDuration(value);
+    };
+    
+    Hero.prototype._setPauseDuration = function(value) {
+        this.qObject.setPauseDuration(value);
+    };
     
     Hero.prototype._setScene = function(object) {
         
