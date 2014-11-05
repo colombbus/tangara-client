@@ -405,7 +405,7 @@ define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager']
         $.ajax({
             dataType: "json",
             url: skeletonUrl,
-            async: true,
+            async: false,
             success: function(data) {
                 $.each( data['skeleton']['element'], function( key, val ) {
                     elements.push(val);
