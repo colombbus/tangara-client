@@ -23,7 +23,9 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment', ], function(TObject, TU
         init: function(props, defaultProps) {
             this._super(qInstance._extend({
                 designMode: false,
-                initialized: false
+                initialized: false,
+                w:0,
+                h:0
             }, props), defaultProps);
             this.operations = new Array();
         },
@@ -59,6 +61,9 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment', ], function(TObject, TU
                 this.p.x = x + this.p.w / 2;
                 this.p.y = y + this.p.h / 2;
             }, [x, y]);
+        },
+        getLocation: function() {
+            return {x:Math.round(this.p.x-this.p.w/2), y:Math.round(this.p.y-this.p.h/2)};
         },
         setCenterLocation: function(x, y) {
             this.perform(function(x, y) {

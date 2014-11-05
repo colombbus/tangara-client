@@ -86,5 +86,13 @@
             "es": "TBT",
             "en": "Random"
         }
+    },
+    "Hero": {
+        "path": "hero",
+        "translations": {
+            "fr": "Héros",
+            "es": "TBT",
+            "en": "Hero"
+        }
     }
 }
