@@ -45,7 +45,7 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
             var p = this.p;
             dt+=p.ellapsed;
             this.performAssetOperations();
-            if (p.autoAsset) {
+            if (p.autoAsset && !p.dragging && !p.frozen) {
                 if (p.moving && p.x !== p.lastX) {
                     // we are moving
                     if (dt>p.dtMovement) {
