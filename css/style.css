@@ -751,14 +751,14 @@ textarea.tsidebar-rename {
     position:absolute;
     right:0px;
     top:-30px;
-    background-image:url(../images/close.png);
+    background-image:url(../images/close_white.png);
     height:26px;
     width:26px;
     cursor:pointer;
 }
 
 .tviewer-button-close:hover{
-    background-image:url(../images/close_white.png);    
+    background-image:url(../images/close_orange.png);    
 }
 
 .tviewer-button-left {
@@ -766,14 +766,14 @@ textarea.tsidebar-rename {
     left:0px;
     top:50%;
     margin-top:-13px;
-    background-image:url(../images/previous.png);
+    background-image:url(../images/previous_white.png);
     height:26px;
     width:26px;
     cursor:pointer;
 }
 
 .tviewer-button-left:hover {
-    background-image:url(../images/previous_white.png);
+    background-image:url(../images/previous_orange.png);
 }
 
 .tviewer-button-right {
@@ -781,21 +781,21 @@ textarea.tsidebar-rename {
     right:0px;
     top:50%;
     margin-top:-13px;
-    background-image:url(../images/next.png);
+    background-image:url(../images/next_white.png);
     height:26px;
     width:26px;
     cursor:pointer;
 }
 
 .tviewer-button-right:hover {
-    background-image:url(../images/next_white.png);    
+    background-image:url(../images/next_orange.png);    
 }
 
 .tviewer-button-edit {
     position:absolute;
     left:0px;
     top:-30px;
-    background-image:url(../images/edit.png);
+    background-image:url(../images/edit_white.png);
     background-position:50% 50%;
     background-repeat:no-repeat;
     height:26px;
@@ -804,14 +804,14 @@ textarea.tsidebar-rename {
 }
 
 .tviewer-button-edit:hover {
-    background-image:url(../images/edit_white.png);    
+    background-image:url(../images/edit_orange.png);    
 }
 
 .tviewer-button-duplicate {
     position:absolute;
     left:-30px;
     top:-30px;
-    background-image:url(../images/duplicate.png);
+    background-image:url(../images/duplicate_white.png);
     background-position:50% 50%;
     background-repeat:no-repeat;
     height:26px;
@@ -820,7 +820,7 @@ textarea.tsidebar-rename {
 }
 
 .tviewer-button-duplicate:hover {
-    background-image:url(../images/duplicate_white.png);    
+    background-image:url(../images/duplicate_orange.png);    
 }
 
 
@@ -835,11 +835,11 @@ textarea.tsidebar-rename {
 }
 
 .tviewer-editor {
-    min-width:80%;
-    min-height:80%;
-    vertical-align:middle;
-    display:inline-block;
-    position:relative;
+    position:absolute;
+    top:30px;
+    bottom:30px;
+    left:30px;
+    right:30px;
     background-color:#dedede;
     border:solid 5px #FFFFFF;
     -webkit-border-radius: 5px;
