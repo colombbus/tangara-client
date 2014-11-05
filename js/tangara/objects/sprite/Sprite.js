@@ -482,6 +482,10 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
     };
     
     Sprite.prototype._removeImage = function (name, set) {
+        this.removeImage(name, set);
+    };
+    
+    Sprite.prototype.removeImage = function(name, set) {
         if (typeof set === 'undefined') {
             set = "";
         } else {
@@ -517,6 +521,9 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
         
         // TODO: remove from  images ONLY IF image not used in other set
         delete this.images[name];
+        
+        // return asset
+        return qInstance.asset(name);
     };
 
     Sprite.prototype._removeImageSet = function (name) {
@@ -547,9 +554,14 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
         this.displayedImage = name;
         // check if image actually loaded
         if (qInstance.assets[asset]) {
-            var currentLocation = qObject.getLocation();
+            /*var currentLocation = false;
+            if (qObject.p.initialized) {
+                var currentLocation = qObject.getLocation();
+            }*/
             qObject.asset(asset, true);
-            qObject.setLocation(currentLocation.x, currentLocation.y);
+            /*if (currentLocation !== false) {
+                qObject.setLocation(currentLocation.x, currentLocation.y);
+            }*/
             if (!qObject.p.initialized) {
                 qObject.initialized();
             }
