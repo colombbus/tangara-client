@@ -3,6 +3,7 @@
         "tangaraman":"tangy",
         "garçon":"boy",
         "bob":"bob",
+        "fille":"girl",
         "unknwon character":"Il n'existe pas de héros de type '{0}'. Les héros disponibles sont : 'tangaraman', 'bob' et 'garçon'",
         "forward":"avancer",
         "backward":"reculer",
