@@ -1,0 +1,9 @@
+{
+    "fr": {
+        "methods":[
+            {"name":"_setScene","translated":"définirDécor","displayed":"définirDécor(\"nature\")"},
+            {"name":"_showBlock","translated":"montrerBloc","displayed":"montrerBloc()"},
+            {"name":"_hideBlock","translated":"cacherBloc","displayed":"cacherBloc()"}
+        ]
+    }
+}

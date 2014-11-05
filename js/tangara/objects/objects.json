@@ -94,5 +94,13 @@
             "es": "TBT",
             "en": "Hero"
         }
+    },
+    "Scene": {
+        "path": "scene",
+        "translations": {
+            "fr": "Décor",
+            "es": "TBT",
+            "en": "Scene"
+        }
     }
 }

@@ -126,31 +126,38 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite'], f
     Block.prototype.qSprite = qInstance.TBlock;
     
     Block.prototype.setDisplayedImage = function(name) {
-        if (Sprite.prototype.setDisplayedImage.call(this, name) && this.transparentColors.length>0) {
+        if (Sprite.prototype.setDisplayedImage.call(this, name)) {
             // compute transparency mask
             var asset = this.images[name];
-            var image = qInstance.asset(asset);
-            var canvas = document.createElement('canvas');
-            var ctx = canvas.getContext('2d');
-            var width = image.width;
-            var height = image.height;
-            canvas.width = width;
-            canvas.height = height;
-            this.qObject.p.transparencyMask = new Array();
-            var mask = this.qObject.p.transparencyMask;
-            var row=-1, col=width;
-            ctx.drawImage(image, 0, 0 );
-            var imageData = ctx.getImageData(0, 0, width, height);
-            var data = imageData.data;
-            for (var i=0;i<data.length;i+=4) {
-                col++;
-                if (col>=width) {
-                    col = 0;
-                    row++;
-                    mask[row] = new Array();
-                }
-                mask[row][col] = (data[i+3] === 0)?true:false;
+            this.computeTransparencyMask(asset);
+            return true;
+        } else {
+            return false;
+        }
+    };
+    
+    Block.prototype.computeTransparencyMask = function(asset) {
+        var image = qInstance.asset(asset);
+        var canvas = document.createElement('canvas');
+        var ctx = canvas.getContext('2d');
+        var width = image.width;
+        var height = image.height;
+        canvas.width = width;
+        canvas.height = height;
+        this.qObject.p.transparencyMask = new Array();
+        var mask = this.qObject.p.transparencyMask;
+        var row=-1, col=width;
+        ctx.drawImage(image, 0, 0 );
+        var imageData = ctx.getImageData(0, 0, width, height);
+        var data = imageData.data;
+        for (var i=0;i<data.length;i+=4) {
+            col++;
+            if (col>=width) {
+                col = 0;
+                row++;
+                mask[row] = new Array();
             }
+            mask[row][col] = (data[i+3] === 0)?true:false;
         }
     };
     
