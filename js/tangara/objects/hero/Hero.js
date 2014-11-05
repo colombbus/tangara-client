@@ -45,13 +45,14 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
             var p = this.p;
             dt+=p.ellapsed;
             this.performAssetOperations();
+            var deltaX = Math.round(p.x-p.lastX);
             if (p.autoAsset && !p.dragging && !p.frozen) {
-                if (p.moving && p.x !== p.lastX) {
+                if (p.moving && deltaX !==0) {
                     // we are moving
                     if (dt>p.dtMovement) {
                         p.ellapsed = 0;
                         // display next image
-                        if (p.x > p.lastX) {
+                        if (deltaX > 0) {
                             // moving right
                             if (p.forwardAssetsCount > 0) {
                                 if (p.lastMove === Sprite.DIRECTION_RIGHT) {
@@ -405,8 +406,8 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
         this.qObject.setPauseDuration(value);
     };
     
-    Hero.prototype._setScene = function(object) {
-        
+    Hero.prototype._addScene = function(object) {
+        this._addBlock(object);
     };
 
     TEnvironment.internationalize(Hero, true);
