@@ -131,7 +131,7 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
         $.ajax({
             dataType: "json",
             url: configUrl,
-            async: true,
+            async: false,
             success: function(data) {
                 var frontTranslated = TEnvironment.getMessage("front");
                 var frontImages = data['images']['front'];
