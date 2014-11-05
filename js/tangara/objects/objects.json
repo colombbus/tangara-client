@@ -102,5 +102,13 @@
             "es": "TBT",
             "en": "Scene"
         }
-    }
+    },
+    "Item": {
+        "path": "item",
+        "translations": {
+            "fr": "Item",
+            "es": "TBT",
+            "en": "Item"
+        }
+    }    
 }

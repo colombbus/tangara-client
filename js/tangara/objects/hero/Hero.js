@@ -39,6 +39,7 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
             this.forwardAssets = [];
             this.backwardAssets = [];
             this.assetOperations = [];
+            this.catchableObjects = {};
         },
         step: function(dt) {
             this._super(dt);
@@ -230,7 +231,25 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
 
         startAutoAsset: function() {
             this.p.autoAsset = true;
+        },
+        
+        mayCatch: function(object) {
+            var id = object.getQObject().getId();
+            if (typeof (this.catchableObjects[id]) === 'undefined') {
+                this.catchableObjects[id] = object;
+            }
+        },
+        objectEncountered: function(col) {
+            this._super(col);
+            var object = col.obj;
+            if (typeof object.getId !== 'undefined') {
+                var id = object.getId();
+                if (typeof (this.catchableObjects[id]) !== 'undefined') {
+                    this.catchableObjects[id]._delete();
+                }
+            }
         }
+
 
     });
     
@@ -408,6 +427,18 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
     
     Hero.prototype._addScene = function(object) {
         this._addBlock(object);
+    };
+    
+    Hero.prototype._mayCatch = function(object) {
+        object = TUtils.getObject(object);
+        this.qObject.mayCatch(object);
+    };
+    
+    Hero.prototype._ifCatch = function(object, command) {
+        object = TUtils.getObject(object);
+        command = TUtils.getString(command);
+        this.qObject.mayCatch(object);
+        this.qObject.addCollisionCommand(command, object);
     };
 
     TEnvironment.internationalize(Hero, true);
