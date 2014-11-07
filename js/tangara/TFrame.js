@@ -75,8 +75,7 @@ define(['jquery', 'split-pane','TCanvas', 'TEditor', 'TSidebar', 'TUI', 'TConsol
             toolbar.displayed();
             log.displayed();
             $('.split-pane').splitPane();
-            // Start with console enabled
-            TUI.enableConsole();
+            // Start with editor disabled
             initialized = true;
             this.ready();
         };

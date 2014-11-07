@@ -3,8 +3,6 @@ define(['TUI', 'TParser', 'TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jquery'
     function TConsole() {
         var domConsole = document.createElement("div");
         domConsole.id = "tconsole";
-        // start with console hidden
-        domConsole.style.display="none";
         
         var domConsoleText = document.createElement("div");
         domConsoleText.id = "tconsole-text";

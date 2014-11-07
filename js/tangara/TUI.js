@@ -7,10 +7,9 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
         var toolbar;
         var console;
         var editorEnabled = false;
-        var consoleEnabled = false;
-        var consoleState = false;
+        var consoleDisplayed = true;
         var designModeEnabled = false;
-        var logDisplayed = true;
+        var minimized = false;
         var designLogDisplayed = false;
         var programsDisplayed = true;
         var log;
@@ -54,54 +53,34 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
             return canvas;
         };
 
-        this.enableConsole = function() {
-            if (!consoleEnabled) {
-                var editorWasEnabled = editorEnabled;
-                // Editor and Console cannot co-exist
-                this.disableEditor();
-                toolbar.enableConsole();
-                log.saveScroll();
-                console.show();
-                log.update();
-                consoleEnabled = true;
-                if (!editorWasEnabled || !consoleState) {
-                    frame.raiseSeparator(console.getHeight());
-                    log.restoreScroll();
-                }
-            }
-        };
-
-        this.disableConsole = function() {
-            if (consoleEnabled) {
+        this.hideConsole = function() {
+            if (consoleDisplayed) {
                 toolbar.disableConsole();
                 log.saveScroll();
                 console.hide();
                 log.update();
-                consoleEnabled = false;
                 frame.lowerSeparator(console.getHeight());
                 log.restoreScroll();
+                consoleDisplayed = false;
             }
         };
         
-        this.hideConsole = function() {
-        };
-        
         this.showConsole = function() {
-        };
-
-        this.toggleConsole = function() {
-            if (consoleEnabled) {
-                this.disableConsole();
-            } else {
-                this.enableConsole();
+            if (!consoleDisplayed) {
+                toolbar.enableConsole();
+                log.saveScroll();
+                console.show();
+                log.update();
+                frame.raiseSeparator(console.getHeight());
+                log.restoreScroll();
+                consoleDisplayed = true;
             }
         };
 
         this.enableEditor = function() {
             if (!editorEnabled) {
-                // Editor and Console cannot co-exist
-                consoleState = consoleEnabled;
-                this.disableConsole();
+                // hide console
+                this.hideConsole();
                 toolbar.enableEditor();
                 TRuntime.stop();
                 canvas.hide();
@@ -118,9 +97,9 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 sidebar.hide();
                 canvas.show();
                 editorEnabled = false;
-                // if console was enabled, enable it
-                if (consoleState)
-                    this.enableConsole();
+                // if not minimized, show console
+                if (!minimized)
+                    this.showConsole();
                 TRuntime.start();
             }
         };
@@ -238,7 +217,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
             if (designLogDisplayed) {
                 this.hideDesignLog();
             }
-            if (consoleEnabled) {
+            if (!editorEnabled) {
                 // execution from console
                 TRuntime.setCurrentProgramName(null);
                 TRuntime.executeFrom(console);
@@ -419,9 +398,10 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
         };
 
         this.displayResources = function() {
-            sidebar.displayResources();
-            toolbar.enableResourceOptions();
-            programsDisplayed = false;
+            if (sidebar.displayResources()) {
+                toolbar.enableResourceOptions();
+                programsDisplayed = false;
+            }
         };
         
         this.delete = function() {
@@ -463,19 +443,23 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
             log.addObjectLocation(name, location);
         };
         
-        this.toggleLog = function() {
-            if (logDisplayed) {
-                // hide console as well
-                this.disableConsole();
+        this.toggleMinimized = function() {
+            if (!minimized) {
+                // hide console
+                this.hideConsole();
                 log.saveScroll();
                 log.hide();
                 frame.lowerSeparator(log.getHeight());
-                logDisplayed = false;
+                minimized = true;
             } else {
                 log.show();
                 frame.raiseSeparator(log.getHeight());
                 log.restoreScroll();
-                logDisplayed = true;
+                if (!editorEnabled) {
+                    // show console
+                    this.showConsole();
+                }
+                minimized = false;
             }
         };
         

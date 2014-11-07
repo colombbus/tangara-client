@@ -29,14 +29,14 @@ define(['jquery','TEnvironment', 'TUI'], function($,TEnvironment, TUI) {
             $domHelp.removeClass("active");
         };
         
-        var domConsole = document.createElement("button");
+        /*var domConsole = document.createElement("button");
         var imageConsole = document.createElement("img");
         imageConsole.src = TEnvironment.getBaseUrl() + "/images/console.png";
         imageConsole.className = "ttoolbar-mode-image";
         domConsole.appendChild(imageConsole);
         domConsole.appendChild(document.createTextNode(TEnvironment.getMessage('mode-console')));
         domConsole.className = "ttoolbar-mode";
-        domConsole.onclick = function() { TUI.toggleConsole(); };
+        domConsole.onclick = function() { TUI.toggleConsole(); };*/
         var domEditor = document.createElement("button");
         var imageEditor = document.createElement("img");
         imageEditor.src = TEnvironment.getBaseUrl() + "/images/editor.png";
@@ -46,7 +46,7 @@ define(['jquery','TEnvironment', 'TUI'], function($,TEnvironment, TUI) {
         domEditor.className = "ttoolbar-mode";
         domEditor.onclick = function() { TUI.toggleEditor(); };
         domModes.appendChild(domHelp);
-        domModes.appendChild(domConsole);
+        /*domModes.appendChild(domConsole);*/
         domModes.appendChild(domEditor);
         domToolbar.appendChild(domModes);
         
@@ -64,6 +64,7 @@ define(['jquery','TEnvironment', 'TUI'], function($,TEnvironment, TUI) {
         buttonExecute.appendChild(imageExecute);
         buttonExecute.appendChild(document.createTextNode(TEnvironment.getMessage('button-execute')));
         buttonExecute.onclick = function() { TUI.execute(); };
+        domButtons.appendChild(buttonExecute);
 
         // OPTIONS
         var domOptions = document.createElement("div");
@@ -134,7 +135,7 @@ define(['jquery','TEnvironment', 'TUI'], function($,TEnvironment, TUI) {
         // add double click handler for toggling log
         var $domToolbar = $(domToolbar);
         $domToolbar.dblclick(function() {
-            TUI.toggleLog();
+            TUI.toggleMinimized();
         });
         // Prevent text selection
         $domToolbar.mousedown(function(){return false;});
@@ -151,12 +152,10 @@ define(['jquery','TEnvironment', 'TUI'], function($,TEnvironment, TUI) {
         };
         
         this.enableConsole = function() {
-            domConsole.className = "ttoolbar-mode active";
             domButtons.appendChild(buttonExecute);
         };
         
         this.disableConsole = function() {
-            domConsole.className = "ttoolbar-mode";
             domButtons.removeChild(buttonExecute);
         };
         
