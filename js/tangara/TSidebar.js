@@ -471,6 +471,7 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'jquery', 'jquer
                     // User is not logged: we cannot manage resources
                     var error = new TError(TEnvironment.getMessage('resources-unavailable-user-not-logged'));
                     TUI.addLogError(error);
+                    return false;
                 } else {
                     $(domSidebarPrograms).hide();
                     $(switchPrograms).removeClass("active");
@@ -480,7 +481,10 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'jquery', 'jquer
                     programsVisible = false;
                     var edition = ($(domSidebarResources).find(".tsidebar-current").length>0);
                     TUI.setEditionEnabled(edition);
+                    return true;
                 }
+            } else {
+                return true;
             }
         };
         
