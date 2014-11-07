@@ -193,7 +193,7 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, T
         };
 
         this.removeObject = function(object) {
-            var index = tGraphicalObjects.indexOf(object);
+            var index = tObjects.indexOf(object);
             if (index > -1) {
                 tObjects.splice(index, 1);
                 $.each(runtimeFrame, function(key, value) {
