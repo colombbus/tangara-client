@@ -98,9 +98,9 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, T
             try {
                 if (typeof commands === 'string' || commands instanceof String) {
                     runtimeFrame.eval(commands);
-                } else if ((typeof commands === 'function' || commands instanceof Function) && (typeof runtimeFame[commands] === 'function' || runtimeFame[commands] instanceof Function)) {
-                    //TODO : does not work... to be fixed!
-                    runtimeFame[commands].call(runtimeFrame, parameter);
+                } else if (typeof commands === 'function' || commands instanceof Function) {
+                    // TOTO: see if we need to check if function is actually declared in runtimeFrame
+                    commands.call(runtimeFrame, parameter);
                 }
                 if (logCommands) {
                     this.logCommand(commands);
@@ -186,7 +186,6 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, T
         };
 
         this.addObject = function(object) {
-            window.console.log("adding object "+object);
             tObjects.push(object);
             // initialize object with current state
             object.freeze(frozen);
@@ -206,7 +205,6 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, T
         };
 
         this.addGraphicalObject = function(object) {
-            window.console.log("adding graphical object "+object);
             canvas.addGraphicalObject(object);
             tGraphicalObjects.push(object);
             // initialize object with current state
@@ -231,13 +229,13 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, T
         this.clear = function() {
             // TODO: clear RuntimeFrame as well (e.g. to erase declared functions)
             while (tGraphicalObjects.length>0) {
-                var object = tGraphicalObjects.pop();
-                window.console.log("deleting graphical object "+object);
+                var object = tGraphicalObjects[0];
+                // deleteObject will remove object from tGraphicalObjects
                 object.deleteObject();
             }
             while (tObjects.length>0) {
-                var object = tObjects.pop();
-                window.console.log("deleting object "+object);
+                var object = tObjects[0];
+                // deleteObject will remove object from tGraphicalObjects
                 object.deleteObject();
             }
         };
