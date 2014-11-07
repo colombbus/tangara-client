@@ -7,8 +7,6 @@ define(['TUI', 'TParser', 'TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jquery'
         var domConsoleText = document.createElement("div");
         domConsoleText.id = "tconsole-text";
         // for iOS to show keyboard
-        // TODO: add this only for iOS devices
-        //domConsoleText.setAttribute("contenteditable", "true");
         domConsole.appendChild(domConsoleText);
 
         var AceRange = ace_range.Range;
@@ -173,12 +171,10 @@ define(['TUI', 'TParser', 'TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jquery'
 
         var consoleCompleter = {
             getCompletions: function(editor, session, pos, prefix, callback) {
-                console.debug("entering console completer");
                 pos.column--;
                 var token = session.getTokenAt(pos.row, pos.column);
 
                 if (token === null) {
-                    console.debug("no token");
                     return false;
                 }
 
@@ -196,7 +192,6 @@ define(['TUI', 'TParser', 'TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jquery'
                 }*/
 
                 if (token.type !== "identifier" &&  token.type !== "text") {
-                    console.debug("token not identifier nor texte");
                     return false;
                 }
 
@@ -216,7 +211,6 @@ define(['TUI', 'TParser', 'TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jquery'
                 }
 
                 if (name.length === 0) {
-                    console.debug ("name empty");
                     return false;
                 }
 
