@@ -108,7 +108,10 @@ define(['jquery', 'split-pane','TCanvas', 'TEditor', 'TSidebar', 'TUI', 'TConsol
         
         if (typeof window.updateEnvironment === 'undefined') {
             // Declare global function
-            window.updateEnvironment = function() {
+            window.updateEnvironment = function(showEditor) {
+                if (typeof showEditor !== 'undefined' && showEditor) {
+                    TUI.enableEditor();
+                }
                 TEnvironment.getProject().update();
                 sidebar.update();
             };
