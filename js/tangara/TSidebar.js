@@ -194,7 +194,7 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'jquery', 'jquer
                             if (typeof result.error.message !== 'undefined' && typeof result.error.name !== 'undefined') {
                                 message = TEnvironment.getMessage(result.error.message, result.error.name);
                             } else {
-                                message = TEnvironment.getMessage(result.error);
+                                message = TEnvironment.getMessage("backend-error-"+result.error);
                             }
                             var error = new TError(message);
                             TUI.addLogError(error);                            
