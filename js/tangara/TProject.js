@@ -320,8 +320,8 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError'], function(TLink
         };
         
         this.isUnsaved = function() {
-            for (var i =0; i<editedPrograms.length; i++) {
-                var program = editedPrograms[i];
+            for (var i =0; i<editedProgramsNames.length; i++) {
+                var program = editedPrograms[editedProgramsNames[i]];
                 if (program.isModified()) {
                     return true;
                 }
