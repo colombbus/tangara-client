@@ -112,6 +112,10 @@ body, html {
     background-color:#EFEFEF;
 }
 
+#teditor.editor-disabled .ace_text-layer {
+    display:none;
+}
+
 #teditor.editor-disabled .ace_cursor {
     border-color:transparent;
 }
@@ -134,6 +138,8 @@ body, html {
     font-size:0.8em;
     opacity:0.3;
 }
+
+/* TSidebar */
 
 #tsidebar {
     background-color:#DEDEDE;
@@ -179,6 +185,12 @@ body, html {
     height:100%;
     margin-right:40px;
     position:relative;
+}
+
+#tsidebar-programs.loading, #tsidebar-resources.loading {
+    background-image:url(../images/loader2.gif);
+    background-repeat:no-repeat;
+    background-position:50% 50%;
 }
 
 #tsidebar-upload {
