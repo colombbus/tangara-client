@@ -72,12 +72,11 @@ function load() {
         window.console.log("* Initiating link *");
         window.console.log("*******************");
         var currentProject = new TProject();
-        currentProject.update();
+        currentProject.init();
         TEnvironment.setProject(currentProject);
         $(document).ready( function() {
             frame.displayed();
-            window.unsavedFiles = false;
-            if (!TEnvironment.debug) {
+            /*if (!TEnvironment.debug) {
                 window.onbeforeunload = function(e) {
                     if (window.unsavedFiles) {
                         var message = TEnvironment.getMessage("confirm-leaving");
@@ -88,7 +87,7 @@ function load() {
                         return message;
                     }
                 };
-            }
+            }*/
         });
     });
 }
