@@ -6,7 +6,7 @@ define(['jquery'], function($) {
         var translatedObjectNames = [];
         var tangaraObjects = {};
         var project;
-        var userLogged = false;
+        var projectAvailable = false;
         var ready_frame = false;
         var ready_runtime = false;
         var ready_environment = false;
@@ -34,18 +34,6 @@ define(['jquery'], function($) {
                 async: false,
                 success: function(data) {
                     $.extend(parent.config, data);
-                    /*if (typeof data['debug'] !== 'undefined') {
-                        parent.debug = data['debug'];
-                        window.console.log("Set debug to "+data['debug']);
-                    } 
-                    if (typeof data['backend-path'] !== 'undefined') {
-                        parent.backendPath = data['backend-path'];
-                        window.console.log("Set back-end path to "+data['backend-path']);
-                    }
-                    if (typeof data['wpaint-path'] !== 'undefined') {
-                        parent.wpaintPath = data['wpaint-path'];
-                        window.console.log("Set wPaint path to "+data['wpaint-path']);
-                    }*/
                     parent.debug = parent.config['debug'];
                 }
             });
@@ -245,12 +233,12 @@ define(['jquery'], function($) {
             return project;
         };
         
-        this.setUserLogged = function(value) {
-            userLogged = value;
+        this.setProjectAvailable = function(value) {
+            projectAvailable = value;
         };
         
-        this.isUserLogged = function() {
-            return userLogged;
+        this.isProjectAvailable = function() {
+            return projectAvailable;
         };
         
         this.getClassMethods = function(className) {
