@@ -27,7 +27,7 @@ function load() {
             $(window).resize();
             TEnvironment.frameReady(function() {
                 TLink.setProjectId(init_projectId);
-                currentProject.update();
+                currentProject.init();
                 TEnvironment.setProject(currentProject);            
                 var statements = TLink.getProgramStatements(init_programName);
                 TRuntime.setCurrentProgramName(init_programName);
