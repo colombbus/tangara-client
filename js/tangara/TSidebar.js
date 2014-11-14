@@ -60,9 +60,12 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'jquery', 'jquer
         
         domSidebar.appendChild(domSidebarResources);
 
+        var $domSidebarPrograms = $(domSidebarPrograms);
         var $domSidebarFiles = $(domSidebarFiles);
         var $domSidebarResources = $(domSidebarResources);
         
+        $domSidebarResources.addClass("loading");
+        $domSidebarPrograms.addClass("loading");
         
         // set tab index in order for the div to receive keyboard events
         $domSidebarResources.attr("tabindex", "0");
@@ -114,7 +117,7 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'jquery', 'jquer
         
         this.displayed = function() {
             this.displayPrograms();
-            this.update();
+            this.init();
             // Set up blueimp fileupload plugin
             // TODO: make use of acceptFileTypes and maxFileSize
             $(domSidebarUpload).fileupload({
@@ -207,7 +210,7 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'jquery', 'jquer
                                 var data = result.created[i].data;
                                 var $div = uploadingDivs[name];
                                 if (typeof $div !== 'undefined') {
-                                    $div.find(".progress-bar-wrapper").fadeOut(2000, function() {$(this).remove()});
+                                    $div.find(".progress-bar-wrapper").fadeOut(2000, function() {$(this).remove();});
                                 }
                                 $div.removeClass('tsidebar-type-uploading');
                                 var type = '';
@@ -234,9 +237,18 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'jquery', 'jquer
             viewer.displayed();
         };
         
-        this.update = function() {
+        this.init = function() {
+            $domSidebarPrograms.removeClass("loading");
             this.updatePrograms();
+            $domSidebarResources.removeClass("loading");
             this.updateResources();
+        };
+
+        this.load = function() {
+            domSidebarPrograms.innerHTML = "";
+            domSidebarFiles.innerHTML = "";
+            $domSidebarPrograms.addClass("loading");
+            $domSidebarResources.addClass("loading");
         };
         
         this.updatePrograms = function() {
@@ -467,8 +479,8 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'jquery', 'jquer
         
         this.displayResources = function() {
             if (programsVisible) {
-                if (!TEnvironment.isUserLogged()) {
-                    // User is not logged: we cannot manage resources
+                if (!TEnvironment.isProjectAvailable()) {
+                    // Project is not available: we cannot manage resources
                     var error = new TError(TEnvironment.getMessage('resources-unavailable-user-not-logged'));
                     TUI.addLogError(error);
                     return false;
