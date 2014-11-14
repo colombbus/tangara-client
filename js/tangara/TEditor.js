@@ -23,6 +23,7 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
         var popupTriggered = false;
         var popupTimeout;
         var triggerPopup = false;
+        var editionEnabled = false;
         
         this.getElement = function() {
             return domEditor;
@@ -38,9 +39,8 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
             
             var self = this;
             aceEditor.on('input', function() {
-                if (!program.isModified()) {
+                if (!program.isModified()&&editionEnabled) {
                     program.setModified(true);
-                    window.unsavedFiles = true;
                     TUI.updateSidebarPrograms();
                 }
                 codeChanged = true;
@@ -61,7 +61,9 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
                 name: "save",
                 bindKey: {win: "Ctrl-S", mac: "Command-S"},
                 exec: function(arg) {
-                    TUI.saveProgram();
+                    if (editionEnabled) {
+                        TUI.saveProgram();
+                    }
                 }
             });
 
@@ -188,6 +190,10 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
             aceEditor.commands.removeCommand(dotCommand);
             aceEditor.commands.removeCommand(backspaceCommand);
             aceEditor.commands.removeCommand(AceAutocomplete.startCommand);
+        };
+        
+        this.setEditionEnabled = function(value) {
+            editionEnabled = value;
         };
 
         var editorCompleter = {
