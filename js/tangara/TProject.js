@@ -158,10 +158,14 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError'], function(TLink
             return editedProgramsArray;
         };
         
-        this.update = function() {
+        this.init = function() {
             programs = [];
+            editedPrograms = {};
             resources = {};
             resourcesNames = [];
+            sessions = {};
+            editedProgramsNames = [];
+            editedProgramsArray = [];
             try {
                 programs = TLink.getProgramList();
                 resources = TLink.getResources();
@@ -169,11 +173,11 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError'], function(TLink
                 // sort programs and resources alphabetically
                 programs = TUtils.sortArray(programs);
                 resourcesNames = TUtils.sortArray(resourcesNames);
-                TEnvironment.setUserLogged(true);
+                TEnvironment.setProjectAvailable(true);
                 this.preloadImages();
             }
             catch (error) {
-                TEnvironment.setUserLogged(false);
+                TEnvironment.setProjectAvailable(false);
             }
         };
 
