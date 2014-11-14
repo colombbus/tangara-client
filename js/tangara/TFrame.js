@@ -75,7 +75,6 @@ define(['jquery', 'split-pane','TCanvas', 'TEditor', 'TSidebar', 'TUI', 'TConsol
             toolbar.displayed();
             log.displayed();
             $('.split-pane').splitPane();
-            // Start with editor disabled
             initialized = true;
             this.ready();
         };
@@ -106,16 +105,23 @@ define(['jquery', 'split-pane','TCanvas', 'TEditor', 'TSidebar', 'TUI', 'TConsol
             this.lowerSeparator(-value);
         };
         
+        // Declare global functions
+        
         if (typeof window.updateEnvironment === 'undefined') {
-            // Declare global function
             window.updateEnvironment = function(showEditor) {
                 if (typeof showEditor !== 'undefined' && showEditor) {
                     TUI.enableEditor();
                 }
-                TEnvironment.getProject().update();
-                sidebar.update();
+                TUI.init();
             };
         }        
+
+        if (typeof window.isUnsaved === 'undefined') {
+            window.isUnsaved = function() {
+                return TEnvironment.getProject().isUnsaved();
+            };
+        }        
+
 
     }
     
