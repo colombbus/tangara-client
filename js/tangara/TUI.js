@@ -171,6 +171,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 TRuntime.clear();
                 console.clear();
                 this.clearLog();
+                this.disableDesignMode();
             }
         };
 
