@@ -1,6 +1,7 @@
 define(['jquery'], function($) {
     var TEnvironment = function() {
-        var processedFiles = new Array();
+        var processedFiles = {};
+        var hiddenMethods = {};
         var classMethods = new Array();
         var objectLibraries = [];
         var translatedObjectNames = [];
@@ -126,12 +127,18 @@ define(['jquery'], function($) {
                 writable: false}); // DOES NOT WORK
         };
 
-        var addTranslatedMethods = function(aClass, file, language) {
+        var addTranslatedMethods = function(aClass, file, language, hideMethods) {
+            if (typeof hideMethods === 'undefined') {
+                hideMethods = [];
+            }
             if (typeof processedFiles[file] !== "undefined") {
+                hideMethods = hideMethods.concat(hiddenMethods[file]);
                 // translation already loaded: we use it
                 $.each(processedFiles[file], function(name, value) {
-                    addTranslatedMethod(aClass, name, value.translated);
-                    classMethods[aClass.prototype.className][value.translated] = value.displayed;
+                    if (hideMethods.indexOf(name) === -1) {
+                        addTranslatedMethod(aClass, name, value.translated);
+                        classMethods[aClass.prototype.className][value.translated] = value.displayed;
+                    }
                 });
             } else {
                 // we load translation file
@@ -141,13 +148,20 @@ define(['jquery'], function($) {
                     async: false,
                     success: function(data) {
                         processedFiles[file] = {};
-                        window.console.log("traduction : " + file);
-                        window.console.log("Language : " + language);
+                        if (typeof data['hide'] !== "undefined") {
+                            // there are methods to skip
+                            hiddenMethods[file] = data['hide'];
+                            hideMethods = hideMethods.concat(data['hide']);
+                        } else {
+                            hiddenMethods[file] = [];
+                        }
                         $.each(data[language]['methods'], function(key, val) {
-                            addTranslatedMethod(aClass, val['name'], val['translated']);
-                            var value = {'translated':val['translated'], 'displayed':val['displayed']};
-                            classMethods[aClass.prototype.className][val.translated] = val.displayed;
-                            processedFiles[file][val['name']] = value;
+                            if (hideMethods.indexOf(val['name']) === -1) {
+                                addTranslatedMethod(aClass, val['name'], val['translated']);
+                                var value = {'translated':val['translated'], 'displayed':val['displayed']};
+                                classMethods[aClass.prototype.className][val.translated] = val.displayed;
+                                processedFiles[file][val['name']] = value;
+                            }
                         });
                     },
                     error: function(data, status, error) {
@@ -155,6 +169,7 @@ define(['jquery'], function($) {
                     }
                 });
             }
+            return hideMethods;
         };
         
         var addTranslatedMessages = function(aClass, file, language) {
@@ -183,13 +198,13 @@ define(['jquery'], function($) {
             // 1st load translated methods
             var translationFile = initialClass.prototype.getResource("i18n.json");
             classMethods[initialClass.prototype.className] = {};
-            addTranslatedMethods(initialClass, translationFile, this.language);
+            var hideMethods = addTranslatedMethods(initialClass, translationFile, this.language);
             if ((typeof parents !== 'undefined') && parents) {
                 // internationalize parents as well
                 var parentClass = Object.getPrototypeOf(initialClass.prototype);
                 while (parentClass !== Object.prototype) {
                     translationFile = parentClass.getResource("i18n.json");
-                    addTranslatedMethods(initialClass, translationFile, this.language);
+                    hideMethods = addTranslatedMethods(initialClass, translationFile, this.language, hideMethods);
                     parentClass = Object.getPrototypeOf(parentClass);
                 }
             }
