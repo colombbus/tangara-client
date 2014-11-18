@@ -392,60 +392,73 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
         // add image only if not already added
         // TODO: allow using the same image in several sets
         if (typeof this.images[name] === 'undefined') {
-            if (project) {
-                // asset from project
-                asset = TEnvironment.getProjectResource(name);
-            } else {
-                // asset from object itself
-                asset = this.getResource(name);
-            }
-            this.images[name] = asset;
-            if (typeof set === 'undefined') {
-                set = "";
-            } else {
-                set = TUtils.getString(set);
-            }
-            if (typeof this.imageSets[set] === 'undefined') {
-                this.imageSets[set] = new Array();
-            }
-            this.imageSets[set].push(name);
-            var spriteObject = this;
-            var loadedAsset = asset;
-            qInstance.load(asset, function() {
-                // Unregister onload event otherwise every transparency manipulation will call this
-                // function again.
-                var image = qInstance.asset(loadedAsset);
-                image.onload = null;
+            try {
+                if (project) {
+                    // asset from project
+                    asset = TEnvironment.getProjectResource(name);
+                } else {
+                    // asset from object itself
+                    asset = this.getResource(name);
+                }
+                this.images[name] = asset;
+                if (typeof set === 'undefined') {
+                    set = "";
+                } else {
+                    set = TUtils.getString(set);
+                }
+                if (typeof this.imageSets[set] === 'undefined') {
+                    this.imageSets[set] = new Array();
+                }
+                this.imageSets[set].push(name);
+                var spriteObject = this;
+                var loadedAsset = asset;
+                qInstance.load(asset, function() {
+                    // Unregister onload event otherwise every transparency manipulation will call this
+                    // function again.
+                    var image = qInstance.asset(loadedAsset);
+                    image.onload = null;
 
-                // 1st handle transparency
-                // Note that transparency settings of current Sprite will affect image for every other Sprites
-                // using the same asset
-                if (spriteObject.transparentColors.length>0) {
-                    var canvas = document.createElement('canvas');
-                    var ctx = canvas.getContext('2d');
-                    var width = image.width;
-                    var height = image.height;
-                    canvas.width = width;
-                    canvas.height = height;
-                    ctx.drawImage(image, 0, 0 );
-                    var imageData = ctx.getImageData(0, 0, width, height);
-                    var data = imageData.data;
-                    var color;
-                    for (var i=0;i<data.length;i+=4) {
-                        var r=data[i];
-                        var g=data[i+1];
-                        var b=data[i+2];
-                        for (var j=0; j<spriteObject.transparentColors.length;j++) {
-                            color = spriteObject.transparentColors[j];
-                            if (r===color[0] && g===color[1] && b===color[2]) {
-                                data[i+3] = 0;
+                    // 1st handle transparency
+                    // Note that transparency settings of current Sprite will affect image for every other Sprites
+                    // using the same asset
+                    if (spriteObject.transparentColors.length>0) {
+                        var canvas = document.createElement('canvas');
+                        var ctx = canvas.getContext('2d');
+                        var width = image.width;
+                        var height = image.height;
+                        canvas.width = width;
+                        canvas.height = height;
+                        ctx.drawImage(image, 0, 0 );
+                        var imageData = ctx.getImageData(0, 0, width, height);
+                        var data = imageData.data;
+                        var color;
+                        for (var i=0;i<data.length;i+=4) {
+                            var r=data[i];
+                            var g=data[i+1];
+                            var b=data[i+2];
+                            for (var j=0; j<spriteObject.transparentColors.length;j++) {
+                                color = spriteObject.transparentColors[j];
+                                if (r===color[0] && g===color[1] && b===color[2]) {
+                                    data[i+3] = 0;
+                                }
                             }
                         }
-                    }
-                    imageData.data = data;
-                    ctx.putImageData(imageData,0,0);
-                    image.onload = function() {
-                        image.onload = null;
+                        imageData.data = data;
+                        ctx.putImageData(imageData,0,0);
+                        image.onload = function() {
+                            image.onload = null;
+                            // 2nd set asset for all sprites waiting for this image
+                            if (typeof Sprite.waitingForImage[name] !== 'undefined') {
+                                // in case _displayImage was called while loading, set image for waiting sprites
+                                while (Sprite.waitingForImage[name].length>0) {
+                                    var sprite = Sprite.waitingForImage[name].pop();
+                                    sprite.setDisplayedImage(name);
+                                }
+                                Sprite.waitingForImage[name] = undefined;
+                            }
+                        };
+                        image.src = canvas.toDataURL();
+                    } else {
                         // 2nd set asset for all sprites waiting for this image
                         if (typeof Sprite.waitingForImage[name] !== 'undefined') {
                             // in case _displayImage was called while loading, set image for waiting sprites
@@ -455,20 +468,12 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
                             }
                             Sprite.waitingForImage[name] = undefined;
                         }
-                    };
-                    image.src = canvas.toDataURL();
-                } else {
-                    // 2nd set asset for all sprites waiting for this image
-                    if (typeof Sprite.waitingForImage[name] !== 'undefined') {
-                        // in case _displayImage was called while loading, set image for waiting sprites
-                        while (Sprite.waitingForImage[name].length>0) {
-                            var sprite = Sprite.waitingForImage[name].pop();
-                            sprite.setDisplayedImage(name);
-                        }
-                        Sprite.waitingForImage[name] = undefined;
                     }
-                }
-            });
+                });
+            }
+            catch (e) {
+                throw new Error(this.getMessage("file not found", name));
+            }
         } else {
             asset = this.images[name];
         }
