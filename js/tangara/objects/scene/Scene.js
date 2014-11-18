@@ -6,7 +6,6 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
         }
         this.backgroundName="";
         this.blockName="";
-        this.displayBlock=false;
         this._setScene(name);
     };
     
@@ -19,41 +18,73 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
     qInstance.TBlock.extend("TScene", {
         init: function(props,defaultProps) {
             this._super(qInstance._extend({
-                computing:false
+                assetBlock:null,
+                showBlock:false
             },props),defaultProps);
         },
         draw: function(ctx) {
+            this._super(ctx);
             var p = this.p;
-            if (!p.computing) {
-                this._super(ctx);
+            if (p.showBlock && p.assetBlock) {
+                ctx.drawImage(qInstance.asset(p.assetBlock),-p.cx,-p.cy);            
             }
         },
-        setComputing: function() {
-            this.p.computing = true;
+        setBackground: function(asset) {
+            this.p.asset = asset;
+            // resize only for background
+            this.size(true);
+            qInstance._generatePoints(this,true);
+            if (!this.p.initialized && this.p.assetBlock) {
+                this.initialized();
+            }
         },
-        unsetComputing: function() {
-            this.p.computing = false;
+        setBlock: function(asset) {
+            this.p.assetBlock = asset;
+            if (!this.p.initialized && this.p.asset) {
+                this.initialized();
+            }
+        },
+        setBlockDisplayed: function(value) {
+            this.p.showBlock = value;
         }
-
     });
     
     Scene.prototype.qSprite = qInstance.TScene;
     
     
     Scene.prototype.setDisplayedImage = function(name) {
-        if (Sprite.prototype.setDisplayedImage.call(this, name)) {
-            // compute transparency mask
-            if (name === this.blockName) {
-                var asset = this.images[name];
-                this.computeTransparencyMask(asset);
-                if (!this.displayBlock) {
-                    // display background
-                    this.setDisplayedImage(this.backgroundName);
+        var asset = this.images[name];
+        var qObject = this.qObject;
+        // check if image actually loaded
+        if (qInstance.assets[asset]) {
+            if (name === this.backgroundName) {
+                console.log("setting background");
+                qObject.setBackground(asset);
+                // Check that block is loaded too
+                var blockName = this.blockName;
+                var blockAsset = this.images[blockName];
+                if (!qInstance.assets[blockAsset]) {
+                    // block not already loaded: wait for it
+                    this.setDisplayedImage(blockName);
                 } else {
-                    this.qObject.unsetComputing();
+                    // block loaded: compute transparency mask
+                    this.computeTransparencyMask(blockAsset);
+                    console.log("setting block #1");
+                    qObject.setBlock(blockAsset);
                 }
-            } else {
-                this.qObject.unsetComputing();                    
+            } else if (name === this.blockName) {
+                // block loaded. Compute Transparency Mask
+                this.computeTransparencyMask(asset);
+                console.log("setting block #2");
+                qObject.setBlock(asset);
+            }
+        } else {
+            // otherwise, image will be displayed once loaded
+            if (typeof Sprite.waitingForImage[name] === 'undefined') {
+                Sprite.waitingForImage[name] = new Array();
+            }
+            if (Sprite.waitingForImage[name].indexOf(this) === -1) {
+                Sprite.waitingForImage[name].push(this);
             }
         }
     };
@@ -86,8 +117,7 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
                 // set initialized to false, to be sure that location will be set after next image is displayed
                 // (and width and height are correctly set)
                 parent.qObject.p.initialized = false;
-                parent.qObject.setComputing();
-                parent.setDisplayedImage(parent.blockName);
+                parent.setDisplayedImage(parent.backgroundName);
                 if (currentLocation !== false) {
                     parent.qObject.setLocation(currentLocation.x, currentLocation.y);
                 }
@@ -98,13 +128,11 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
     };        
     
     Scene.prototype._showBlock = function() {
-        this.displayBlock = true;
-        this.setDisplayedImage(this.blockName);
+        this.qObject.setBlockDisplayed(true);
     };
 
     Scene.prototype._hideBlock = function() {
-        this.displayBlock = false;
-        this.setDisplayedImage(this.backgroundName);
+        this.qObject.setBlockDisplayed(false);
     };
 
     Scene.prototype._setBackground = function(name) {
@@ -114,9 +142,7 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
         } catch (e) {}
         this.backgroundName = name;
         this.addImage(this.backgroundName, "elements", true);
-        if (!this.displayBlock) {
-            this.setDisplayedImage(this.backgroundName);
-        }
+        this.setDisplayedImage(this.backgroundName);
     };
 
     Scene.prototype._setBlock = function(name) {
@@ -125,9 +151,8 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
             this.removeImage(this.blockName);
         } catch (e) {}
         this.blockName = name;
+        this.qObject.p.initialized = false;
         this.addImage(this.blockName, "elements", true);
-        // anyway, because we have to re-compute mask
-        this.qObject.setComputing();
         this.setDisplayedImage(this.blockName);
     };    
     
