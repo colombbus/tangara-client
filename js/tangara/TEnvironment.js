@@ -132,29 +132,29 @@ define(['jquery'], function($) {
                 $.each(processedFiles[file], function(name, value) {
                     addTranslatedMethod(aClass, name, value.translated);
                     classMethods[aClass.prototype.className][value.translated] = value.displayed;
-                    //classMethods[aClass.prototype.className].push(value);
+                });
+            } else {
+                // we load translation file
+                $.ajax({
+                    dataType: "json",
+                    url: file,
+                    async: false,
+                    success: function(data) {
+                        processedFiles[file] = {};
+                        window.console.log("traduction : " + file);
+                        window.console.log("Language : " + language);
+                        $.each(data[language]['methods'], function(key, val) {
+                            addTranslatedMethod(aClass, val['name'], val['translated']);
+                            var value = {'translated':val['translated'], 'displayed':val['displayed']};
+                            classMethods[aClass.prototype.className][val.translated] = val.displayed;
+                            processedFiles[file][val['name']] = value;
+                        });
+                    },
+                    error: function(data, status, error) {
+                        window.console.log("Error loading translated methods (" + file + "): " + status);
+                    }
                 });
             }
-            $.ajax({
-                dataType: "json",
-                url: file,
-                async: false,
-                success: function(data) {
-                    processedFiles[file] = new Array();
-                    window.console.log("traduction : " + file);
-                    window.console.log("Language : " + language);
-                    $.each(data[language]['methods'], function(key, val) {
-                        addTranslatedMethod(aClass, val['name'], val['translated']);
-                        var value = {'translated':val['translated'], 'displayed':val['displayed']};
-                        console.log("pushing method "+value+" for class "+aClass.prototype.className);
-                        classMethods[aClass.prototype.className][val.translated] = val.displayed;//.push(value);
-                        processedFiles[file][val['name']] = value;
-                    });
-                },
-                error: function(data, status, error) {
-                    window.console.log("Error loading translated methods (" + file + "): " + status);
-                }
-            });
         };
         
         var addTranslatedMessages = function(aClass, file, language) {
