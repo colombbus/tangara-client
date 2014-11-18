@@ -2,7 +2,7 @@ define(['jquery', 'TRuntime'], function($, TRuntime) {
 
     function TCanvas() {
         var domCanvasOut = document.createElement("div");
-        domCanvasOut.id = "tcanvas";
+        domCanvasOut.id = "tcanvas-outer";
         
         var domCanvasDesign = document.createElement("div");
         domCanvasDesign.id = "tcanvas-design";
