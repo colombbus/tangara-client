@@ -141,6 +141,7 @@ define(['jquery'], function($) {
                 // translation already loaded: we use it
                 $.each(processedFiles[file], function(name, value) {
                     if (hideMethods.indexOf(name) == -1) {
+                        addTranslatedMethod(aClass, name, value.translated);
                         classMethods[aClass.prototype.className][value.translated] = value.displayed;
                     } else {
                         hideTranslatedMethod(aClass, value.translated);
