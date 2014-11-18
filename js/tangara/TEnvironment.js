@@ -126,6 +126,11 @@ define(['jquery'], function($) {
                 configurable: false,
                 writable: false}); // DOES NOT WORK
         };
+        
+        var hideTranslatedMethod = function (aClass, translated) {
+            // redefine method to hide the orignal one
+            aClass.prototype[translated] = function() {throw new Error("unknown function");};
+        };
 
         var addTranslatedMethods = function(aClass, file, language, hideMethods) {
             if (typeof hideMethods === 'undefined') {
@@ -135,9 +140,10 @@ define(['jquery'], function($) {
                 hideMethods = hideMethods.concat(hiddenMethods[file]);
                 // translation already loaded: we use it
                 $.each(processedFiles[file], function(name, value) {
-                    if (hideMethods.indexOf(name) === -1) {
-                        addTranslatedMethod(aClass, name, value.translated);
+                    if (hideMethods.indexOf(name) == -1) {
                         classMethods[aClass.prototype.className][value.translated] = value.displayed;
+                    } else {
+                        hideTranslatedMethod(aClass, value.translated);
                     }
                 });
             } else {
@@ -156,11 +162,13 @@ define(['jquery'], function($) {
                             hiddenMethods[file] = [];
                         }
                         $.each(data[language]['methods'], function(key, val) {
-                            if (hideMethods.indexOf(val['name']) === -1) {
+                            if (hideMethods.indexOf(val['name']) == -1) {
                                 addTranslatedMethod(aClass, val['name'], val['translated']);
                                 var value = {'translated':val['translated'], 'displayed':val['displayed']};
                                 classMethods[aClass.prototype.className][val.translated] = val.displayed;
                                 processedFiles[file][val['name']] = value;
+                            } else {
+                                hideTranslatedMethod(aClass, val['translated']);
                             }
                         });
                     },
@@ -233,7 +241,6 @@ define(['jquery'], function($) {
                     parentClass = Object.getPrototypeOf(parentClass);
                 }
             }
-            // TODO: add messages from parent classes
             return initialClass;
         };
 
