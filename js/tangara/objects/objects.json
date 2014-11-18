@@ -7,6 +7,14 @@
             "en": "Character"
         }
     },
+    "Space3D": {
+        "path": "space3d",
+        "translations": {
+            "fr": "Espace3D",
+            "es": "Espacio3D",
+            "en": "Space3D"
+        }
+    },
     "Sprite": {
         "path": "sprite",
         "translations": {

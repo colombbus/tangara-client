@@ -68,6 +68,14 @@ body, html {
     background-color:#FFFFFF;
 }
 
+#tcanvas3d {
+    background-color:transparent;
+    width:500px;
+    height:200px;
+    position:relative;
+    overflow:hidden;
+}
+
 #tcanvas {
     background-color:transparent;
     width:500px;

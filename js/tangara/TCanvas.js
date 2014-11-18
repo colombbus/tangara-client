@@ -1,8 +1,8 @@
-define(['jquery', 'TRuntime', ], function($, TRuntime) {
+define(['jquery', 'TRuntime'], function($, TRuntime) {
 
     function TCanvas() {
         var domCanvasOut = document.createElement("div");
-        domCanvasOut.id = "tcanvas-outer";
+        domCanvasOut.id = "tcanvas";
         
         var domCanvasDesign = document.createElement("div");
         domCanvasDesign.id = "tcanvas-design";
@@ -19,7 +19,10 @@ define(['jquery', 'TRuntime', ], function($, TRuntime) {
         
         var domCanvas = document.createElement("canvas");
         domCanvas.id = "tcanvas";
-        
+		
+        var domCanvas3d = document.createElement("canvas");
+        domCanvas3d.id = "tcanvas3d";       
+        domCanvasOut.appendChild(domCanvas3d);
         domCanvasOut.appendChild(domCanvas);
         
         var qStage;
