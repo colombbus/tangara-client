@@ -60,7 +60,7 @@ define(['TUI', 'TParser', 'TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jquery'
                 exec: function(editor) {
                     // postpone execution due to a bug in Firefox handling synchronous ajax when in a keyboard event 
                     // (insert new line)
-                    window.setTimeout(TUI.execute, 0);
+                    window.setTimeout(function() { TUI.execute(); }, 0);
                 },
                 readOnly: true // false if this command should not apply in readOnly mode
             });
