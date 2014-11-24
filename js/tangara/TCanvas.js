@@ -16,12 +16,13 @@ define(['jquery', 'TRuntime'], function($, TRuntime) {
 
         domCanvasOut.appendChild(domCanvasDesign);
 
+        var domCanvas3d = document.createElement("canvas");
+        domCanvas3d.id = "tcanvas3d";    
         
         var domCanvas = document.createElement("canvas");
         domCanvas.id = "tcanvas";
 		
-        var domCanvas3d = document.createElement("canvas");
-        domCanvas3d.id = "tcanvas3d";       
+   
         domCanvasOut.appendChild(domCanvas3d);
         domCanvasOut.appendChild(domCanvas);
         
