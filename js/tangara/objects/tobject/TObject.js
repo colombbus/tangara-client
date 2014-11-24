@@ -11,18 +11,25 @@ define(['jquery', 'TRuntime', 'TEnvironment'], function($, TRuntime, TEnvironmen
     };
 
     TObject.prototype.getResource = function(location) {
-        return TEnvironment.getObjectsUrl()+"/"+this.className.toLowerCase()+"/resources/"+location;
+        var objectPath = TEnvironment.getObjectPath(this.className);
+        var path = this.className.toLowerCase();
+
+        if ((objectPath !== 'undefined') && (this.className !== 'TObject')) {
+            path = objectPath;
+        }
+        console.log('result ::: ' + path);
+        return TEnvironment.getObjectsUrl() + "/" + path + "/resources/" + location;
     };
 
     TObject.prototype.getMessage = function(code) {
         if (typeof this.constructor.messages[code] !== 'undefined') {
             var message = this.constructor.messages[code];
-            if (arguments.length>1) {
+            if (arguments.length > 1) {
                 // message has to be parsed
                 var elements = arguments;
                 message = message.replace(/{(\d+)}/g, function(match, number) {
-                    number = parseInt(number)+1;
-                    return typeof elements[number] !== 'undefined' ? elements[number]:match;
+                    number = parseInt(number) + 1;
+                    return typeof elements[number] !== 'undefined' ? elements[number] : match;
                 });
             }
             return message;
@@ -30,7 +37,7 @@ define(['jquery', 'TRuntime', 'TEnvironment'], function($, TRuntime, TEnvironmen
             return code;
         }
     };
-    
+
     TObject.prototype._delete = function() {
         this.deleteObject();
     };
@@ -38,10 +45,10 @@ define(['jquery', 'TRuntime', 'TEnvironment'], function($, TRuntime, TEnvironmen
     TObject.prototype.freeze = function(value) {
         // every object may add actions to take to freeze
     };
-    
+
     TObject.prototype.toString = function() {
-        return "TObject "+this.className;
+        return "TObject " + this.className;
     };
-    
+
     return TObject;
 });
