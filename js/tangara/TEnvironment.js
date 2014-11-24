@@ -251,6 +251,10 @@ define(['jquery'], function($) {
         };
 
         this.getResource = function(name) {
+            if (name !== 'undefined') {
+                console.log ("ERROR")
+                //name = "tobject";
+            }
             return this.getBaseUrl() + "/js/tangara/resources/" + name;
         };
 

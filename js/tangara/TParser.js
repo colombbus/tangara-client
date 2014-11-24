@@ -15,8 +15,6 @@ define(['acorn'], function(acorn) {
             // return statements
             return result.body;
         };
-        
-        
     }
     
     var parserInstance = new TParser();

@@ -14,10 +14,9 @@ define(['jquery', 'TRuntime', 'TEnvironment'], function($, TRuntime, TEnvironmen
         var objectPath = TEnvironment.getObjectPath(this.className);
         var path = this.className.toLowerCase();
 
-        if ((objectPath !== 'undefined') && (this.className !== 'TObject')) {
+        if (typeof objectPath !== 'undefined') {
             path = objectPath;
         }
-        console.log('result ::: ' + path);
         return TEnvironment.getObjectsUrl() + "/" + path + "/resources/" + location;
     };
 
