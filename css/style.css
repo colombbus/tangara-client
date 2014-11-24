@@ -70,8 +70,8 @@ body, html {
 
 #tcanvas3d {
     background-color:transparent;
-    width:500px;
-    height:200px;
+    width:800px;
+    height:500px;
     position:relative;
     overflow:hidden;
 }
