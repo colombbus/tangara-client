@@ -8,11 +8,35 @@
         }
     },
     "Space3D": {
-        "path": "space3d",
+        "path": "3dspace",
         "translations": {
             "fr": "Espace3D",
             "es": "Espacio3D",
             "en": "Space3D"
+        }
+    },
+    "Sphere3D": {
+        "path": "3dsphere",
+        "translations": {
+            "fr": "Sphère3D",
+            "es": "Esfera3D",
+            "en": "Sphere3D"
+        }
+    },
+    "Cylinder3D": {
+        "path": "3dcylinder",
+        "translations": {
+            "fr": "Cylindre3D",
+            "es": "Cilindro3D",
+            "en": "Cylinder3D"
+        }
+    },
+    "Torus3D": {
+        "path": "3dtorus",
+        "translations": {
+            "fr": "Tore3D",
+            "es": "Toro3D",
+            "en": "Torus3D"
         }
     },
     "Sprite": {
