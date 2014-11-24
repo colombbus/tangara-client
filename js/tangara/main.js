@@ -77,18 +77,6 @@ function load() {
         TEnvironment.setProject(currentProject);
         $(document).ready( function() {
             frame.displayed();
-            /*if (!TEnvironment.debug) {
-                window.onbeforeunload = function(e) {
-                    if (window.unsavedFiles) {
-                        var message = TEnvironment.getMessage("confirm-leaving");
-                        var e = e || window.event;
-                        if (e) {
-                            e.returnValue = message;
-                        }
-                        return message;
-                    }
-                };
-            }*/
         });
     });
 }

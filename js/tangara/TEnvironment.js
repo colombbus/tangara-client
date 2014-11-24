@@ -1,6 +1,7 @@
 define(['jquery'], function($) {
     var TEnvironment = function() {
-        var processedFiles = new Array();
+        var processedFiles = {};
+        var hiddenMethods = {};
         var classMethods = new Array();
         var objectLibraries = [];
         var objectsPath = [];
@@ -130,78 +131,122 @@ define(['jquery'], function($) {
                 configurable: false,
                 writable: false}); // DOES NOT WORK
         };
+        
+        var hideTranslatedMethod = function (aClass, translated) {
+            // redefine method to hide the orignal one
+            aClass.prototype[translated] = function() {throw new Error("unknown function");};
+        };
 
-        var addTranslatedMethods = function(aClass, file, language) {
+        var addTranslatedMethods = function(aClass, file, language, hideMethods) {
+            if (typeof hideMethods === 'undefined') {
+                hideMethods = [];
+            }
             if (typeof processedFiles[file] !== "undefined") {
+                hideMethods = hideMethods.concat(hiddenMethods[file]);
                 // translation already loaded: we use it
                 $.each(processedFiles[file], function(name, value) {
-                    addTranslatedMethod(aClass, name, value.translated);
-                    classMethods[aClass.prototype.className][value.translated] = value.displayed;
-                    //classMethods[aClass.prototype.className].push(value);
+                    if (hideMethods.indexOf(name) == -1) {
+                        addTranslatedMethod(aClass, name, value.translated);
+                        classMethods[aClass.prototype.className][value.translated] = value.displayed;
+                    } else {
+                        hideTranslatedMethod(aClass, value.translated);
+                    }
+                });
+            } else {
+                // load translation file
+                $.ajax({
+                    dataType: "json",
+                    url: file,
+                    async: false,
+                    success: function(data) {
+                        processedFiles[file] = {};
+                        if (typeof data['hide'] !== "undefined") {
+                            // there are methods to hide
+                            hiddenMethods[file] = data['hide'];
+                            hideMethods = hideMethods.concat(data['hide']);
+                        } else {
+                            hiddenMethods[file] = [];
+                        }
+                        $.each(data[language]['methods'], function(key, val) {
+                            if (hideMethods.indexOf(val['name']) == -1) {
+                                addTranslatedMethod(aClass, val['name'], val['translated']);
+                                var value = {'translated':val['translated'], 'displayed':val['displayed']};
+                                classMethods[aClass.prototype.className][val.translated] = val.displayed;
+                                processedFiles[file][val['name']] = value;
+                            } else {
+                                hideTranslatedMethod(aClass, val['translated']);
+                            }
+                        });
+                    },
+                    error: function(data, status, error) {
+                        window.console.log("Error loading translated methods (" + file + "): " + status);
+                    }
                 });
             }
-            $.ajax({
-                dataType: "json",
-                url: file,
-                async: false,
-                success: function(data) {
-                    processedFiles[file] = new Array();
-                    window.console.log("traduction : " + file);
-                    window.console.log("Language : " + language);
-                    $.each(data[language]['methods'], function(key, val) {
-                        addTranslatedMethod(aClass, val['name'], val['translated']);
-                        var value = {'translated':val['translated'], 'displayed':val['displayed']};
-                        console.log("pushing method "+value+" for class "+aClass.prototype.className);
-                        classMethods[aClass.prototype.className][val.translated] = val.displayed;//.push(value);
-                        processedFiles[file][val['name']] = value;
-                    });
-                },
-                error: function(data, status, error) {
-                    window.console.log("Error loading translated methods (" + file + "): " + status);
-                }
-            });
+            return hideMethods;
         };
         
         var addTranslatedMessages = function(aClass, file, language) {
-            aClass.messages = new Array();
-            $.ajax({
-                dataType: "json",
-                url: file,
-                global:false,
-                async: false,
-                success: function(data) {
-                    if (typeof data[language] !== 'undefined'){
-                        aClass.messages = data[language];
-                        window.console.log("found messages in language: "+language);
-                    } else {
-                        window.console.log("found no messages for language: "+language);
+            if (typeof aClass.messages === "undefined") {
+                aClass.messages = {};                
+            }
+            if (typeof processedFiles[file] !== "undefined") {
+                // file has already been processed
+                $.each(processedFiles[file], function(name, value) {
+                    if (typeof aClass.messages[name] === 'undefined') {
+                        // only set message if not already set
+                        aClass.messages[name] = value;
                     }
-                },
-                error: function(data, status, error) {
-                    window.console.log("Error loading messages for class: "+aClass);
-                }
-            });
-            
+                });
+            } else {
+                // load message file
+                $.ajax({
+                    dataType: "json",
+                    url: file,
+                    global:false,
+                    async: false,
+                    success: function(data) {
+                        processedFiles[file] = {};
+                        if (typeof data[language] !== 'undefined'){
+                            $.each(data[language], function(name, value) {
+                                if (typeof aClass.messages[name] === 'undefined') {
+                                    // only set message if not already set
+                                    aClass.messages[name] = value;
+                                    processedFiles[file][name] = value;
+                                }
+                            });
+                            window.console.log("found messages in language: "+language);
+                        } else {
+                            window.console.log("found no messages for language: "+language);
+                        }
+                    },
+                    error: function(data, status, error) {
+                        window.console.log("Error loading messages for class: "+aClass);
+                    }
+                });
+            }            
         };
 
         this.internationalize = function(initialClass, parents) {
-            // 1st load translated methods
             var translationFile = initialClass.prototype.getResource("i18n.json");
+            var messageFile = initialClass.prototype.getResource("messages.json");
             classMethods[initialClass.prototype.className] = {};
-            addTranslatedMethods(initialClass, translationFile, this.language);
+            // 1st load translated methods
+            var hideMethods = addTranslatedMethods(initialClass, translationFile, this.language);
+            // 2nd load translated messages
+            addTranslatedMessages(initialClass, messageFile, this.language);
+            // 3rd do it for parents
             if ((typeof parents !== 'undefined') && parents) {
                 // internationalize parents as well
                 var parentClass = Object.getPrototypeOf(initialClass.prototype);
                 while (parentClass !== Object.prototype) {
                     translationFile = parentClass.getResource("i18n.json");
-                    addTranslatedMethods(initialClass, translationFile, this.language);
+                    messageFile = parentClass.getResource("messages.json");
+                    hideMethods = addTranslatedMethods(initialClass, translationFile, this.language, hideMethods);
+                    addTranslatedMessages(initialClass, messageFile, this.language);
                     parentClass = Object.getPrototypeOf(parentClass);
                 }
             }
-            // 2nd load translated messages
-            // TODO: add messages from parent classes
-            translationFile = initialClass.prototype.getResource("messages.json");
-            addTranslatedMessages(initialClass, translationFile, this.language);
             return initialClass;
         };
 

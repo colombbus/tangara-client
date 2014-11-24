@@ -1,4 +1,5 @@
 {
+    "hide": ["_addImage", "_setImage", "_displayImage", "_displayNextImage", "_displayPreviousImage", "_removeImage", "_removeImageSet"],
     "fr": {
         "methods":[
             {"name":"_setScene","translated":"définirDécor","displayed":"définirDécor(\"nature\")"},

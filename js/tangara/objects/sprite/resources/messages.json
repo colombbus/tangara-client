@@ -1,10 +1,12 @@
 {
     "fr": {
-        "resource not found":"Image '{0}' introuvable",
+        "file not found":"Fichier « {0} » introuvable",
+        "resource not found":"Image « {0} » introuvable",
         "wrong set":"Ensemble d'images incorrect"
     },
     "en": {
-        "resource not found":"Picture '{0}' cannot be found",
+        "file not found":"File '{0}' not found",
+        "resource not found":"Picture '{0}' not found",
         "wrong set":"Wrong images set"
     }
 }
