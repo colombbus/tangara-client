@@ -23,6 +23,22 @@
             "en": "Sphere3D"
         }
     },
+    "Quadrilateral3D": {
+        "path": "3dquadrilateral",
+        "translations": {
+            "fr": "Quadrilatère3D",
+            "es": "Cuadrilatero3D",
+            "en": "Quadrilateral3D"
+        }
+    },
+    "Box3D": {
+        "path": "3dbox",
+        "translations": {
+            "fr": "Boîte3D",
+            "es": "Caja3D",
+            "en": "Box3D"
+        }
+    },
     "Cylinder3D": {
         "path": "3dcylinder",
         "translations": {
@@ -75,7 +91,7 @@
         "path": "walker",
         "translations": {
             "fr": "Promeneur",
-            "es": "TBT",
+            "es": "Paseante",
             "en": "Walker"
         }
     },
@@ -83,7 +99,7 @@
         "path": "block",
         "translations": {
             "fr": "Bloc",
-            "es": "TBT",
+            "es": "Bloque",
             "en": "Block"
         }
     },
@@ -91,7 +107,7 @@
         "path": "sequence",
         "translations": {
             "fr": "Séquence",
-            "es": "TBT",
+            "es": "Secuencia",
             "en": "Sequence"
         }
     },
@@ -99,7 +115,7 @@
         "path": "clock",
         "translations": {
             "fr": "Minuteur",
-            "es": "TBT",
+            "es": "Minutero",
             "en": "Clock"
         }
     },
@@ -107,7 +123,7 @@
         "path": "text",
         "translations": {
             "fr": "Texte",
-            "es": "TBT",
+            "es": "Texto",
             "en": "Text"
         }
     },
@@ -115,7 +131,7 @@
         "path": "random",
         "translations": {
             "fr": "Hasard",
-            "es": "TBT",
+            "es": "Casualidad",
             "en": "Random"
         }
     },
@@ -123,7 +139,7 @@
         "path": "hero",
         "translations": {
             "fr": "Héros",
-            "es": "TBT",
+            "es": "Héroe",
             "en": "Hero"
         }
     },
@@ -131,7 +147,7 @@
         "path": "scene",
         "translations": {
             "fr": "Décor",
-            "es": "TBT",
+            "es": "Decoración",
             "en": "Scene"
         }
     },
@@ -139,7 +155,7 @@
         "path": "item",
         "translations": {
             "fr": "Item",
-            "es": "TBT",
+            "es": "Artículo",
             "en": "Item"
         }
     }    
