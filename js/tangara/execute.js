@@ -6,6 +6,7 @@ require.config({
         "quintus":'../libs/quintus-0.2.0/quintus-all.min',
         "acorn":'../libs/acorn/acorn',
         "TObject":'objects/tobject/TObject',
+        "TObject3D":'objects/tobject3d/TObject3D',
         "TGraphicalObject":'objects/tgraphicalobject/TGraphicalObject'
     }
 });
