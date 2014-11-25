@@ -31,24 +31,28 @@ define(['jquery', 'babylon', 'TEnvironment', 'TUtils', 'TObject', 'CommandManage
     /**
      * 
      */
-    Space3D.prototype.freeze = function() {
-        camera.detachControl(canvas);
+    Space3D.prototype.addObject = function(obj3D) {
+        obj3D.setSpace(scene);
+    };
+    
+    /**
+     * 
+     * @param TLight3D lg3D
+     */
+    Space3D.prototype.addLight = function(lg3D) {
     };
     
     /**
      * 
      */
-    Space3D.prototype.run = function() {
-        camera.attachControl(canvas, true);
+    Space3D.prototype.freeze = function(value) {
+        if (value)
+            camera.detachControl(canvas);
+        else
+            camera.attachControl(canvas, true);
     };
-    
-    /**
-     * 
-     */
-    Space3D.prototype.getScene = function() {
-        return scene;
-    };
-    
+
+
     TEnvironment.internationalize(Space3D, true);
 
     return Space3D;
