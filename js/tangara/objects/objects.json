@@ -55,6 +55,86 @@
             "en": "Torus3D"
         }
     },
+    "Text3D": {
+        "path": "3dtext",
+        "translations": {
+            "fr": "Texte3D",
+            "es": "Texto3D",
+            "en": "Text3D"
+        }
+    },
+    "Triangle3D": {
+        "path": "3dtriangle",
+        "translations": {
+            "fr": "Triangle3D",
+            "es": "Triangulo3D",
+            "en": "Triangle3D"
+        }
+    },
+    "Cube3D": {
+        "path": "3dcube",
+        "translations": {
+            "fr": "Cube3D",
+            "es": "Cubo3D",
+            "en": "Cube3D"
+        }
+    },
+    "Light3D": {
+        "path": "3dlight",
+        "translations": {
+            "fr": "Lumière3D",
+            "es": "Luz3D",
+            "en": "Light3D"
+        }
+    },
+    "Point3D": {
+        "path": "3dpoint",
+        "translations": {
+            "fr": "Point3D",
+            "es": "Punto3D",
+            "en": "Point3D"
+        }
+    },
+    "Rider3D": {
+        "path": "3drider",
+        "translations": {
+            "fr": "Suiveur3D",
+            "es": "Seguidor3D",
+            "en": "Rider3D"
+        }
+    },
+    "Segment3D": {
+        "path": "3dsegment",
+        "translations": {
+            "fr": "Segment3D",
+            "es": "Segmento3D",
+            "en": "Segment3D"
+        }
+    },
+    "Vector3D": {
+        "path": "3dvector",
+        "translations": {
+            "fr": "Vecteur3D",
+            "es": "Vector3D",
+            "en": "Vector3D"
+        }
+    },
+    "Walker3D": {
+        "path": "3dwalker",
+        "translations": {
+            "fr": "Promeneur3D",
+            "es": "Paseante3D",
+            "en": "Walker3D"
+        }
+    },
+    "Path3D": {
+        "path": "3dpath",
+        "translations": {
+            "fr": "Chemin3D",
+            "es": "Camino3D",
+            "en": "Path3D"
+        }
+    },
     "Sprite": {
         "path": "sprite",
         "translations": {

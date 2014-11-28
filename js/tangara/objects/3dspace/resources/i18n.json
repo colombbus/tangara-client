@@ -1,7 +1,11 @@
 {
     "fr": {
-        "methods":[
-            {"name":"_moveForward","translated":"avancer","displayed":"avancer(50)"}
+        "methods": [
+            {
+                "name": "_moveForward",
+                "translated": "avancer",
+                "displayed": "avancer(50)"
+            }
         ]
     }
 }

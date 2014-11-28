@@ -1,7 +1,8 @@
 {
     "fr": {
         "methods":[
-             {"name":"_delete","translated":"supprimer","displayed":"supprimer()"}
+             {"name":"_hide","translated":"cacher","displayed":"cacher()"},
+             {"name":"_show","translated":"montrer","displayed":"montrer()"}
         ]
     }
 }
