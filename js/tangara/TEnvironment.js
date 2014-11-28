@@ -65,7 +65,6 @@ define(['jquery'], function($) {
                 success: function(data) {
                     $.each( data, function( key, val ) {
                         var lib = "objects/"+val['path']+"/"+key;
-                        if (val['path'] !== 'undefined')
                             objectsPath[key] = val['path'];
                         if (typeof val['translations'][language] !== 'undefined') {
                             window.console.log("adding "+lib);
@@ -251,10 +250,6 @@ define(['jquery'], function($) {
         };
 
         this.getResource = function(name) {
-            if (name !== 'undefined') {
-                console.log ("ERROR")
-                //name = "tobject";
-            }
             return this.getBaseUrl() + "/js/tangara/resources/" + name;
         };
 
