@@ -7,12 +7,11 @@ define(['jquery', 'TRuntime'], function($, TRuntime) {
         domCanvasDesign.id = "tcanvas-design";
         var domCanvasDesignMouse = document.createElement("div");
         domCanvasDesignMouse.id = "tcanvas-design-mouse";
-        domCanvasDesignMouse.class = "right-design";
         domCanvasDesign.appendChild(domCanvasDesignMouse);
         var $domCanvasDesignMouse = $(domCanvasDesignMouse);
+        $domCanvasDesignMouse.addClass("right-design");
 
         // start with design mode off
-
         domCanvasDesign.style.display = "none";
         domCanvasOut.appendChild(domCanvasDesign);
         var domCanvas3d = document.createElement("canvas");
@@ -28,18 +27,17 @@ define(['jquery', 'TRuntime'], function($, TRuntime) {
             $domCanvasDesignMouse.text(x + "," + y);
         };
         var designMouseSideHandler = function(event) {
-            console.log("mouse over");
+            if ($domCanvasDesignMouse.hasClass("left-design")) {
+                $domCanvasDesignMouse.removeClass("left-design");
+                $domCanvasDesignMouse.addClass("right-design");
+                return;
+            }
             
-//            if (domCanvasDesignMouse.css("right")) {
-//                domCanvasDesignMouse.removeClass("right-design");
-//                domCanvasDesignMouse.addClass("left-design");
-//                console.log("left design");
-//            }
-//            if (domCanvasDesignMouse.css("left")) {
-//                domCanvasDesignMouse.removeClass("left-design");
-//                domCanvasDesignMouse.addClass("right-design");
-//                console.log("right design");
-//            }
+            if ($domCanvasDesignMouse.hasClass("right-design")) {
+                $domCanvasDesignMouse.removeClass("right-design");
+                $domCanvasDesignMouse.addClass("left-design");
+                return;
+            }
         };
 
         this.addGraphicalObject = function(object) {
@@ -88,12 +86,12 @@ define(['jquery', 'TRuntime'], function($, TRuntime) {
             if (value) {
                 $(domCanvasDesign).show();
                 $(domCanvas).on("mousemove", designMouseHandler);
-                //$(domCanvasDesignMouse).on("mouseover", designMouseSideHandler);
+                $domCanvasDesignMouse.on("mouseover", designMouseSideHandler);
             } else {
                 $(domCanvasDesign).hide();
                 $domCanvasDesignMouse.text("");
                 $(domCanvas).off("mousemove", designMouseHandler);
-                //$(domCanvasDesignMouse).off("mouseover", designMouseSideHandler);
+                $domCanvasDesignMouse.off("mouseover", designMouseSideHandler);
             }
         };
     }
