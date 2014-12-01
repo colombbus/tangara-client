@@ -72,8 +72,11 @@ body, html {
     background-color:transparent;
     width:800px;
     height:500px;
-    position:relative;
+    position:absolute;
     overflow:hidden;
+    top:0px;
+    left:0px;
+    display:none;
 }
 
 #tcanvas {
@@ -94,12 +97,17 @@ body, html {
 #tcanvas-design-mouse {
     position:absolute;
     bottom:0px;
-    right:0px;
     font-family: "Arial", sans-serif;
     color:#929292;
     font-size:12pt;
     background-color:white;
     padding:2px;
+}
+.right-design{
+    right:0px;
+}
+.left-design{
+    left:0px;
 }
 
 #tcanvas_container {
