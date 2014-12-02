@@ -76,20 +76,26 @@ define(['jquery', 'TEnvironment', 'TObject3D'], function($, TEnvironment, TObjec
     Point3D.prototype._setSpace = function(scene3d) {
         TObject3D.prototype._setSpace.call(this, scene3d);
         // Display name & 3 segments
+        var point = new BABYLON.Vector3(this._getX(), this._getY(), this._getZ());
+        var xdelta = new BABYLON.Vector3(1, 0 , 0);
+        var ydelta = new BABYLON.Vector3(0, 1 , 0);
+        var zdelta = new BABYLON.Vector3(0, 0 , 1);
+        
         this.xlines = BABYLON.Mesh.CreateLines("xline", [
-            new BABYLON.Vector3(1 + this._getX(), this._getY(), this._getZ()),
-            new BABYLON.Vector3(-1 + this._getX(), this._getY(), this._getZ())
+            point.add(xdelta),
+            point.subtract(xdelta)
         ], this.scene);
         this.xlines.color = new BABYLON.Color3(1, 0, 0); //red
 
         this.ylines = BABYLON.Mesh.CreateLines("yline", [
-            new BABYLON.Vector3(this._getX(), this._getY(), this._getZ()) + new BABYLON.Vector3(0, 1 , 0),
-            new BABYLON.Vector3(this._getX(), -1 + this._getY(), this._getZ())
+            point.add(ydelta),
+            point.subtract(ydelta)
         ], this.scene);
         this.ylines.color = new BABYLON.Color3(0, 0, 1); //blue
+
         this.zlines = BABYLON.Mesh.CreateLines("zline", [
-            new BABYLON.Vector3(this._getX(), this._getY(), 1 + this._getZ()),
-            new BABYLON.Vector3(this._getX(), this._getY(), -1 + this._getZ())
+            point.add(zdelta),
+            point.subtract(zdelta)
         ], this.scene);
         this.zlines.color = new BABYLON.Color3(0, 1, 0); //green
     };
