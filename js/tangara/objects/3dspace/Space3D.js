@@ -1,34 +1,44 @@
 define(['jquery', 'babylon', 'TEnvironment', 'TUtils', 'TObject', 'CommandManager'], function($, babylon, TEnvironment, TUtils, TObject, CommandManager) {
     var Space3D = function() {
-        engine.runRenderLoop(function() {
-            scene.render();
-        });
-        this.freeze(false);
-        window.addEventListener("resize", function() {
-            engine.resize();
-        });
+        this.scene = new BABYLON.Scene(engine);
+        this.camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -10), this.scene);
+        this.camera.setTarget(BABYLON.Vector3.Zero());
+        this.light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), this.scene);
+        this.light.intensity = 0.7;
+        this.ground = BABYLON.Mesh.CreateGround("ground1", 6, 6, 2, this.scene, true);
+        this.sceneIndex = scenes.length;
+        scenes.push(this.scene);
+        if (this.sceneIndex === 0) {
+            // first space to be displayed: show canvas
+            $canvas.show();
+        }
+        TObject.call(this);
     };
 
     var canvas = document.getElementById("tcanvas3d");
-    
+    var $canvas = $(canvas);
     var engine = new BABYLON.Engine(canvas, true);
+    var scenes = [];
     
-    var scene = new BABYLON.Scene(engine);
-
-    var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -10), scene);
-    camera.setTarget(BABYLON.Vector3.Zero());
+    engine.runRenderLoop(function() {
+        for (var i=0; i<scenes.length; i++) {
+            scenes[i].render();
+        }
+    });
     
-    var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
-    light.intensity = 0.7;
+    window.addEventListener("resize", function() {
+        engine.resize();
+    });
 
-    var ground = BABYLON.Mesh.CreateGround("ground1", 6, 6, 2, scene, true);
+    // hide canvas at the beginning
+    $canvas.hide();
 
     Space3D.prototype = Object.create(TObject.prototype);
     Space3D.prototype.constructor = Space3D;
     Space3D.prototype.className = "Space3D";
 
     Space3D.prototype._addObject = function(obj3D) {
-        obj3D._setSpace(scene);
+        obj3D._setSpace(this.scene);
     };
 
     Space3D.prototype.addLight = function(lg3D) {
@@ -36,11 +46,21 @@ define(['jquery', 'babylon', 'TEnvironment', 'TUtils', 'TObject', 'CommandManage
 
     Space3D.prototype.freeze = function(value) {
         if (value)
-            camera.detachControl(canvas);
+            this.camera.detachControl(canvas);
         else
-            camera.attachControl(canvas, true);
+            this.camera.attachControl(canvas, true);
     };
 
+    Space3D.prototype.deleteObject = function() {
+        TObject.prototype.deleteObject.call(this);
+        scenes.splice(this.sceneIndex,1);
+        this.scene.dispose();
+        if (scenes.length === 0) {
+            // no more spaces to show: hide canvas
+            $canvas.hide();
+        }
+    };
+    
     TEnvironment.internationalize(Space3D, true);
 
     return Space3D;
