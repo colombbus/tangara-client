@@ -96,7 +96,7 @@ define(['jquery', 'TEnvironment', 'TObject3D'], function($, TEnvironment, TObjec
 
     /**
      * Set Z coordinate of a Point3D
-     * @param Number z
+     * @param Number z coordinate
      * @returns undefined
      */
     Point3D.prototype._setZ = function(z) {
@@ -110,9 +110,9 @@ define(['jquery', 'TEnvironment', 'TObject3D'], function($, TEnvironment, TObjec
     /**
      * Set X, Y, Z coordinates of a Point3D
      * 
-     * @param Number x
-     * @param Number y
-     * @param Number z
+     * @param Number x coordinate
+     * @param Number y coordinate
+     * @param Number z coordinate
      */
     Point3D.prototype._setCoordinates = function(x, y, z) {
         if (typeof x === 'object' || x instanceof Point3D) {
