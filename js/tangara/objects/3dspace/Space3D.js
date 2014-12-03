@@ -10,14 +10,14 @@ define(['jquery', 'babylon', 'TEnvironment', 'TUtils', 'TObject', 'CommandManage
     };
 
     var canvas = document.getElementById("tcanvas3d");
-
+    
     var engine = new BABYLON.Engine(canvas, true);
-
+    
     var scene = new BABYLON.Scene(engine);
 
     var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -10), scene);
     camera.setTarget(BABYLON.Vector3.Zero());
-
+    
     var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
     light.intensity = 0.7;
 
@@ -27,8 +27,8 @@ define(['jquery', 'babylon', 'TEnvironment', 'TUtils', 'TObject', 'CommandManage
     Space3D.prototype.constructor = Space3D;
     Space3D.prototype.className = "Space3D";
 
-    Space3D.prototype.addObject = function(obj3D) {
-        obj3D.setSpace(scene);
+    Space3D.prototype._addObject = function(obj3D) {
+        obj3D._setSpace(scene);
     };
 
     Space3D.prototype.addLight = function(lg3D) {

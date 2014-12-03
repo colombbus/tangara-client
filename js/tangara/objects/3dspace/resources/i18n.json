@@ -1,11 +1,7 @@
 {
     "fr": {
         "methods": [
-            {
-                "name": "_moveForward",
-                "translated": "avancer",
-                "displayed": "avancer(50)"
-            }
+            {"name": "_addObject", "translated": "ajouterObjet", "displayed": "ajouterObjet(objet)"}
         ]
     }
 }
