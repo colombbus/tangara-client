@@ -16,6 +16,7 @@ define(['jquery', 'TRuntime'], function($, TRuntime) {
         domCanvasOut.appendChild(domCanvasDesign);
         var domCanvas3d = document.createElement("canvas");
         domCanvas3d.id = "tcanvas3d";
+        var $domCanvas3d = $(domCanvas3d);
         var domCanvas = document.createElement("canvas");
         domCanvas.id = "tcanvas";
         domCanvasOut.appendChild(domCanvas3d);
@@ -26,17 +27,20 @@ define(['jquery', 'TRuntime'], function($, TRuntime) {
             var y = event.clientY + domCanvasOut.scrollTop;
             $domCanvasDesignMouse.text(x + "," + y);
         };
+        var canvasToCanvas3DTransferHandler = function(event) {
+            $domCanvas3d.trigger(event);
+            console.log("type " + event.type);
+        };
+
         var designMouseSideHandler = function(event) {
             if ($domCanvasDesignMouse.hasClass("left-design")) {
                 $domCanvasDesignMouse.removeClass("left-design");
                 $domCanvasDesignMouse.addClass("right-design");
                 return;
             }
-            
-            if ($domCanvasDesignMouse.hasClass("right-design")) {
+            else {
                 $domCanvasDesignMouse.removeClass("right-design");
                 $domCanvasDesignMouse.addClass("left-design");
-                return;
             }
         };
 
@@ -87,6 +91,12 @@ define(['jquery', 'TRuntime'], function($, TRuntime) {
                 $(domCanvasDesign).show();
                 $(domCanvas).on("mousemove", designMouseHandler);
                 $domCanvasDesignMouse.on("mouseover", designMouseSideHandler);
+//                $domCanvas3d.on("click", function(e) {
+//                    console.log("c3D clicked");
+//                    if (e.clientY > $(this).outerHeight() - 14) {
+//                        alert('clicked on the bottom border!');
+//                    }
+//                });
             } else {
                 $(domCanvasDesign).hide();
                 $domCanvasDesignMouse.text("");
