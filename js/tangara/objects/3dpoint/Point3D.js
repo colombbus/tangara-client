@@ -10,53 +10,110 @@ define(['jquery', 'TEnvironment', 'TObject3D'], function($, TEnvironment, TObjec
      */
     var Point3D = function(x, y, z) {
         this._setCoordinates(x, y, z);
+        var vectorPoint;
         var xlines;
         var ylines;
         var zlines;
+        var pointX;
+        var pointY;
+        var pointZ;
+        var name;
     };
-    var pointX;
-    var pointY;
-    var pointZ;
-    var name;
 
     Point3D.prototype = Object.create(TObject3D.prototype);
     Point3D.prototype.constructor = Point3D;
     Point3D.prototype.className = "Point3D";
 
-    // TODO: display name in Space3D
+    /**
+     * Get the Point3D's name
+     * TODO: display it in Space3D
+     * 
+     * @returns String Name of the Point3D
+     */
     Point3D.prototype._getName = function() {
         return this.name;
     };
+
+    /**
+     * Set the Point3D's name
+     * @param String n
+     * 
+     */
     Point3D.prototype._setName = function(n) {
         this.name = n;
+        this.redraw();
     };
+
+    /**
+     * Get x coordinate of a Point3D
+     * @returns Number X coordinate
+     */
     Point3D.prototype._getX = function() {
         return this.pointX;
     };
+
+    /**
+     * Get y coordinate of a Point3D
+     * @returns Number Y coordinate
+     */
     Point3D.prototype._getY = function() {
-        return this.pointX;
+        return this.pointY;
     };
+
+    /**
+     * Get z coordinate of a Point3D
+     * @returns Number Z coordinate
+     */
     Point3D.prototype._getZ = function() {
         return this.pointZ;
     };
+
+    /**
+     * Set X coordinate of a Point3D
+     * @param Number x
+     * @returns undefined
+     */
     Point3D.prototype._setX = function(x) {
         if (typeof x === 'undefined')
             this.pointX = 0;
         else
-            this.pointX = x;
+            this.pointX = parseInt(x);
+        this.redraw();
     };
+
+    /**
+     * Set Y coordinate of a Point3D
+     * @param Number y
+     * @returns undefined
+     */
     Point3D.prototype._setY = function(y) {
         if (typeof y === 'undefined')
             this.pointY = 0;
         else
-            this.pointY = y;
+            this.pointY = parseInt(y);
+        this.redraw();
     };
+
+    /**
+     * Set Z coordinate of a Point3D
+     * @param Number z
+     * @returns undefined
+     */
     Point3D.prototype._setZ = function(z) {
         if (typeof z === 'undefined')
             this.pointZ = 0;
         else
-            this.pointZ = z;
+            this.pointZ = parseInt(z);
+        this.redraw();
     };
+
+    /**
+     * Set X, Y, Z coordinates of a Point3D
+     * 
+     * @param Number x
+     * @param Number y
+     * @param Number z
+     */
     Point3D.prototype._setCoordinates = function(x, y, z) {
         if (typeof x === 'object' || x instanceof Point3D) {
             var point = x;
@@ -68,41 +125,93 @@ define(['jquery', 'TEnvironment', 'TObject3D'], function($, TEnvironment, TObjec
             this._setY(y);
             this._setZ(z);
         }
+        this.redraw();
+    };
+    Point3D.prototype._translate = function(x, y, z) {
+        // TODO: 
     };
 
-    Point3D.prototype._translate = function(x, y, z) {
+    /**
+     * Show a Point3D
+     */
+    Point3D.prototype._show = function() {
+        if ((typeof this.xlines !== 'undefined') ||
+                (typeof this.ylines !== 'undefined') ||
+                (typeof this.zlines !== 'undefined')) {
+            this.xlines.visibility = true;
+            this.ylines.visibility = true;
+            this.zlines.visibility = true;
+        }
     };
-    
+    /**
+     * Hide a Point3D
+     */
+    Point3D.prototype._hide = function() {
+        if ((typeof this.xlines !== 'undefined') ||
+                (typeof this.ylines !== 'undefined') ||
+                (typeof this.zlines !== 'undefined')) {
+            this.xlines.visibility = false;
+            this.ylines.visibility = false;
+            this.zlines.visibility = false;
+        }
+    };
+
+    /**
+     * Set the 
+     * @param Space3D scene3d
+     * @returns {undefined}
+     */
     Point3D.prototype._setSpace = function(scene3d) {
         TObject3D.prototype._setSpace.call(this, scene3d);
-        // Display name & 3 segments
-        var point = new BABYLON.Vector3(this._getX(), this._getY(), this._getZ());
-        var xdelta = new BABYLON.Vector3(1, 0 , 0);
-        var ydelta = new BABYLON.Vector3(0, 1 , 0);
-        var zdelta = new BABYLON.Vector3(0, 0 , 1);
-        
+        this.redraw();
+    };
+
+    /**
+     * Draw or redraw a 3 segments to show a Point3D 
+     * in a Space3D
+     */
+    Point3D.prototype.redraw = function() {
+        if ((typeof this._getX() === 'undefined') ||
+                (typeof this._getY() === 'undefined') ||
+                (typeof this._getZ() === 'undefined') ||
+                (typeof this.scene === 'undefined')) {
+            return;
+        }
+        this.vectorPoint = new BABYLON.Vector3(this._getX(), this._getY(), this._getZ());
+        var xDelta = new BABYLON.Vector3(.5, 0, 0);
+        var yDelta = new BABYLON.Vector3(0, .5, 0);
+        var zDelta = new BABYLON.Vector3(0, 0, .5);
+        if ((typeof this.xlines !== 'undefined') ||
+                (typeof this.ylines !== 'undefined') ||
+                (typeof this.zlines !== 'undefined')) {
+            this.xlines.dispose();
+            this.ylines.dispose();
+            this.zlines.dispose();
+        }
         this.xlines = BABYLON.Mesh.CreateLines("xline", [
-            point.add(xdelta),
-            point.subtract(xdelta)
+            this.vectorPoint.add(xDelta),
+            this.vectorPoint.subtract(xDelta)
         ], this.scene);
         this.xlines.color = new BABYLON.Color3(1, 0, 0); //red
 
         this.ylines = BABYLON.Mesh.CreateLines("yline", [
-            point.add(ydelta),
-            point.subtract(ydelta)
+            this.vectorPoint.add(yDelta),
+            this.vectorPoint.subtract(yDelta)
         ], this.scene);
         this.ylines.color = new BABYLON.Color3(0, 0, 1); //blue
 
         this.zlines = BABYLON.Mesh.CreateLines("zline", [
-            point.add(zdelta),
-            point.subtract(zdelta)
+            this.vectorPoint.add(zDelta),
+            this.vectorPoint.subtract(zDelta)
         ], this.scene);
         this.zlines.color = new BABYLON.Color3(0, 1, 0); //green
     };
-    
+
     Point3D.prototype.toString = function() {
         return "Point3D";
     };
+
+    TEnvironment.internationalize(Point3D, true);
 
     return Point3D;
 });
