@@ -31,7 +31,10 @@ define(['jquery', 'TRuntime'], function($, TRuntime) {
             $domCanvas3d.trigger(event);
             console.log("type " + event.type);
         };
-
+        /**
+         * 
+         * @param event 
+         */
         var designMouseSideHandler = function(event) {
             if ($domCanvasDesignMouse.hasClass("left-design")) {
                 $domCanvasDesignMouse.removeClass("left-design");
