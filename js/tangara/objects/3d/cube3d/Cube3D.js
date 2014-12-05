@@ -21,7 +21,7 @@ define(['jquery', 'babylon', 'TEnvironment', 'TObject3D'], function($, babylon, 
      */
     Cube3D.prototype._setSpace = function(scene3d) {
         TObject3D.prototype._setSpace.call(this, scene3d);
-        this.object3d = this.getMesh().CreateBox("box1", 2, this.scene, true)
+        this.object3d = this.getMesh().CreateBox(this.createName(), 2, this.scene, true);
     };
     Cube3D.prototype._setDimension = function(size) {
     };

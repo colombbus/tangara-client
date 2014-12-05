@@ -1,20 +1,24 @@
-define(['jquery', 'babylon', 'TEnvironment', 'TObject'], function($, babylon, TEnvironment, TObject) {
+define(['jquery', 'babylon', 'TEnvironment', 'TObject3D'], function($, babylon, TEnvironment, TObject3D) {
     /**
      * 
-     * @return 
+     * @returns Light3D
      */
-    var Light3D = function() {
-        TObject.call(this);
+    var Light3D = function(sizeX, sizeY, sizeZ, colorName) {
+        /*
+         this.object3d.position.x = sizeX;
+         this.object3d.position.y = sizeY;
+         this.object3d.position.z = sizeZ;
+         */
     };
-    //var object3d;
-    //var name;
 
-    Light3D.prototype = Object.create(TObject.prototype);
+    Light3D.prototype = Object.create(TObject3D.prototype);
     Light3D.prototype.constructor = Light3D;
     Light3D.prototype.className = "Light3D";
 
     Light3D.prototype._setSpace = function(scene3d) {
-        //this.scene = scene3d;
+        TObject3D.prototype._setSpace.call(this, scene3d);
+        this.object3d = new BABYLON.HemisphericLight(this.createName(), new BABYLON.Vector3(0, 1, 0), this.scene);
+        this.object3d.intensity = 0.7;
     };
     Light3D.prototype._setAmbient = function() {
     };

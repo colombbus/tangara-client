@@ -21,7 +21,7 @@ define(['jquery', 'babylon', 'TEnvironment', 'TObject3D'], function($, babylon, 
      */
     Path3D.prototype._setSpace = function(scene3d) {
         TObject3D.prototype._setSpace.call(this, scene3d);
-        //this.object3d = this.getMesh().CreateCylinder(this.getName(), 3, 1, 1, 16, this.scene);
+        //this.object3d = this.getMesh().CreateCylinder(this.createName(), 3, 1, 1, 16, this.scene);
     };
 
     Path3D.prototype._loadPathPicture = function(file) {

@@ -13,9 +13,9 @@ define(['jquery', 'babylon', 'TEnvironment', 'TObject3D'], function($, babylon, 
 
     Sphere3D.prototype._setSpace = function(scene3d) {
         TObject3D.prototype._setSpace.call(this, scene3d);
-        scene = scene3d;
-        object3d = BABYLON.Mesh.CreateSphere("sphere1", 16, 2, scene);
-        object3d.position.y = 1;
+        this.scene = scene3d;
+        this.object3d = this.getMesh().CreateSphere(this.createName(), 16, 2, this.scene);
+        this.object3d.position.y = 1;
     };
 
     Sphere3D.prototype._setRadius = function(radius) {

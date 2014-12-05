@@ -1,15 +1,16 @@
 define(['jquery', 'TEnvironment', 'TObject3D'], function($, TEnvironment, TObject3D) {
     /**
-     *  A Point3D is a basic 3D element but a complex object can:
-     *  -set a name
-     *  -be displayed in Space3D as 3 Segment3D 
-     *  
+     *  A Point3D is a basic 3D element but a complex object can:</br>
+     *  -set a name</br>
+     *  -be displayed in Space3D as 3 Segment3D </br>
+     *  </br>
      *  Another Point3D can defined a Point3D
      *  
      * @return Point3D 
      */
     var Point3D = function(x, y, z) {
         this._setCoordinates(x, y, z);
+        this.createName();
         var vectorPoint;
         var xlines;
         var ylines;
@@ -18,11 +19,13 @@ define(['jquery', 'TEnvironment', 'TObject3D'], function($, TEnvironment, TObjec
         var pointY;
         var pointZ;
         var name;
+        var displayed;
     };
 
     Point3D.prototype = Object.create(TObject3D.prototype);
     Point3D.prototype.constructor = Point3D;
     Point3D.prototype.className = "Point3D";
+    Point3D.id = 0;
 
     /**
      * Get the Point3D's name
@@ -128,7 +131,7 @@ define(['jquery', 'TEnvironment', 'TObject3D'], function($, TEnvironment, TObjec
         this.redraw();
     };
     Point3D.prototype._translate = function(x, y, z) {
-        // TODO: 
+        //mesh.translate(BABYLON.Axis.X, 1.0, BABYLON.Space.WORLD);
     };
 
     /**
@@ -157,13 +160,15 @@ define(['jquery', 'TEnvironment', 'TObject3D'], function($, TEnvironment, TObjec
     };
 
     /**
-     * Set the 
+     * Set a Space3D to display a Point3D
      * @param Space3D scene3d
      * @returns {undefined}
      */
     Point3D.prototype._setSpace = function(scene3d) {
-        TObject3D.prototype._setSpace.call(this, scene3d);
-        this.redraw();
+        if (typeof scene3d === 'undefined') {
+            TObject3D.prototype._setSpace.call(this, scene3d);
+            this.redraw();
+        }
     };
 
     /**

@@ -17,7 +17,7 @@ define(['jquery', 'babylon', 'TEnvironment', 'TObject3D'], function($, babylon, 
 
     Cylinder3D.prototype._setSpace = function(scene3d) {
         TObject3D.prototype._setSpace.call(this, scene3d);
-        this.object3d = this.getMesh().CreateCylinder("cylindre1", 3, 1, 1, 16, this.scene);
+        this.object3d = this.getMesh().CreateCylinder(this.createName(), 3, 1, 1, 16, this.scene);
         this.object3d.position.y = 1;
     };
 
@@ -37,12 +37,20 @@ c=new Cylindre3D()
 e.addObject(c)
 c.cacher()
 
+e=new Espace3D()
+c=new Boîte3D()
+e.ajouterObjet(c)
+c.cacher()
 
 e=new Espace3D()
 c=new Cylindre3D()
+e.ajouterObjet(c)
 d=new Cylindre3D()
-e.addObject(c)
+e.ajouterObjet(d)
+s=new Sphère3D()
+e.ajouterObjet(s)
 tangara.écrire("nom " + d.getName())
+tangara.écrire("nom " + s.getName())
 
 
 e=new Espace3D()

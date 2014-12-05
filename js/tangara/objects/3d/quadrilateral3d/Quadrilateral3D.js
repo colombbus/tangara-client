@@ -14,7 +14,7 @@ define(['jquery', 'babylon', 'TEnvironment', 'TObject3D'], function($, babylon, 
     Quadrilateral3D.prototype._setSpace = function(scene3d) {
         TObject3D.prototype._setSpace.call(this, scene3d);
         scene = scene3d;
-        //object3d = BABYLON.Mesh.CreateCylinder("cylinder1", 3, 1, 1, 16, scene);
+        //object3d = BABYLON.Mesh.CreateCylinder(this.createName(), 3, 1, 1, 16, this.scene);
         object3d.position.y = 1;
     };
 
