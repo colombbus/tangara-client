@@ -27,10 +27,7 @@ define(['jquery', 'TRuntime'], function($, TRuntime) {
             var y = event.clientY + domCanvasOut.scrollTop;
             $domCanvasDesignMouse.text(x + "," + y);
         };
-        var canvasToCanvas3DTransferHandler = function(event) {
-            $domCanvas3d.trigger(event);
-            console.log("type " + event.type);
-        };
+
         /**
          * 
          * @param event 
@@ -94,6 +91,7 @@ define(['jquery', 'TRuntime'], function($, TRuntime) {
                 $(domCanvasDesign).show();
                 $(domCanvas).on("mousemove", designMouseHandler);
                 $domCanvasDesignMouse.on("mouseover", designMouseSideHandler);
+
 //                $domCanvas3d.on("click", function(e) {
 //                    console.log("c3D clicked");
 //                    if (e.clientY > $(this).outerHeight() - 14) {

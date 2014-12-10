@@ -13,19 +13,81 @@ define(['jquery', 'babylon', 'TEnvironment', 'TUtils', 'TObject', 'CommandManage
             $canvas.show();
         }
         TObject.call(this);
+        var eventPrefix = BABYLON.Tools.GetPointerPrefix();
+        canvas2d.addEventListener(eventPrefix + "down", canvasToCanvas3DTransferHandler);
+        canvas2d.addEventListener(eventPrefix + "up", canvasToCanvas3DTransferHandler);
+        canvas2d.addEventListener(eventPrefix + "out", canvasToCanvas3DTransferHandler);
+        canvas2d.addEventListener(eventPrefix + "move", canvasToCanvas3DTransferHandler);
     };
+
+    var canvas2d = document.getElementById("tcanvas");
+    var $domcanvas2d = $(canvas2d);
 
     var canvas = document.getElementById("tcanvas3d");
     var $canvas = $(canvas);
     var engine = new BABYLON.Engine(canvas, true);
     var scenes = [];
-    
+
+    function simulate(element, eventName)
+    {
+        var options = extend(defaultOptions, arguments[2] || {});
+        var oEvent;
+        var eventType = "MouseEvents";
+
+        if (document.createEvent)
+        {
+            oEvent = document.createEvent(eventType);
+            if (eventType === 'HTMLEvents')
+            {
+                oEvent.initEvent(eventName, options.bubbles, options.cancelable);
+            }
+            else
+            {
+                oEvent.initMouseEvent(eventName, options.bubbles, options.cancelable, document.defaultView,
+                        options.button, options.pointerX, options.pointerY, options.pointerX, options.pointerY,
+                        options.ctrlKey, options.altKey, options.shiftKey, options.metaKey, options.button, element);
+            }
+            element.dispatchEvent(oEvent);
+        }
+        else
+        {
+            options.clientX = options.pointerX;
+            options.clientY = options.pointerY;
+            var evt = document.createEventObject();
+            oEvent = extend(evt, options);
+            element.fireEvent('on' + eventName, oEvent);
+        }
+        return element;
+    }
+
+    function extend(destination, source) {
+        for (var property in source)
+            destination[property] = source[property];
+        return destination;
+    }
+
+    var defaultOptions = {
+        pointerX: 0,
+        pointerY: 0,
+        button: 0,
+        ctrlKey: false,
+        altKey: false,
+        shiftKey: false,
+        metaKey: false,
+        bubbles: true,
+        cancelable: true
+    };
+
+    var canvasToCanvas3DTransferHandler = function(event) {
+        var e = simulate(canvas, event.type, {pointerX: event.clientX, pointerY: event.clientY});
+    };
+
     engine.runRenderLoop(function() {
-        for (var i=0; i<scenes.length; i++) {
+        for (var i = 0; i < scenes.length; i++) {
             scenes[i].render();
         }
     });
-    
+
     window.addEventListener("resize", function() {
         engine.resize();
     });
@@ -53,14 +115,14 @@ define(['jquery', 'babylon', 'TEnvironment', 'TUtils', 'TObject', 'CommandManage
 
     Space3D.prototype.deleteObject = function() {
         TObject.prototype.deleteObject.call(this);
-        scenes.splice(this.sceneIndex,1);
+        scenes.splice(this.sceneIndex, 1);
         this.scene.dispose();
         if (scenes.length === 0) {
             // no more spaces to show: hide canvas
             $canvas.hide();
         }
     };
-    
+
     TEnvironment.internationalize(Space3D, true);
 
     return Space3D;

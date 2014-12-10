@@ -107,7 +107,6 @@ define(['jquery', 'babylon', 'TEnvironment', 'TObject'], function($, babylon, TE
      */
     TObject3D.prototype._hide = function() {
         this.object3d.visibility = false;
-
     };
 
     TObject3D.prototype._ifCollision = function(command) {
@@ -178,7 +177,15 @@ c._rotate(45)
     };
 
     TObject3D.prototype._setPosition = function(point) {
-        // arg 1 : point
+        // arg 1 : point        
+            this.object3d.x = point;
+        /* test 
+         * 
+         e=new Espace3D()
+         c=new Cylindre3D()
+         e.ajouterObjet(c)
+         c._setPosition(2)
+         */
     };
     /**
      * _setRotationAxis() defines the rotation axis ("X", "Y" or "Z")
