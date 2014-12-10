@@ -7,7 +7,8 @@ require.config({
         "acorn":'../libs/acorn/acorn',
         "TObject":'objects/tobject/TObject',
         "TObject3D":'objects/tobject3d/TObject3D',
-        "TGraphicalObject":'objects/tgraphicalobject/TGraphicalObject'
+        "TGraphicalObject":'objects/tgraphicalobject/TGraphicalObject',
+	"babylon":'../libs/babylonjs/babylon.1.14'
     }
 });
 
