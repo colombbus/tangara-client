@@ -1,5 +1,5 @@
 {
-  "name": "tangara-js",
+  "name": "tangara-client",
   "version": "0.1.2",
   "dependencies": {
     "requirejs": "~2.1.9",
