@@ -112,6 +112,7 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, T
                 if (typeof lineNumbers !== null) {
                     error.setLines(lineNumbers);
                 }
+                error.detectError();
                 this.logError(error);
                 return false;
             }
@@ -136,6 +137,7 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, T
                 if (currentProgramName === null) {
                     error.setCode(object.getValue());
                 }
+                error.detectError();                
                 this.logError(error);
             }
         };
