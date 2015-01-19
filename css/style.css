@@ -68,6 +68,22 @@ body, html {
     background-color:#FFFFFF;
 }
 
+#tcanvas3d {
+    background-color:transparent;
+    width:800px;
+    height:500px;
+    position:absolute;
+    overflow:hidden;
+    top:0px;
+    left:0px;
+    /*
+    border-color: red;
+    border-style: solid;
+    border-width: 15px;
+    z-index: 3;
+    */
+}
+
 #tcanvas {
     background-color:transparent;
     width:500px;
@@ -86,12 +102,18 @@ body, html {
 #tcanvas-design-mouse {
     position:absolute;
     bottom:0px;
-    right:0px;
     font-family: "Arial", sans-serif;
     color:#929292;
     font-size:12pt;
     background-color:white;
     padding:2px;
+    z-index: 1;
+}
+.right-design{
+    right:0px;
+}
+.left-design{
+    left:0px;
 }
 
 #tcanvas_container {

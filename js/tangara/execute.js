@@ -6,7 +6,9 @@ require.config({
         "quintus":'../libs/quintus-0.2.0/quintus-all.min',
         "acorn":'../libs/acorn/acorn',
         "TObject":'objects/tobject/TObject',
-        "TGraphicalObject":'objects/tgraphicalobject/TGraphicalObject'
+        "TObject3D":'objects/tobject3d/TObject3D',
+        "TGraphicalObject":'objects/tgraphicalobject/TGraphicalObject',
+	"babylon":'../libs/babylonjs/babylon.1.14'
     }
 });
 

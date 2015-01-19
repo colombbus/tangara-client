@@ -4,6 +4,7 @@ define(['jquery'], function($) {
         var hiddenMethods = {};
         var classMethods = new Array();
         var objectLibraries = [];
+        var objectsPath = [];
         var translatedObjectNames = [];
         var tangaraObjects = {};
         var project;
@@ -12,8 +13,6 @@ define(['jquery'], function($) {
         var ready_runtime = false;
         var ready_environment = false;
         var ready_callback = null;
-        
-        
         
         this.messages = {};
 
@@ -66,6 +65,7 @@ define(['jquery'], function($) {
                 success: function(data) {
                     $.each( data, function( key, val ) {
                         var lib = "objects/"+val['path']+"/"+key;
+                            objectsPath[key] = val['path'];
                         if (typeof val['translations'][language] !== 'undefined') {
                             window.console.log("adding "+lib);
                             objectLibraries.push(lib);
@@ -78,7 +78,7 @@ define(['jquery'], function($) {
             });
             this.ready();
         };
-
+        
 
         this.getBaseUrl = function() {
             return window.location.protocol + "//" + window.location.host + window.location.pathname.split("/").slice(0, -1).join("/");
@@ -90,6 +90,10 @@ define(['jquery'], function($) {
 
         this.getObjectListUrl = function() {
             return this.getObjectsUrl() + "/objects.json";
+        };
+        this.getObjectPath = function(object) {
+            if (object !== 'undefined')
+                return objectsPath[object];
         };
         
         this.getBackendUrl = function(module) {
