@@ -261,6 +261,14 @@ define(['TEnvironment'], function(TEnvironment) {
             return result;
         };
         
+        this.convertUnicode = function(text) {
+            var result = text.replace(/\\u([0-9a-fA-F]{4})/g, 
+                function (whole, group1) {
+                    return String.fromCharCode(parseInt(group1, 16));
+                }
+            );
+            return result;
+        }
 
         
     };
