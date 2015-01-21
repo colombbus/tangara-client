@@ -365,7 +365,8 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'jquery', 'jquer
             // rename
             nameDiv.onclick = function(e) {
                 var parent = $(this).parent();
-                if (parent.hasClass('tsidebar-current')) {
+                if (parent.hasClass('tsidebar-current') && !$(this).hasClass('tsidebar-renaming')) {
+                    parent.attr("draggable", "false");
                     $(this).addClass('tsidebar-renaming');
                     var renameElement = document.createElement("textarea");
                     renameElement.className="tsidebar-rename";
@@ -380,6 +381,7 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'jquery', 'jquer
                             // Escape was pressed
                             $(this).parent().removeClass('tsidebar-renaming');
                             $(renameElement).remove();
+                            parent.attr("draggable", "true");
                         }
                     });
                     renameElement.onblur = function() {TUI.renameResource(name, renameElement.value);};
@@ -509,7 +511,7 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'jquery', 'jquer
                 $domSidebarResources.stop().animate({scrollTop: $domSidebarResources.scrollTop()+parent.position().top}, 1000);
                 TUI.setEditionEnabled(true);
              }
-        }
+        };
         
         this.viewResource = function(name) {
             viewer.show(name);
