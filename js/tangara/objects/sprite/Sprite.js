@@ -272,7 +272,7 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
             this.p.frozen = value;
             this._super(value);
         },
-        addTransparency: function(red, green, blue) {
+        /*addTransparency: function(red, green, blue) {
             this.perform(function(red,green,blue) {
                 var canvas = document.createElement('canvas');
                 var asset = this.p.asset;
@@ -307,7 +307,7 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
                 ctx.putImageData(imageData,0,0);
                 image.src = canvas.toDataURL();
             }, [red, green, blue]);
-        },
+        },*/
         removeAsset: function() {
             this.p.asset = null;
         }
@@ -386,6 +386,13 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
         this.addImage(name, set, true);
     };
     
+    
+    Sprite.colorMatch = function(color, red, green, blue) {
+        if (Math.abs(color[0]+color[1]+color[2]-red-green-blue)<30)
+            return true;
+        return false;
+    };
+    
     Sprite.prototype.addImage = function(name, set, project) {
         name = TUtils.getString(name);
         var asset;
@@ -438,8 +445,9 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
                             var b=data[i+2];
                             for (var j=0; j<spriteObject.transparentColors.length;j++) {
                                 color = spriteObject.transparentColors[j];
-                                if (r===color[0] && g===color[1] && b===color[2]) {
+                                if (Sprite.colorMatch(color, r, g, b)) {
                                     data[i+3] = 0;
+                                    break;
                                 }
                             }
                         }
@@ -684,10 +692,7 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
                     var imageData = ctx.getImageData(0, 0, width, height);
                     var data = imageData.data;
                     for (var i=0;i<data.length;i+=4) {
-                        var r=data[i];
-                        var g=data[i+1];
-                        var b=data[i+2];
-                        if (r===color[0] && g===color[1] && b===color[2]) {
+                        if (Sprite.colorMatch(color, data[i], data[i+1], data[i+2])) {
                             data[i+3] = 0;
                         }
                     }
