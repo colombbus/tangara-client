@@ -79,7 +79,7 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
             }
         },
         objectEncountered: function(col) {
-            if (this.p.hasCollisionCommands) {
+            if (this.p.collisionWatched && this.p.hasCollisionCommands) {
                 // TODO add event object with info on collision
                 var object = col.obj;
                 if (typeof object.getId !== 'undefined') {
