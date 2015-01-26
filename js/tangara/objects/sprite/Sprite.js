@@ -535,6 +535,9 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
     };
 
     Sprite.prototype._removeImageSet = function (name) {
+        if (typeof name === 'undefined') {
+            name = "";
+        }
         name = TUtils.getString(name);
 
         if (typeof this.imageSets[name] === 'undefined') {
