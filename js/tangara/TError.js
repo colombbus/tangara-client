@@ -94,7 +94,11 @@ define(['jquery', 'TEnvironment', 'TUtils'], function($, TEnvironment, TUtils) {
             if (result !== null && result.length > 0) { 
                 var name = result[1];
                 name = TUtils.convertUnicode(name);
-                message = translate("runtime-error-not-a-function", name);
+                if (name === 'undefined') {
+                    message = translate("runtime-error-undefined-not-a-function");                    
+                } else {
+                    message = translate("runtime-error-not-a-function", name);
+                } 
                 return;
             }
             var result = detectRegex_syntax_error.exec(message);
