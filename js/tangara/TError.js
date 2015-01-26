@@ -8,6 +8,7 @@ define(['jquery', 'TEnvironment', 'TUtils'], function($, TEnvironment, TUtils) {
         var detectRegex_undefined = /(\S*)\sis\snot\sdefined/i;
         var detectRegex_not_a_function = /(\S*)\sis\snot\sa\sfunction/i;
         var detectRegex_syntax_error = /Unexpected\stoken\s/i;
+        var detectRegex_not_a_variable = /Can\'t\sfind\svariable\:\s(\S*)/i;
         
         
         // Initialization from error object
@@ -90,7 +91,7 @@ define(['jquery', 'TEnvironment', 'TUtils'], function($, TEnvironment, TUtils) {
             }
             // Not a function 
             var result = detectRegex_not_a_function.exec(message);
-            if (result !== null && result.length > 0) {
+            if (result !== null && result.length > 0) { 
                 var name = result[1];
                 name = TUtils.convertUnicode(name);
                 message = translate("runtime-error-not-a-function", name);
@@ -99,6 +100,13 @@ define(['jquery', 'TEnvironment', 'TUtils'], function($, TEnvironment, TUtils) {
             var result = detectRegex_syntax_error.exec(message);
             if (result !== null) {
                 message = translate("runtime-error-syntax-error");
+                return;
+            }
+            var result = detectRegex_not_a_variable.exec(message);
+            if (result !== null && result.length > 0) { 
+                var name = result[1];
+                name = TUtils.convertUnicode(name);
+                message = translate("runtime-error-not-variable-error", name);
                 return;
             }
         };
