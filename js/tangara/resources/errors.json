@@ -8,6 +8,7 @@
         "runtime-error-not-a-function":"La fonction « {0} » n'existe pas",
         "runtime-error-syntax-error-line":"Erreur de syntaxe à la ligne {0}",
         "runtime-error-syntax-error":"Erreur de syntaxe",
-        "runtime-error-not-variable-error":"« {0} » n'existe pas"
+        "runtime-error-not-variable-error":"« {0} » n'existe pas",
+        "runtime-error-unterminated-string-error":"Il manque un guillemet"
     }
 }

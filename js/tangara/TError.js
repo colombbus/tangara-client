@@ -9,7 +9,7 @@ define(['jquery', 'TEnvironment', 'TUtils'], function($, TEnvironment, TUtils) {
         var detectRegex_not_a_function = /(\S*)\sis\snot\sa\sfunction/i;
         var detectRegex_syntax_error = /Unexpected\stoken\s/i;
         var detectRegex_not_a_variable = /Can\'t\sfind\svariable\:\s(\S*)/i;
-        
+        var detectRegex_unterminated_string = /Unterminated\sstring\sconstant/i;
         
         // Initialization from error object
         if (typeof e !== 'undefined') {
@@ -109,6 +109,11 @@ define(['jquery', 'TEnvironment', 'TUtils'], function($, TEnvironment, TUtils) {
                 message = translate("runtime-error-not-variable-error", name);
                 return;
             }
+            var result = detectRegex_unterminated_string.exec(message);
+            if (result !== null) {
+                message = translate("runtime-error-unterminated-string-error");
+                return;
+            }            
         };
     }
 
