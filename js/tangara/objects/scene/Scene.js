@@ -64,7 +64,8 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
         if (qInstance.assets[asset]) {
             if (name === this.backgroundName) {
                 qObject.setBackground(asset);
-            } else if (name === this.blockName) {
+            } 
+            if (name === this.blockName) {
                 // block loaded. Compute Transparency Mask
                 this.computeTransparencyMask(asset);
                 qObject.setBlock(asset);
@@ -154,7 +155,14 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
         this.qObject.p.initialized = false;
         this.addImage(this.blockName, "elements", true);
         this.setDisplayedImage(this.blockName);
-    };    
+    };
+    
+    Scene.prototype._setTransparent = function(red, green, blue) {
+        Sprite.prototype._setTransparent.call(this, red, green, blue);
+        if (typeof this.images[this.blockName] !== 'undefined') {
+            this.computeTransparencyMask(this.images[this.blockName]);
+        }
+    };
     
     TEnvironment.internationalize(Scene, true);
     
