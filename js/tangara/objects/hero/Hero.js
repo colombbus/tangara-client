@@ -31,8 +31,8 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
                 forwardAssetsCount:0,
                 backwardAssetsCount:0,
                 defaultAssetsCount:0,
-                durationMove:0,
-                durationPause:0,
+                durationMove:1,
+                durationPause:1,
                 ellapsed:0.0,
                 autoAsset:true
             },props),defaultProps);
