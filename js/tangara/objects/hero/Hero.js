@@ -22,8 +22,8 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
     qInstance.TWalker.extend("THero", {
         init: function(props,defaultProps) {
             this._super(qInstance._extend({
-                dtMovement:0,
-                dtPause:0,
+                dtMovement:1,
+                dtPause:1,
                 imgIndex:0,
                 lastX:0,
                 lastMove:Hero.DIRECTION_NONE,
@@ -31,8 +31,8 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
                 forwardAssetsCount:0,
                 backwardAssetsCount:0,
                 defaultAssetsCount:0,
-                durationMove:0,
-                durationPause:0,
+                durationMove:1,
+                durationPause:1,
                 ellapsed:0.0,
                 autoAsset:true
             },props),defaultProps);
