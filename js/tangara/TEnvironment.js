@@ -98,7 +98,7 @@ define(['jquery'], function($) {
         
         this.getBackendUrl = function(module) {
             var url = window.location.protocol + "//" + window.location.host + window.location.pathname.split("/").slice(0, -2).join("/");
-            url += this.config['backend-path'] + "tangarajs/";
+            url += this.config['backend-path'] + "assets/";
             if (typeof module !== "undefined"){
                 url = url + module;
             }
