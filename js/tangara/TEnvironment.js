@@ -356,16 +356,29 @@ define(['jquery'], function($) {
         };
         
         this.is3DSupported = function() {
-            var canvas, ctx;
+            var canvas, gl;
             if (support3D !== null)
                 return support3D;
-            support3D = true;
             try {
-                canvas = createElement('canvas');
-                ctx = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+                canvas = document.createElement('canvas');
+                gl = canvas.getContext('webgl');
             } catch (e) {
+                gl = null;
+            }
+            if (gl === null) {
+                try {
+                    gl = canvas.getContext("experimental-webgl");
+                }
+                catch (e) {
+                    gl = null;
+                }
+            }
+            if (gl === null) {
                 support3D = false;
                 console.log("3D functions not supported");
+            } else {
+                support3D = true;
+                console.log("3D functions supported");
             }
             return support3D;
         };
