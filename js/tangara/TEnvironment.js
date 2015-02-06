@@ -74,6 +74,7 @@ define(['jquery'], function($) {
                                 switch (condition) {
                                     case '3d':
                                         if (!is3DSupported) {
+                                            console.log("skipping addition of object "+key+": 3D not supported");
                                             addObject = false;
                                         }
                                         break;
