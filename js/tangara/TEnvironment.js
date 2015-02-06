@@ -359,6 +359,7 @@ define(['jquery'], function($) {
             var canvas, ctx;
             if (support3D !== null)
                 return support3D;
+            support3D = true;
             try {
                 canvas = createElement('canvas');
                 ctx = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
@@ -366,7 +367,6 @@ define(['jquery'], function($) {
                 support3D = false;
                 console.log("3D functions not supported");
             }
-            support3D = true;
             return support3D;
         };
         
