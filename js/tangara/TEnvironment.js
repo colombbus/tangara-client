@@ -13,6 +13,7 @@ define(['jquery'], function($) {
         var ready_runtime = false;
         var ready_environment = false;
         var ready_callback = null;
+        var support3D = null;
         
         this.messages = {};
 
@@ -334,6 +335,20 @@ define(['jquery'], function($) {
         
         this.getConfig = function(value) {
             return this.config[value];
+        };
+        
+        this.is3DSupported = function() {
+            var canvas, ctx;
+            if (support3D !== null)
+                return support3D;
+            try {
+                canvas = createElement('canvas');
+                ctx = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+            } catch (e) {
+                support3D = false;
+            }
+            support3D = true;
+            return support3D;
         };
         
 

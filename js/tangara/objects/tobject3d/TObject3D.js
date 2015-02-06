@@ -6,6 +6,9 @@ define(['jquery', 'babylon', 'TEnvironment', 'TObject'], function($, babylon, TE
      * else <code>false</code>.
      */
     var TObject3D = function() {
+        if (!TEnvironment.is3DSupported()) {
+            throw new Error(this.getMessage("error-3d-not-supported"));
+        }
         TObject.call(this);
     };
     var object3d;
@@ -16,7 +19,9 @@ define(['jquery', 'babylon', 'TEnvironment', 'TObject'], function($, babylon, TE
     TObject3D.prototype = Object.create(TObject.prototype);
     TObject3D.prototype.constructor = TObject3D;
     TObject3D.prototype.className = "TObject3D";
-    TObject3D.prototype.mesh = BABYLON.Mesh;
+    if (TEnvironment.is3DSupported()) {
+        TObject3D.prototype.mesh = BABYLON.Mesh;
+    }
     /** Unique id for each TObject3D instancied */
     TObject3D.id = 0;
 

@@ -1,5 +1,8 @@
 define(['jquery', 'babylon', 'TEnvironment', 'TUtils', 'TObject', 'CommandManager'], function($, babylon, TEnvironment, TUtils, TObject, CommandManager) {
     var Space3D = function() {
+        if (!TEnvironment.is3DSupported()) {
+            throw new Error(this.getMessage("error-3d-not-supported"));
+        }
         this.scene = new BABYLON.Scene(engine);
         this.camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -10), this.scene);
         this.camera.setTarget(BABYLON.Vector3.Zero());
@@ -17,18 +20,21 @@ define(['jquery', 'babylon', 'TEnvironment', 'TUtils', 'TObject', 'CommandManage
 
     var canvas = document.getElementById("tcanvas3d");
     var $canvas = $(canvas);
-    var engine = new BABYLON.Engine(canvas, true);
+    var engine;
     var scenes = [];
+    if (TEnvironment.is3DSupported()) {
+        engine = new BABYLON.Engine(canvas, true);
+        engine.runRenderLoop(function() {
+            for (var i=0; i<scenes.length; i++) {
+                scenes[i].render();
+            }
+        });
+        window.addEventListener("resize", function() {
+            engine.resize();
+        });
+    }
     
-    engine.runRenderLoop(function() {
-        for (var i=0; i<scenes.length; i++) {
-            scenes[i].render();
-        }
-    });
     
-    window.addEventListener("resize", function() {
-        engine.resize();
-    });
 
     // hide canvas at the beginning
     $canvas.hide();
