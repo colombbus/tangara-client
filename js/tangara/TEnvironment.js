@@ -346,6 +346,7 @@ define(['jquery'], function($) {
                 ctx = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
             } catch (e) {
                 support3D = false;
+                console.log("3D functions not supported");
             }
             support3D = true;
             return support3D;
