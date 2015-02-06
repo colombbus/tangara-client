@@ -28,6 +28,13 @@ define(['jquery', 'babylon', 'TEnvironment', 'TUtils', 'TObject', 'CommandManage
     var engine = new BABYLON.Engine(canvas, true);
     var scenes = [];
 
+    /*
+     * Transfer mouse event
+     * 
+     * @param {type} element
+     * @param {type} eventName
+     * @returns {unresolved}
+     */
     function simulate(element, eventName)
     {
         var options = extend(defaultOptions, arguments[2] || {});
