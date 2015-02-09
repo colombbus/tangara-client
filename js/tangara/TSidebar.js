@@ -42,7 +42,7 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'jquery', 'jquer
         domSidebarUploadButton.appendChild(imageUpload);
         domSidebarUploadButton.appendChild(document.createTextNode(TEnvironment.getMessage("resource_upload_files")));
         $(domSidebarUploadButton).click(function() {
-            $(domSidebarUploadInput).click();
+            $("#tsidebar-upload-input").click();
         });
         domSidebarUploadHeader.appendChild(domSidebarUploadButton);
         domSidebarUpload.appendChild(domSidebarUploadHeader);
@@ -124,6 +124,7 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'jquery', 'jquer
                 dataType: 'json',
                 url:TEnvironment.getBackendUrl('addresource'),
                 paramName:'resources[]',
+                dropZone: $(domSidebarResources),
                 add: function (e, data) {
                     var newDivs=[];
                     var newNames=[];
