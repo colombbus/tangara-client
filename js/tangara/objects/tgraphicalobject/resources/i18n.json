@@ -3,6 +3,8 @@
         "methods":[
             {"name":"_setCenterLocation","translated":"d\u00e9finirPositionCentre","displayed":"d\u00e9finirPositionCentre(0,0)"},
             {"name":"_setLocation","translated":"d\u00e9finirPosition","displayed":"d\u00e9finirPosition(0,0)"},
+            {"name":"_getX","translated":"r\u00e9cup\u00e9rerX","displayed":"r\u00e9cup\u00e9rerX()"},
+            {"name":"_getY","translated":"r\u00e9cup\u00e9rerY","displayed":"r\u00e9cup\u00e9rerY()"},
             {"name":"_hide","translated":"cacher","displayed":"cacher()"},
             {"name":"_show","translated":"montrer","displayed":"montrer()"}
         ]
