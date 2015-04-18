@@ -1,0 +1,29 @@
+
+-----------------------------------------------
+NO COORDONNEES UPDATED WITH EMPTY PICTURE
+r = new Animation()
+r.récupérerX()
+re0
+tangara.écrire("re" + r.récupérerX())
+r.avancer(50)
+re0
+tangara.écrire("re" + r.récupérerX())
+-----------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+-----------------------------------------------
+TANGARA DOESN'T DISPLAY NUMBER ON FIRST
+
+r = new Animation()
+tangara.écrire(r.récupérerX())
+-----------------------------------------------
