@@ -219,23 +219,27 @@ define(['jquery','ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 
                     endToken = "[";
                 }*/
 
-                if (token.type !== "identifier" &&  token.type !== "text") {
+                if (token.type !== "identifier" &&  token.type !== "text" && token.type !== "string") {
                     return false;
                 }
 
                 var name = token.value.trim();
 
-                for (var i = index-1;i>=0;i--) {
+                for (var i = index - 1; i >= 0; i--) {
                     token = tokens[i];
-                    if (token.type !== "identifier" &&  token.type !== "text") {
+                    if (token.type !== "identifier" && token.type !== "text" && token.type !== "string") {
                         break;
                     }
                     var part = token.value.trim();
                     if (part.length === 0) {
                         break;
                     }
-
-                    name = part+name;
+                    name = part + name;
+                }
+                if (token.type === "text") {
+                    // non whole writed command:
+                    //name = name.slice(1, name.length - 1); // "r. -> r
+                    name = name.slice(1, name.length - 2); // "r." -> r
                 }
 
                 if (name.length === 0) {
