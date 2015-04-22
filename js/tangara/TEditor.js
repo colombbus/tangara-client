@@ -247,18 +247,21 @@ define(['jquery', 'ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager',
                 var firstcar = name.slice(0, 1);
 
                 if (token.type === "text") {
-                    // Remove the first
+                    // Remove double quote
                     if (firstcar === '"' || firstcar === "'") {
                         name = name.slice(1, name.length); // "r. -> r.
                     }
+                    // remove dot caracter
                     if (lastcar === '.') {
                         name = name.slice(0, name.length - 1); // "r. -> r
                     }
+                    // remove dot caracter and simple/double quote
                     if (lastlastcar === '.' && (lastcar === '"' || firstcar === "'")) {
                         name = name.slice(0, name.length - 2); // "r" -> r
                     }
+                    // remove simple/double quote when string extracted hasn't "
                     if (lastlastcar !== '.' && (lastcar === '"' || firstcar === "'")) {
-                        name = name.slice(0, name.length - 1); // "r") -> r
+                        name = name.slice(0, name.length - 1); // "r.") -> r
                     }
                 }
 
