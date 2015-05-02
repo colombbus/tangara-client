@@ -13,4 +13,6 @@ bin-release/
 /js/tangara/resources/config.json
 
 /bower_components/*
+/js/libs-bower/*
 /nbproject/
+/node_modules/
