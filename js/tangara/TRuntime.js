@@ -133,9 +133,9 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment', 'TEval'], func
             try {
                 var statements = object.getStatements();
                 this.executeStatements(statements);
-            } catch (e) {
-                if (typeof e !== TError) {
-                    var error = new TError(e);
+            } catch (err) {
+                if (!(err instanceof TError)) {
+                    var error = new TError(err);
                     error.setProgramName(currentProgramName);
                     if (currentProgramName === null) {
                         error.setCode(object.getValue());
@@ -143,11 +143,11 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment', 'TEval'], func
                     error.detectError();
                     this.logError(error);
                 } else {
-                    e.setProgramName(currentProgramName);
+                    err.setProgramName(currentProgramName);
                     if (currentProgramName === null) {
-                        error.setCode(object.getValue());
+                        err.setCode(object.getValue());
                     }                    
-                    this.logError(e);                    
+                    this.logError(err);
                 }
             }
         };

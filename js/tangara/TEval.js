@@ -27,13 +27,13 @@ define(['TError'], function(TError) {
         };
 
         this.evalExpressionStatement = function(statement) {
-            this.evalExpression(statement.expression);
+            this.evalExpression(statement.expression, true);
         };
         
         this.evalIfStatement = function(statement) {
-            if (this.evalExpression(statement.test)) {
+            if (this.evalExpression(statement.test, true)) {
                 this.evalStatement(statement.consequent);
-            } else if (typeof(statement.alternate) !== false) {
+            } else if (statement.alternate !== null) {
                 this.evalStatement(statement.alternate);
             }
         };
@@ -51,14 +51,14 @@ define(['TError'], function(TError) {
         };
         
         this.evalWithStatement = function(statement) {
-            throw "WithStatement Not Implemented yet";            
+            throw "With statement is not supported";            
         };
         
         this.evalSwitchStatement = function(statement) {
-            var value = this.evalExpression(statement.discriminant);
+            var value = this.evalExpression(statement.discriminant, true);
             for (var i=0; i<statement.cases.length; i++) {
                 var switchCase = statement.cases[i];
-                if (switchCase.test === null || value == switchCase.test) {
+                if (switchCase.test === null || value == this.evalExpression(switchCase.test, true)) {
                     this.evalStatement(switchCase.consequent);
                 }
             }
@@ -77,7 +77,7 @@ define(['TError'], function(TError) {
         };
 
         this.evalWhileStatement = function(statement) {
-            while (this.evalExpression(statement.test)) {
+            while (this.evalExpression(statement.test, true)) {
                 this.evalStatement(statement.body);
             }
         };
@@ -85,16 +85,16 @@ define(['TError'], function(TError) {
         this.evalDoWhileStatement = function(statement) {
             do {
                 this.evalStatement(statement.body);
-            } while (this.evalExpression(statement.test));
+            } while (this.evalExpression(statement.test, true));
         };
 
         this.evalForStatement = function(statement) {
             if (statement.init.type === "VariableDeclaration") {
-                for (this.evalVariableDeclaration(statement.init);this.evalExpression(statement.test);this.evalExpression(statement.update)) {
+                for (this.evalVariableDeclaration(statement.init);this.evalExpression(statement.test, true);this.evalExpression(statement.update, true)) {
                     this.evalStatement(statement.body);
                 }                
             } else {
-                for (this.evalExpression(statement.init);this.evalExpression(statement.test);this.evalExpression(statement.update)) {
+                for (this.evalExpression(statement.init, true);this.evalExpression(statement.test, true);this.evalExpression(statement.update, true)) {
                     this.evalStatement(statement.body);
                 }
             }
@@ -123,7 +123,9 @@ define(['TError'], function(TError) {
         };
 
         this.evalFunctionDeclaration = function(declaration) {
-            throw "Function Declaration Not Implemented Yet";
+            var identifier = this.evalExpression(declaration.id);
+            definedFunctions[identifier] = {'body':declaration.body, 'params':declaration.params};
+            // TODO: do we need to eval function decalaration into RuntimeFrame?
         };
         
         this.evalStatement = function(statement) {
@@ -188,7 +190,7 @@ define(['TError'], function(TError) {
                         break;
                 }
             } catch (err) {
-                if (typeof err !== TError) {
+                if (!(err instanceof TError)) {
                     var error = new TError(err);
                     error.setLines([statement.start,statement.end]);
                     error.detectError();
@@ -200,24 +202,32 @@ define(['TError'], function(TError) {
         };
 
         this.defaultEvalExpression = function(expression) {
-            return this.eval(expression.raw);
+            return expression.raw;
         };
                 
         this.evalFunctionExpression = function(expression) {
+            
             throw "Function Expression Not Implemented Yet";
         };
         
         this.evalSequenceExpression = function(expression) {
-            throw "Sequence Expression Not Implemented Yet";
+            var sequence = "";
+            if (expression.expressions.length>0) {
+                sequence = this.evalExpression(expression.expressions[0]);
+                for (var i=1; i< expression.expressions.length; i++) {
+                    sequence += ","+this.evalExpression(expression.expressions[i]);
+                }
+            }
+            return sequence;
         };
         
         this.evalUnaryExpression = function(expression) {
             try {
                 var argument = this.evalExpression(expression.argument);
                 if (expression.prefix) {
-                    return this.eval(expression.operator+argument);
+                    return expression.operator+argument;
                 } else {
-                    return this.eval(argument+expression.operator);
+                    return argument+expression.operator;
                 }
             } catch (err) {
                 return this.defaultEvalExpression(expression);
@@ -225,13 +235,9 @@ define(['TError'], function(TError) {
         };
 
         this.evalBinaryExpression = function(expression) {
-            try {
-                var left = this.evalExpression(expression.left);
-                var right = this.evalExpression(expression.right);
-                return this.eval(left+expression.operator.right);
-            } catch (err) {
-                return this.defaultEvalExpression(expression);
-            }
+            var left = this.evalExpression(expression.left);
+            var right = this.evalExpression(expression.right);
+            return left+expression.operator+right;
         };
 
         this.evalAssignementExpression = function(expression) {
@@ -243,15 +249,15 @@ define(['TError'], function(TError) {
                 left = this.evalExpression(expression.left);
             }
             right = this.evalExpression(expression.right);
-            return this.eval(left+expression.operator+right);
+            return left+expression.operator+right;
         };
 
         this.evalUpdateExpression = function(expression) {
             var argument = this.evalExpression(expression.argument);
             if (expression.prefix) {
-                return this.eval(expression.operator+argument);
+                return expression.operator+argument;
             } else {
-                return this.eval(argument+expression.operator);
+                return argument+expression.operator;
             }
         };
 
@@ -259,7 +265,7 @@ define(['TError'], function(TError) {
             var left,right;
             left = this.evalExpression(expression.left);
             right = this.evalExpression(expression.right); 
-            return this.eval(left+expression.operator+right);
+            return left+expression.operator+right;
         };
 
         this.evalConditionalExpression = function(expression) {
@@ -271,15 +277,46 @@ define(['TError'], function(TError) {
         };
 
         this.evalCallExpression = function(expression) {
-            throw "Call Expression Not Implemented yet";
+            var callLiteral = this.evalExpression(expression.callee);
+            // Check if it is a defined function
+            if (expression.callee.type === 'identifier' && typeof definedFunctions[callLiteral] !== 'undefined') {
+                // we need to call the function with given parameters
+                // Todo: do we have to do it even if eval is set to false?
+                var functionExpression = {'type':'FunctionExpression', 'id':callLiteral, 'params':definedFunctions[callLiteral]['params'], 'body':definedFunctions[callLiteral]['body']};
+                return this.evalExpression(functionExpression, true);
+            } else {
+                if (expression.arguments.length > 0 ) {
+                    arguments = "("+this.evalExpression(expression.arguments[0]);
+                    for (var i=1; i<expression.arguments.length; i++) {
+                        arguments += ","+this.evalExpression(expression.arguments[i]);
+                    }
+                    arguments += ")";
+                } else {
+                    arguments = "()";
+                }
+            }
+            return callLiteral+arguments;
         };
 
         this.evalNewExpression = function(expression) {
-            throw "New Expression Not Implemented yet";            
+            var className = this.evalExpression(expression.callee);
+            var arguments;
+            if (expression.arguments.length > 0 ) {
+                arguments = "("+this.evalExpression(expression.arguments[0]);
+                for (var i=1; i<expression.arguments.length; i++) {
+                    arguments += ","+this.evalExpression(expression.arguments[i]);
+                }
+                arguments += ")";
+            } else {
+                arguments = "()";
+            }
+            return "new "+className+arguments;
         };
 
         this.evalMemberExpression = function(expression) {
-            throw "New Expression Not Implemented yet";                        
+            var objectName = this.evalExpression(expression.object);
+            var propertyName = this.evalExpression(expression.property);
+            return objectName+"."+propertyName;
         };
 
         this.evalIdentifier = function(expression) {
@@ -287,62 +324,74 @@ define(['TError'], function(TError) {
         };
 
         this.evalLiteral = function(expression) {
+            if (typeof expression.value === "string") {
+                return "\""+expression.value+"\"";                
+            }
             return expression.value;
         };
 
-        this.evalExpression = function(expression) {
+        this.evalExpression = function(expression, eval) {
+            var result;
             if (expression === null) {
                 return;
+            }
+            if (typeof eval === "undefined") {
+                eval = false;
             }
             try {
                 switch (expression.type) {
                     case "FunctionExpression": 
-                        return this.evalFunctionExpression(expression);
+                        result = this.evalFunctionExpression(expression);
                         break;
                     case "SequenceExpression": 
-                        return this.evalSequenceExpression(expression);
+                        result = this.evalSequenceExpression(expression);
                         break;
                     case "UnaryExpression": 
-                        return this.evalUnaryExpression(expression);
+                        result = this.evalUnaryExpression(expression);
                         break;
                     case "BinaryExpression": 
-                        return this.evalBinaryExpression(expression);
+                        result = this.evalBinaryExpression(expression);
                         break;
                     case "AssignmentExpression": 
-                        return this.evalAssignementExpression(expression);
+                        result = this.evalAssignementExpression(expression);
                         break;
                     case "UpdateExpression": 
-                        return this.evalUpdateExpression(expression);
+                        result = this.evalUpdateExpression(expression);
                         break;
                     case "LogicalExpression": 
-                        return this.evalLogicalExpression(expression);
+                        result = this.evalLogicalExpression(expression);
                         break;
                     case "ConditionalExpression": 
-                        return this.evalConditionalExpression(expression);
+                        result = this.evalConditionalExpression(expression);
                         break;
                     case "CallExpression":
-                        return this.evalCallExpression(expression);
+                        result = this.evalCallExpression(expression, eval);
                         break;
                     case "NewExpression": 
-                        return this.evalNewExpression(expression);
+                        result = this.evalNewExpression(expression);
                         break;
                     case "MemberExpression": 
-                        return this.evalMemberExpression(expression);
+                        result = this.evalMemberExpression(expression);
                         break;
                     case "Identifier":
-                        return this.evalIdentifier(expression);
+                        result = this.evalIdentifier(expression);
                         break;
                     case "Literal":
-                        return this.evalLiteral(expression);
+                        result = this.evalLiteral(expression);
                         break;
                     default:
-                        return this.defaultEvalExpression(expression);
+                        result = this.defaultEvalExpression(expression);
                         break;
                 }
+                if (eval) {
+                    return this.eval(result);
+                } else {
+                    return result;
+                }
             } catch (err) {
-                if (typeof err !== TError) {
+                if (!(err instanceof TError)) {
                     var error = new TError(err);
-                    error.setLines([statement.start,statement.end]);
+                    error.setLines([expression.start,expression.end]);
                     error.detectError();
                     throw error;
                 } else {
