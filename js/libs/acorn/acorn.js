@@ -1069,8 +1069,12 @@
   function finishNode(node, type) {
     node.type = type;
     node.end = lastEnd;
-    if (options.locations)
+    if (options.locations) {
       node.loc.end = lastEndLoc;
+      // TWEAK FOR TANGARA
+      node.raw = input.slice(node.start, node.end);
+      // END OF TWEAK
+    }
     if (options.ranges)
       node.range[1] = lastEnd;
     return node;
@@ -1152,11 +1156,15 @@
     while (tokType !== _eof) {
       var stmt = parseStatement();
       // TWEAK FOR TANGARA: record only body, start and end to statement
-      var stmt2 = {};
+      /*var stmt2 = {};
       stmt2.body = input.slice(stmt.start, stmt.end);
       stmt2.start = stmt.loc.start.line;
       stmt2.end = stmt.loc.end.line;
-      node.body.push(stmt2);
+      node.body.push(stmt2);*/
+      stmt.body = input.slice(stmt.start, stmt.end);
+      stmt.start = stmt.loc.start.line;
+      stmt.end = stmt.loc.end.line;
+      node.body.push(stmt);
       if (first && isUseStrict(stmt)) setStrict(true);
       first = false;
     }
