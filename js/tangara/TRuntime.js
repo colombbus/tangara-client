@@ -1,8 +1,9 @@
-define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, TError, Quintus, TParser, TEnvironment) {
+define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment', 'TEval'], function($, TError, Quintus, TParser, TEnvironment, TEval) {
     function TRuntime() {
         var libs = new Array();
         var translatedNames = new Array();
         var runtimeFrame;
+        var evaluator = new TEval();
         var runtimeCallback;
         var quintusInstance;
         var canvas;
@@ -38,6 +39,9 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, T
             window.console.log("**** TRUNTIME INITIALIZED ****");
             // Ask parser to protect translated names
             TParser.protectIdentifiers(translatedNames);
+            
+            // link evaluator to runtimeFrame
+            evaluator.setRuntimeFrame(runtimeFrame);
         };
 
         this.ready = function() {
@@ -118,12 +122,10 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, T
             }
             return true;
         };
-
+        
         this.executeStatements = function(statements) {
             for (var i = 0; i<statements.length; i++) {
-                var statement = statements[i];
-                if (!this.execute(statement.body, null, true, [statement.start,statement.end]))
-                    return false;
+                evaluator.evalStatement(statements[i]);
             }
         };
 
@@ -132,13 +134,21 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, T
                 var statements = object.getStatements();
                 this.executeStatements(statements);
             } catch (e) {
-                var error = new TError(e);
-                error.setProgramName(currentProgramName);
-                if (currentProgramName === null) {
-                    error.setCode(object.getValue());
+                if (typeof e !== TError) {
+                    var error = new TError(e);
+                    error.setProgramName(currentProgramName);
+                    if (currentProgramName === null) {
+                        error.setCode(object.getValue());
+                    }
+                    error.detectError();
+                    this.logError(error);
+                } else {
+                    e.setProgramName(currentProgramName);
+                    if (currentProgramName === null) {
+                        error.setCode(object.getValue());
+                    }                    
+                    this.logError(e);                    
                 }
-                error.detectError();                
-                this.logError(error);
             }
         };
 
@@ -240,6 +250,7 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, T
                 // deleteObject will remove object from tGraphicalObjects
                 object.deleteObject();
             }
+            evaluator.clear();
         };
 
         this.setDesignMode = function(value) {
