@@ -49,6 +49,9 @@ require.config({
         },
         'wPaint/plugins/flip': {
             deps: ['wPaint', 'wPaint/plugins/main']
+        },
+        'wColorPicker': {
+            deps: ['wPaint']
         }
     }
 });
