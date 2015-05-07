@@ -170,7 +170,7 @@ define(['TError'], function(TError) {
             if (stack.length > 0) {
                 // inside a function call: use function's callback instead
                 var returnCallback = stack.pop();
-                this.evalExpression(statement.argument, returnCallback, true);
+                this.evalExpression(statement.argument, returnCallback);
             } else {
                 // no function call: we just stop evaluation
                 this.stop();
