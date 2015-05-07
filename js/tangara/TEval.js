@@ -12,83 +12,121 @@ define(['TError'], function(TError) {
         };
 
         
-        this.eval = function(literal) {
-            return runtimeFrame.eval(literal);
-        };
-        
-        this.defaultEvalStatement = function(statement) {
-            this.eval(statement.raw);
-        };
-        
-        this.evalBlockStatement = function(statement) {
-            for (var i = 0; i<statement.body.length ; i++) {
-                this.evalStatement(statement.body[i]);
+        this.eval = function(literal, callback) {
+            var result = runtimeFrame.eval(literal);
+            if (runtimeFrame.ready()) {
+                callback(result);
+            } else {
+                runtimeFrame.whenReady(callback, result);
             }
         };
+        
+        this.defaultEvalStatement = function(statement, callback) {
+            this.eval(statement.raw, callback);
+        };
+        
+        this.evalBlockStatement = function(statement, callback) {
+            var i = -1;
+            var evaluator = this;
+            
+            function evalNextBlockItem() {
+               i++;
+               if (i<statement.body.length) {
+                   evaluator.evalStatement(statement.body[i], evalNextBlockItem);
+               } else {
+                   callback();
+               }
+            }
+            evalNextBlockItem();
+            //TODO: erase local variables
+        };
 
-        this.evalExpressionStatement = function(statement) {
+        this.evalExpressionStatement = function(statement, callback) {
             this.evalExpression(statement.expression, true);
         };
         
-        this.evalIfStatement = function(statement) {
-            if (this.evalExpression(statement.test, true)) {
-                this.evalStatement(statement.consequent);
-            } else if (statement.alternate !== null) {
-                this.evalStatement(statement.alternate);
-            }
+        this.evalIfStatement = function(statement, callback) {            
+            this.evalExpression(statement.test, true, function(result) {
+                if (result) {
+                    this.evalStatement(statement.consequent, callback);                    
+                } else if (statement.alternate !== null) {
+                this.evalStatement(statement.alternate, callback);
+                } else {
+                    callback();
+                }
+            });
         };
 
-        this.evalLabeledStatement = function(statement) {
+        this.evalLabeledStatement = function(statement, callback) {
             throw "LabeledStatement Not Implemented yet";
         };
 
-        this.evalBreakStatement = function(statement) {
+        this.evalBreakStatement = function(statement, callback) {
             throw "BreakStatement Not Implemented yet";            
         };
 
-        this.evalContinueStatement = function(statement) {
+        this.evalContinueStatement = function(statement, callback) {
             throw "ContinueStatement Not Implemented yet";            
         };
         
-        this.evalWithStatement = function(statement) {
+        this.evalWithStatement = function(statement, callback) {
             throw "With statement is not supported";            
         };
         
-        this.evalSwitchStatement = function(statement) {
-            var value = this.evalExpression(statement.discriminant, true);
-            for (var i=0; i<statement.cases.length; i++) {
-                var switchCase = statement.cases[i];
-                if (switchCase.test === null || value == this.evalExpression(switchCase.test, true)) {
-                    this.evalStatement(switchCase.consequent);
+        this.evalSwitchStatement = function(statement, callback) {
+            this.evalExpression(statement.discriminant, true, function(value) {
+                var i = -1;
+                function testNextCase() {
+                    i++;
+                    if (i<statement.cases.length) {
+                        var switchCase = statement.cases[i];
+                        if (switchCase.test === null) {
+                            this.evalStatement(switchCase.consequent, testNextCase);
+                        } else {
+                            this.evalExpression(switchCase.test, true, function(result) {
+                                if (value === result) {
+                                    this.evalStatement(switchCase.consequent, testNextCase);
+                                } else {
+                                    testNextCase();
+                                }
+                            });
+                        }
+                    } else {
+                        callback();
+                    }
                 }
-            }
+                testNextCase();
+            });
+            
+            
+            var value = this.evalExpression(statement.discriminant, true);
         };
 
-        this.evalReturnStatement = function(statement) {
+        this.evalReturnStatement = function(statement, callback) {
             throw "ReturnStatement Not Implemented yet";
         };
 
-        this.evalThrowStatement = function(statement) {
+        this.evalThrowStatement = function(statement, callback) {
             throw "ThrowStatement Not Implemented yet";
         };
         
-        this.evalTryStatement = function(statement) {
+        this.evalTryStatement = function(statement, callback) {
             throw "TryStatement Not Implemented yet";
         };
 
-        this.evalWhileStatement = function(statement) {
+        this.evalWhileStatement = function(statement, callback) {
             while (this.evalExpression(statement.test, true)) {
                 this.evalStatement(statement.body);
             }
         };
 
-        this.evalDoWhileStatement = function(statement) {
+        this.evalDoWhileStatement = function(statement, callback) {
             do {
                 this.evalStatement(statement.body);
             } while (this.evalExpression(statement.test, true));
         };
 
-        this.evalForStatement = function(statement) {
+        this.evalForStatement = function(statement, callback) {
             if (statement.init.type === "VariableDeclaration") {
                 for (this.evalVariableDeclaration(statement.init);this.evalExpression(statement.test, true);this.evalExpression(statement.update, true)) {
                     this.evalStatement(statement.body);
@@ -100,7 +138,7 @@ define(['TError'], function(TError) {
             }
         };
 
-        this.evalForInStatement = function(statement) {
+        this.evalForInStatement = function(statement, callback) {
             /*if (statement.left.type === "VariableDeclaration") {
                 for (this.evalVariableDeclaration(statement.left) in this.evalExpression(statement.right)) {
                     
@@ -110,11 +148,11 @@ define(['TError'], function(TError) {
             
         };
 
-        this.evalDebuggerStatement = function(statement) {
-            this.defaultEvalStatement(statement);
+        this.evalDebuggerStatement = function(statement, callback) {
+            this.defaultEvalStatement(statement, callback);
         };
         
-        this.evalVariableDeclaration = function(declaration) {
+        this.evalVariableDeclaration = function(declaration, callback) {
             for (var i=0; i<declaration.declarations.length; i++) {
                 var declarator = declaration.declarations[i];
                 var value = this.evalExpression(declarator.init);
@@ -122,71 +160,72 @@ define(['TError'], function(TError) {
             }
         };
 
-        this.evalFunctionDeclaration = function(declaration) {
+        this.evalFunctionDeclaration = function(declaration, callback) {
             var identifier = this.evalExpression(declaration.id);
             definedFunctions[identifier] = {'body':declaration.body, 'params':declaration.params};
+            callback();
             // TODO: do we need to eval function decalaration into RuntimeFrame?
         };
         
-        this.evalStatement = function(statement) {
+        this.evalStatement = function(statement, callback) {
             try {
                 switch (statement.type) {
                     case "BlockStatement":
-                        this.evalBlockStatement(statement);
+                        this.evalBlockStatement(statement, callback);
                         break;
                     case "ExpressionStatement":
-                        this.evalExpressionStatement(statement);
+                        this.evalExpressionStatement(statement, callback);
                         break;
                     case "IfStatement": 
-                        this.evalIfStatement(statement);
+                        this.evalIfStatement(statement, callback);
                         break;
                     case "LabeledStatement":
-                        this.evalLabeledStatement(statement);
+                        this.evalLabeledStatement(statement, callback);
                         break;
                     case "BreakStatement":
-                        this.evalBreakStatement(statement);
+                        this.evalBreakStatement(statement, callback);
                         break;
                     case "ContinueStatement":
-                        this.evalContinueStatement(statement);
+                        this.evalContinueStatement(statement, callback);
                         break;
                     case "WithStatement":
-                        this.evalWithStatement(statement);
+                        this.evalWithStatement(statement, callback);
                         break;
                     case "SwitchStatement":
-                        this.evalSwitchStatement(statement);
+                        this.evalSwitchStatement(statement, callback);
                         break;
                     case "ReturnStatement":
-                        this.evalReturnStatement(statement);
+                        this.evalReturnStatement(statement, callback);
                         break;
                     case "ThrowStatement":
-                        this.evalThrowStatement(statement);
+                        this.evalThrowStatement(statement, callback);
                         break;
                     case "TryStatement":
-                        this.evalTryStatement(statement);
+                        this.evalTryStatement(statement, callback);
                         break;
                     case "WhileStatement":
-                        this.evalWhileStatement(statement);
+                        this.evalWhileStatement(statement, callback);
                         break;
                     case "DoWhileStatement":
-                        this.evalDoWhileStatement(statement);
+                        this.evalDoWhileStatement(statement, callback);
                         break;
                     case "ForStatement":
-                        this.evalForStatement(statement);
+                        this.evalForStatement(statement, callback);
                         break;
                     case "ForInStatement":
-                        this.evalForInStatement(statement);
+                        this.evalForInStatement(statement, callback);
                         break;
                     case "DebuggerStatement":
-                        this.evalDebuggerStatement(statement);
+                        this.evalDebuggerStatement(statement, callback);
                         break;
                     case "VariableDeclaration":
-                        this.evalVariableDeclaration(statement);
+                        this.evalVariableDeclaration(statement, callback);
                         break;                    
                     case "FunctionDeclaration":
-                        this.evalFunctionDeclaration(statement);
+                        this.evalFunctionDeclaration(statement, callback);
                         break;                    
                     default:
-                        this.defaultEvalStatement(statement);
+                        this.defaultEvalStatement(statement, callback);
                         break;
                 }
             } catch (err) {
@@ -330,7 +369,7 @@ define(['TError'], function(TError) {
             return expression.value;
         };
 
-        this.evalExpression = function(expression, eval) {
+        this.evalExpression = function(expression, eval, callback) {
             var result;
             if (expression === null) {
                 return;
@@ -384,7 +423,7 @@ define(['TError'], function(TError) {
                         break;
                 }
                 if (eval) {
-                    return this.eval(result);
+                    return this.eval(result, callback);
                 } else {
                     return result;
                 }
