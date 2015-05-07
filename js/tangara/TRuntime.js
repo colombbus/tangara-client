@@ -124,9 +124,14 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment', 'TEval'], func
         };
         
         this.executeStatements = function(statements) {
-            for (var i = 0; i<statements.length; i++) {
-                evaluator.evalStatement(statements[i]);
+            var i = -1;
+            function evalNextStatement() {
+                i++;
+                if (i<statements.length) {
+                    evaluator.evalStatement(statements[i], evalNextStatement);
+                }
             }
+            evalNextStatement();
         };
 
         this.executeFrom = function(object) {
