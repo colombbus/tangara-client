@@ -1,9 +1,9 @@
-define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment', 'TEval'], function($, TError, Quintus, TParser, TEnvironment, TEval) {
+define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment', 'TInterpreter'], function($, TError, Quintus, TParser, TEnvironment, TInterpreter) {
     function TRuntime() {
         var libs = new Array();
         var translatedNames = new Array();
         var runtimeFrame;
-        var evaluator = new TEval();
+        var interpreter = new TInterpreter();
         var runtimeCallback;
         var quintusInstance;
         var canvas;
@@ -40,8 +40,8 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment', 'TEval'], func
             // Ask parser to protect translated names
             TParser.protectIdentifiers(translatedNames);
             
-            // link evaluator to runtimeFrame
-            evaluator.setRuntimeFrame(runtimeFrame);
+            // link interpreter to runtimeFrame
+            interpreter.setRuntimeFrame(runtimeFrame);
         };
 
         this.ready = function() {
@@ -128,7 +128,7 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment', 'TEval'], func
             function evalNextStatement() {
                 i++;
                 if (i<statements.length) {
-                    evaluator.evalStatement(statements[i], evalNextStatement);
+                    interpreter.evalStatement(statements[i], evalNextStatement);
                 }
             }
             evalNextStatement();
@@ -255,7 +255,7 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment', 'TEval'], func
                 // deleteObject will remove object from tGraphicalObjects
                 object.deleteObject();
             }
-            evaluator.clear();
+            interpreter.clear();
         };
 
         this.setDesignMode = function(value) {
