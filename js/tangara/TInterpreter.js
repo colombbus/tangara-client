@@ -9,10 +9,13 @@ define(['TError'], function(TError) {
         var blockLevel = 0;
         var stack = [];
         
+        /* Initialization */
         
         this.setRuntimeFrame = function(frame) {
             runtimeFrame = frame;
         };
+        
+        /* Lifecycle management */
         
         this.clear = function() {
             definedFunctions = {};
@@ -45,6 +48,54 @@ define(['TError'], function(TError) {
             delayed = [];
         };
         
+        /* Variable management */
+        
+        getVariable = function(identifier) {
+            if (typeof (runtimeFrame[identifier]) !== 'undefined') {
+                return runtimeFrame[identifier];
+            }
+        };
+        
+        saveVariable = function(identifier) {
+            if (typeof (runtimeFrame[identifier]) !== 'undefined') {
+                if (typeof localVariables[blockLevel] === 'undefined') {
+                    localVariables[blockLevel] = {};
+                }
+                localVariables[blockLevel][identifier] = runtimeFrame[identifier];
+            }
+        };
+        
+        restoreVariable = function(identifier) {
+            if (typeof localVariables[blockLevel+1] !=='undefined') {
+                if (typeof localVariables[blockLevel+1][identifier] !== 'undefined') {
+                    runtimeFrame[identifier] = localVariables[blockLevel+1][identifier];
+                    delete localVariables[blockLevel+1][identifier];
+                } else {
+                    delete runtimeFrame[identifier];
+                }
+            } else {
+                delete runtimeFrame[identifier];                
+            }
+        };
+        
+        /* Block management */
+        
+        enterBlock = function() {
+            blockLevel++;
+            currentVariables = [];
+        };
+        
+        leaveBlock = function() {
+            // local variable management: erase any locally created variables
+            blockLevel--;                       
+            for (var j=0; j<currentVariables.length; j++) {
+                restoreVariable(currentVariables[j]);
+            }
+            currentVariables = [];
+        };
+        
+        /* Main Eval function */
+        
         this.eval = function(literal, callback) {
             var result = runtimeFrame.eval(literal);
             if (run) {
@@ -54,31 +105,7 @@ define(['TError'], function(TError) {
             }
         };
         
-        this.getVariable = function(identifier) {
-            if (typeof (runtimeFrame[identifier]) !== 'undefined') {
-                return runtimeFrame[identifier];
-            }
-        }
-        
-        this.saveVariable = function(identifier) {
-            if (typeof (runtimeFrame[identifier]) !== 'undefined') {
-                if (typeof localVariables[blockLevel] === 'undefined') {
-                    localVariables[blockLevel] = {};
-                }
-                localVariables[blockLevel][identifier] = runtimeFrame[identifier];
-            }
-        }
-        
-        this.restoreVariable = function(identifier) {
-            if (typeof localVariables[blockLevel] !=='undefined') {
-                if (typeof localVariables[blockLevel][identifier] !== 'undefined') {
-                    runtimeFrame[identifier] = localVariables[blockLevel][identifier];
-                } else {
-                    delete runtimeFrame[identifier];
-                }
-                delete localVariables[blockLevel][identifier];
-            }
-        }
+        /* Statements management */
         
         this.defaultEvalStatement = function(statement, callback) {
             this.eval(statement.raw, callback);
@@ -87,19 +114,13 @@ define(['TError'], function(TError) {
         this.evalBlockStatement = function(statement, callback) {
             var i = -1;
             var interpreter = this;
-            blockLevel++;
-            currentVariables = [];
+            enterBlock();
             function evalNextBlockItem() {
                i++;
                if (i<statement.body.length) {
                    interpreter.evalStatement(statement.body[i], evalNextBlockItem);
                } else {
-                   // local variable management: erase any locally created variables
-                   for (var j=0; j<currentVariables.length; j++) {
-                       interpreter.restoreVariable(currentVariables[j]);
-                   }
-                   currentVariables = [];
-                   blockLevel--;
+                   leaveBlock();
                    callback.call(interpreter);
                }
             }
@@ -167,11 +188,17 @@ define(['TError'], function(TError) {
         };
 
         this.evalReturnStatement = function(statement, callback) {
+            var interpreter = this;
             if (stack.length > 0) {
                 // inside a function call: use function's callback instead
                 var returnCallback = stack.pop();
-                //TODO: end block, ie restore local variables, etc.
-                this.evalExpression(statement.argument, returnCallback);
+                this.evalExpression(statement.argument, function(value) {
+                    leaveBlock();
+                    if (typeof value === "string") {
+                        value = "\""+value+"\"";                
+                    }
+                    returnCallback.call(interpreter, value);
+                }, true);
             } else {
                 // no function call: we just stop evaluation
                 this.stop();
@@ -256,7 +283,7 @@ define(['TError'], function(TError) {
                     interpreter.evalExpression(declarator.id, function(identifier) {
                         interpreter.evalExpression(declarator.init, function(value) {
                             // local variables management: save preceeding value if any
-                            interpreter.saveVariable(identifier);
+                            saveVariable(identifier);
                             currentVariables.push(identifier);
                             interpreter.eval(identifier+"="+value, declareVariable);
                         });
@@ -349,6 +376,8 @@ define(['TError'], function(TError) {
                 }
             }
         };
+        
+        /* Expressions management */
 
         this.defaultEvalExpression = function(expression, callback) {
             callback.call(this, expression.raw);
