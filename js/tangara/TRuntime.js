@@ -1,4 +1,4 @@
-define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment', 'TInterpreter'], function($, TError, Quintus, TParser, TEnvironment, TInterpreter) {
+define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment', 'TInterpreter', 'TUtils'], function($, TError, Quintus, TParser, TEnvironment, TInterpreter, TUtils) {
     function TRuntime() {
         var libs = new Array();
         var translatedNames = new Array();
@@ -96,7 +96,16 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment', 'TInterpreter'
         };
 
         this.execute = function(commands, parameter, logCommands, lineNumbers) {
-            if (typeof logCommands === 'undefined') {
+            // TODO: detect function calls
+            this.executeStatements(commands);
+            
+            
+            
+            
+            
+            
+            // TO BE CONTINUED
+            /*if (typeof logCommands === 'undefined') {
                 logCommands = true;
             }
             try {
@@ -120,15 +129,19 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment', 'TInterpreter'
                 this.logError(error);
                 return false;
             }
-            return true;
+            return true;*/
         };
         
         this.executeStatements = function(statements) {
             var i = -1;
+            var runtime = this;
             function evalNextStatement() {
                 i++;
                 if (i<statements.length) {
-                    interpreter.evalStatement(statements[i], evalNextStatement);
+                    interpreter.evalStatement(statements[i], function() {
+                        runtime.logCommand(statements[i].raw);
+                        evalNextStatement.call(runtime);
+                    });
                 }
             }
             evalNextStatement();
