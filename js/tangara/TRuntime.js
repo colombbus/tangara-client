@@ -201,6 +201,14 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment', 'TInterpreter'
                 this.freeze(false);
             }
         };
+        
+        this.suspend = function() {
+            interpreter.suspend();
+        };
+        
+        this.resume = function() {
+            interpreter.resume();
+        }
 
         this.addObject = function(object) {
             tObjects.push(object);
