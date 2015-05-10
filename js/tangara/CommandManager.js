@@ -1,10 +1,14 @@
-define(['TRuntime'], function(TRuntime) {
+define(['TRuntime', 'TUtils', 'TParser'], function(TRuntime, TUtils, TParser) {
     var CommandManager = function() {
         this.commands = new Array();
         this.logging= true;
     };
     
     CommandManager.prototype.addCommand = function(command, field) {
+        if (TUtils.checkString(command)) {
+            // command is a string: we parse it
+            command = TParser.parse(command);
+        }
         if (typeof field === 'undefined') {
             // simple command provided
             this.commands.push(command);
