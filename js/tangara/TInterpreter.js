@@ -27,7 +27,7 @@ define(['TError'], function(TError) {
             run = true;
         };
 
-        this.pause = function() {
+        this.suspend = function() {
             run = false;
         };
         
