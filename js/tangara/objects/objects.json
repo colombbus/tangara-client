@@ -254,5 +254,13 @@
             "es": "Artículo",
             "en": "Item"
         }
+    },
+    "Robot": {
+        "path": "robot",
+        "translations": {
+            "fr": "Robot",
+            "es": "TBD",
+            "en": "Robot"
+        }
     }    
 }
