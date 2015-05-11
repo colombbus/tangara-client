@@ -1,4 +1,4 @@
-define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManager', 'TGraphicalObject'], function($, TEnvironment, TUtils, CommandManager, SynchronousManager, TGraphicalObject) {
+define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'], function($, TEnvironment, TUtils, CommandManager, TGraphicalObject) {
     var Sprite = function(name) {
         TGraphicalObject.call(this);
         this.images = new Array();
@@ -7,9 +7,6 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManager
         this.displayedImage = "";
         this.displayedSet = "";
         this.displayedIndex = "";
-        this.synchronous = false;
-        this.synchronousManager = new SynchronousManager();
-        this.qObject.synchronousManager = this.synchronousManager;
         if (typeof name === 'string') {
           this._setImage(name);
         }
@@ -39,9 +36,7 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManager
                 moving:false,
                 hasCollisionCommands:false,
                 collisionWatched:false,
-                frozen:false,
-                synchronous:false,
-                inMovement:false
+                frozen:false
             },props),defaultProps);
             this.watchCollisions(true);
             this.encounteredObjects = new Array();
@@ -126,10 +121,6 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManager
                             p.y = Math.max(p.y - step, p.destinationY);
                             p.moving = true;
                         }
-                        if (p.inMovement && !p.moving && p.synchronous) {
-                            p.inMovement = false;
-                            this.synchronousManager.end();
-                        }
                         break;
                     case Sprite.DIRECTION_RIGHT:
                         p.x+=step;
@@ -172,10 +163,6 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManager
         },
         moveForward: function(value) {
             this.perform(function(value){
-                if (this.p.synchronous) {
-                    this.p.inMovement = true;
-                    this.synchronousManager.begin();
-                }
                 this.p.destinationX+=value;
             }, [value]);
         },
@@ -186,10 +173,6 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManager
         },
         moveBackward: function(value) {
             this.perform(function(value){
-                if (this.p.synchronous) {
-                    this.p.inMovement = true;
-                    this.synchronousManager.begin();
-                }
                 this.p.destinationX-=value;
             }, [value]);
         },
@@ -200,10 +183,6 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManager
         },
         moveUpward: function(value) {
             this.perform(function(value){
-                if (this.p.synchronous) {
-                    this.p.inMovement = true;
-                    this.synchronousManager.begin();
-                }
                 this.p.destinationY-=value;
             }, [value]);
         },
@@ -214,10 +193,6 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManager
         },
         moveDownward: function(value) {
             this.perform(function(value){
-                if (this.p.synchronous) {
-                    this.p.inMovement = true;
-                    this.synchronousManager.begin();
-                }
                 this.p.destinationY+=value;
             }, [value]);
         },
@@ -228,10 +203,6 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManager
         },
         goTo: function(x,y) {
             this.perform(function(x,y){
-                if (this.p.synchronous) {
-                    this.p.inMovement = true;
-                    this.synchronousManager.begin();
-                }
                 this.p.destinationX = x + this.p.w / 2;
                 this.p.destinationY = y + this.p.h / 2;
                 this.p.direction = Sprite.DIRECTION_NONE;
@@ -745,15 +716,6 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManager
     Sprite.prototype._watchCollisions = function(value) {
         value = TUtils.getBoolean(value);
         this.qObject.watchCollisions(value);
-    };
-
-    Sprite.prototype._setSynchronous = function(value) {
-        value = TUtils.getBoolean(value);
-        this.synchronous = value;
-        this.qObject.p.synchronous = value;
-        if (!value && this.SynchronousManager.isRunning()) {
-            this.SynchronousManager.end();
-        }
     };
     
     Sprite.prototype.isReady = function(callback, arguments) {
