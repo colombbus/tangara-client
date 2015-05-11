@@ -33,7 +33,7 @@ define(['TError'], function(TError) {
         
         this.consumeDelayed = function() {
             while (delayed.length>0 && run) {
-                var execution = delayed.pop();
+                var execution = delayed.shift();
                 execution[0].call(this, execution[1]);
             }
         };
