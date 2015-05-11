@@ -2,12 +2,8 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'T
     var Item = function(name) {
         Sprite.call(this, name);
         var qObject = this.qObject;
-        var resource = this.getResource("ball.gif");
-        qInstance.load(resource, function() {
-            qObject.asset(resource, true);
-            qObject.initialized();
-        });
-
+        this.addImage("ball.gif","", false);
+        this.setDisplayedImage("ball.gif");
     };
     
     Item.prototype = Object.create(Sprite.prototype);
