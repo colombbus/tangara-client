@@ -56,9 +56,11 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManager
                     p.moving = true;
                 }
                 if (p.moving) {
+                    var x = p.x - p.w/2;
+                    var y = p.y - p.h/2;
                     for (var i=0; i<p.carriedItems.length;i++) {
                         var item = p.carriedItems[i];
-                        item.setLocation(p.x+i*10, p.y);
+                        item.setLocation(x+i*10, y);
                     }
                 }
                 if (p.inMovement && !p.moving) {
@@ -139,7 +141,7 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManager
             }
             var newItem = this.p.encountered[0];
             this.p.carriedItems.push(newItem);
-            newItem.setLocation(this.p.x + (this.p.carriedItems.length-1)*10, this.p.y);
+            newItem.setLocation(this.p.x-this.p.w/2 + (this.p.carriedItems.length-1)*10, this.p.y-this.p.h/2);
         },
         dropItem: function() {
             if (this.p.carriedItems.length===0) {
