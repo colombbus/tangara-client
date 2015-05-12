@@ -288,6 +288,12 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment', 'TInterpreter'
         };
 
         this.freeze = function(value) {
+            if (value) {
+                this.suspend();
+            } else {
+                this.resume();
+            }
+            
             for (var i = 0; i<tGraphicalObjects.length; i++) {
                 tGraphicalObjects[i].freeze(value);
             }
