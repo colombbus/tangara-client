@@ -1,4 +1,4 @@
-define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, TError, Quintus, TParser, TEnvironment) {
+define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment', 'TUtils'], function ($, TError, Quintus, TParser, TEnvironment, TUtils) {
     function TRuntime() {
         var libs = new Array();
         var translatedNames = new Array();
@@ -16,7 +16,7 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, T
         var wasFrozen = false;
         var Q = Quintus();
 
-        this.load = function(language, objectListUrl) {
+        this.load = function (language, objectListUrl) {
             // create runtime frame
             this.initRuntimeFrame();
 
@@ -28,9 +28,9 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, T
             var libs = TEnvironment.getObjectLibraries();
             var translatedNames = TEnvironment.getTranslatedObjectNames();
             var self = this;
-            require(libs, function() {
-                for(var i= 0; i < translatedNames.length; i++) {
-                    window.console.log("Declaring translated object '"+translatedNames[i]+"'");
+            require(libs, function () {
+                for (var i = 0; i < translatedNames.length; i++) {
+                    window.console.log("Declaring translated object '" + translatedNames[i] + "'");
                     runtimeFrame[translatedNames[i]] = arguments[i];
                 }
                 self.ready();
@@ -40,11 +40,11 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, T
             TParser.protectIdentifiers(translatedNames);
         };
 
-        this.ready = function() {
+        this.ready = function () {
             TEnvironment.runtimeReady();
         };
 
-        this.initRuntimeFrame = function() {
+        this.initRuntimeFrame = function () {
             if (typeof runtimeFrame === 'undefined') {
                 var runtime = this;
                 var iframe = document.createElement("iframe");
@@ -54,24 +54,24 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, T
             }
         };
 
-        this.getRuntimeFrame = function() {
+        this.getRuntimeFrame = function () {
             return runtimeFrame;
         };
 
-        this.setCallback = function(callback) {
+        this.setCallback = function (callback) {
             runtimeCallback = callback;
         };
 
-        this.getCallback = function() {
+        this.getCallback = function () {
             return runtimeCallback;
         };
 
-        this.getTObjectName = function(reference) {
+        this.getTObjectName = function (reference) {
             if (typeof reference.objectName !== 'undefined') {
                 return reference.objectName;
             }
             var name;
-            $.each(runtimeFrame, function(key, value) {
+            $.each(runtimeFrame, function (key, value) {
                 if (value === reference) {
                     name = key;
                     return false;
@@ -80,8 +80,8 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, T
             reference.objectName = name;
             return name;
         };
-        
-        this.getTObjectClassName = function(objectName) {
+
+        this.getTObjectClassName = function (objectName) {
             if (typeof runtimeFrame[objectName] === 'undefined') {
                 return false;
             }
@@ -118,15 +118,15 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, T
             return true;
         };
 
-        this.executeStatements = function(statements) {
-            for (var i = 0; i<statements.length; i++) {
+        this.executeStatements = function (statements) {
+            for (var i = 0; i < statements.length; i++) {
                 var statement = statements[i];
-                if (!this.execute(statement.body, null, true, [statement.start,statement.end]))
+                if (!this.execute(statement.body, null, true, [statement.start, statement.end]))
                     return false;
             }
         };
 
-        this.executeFrom = function(object) {
+        this.executeFrom = function (object) {
             try {
                 var statements = object.getStatements();
                 this.executeStatements(statements);
@@ -140,35 +140,35 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, T
             }
         };
 
-        this.setQuintusInstance = function(instance) {
+        this.setQuintusInstance = function (instance) {
             quintusInstance = instance;
         };
 
-        this.getQuintusInstance = function() {
+        this.getQuintusInstance = function () {
             return quintusInstance;
         };
 
-        this.setCanvas = function(element) {
+        this.setCanvas = function (element) {
             canvas = element;
         };
 
-        this.setLog = function(element) {
+        this.setLog = function (element) {
             log = element;
         };
 
-        this.logCommand = function(command) {
+        this.logCommand = function (command) {
             if (typeof log !== 'undefined') {
                 log.addCommand(command);
             }
         };
 
-        this.logError = function(error) {
+        this.logError = function (error) {
             if (typeof log !== 'undefined') {
                 log.addError(error);
             }
         };
 
-        this.stop = function() {
+        this.stop = function () {
             if (quintusInstance.loop) {
                 quintusInstance.pauseGame();
             }
@@ -176,7 +176,7 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, T
             this.freeze(true);
         };
 
-        this.start = function() {
+        this.start = function () {
             if (!quintusInstance.loop) {
                 quintusInstance.unpauseGame();
             }
@@ -185,17 +185,17 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, T
             }
         };
 
-        this.addObject = function(object) {
+        this.addObject = function (object) {
             tObjects.push(object);
             // initialize object with current state
             object.freeze(frozen);
         };
 
-        this.removeObject = function(object) {
+        this.removeObject = function (object) {
             var index = tObjects.indexOf(object);
             if (index > -1) {
                 tObjects.splice(index, 1);
-                $.each(runtimeFrame, function(key, value) {
+                $.each(runtimeFrame, function (key, value) {
                     if (value === object) {
                         delete runtimeFrame[key];
                         return false;
@@ -204,7 +204,7 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, T
             }
         };
 
-        this.addGraphicalObject = function(object) {
+        this.addGraphicalObject = function (object) {
             canvas.addGraphicalObject(object);
             tGraphicalObjects.push(object);
             // initialize object with current state
@@ -212,12 +212,12 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, T
             object.setDesignMode(designMode);
         };
 
-        this.removeGraphicalObject = function(object) {
+        this.removeGraphicalObject = function (object) {
             var index = tGraphicalObjects.indexOf(object);
             if (index > -1) {
                 canvas.removeGraphicalObject(object);
                 tGraphicalObjects.splice(index, 1);
-                $.each(runtimeFrame, function(key, value) {
+                $.each(runtimeFrame, function (key, value) {
                     if (value === object) {
                         delete runtimeFrame[key];
                         return false;
@@ -226,51 +226,49 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, T
             }
         };
 
-        this.clear = function() {
+        this.clear = function () {
             // TODO: clear RuntimeFrame as well (e.g. to erase declared functions)
-            while (tGraphicalObjects.length>0) {
+            while (tGraphicalObjects.length > 0) {
                 var object = tGraphicalObjects[0];
                 // deleteObject will remove object from tGraphicalObjects
                 object.deleteObject();
             }
-            while (tObjects.length>0) {
+            while (tObjects.length > 0) {
                 var object = tObjects[0];
                 // deleteObject will remove object from tGraphicalObjects
                 object.deleteObject();
             }
         };
 
-        this.setDesignMode = function(value) {
+        this.setDesignMode = function (value) {
             // TODO: handle duplicate objects
-            for (var i = 0; i<tGraphicalObjects.length; i++) {
+            for (var i = 0; i < tGraphicalObjects.length; i++) {
                 tGraphicalObjects[i].setDesignMode(value);
             }
             designMode = value;
         };
 
-        this.freeze = function(value) {
-            for (var i = 0; i<tGraphicalObjects.length; i++) {
+        this.freeze = function (value) {
+            for (var i = 0; i < tGraphicalObjects.length; i++) {
                 tGraphicalObjects[i].freeze(value);
             }
-            for (var i = 0; i<tObjects.length; i++) {
+            for (var i = 0; i < tObjects.length; i++) {
                 tObjects[i].freeze(value);
             }
             frozen = value;
         };
 
-        this.setCurrentProgramName = function(name) {
+        this.setCurrentProgramName = function (name) {
             currentProgramName = name;
         };
 
-        this.getCurrentProgramName = function() {
+        this.getCurrentProgramName = function () {
             return currentProgramName;
         };
 
-        this.tweakQuintus = function() {
-
-
+        this.tweakQuintus = function () {
             // Tweak Quintus to be able to look for sprites while skipping some of them
-            Q._TdetectSkip = function(obj, iterator, context, arg1, arg2, skip) {
+            Q._TdetectSkip = function (obj, iterator, context, arg1, arg2, skip) {
                 var result;
                 if (obj == null) {
                     return;
@@ -300,7 +298,7 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, T
                 }
             };
 
-            quintusInstance.Stage.prototype._TgridCellCheckSkip = function(type, id, obj, collisionMask, skip) {
+            quintusInstance.Stage.prototype._TgridCellCheckSkip = function (type, id, obj, collisionMask, skip) {
                 if (Q._isUndefined(collisionMask) || collisionMask & type) {
                     var obj2 = this.index[id];
                     if (obj2 && obj2 !== obj && Q.overlap(obj, obj2)) {
@@ -314,9 +312,9 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, T
                     }
                 }
             };
-            
 
-            quintusInstance.Stage.prototype.TsearchSkip = function(obj, collisionMask, skip) {
+
+            quintusInstance.Stage.prototype.TsearchSkip = function (obj, collisionMask, skip) {
                 var col;
 
                 // If the object doesn't have a grid, regrid it
@@ -347,17 +345,16 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, T
                 return false;
             };
 
-
             // Tweak Quintus to be able to look for sprite with highest id
             Q.touchStage = [0];
             Q.touchType = 0;
 
-            Q._TdetectTouch = function(obj, iterator, context, arg1, arg2) {
+            Q._TdetectTouch = function (obj, iterator, context, arg1, arg2) {
                 var result = false, id = -1, col;
                 if (obj == null) {
                     return;
                 }
-                
+
                 if (obj.length === +obj.length) {
                     for (var i = 0, l = obj.length; i < l; i++) {
                         col = iterator.call(context, obj[i], i, arg1, arg2, id);
@@ -379,7 +376,7 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, T
                 }
             };
 
-            quintusInstance.Stage.prototype._TgridCellCheckTouch = function(type, id, obj, collisionMask, minId) {
+            quintusInstance.Stage.prototype._TgridCellCheckTouch = function (type, id, obj, collisionMask, minId) {
                 if (Q._isUndefined(collisionMask) || collisionMask & type) {
                     var obj2 = this.index[id];
                     if (obj2 && obj2 !== obj && !obj2.p.hidden && obj2.p.id > minId && Q.overlap(obj, obj2)) {
@@ -394,8 +391,7 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, T
                 }
             };
 
-
-            quintusInstance.Stage.prototype.TsearchTouch = function(obj, collisionMask) {
+            quintusInstance.Stage.prototype.TsearchTouch = function (obj, collisionMask) {
                 var col;
 
                 // If the object doesn't have a grid, regrid it
@@ -406,7 +402,7 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, T
                 }
 
                 var grid = obj.grid, gridCell, col;
-                
+
                 for (var y = grid.Y1; y <= grid.Y2; y++) {
                     if (this.grid[y]) {
                         for (var x = grid.X1; x <= grid.X2; x++) {
@@ -423,8 +419,7 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, T
                 return false;
             };
 
-
-            Q.TouchSystem.prototype.touch = function(e) {
+            Q.TouchSystem.prototype.touch = function (e) {
                 var touches = e.changedTouches || [e];
 
                 for (var i = 0; i < touches.length; i++) {
@@ -472,7 +467,7 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, T
                 //e.preventDefault();
             };
 
-            Q.touch = function(type, stage) {
+            Q.touch = function (type, stage) {
                 Q.untouch();
                 Q.touchType = type || Q.SPRITE_UI;
                 Q.touchStage = stage || [2, 1, 0];
@@ -485,15 +480,8 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment'], function($, T
                 }
                 return Q;
             };
-
-
-
         };
-
-    };
-
-
-
+    }
 
     var runtimeInstance = new TRuntime();
 
