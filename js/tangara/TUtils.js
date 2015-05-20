@@ -323,7 +323,7 @@ define(['TEnvironment'], function (TEnvironment) {
         {
             if (typeof value === "undefined")
                 value = QUOTE_DELIMITER;
-            var result = value;
+            var result = "";
             for (var i = 0; i < level; i++)
                 result += value;
             return result;
@@ -338,8 +338,7 @@ define(['TEnvironment'], function (TEnvironment) {
          * @return
          * 		the new string
          */
-        this.parseQuotes = function (string)
-        {
+        this.parseQuotes = function (string) {
             var result = "";
             var charactersTab = string.split('');
             var delimiterEncountered = false;
@@ -363,7 +362,7 @@ define(['TEnvironment'], function (TEnvironment) {
                         if (delimiterEncountered)
                         {
                             result += this.someDelimiters(level, "\\");
-                            result += '\"';
+                            result += '"';
                             delimiterEncountered = false;
                             level = 0;
                         }
@@ -448,9 +447,11 @@ define(['TEnvironment'], function (TEnvironment) {
         };
 
         this.isElsePresent = function (text) {
-            var regex = new RegExp("^.*else*$", "m");
+            //var regex = new RegExp("^.*else*$", "m");
+            var regex = new RegExp("^.*[^[[:alpha:]]]*else[^[[:alpha:]]]*.*$", "m");
             //var regex  = new RegExp("^.*\\s*[^[[:alpha:]]]else[^[[:alpha:]]]*", "m");
-            //console.log("Regex : " + regex.toString() + " -- Verif : " + regex.test(text) + " -- Text : " + text );
+            //^.*[^[[:alpha:]]]*else[^[[:alpha:]]]*.*$
+            console.log("Regex : " + regex.toString() + " -- Verif : " + regex.test(text) + " -- Text : " + text);
 
             return regex.test(text);
         };
