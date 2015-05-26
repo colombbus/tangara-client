@@ -119,6 +119,46 @@ define(['jquery', 'TEnvironment', 'TUtils'], function($, TEnvironment, TUtils) {
                 return;
             }            
         };
+        
+        this.detectError = function() {
+            // Undefined 
+            var result = detectRegex_undefined.exec(message);
+            if (result !== null && result.length > 0) {
+                var name = result[1];
+                name = TUtils.convertUnicode(name);
+                message = translate("runtime-error-undefined", name);
+                return;
+            }
+            // Not a function 
+            var result = detectRegex_not_a_function.exec(message);
+            if (result !== null && result.length > 0) { 
+                var name = result[1];
+                name = TUtils.convertUnicode(name);
+                if (name === 'undefined') {
+                    message = translate("runtime-error-undefined-not-a-function");                    
+                } else {
+                    message = translate("runtime-error-not-a-function", name);
+                } 
+                return;
+            }
+            var result = detectRegex_syntax_error.exec(message);
+            if (result !== null) {
+                message = translate("runtime-error-syntax-error");
+                return;
+            }
+            var result = detectRegex_not_a_variable.exec(message);
+            if (result !== null && result.length > 0) { 
+                var name = result[1];
+                name = TUtils.convertUnicode(name);
+                message = translate("runtime-error-not-variable-error", name);
+                return;
+            }
+            var result = detectRegex_unterminated_string.exec(message);
+            if (result !== null) {
+                message = translate("runtime-error-unterminated-string-error");
+                return;
+            }            
+        };
     }
 
     // Load translated errors
