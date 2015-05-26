@@ -85,7 +85,10 @@ define(['jquery', 'ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager',
         };
 
         this.getValue = function () {
-            return aceEditor.getSession().getValue();
+            var simpleText = aceEditor.getSession().getValue();
+            var protectedText = TUtils.addQuoteDelimiters(simpleText);
+            var command = TUtils.parseQuotes(protectedText);
+            return command;
         };
 
         this.getStatements = function () {
@@ -108,7 +111,6 @@ define(['jquery', 'ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager',
             program = value;
             codeChanged = true;
         };
-
 
         this.getProgramName = function () {
             return program.getName();
@@ -159,11 +161,12 @@ define(['jquery', 'ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager',
 
         this.setError = function (lines) {
             this.removeError();
+            var range;
             if (lines.length > 1) {
-                var range = new AceRange(lines[0] - 1, 0, lines[1] - 1, 100);
+                range = new AceRange(lines[0] - 1, 0, lines[1] - 1, 100);
                 errorMarker = aceEditor.getSession().addMarker(range, 'tangara_error', 'line', true);
             } else if (lines.length > 0) {
-                var range = new AceRange(lines[0] - 1, 0, lines[0] - 1, 100);
+                range = new AceRange(lines[0] - 1, 0, lines[0] - 1, 100);
                 errorMarker = aceEditor.getSession().addMarker(range, 'tangara_error', 'line', true);
             }
             aceEditor.navigateTo(lines[0] - 1, 0);
@@ -220,13 +223,28 @@ define(['jquery', 'ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager',
                  }
                  endToken = "[";
                  }*/
-                if (token.type !== "identifier" && token.type !== "text" && token.type !== "string") {
+                if (token.type !== "identifier" && token.type !== "text" && token.type !== "string" && token.type !== "keyword") {
                     return false;
                 }
 
                 var name = token.value.trim();
-                console.debug("name " + name);
+// Class completion
+                if (name === "new") {
+                    //TODO: get real classes
+                    var classNames = ["Animation", "Héros",
+                        "CommandesClavier", "Bloc", "Item"];
+                    methodNames = TUtils.sortArray(classNames);
 
+                    var completions = [];
+                    for (var j = 0; j < methodNames.length; j++) {
+                        completions.push({
+                            caption: methodNames[j],
+                            value: methodNames[j] + "()"
+                        });
+                    }
+                    callback(null, completions);
+                    return;
+                }
                 for (var i = index - 1; i >= 0; i--) {
                     token = tokens[i];
                     if (token.type !== "identifier" && token.type !== "text" && token.type !== "string") {
@@ -247,7 +265,7 @@ define(['jquery', 'ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager',
                 var firstcar = name.slice(0, 1);
 
                 if (token.type === "text") {
-                    // Remove double quote
+                    // Remove first simple/double quote
                     if (firstcar === '"' || firstcar === "'") {
                         name = name.slice(1, name.length); // "r. -> r.
                     }
@@ -269,6 +287,7 @@ define(['jquery', 'ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager',
                 var valueBefore = session.getDocument().getTextRange(range);
                 // Since regex do not support unicode...
                 var unicodeName = TUtils.toUnicode(name);
+                console.log("unicode " + name);
                 var regex = new RegExp("(?:^|\\s)" + unicodeName + "\\s*=\\s*new\\s*([\\S^\\" + endToken + "]*)\\s*\\" + endToken);
 
                 var result = regex.exec(valueBefore);
@@ -280,10 +299,10 @@ define(['jquery', 'ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager',
                     var methods = TEnvironment.getTranslatedClassMethods(className);
                     var methodNames = Object.keys(methods);
                     methodNames = TUtils.sortArray(methodNames);
-                    for (var i = 0; i < methodNames.length; i++) {
+                    for (var j = 0; j < methodNames.length; j++) {
                         completions.push({
-                            caption: methodNames[i],
-                            value: methods[methodNames[i]]
+                            caption: methodNames[j],
+                            value: methods[methodNames[j]]
                         });
                     }
                 }
@@ -296,7 +315,6 @@ define(['jquery', 'ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager',
             bindKey: {win: '.', mac: '.'},
             exec: function (editor) {
                 triggerPopup = true;
-                ;
                 return false; // let default event perform
             },
             readOnly: true // false if this command should not apply in readOnly mode
@@ -316,7 +334,6 @@ define(['jquery', 'ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager',
             readOnly: true // false if this command should not apply in readOnly mode
         };
     }
-    ;
 
     return TEditor;
 });
