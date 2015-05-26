@@ -228,6 +228,7 @@ define(['jquery', 'ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager',
                 }
 
                 var name = token.value.trim();
+
 // Class completion
                 if (name === "new") {
                     //TODO: get real classes
@@ -293,7 +294,11 @@ define(['jquery', 'ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager',
                 var result = regex.exec(valueBefore);
 
                 var completions = [];
-
+                
+                if (name == "tangara"){
+                    // result[1] is the important part
+                    result = [name,name];
+                }
                 if (result !== null && result.length > 0) {
                     var className = result[1];
                     var methods = TEnvironment.getTranslatedClassMethods(className);
@@ -306,6 +311,7 @@ define(['jquery', 'ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager',
                         });
                     }
                 }
+
                 callback(null, completions);
             }
         };
