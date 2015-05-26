@@ -1,6 +1,7 @@
 {
     "fr": {
         "methods":[
+            {"name":"_rotate","translated":"tourner","displayed":"tourner(30)"},
             {"name":"_setCenterLocation","translated":"d\u00e9finirPositionCentre","displayed":"d\u00e9finirPositionCentre(0,0)"},
             {"name":"_setLocation","translated":"d\u00e9finirPosition","displayed":"d\u00e9finirPosition(0,0)"},
             {"name":"_getXCenter","translated":"r\u00e9cup\u00e9rerCoordonnéeXCentre","displayed":"r\u00e9cup\u00e9rerCoordonnéeXCentre()"},

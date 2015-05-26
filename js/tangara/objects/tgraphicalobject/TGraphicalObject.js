@@ -56,6 +56,11 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function (TObject, TUt
                 operation[0].apply(this, operation[1]);
             }
         },
+        rotate: function (angle) {
+            this.perform(function (angle) {
+                this.p.angle = this.p.angle + angle;
+            }, [angle]);
+        },
         setLocation: function (x, y) {
             this.perform(function (x, y) {
                 this.p.x = x + this.p.w / 2;
@@ -104,6 +109,10 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function (TObject, TUt
 
     TGraphicalObject.prototype.getQObject = function () {
         return this.qObject;
+    };
+    TGraphicalObject.prototype._rotate = function (angle) {
+        //TODO: parseFloat
+        this.qObject.rotate(angle);
     };
 
     TGraphicalObject.prototype._setCenterLocation = function (x, y) {
