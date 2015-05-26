@@ -13,7 +13,8 @@
             "fr": "Espace3D",
             "es": "Espacio3D",
             "en": "Space3D"
-        }
+        },
+        "conditions": ["3d"]
     },
     "Sphere3D": {
         "path": "3d/sphere3d",
@@ -21,7 +22,8 @@
             "fr": "Sphère3D",
             "es": "Esfera3D",
             "en": "Sphere3D"
-        }
+        },
+        "conditions": ["3d"]
     },
     "Quadrilateral3D": {
         "path": "3d/quadrilateral3d",
@@ -29,7 +31,8 @@
             "fr": "Quadrilatère3D",
             "es": "Cuadrilatero3D",
             "en": "Quadrilateral3D"
-        }
+        },
+        "conditions": ["3d"]
     },
     "Box3D": {
         "path": "3d/box3d",
@@ -37,7 +40,8 @@
             "fr": "Boîte3D",
             "es": "Caja3D",
             "en": "Box3D"
-        }
+        },
+        "conditions": ["3d"]
     },
     "Cylinder3D": {
         "path": "3d/cylinder3d",
@@ -45,7 +49,8 @@
             "fr": "Cylindre3D",
             "es": "Cilindro3D",
             "en": "Cylinder3D"
-        }
+        },
+        "conditions": ["3d"]
     },
     "Torus3D": {
         "path": "3d/torus3d",
@@ -53,7 +58,8 @@
             "fr": "Tore3D",
             "es": "Toro3D",
             "en": "Torus3D"
-        }
+        },
+        "conditions": ["3d"]
     },
     "Text3D": {
         "path": "3d/text3d",
@@ -61,7 +67,8 @@
             "fr": "Texte3D",
             "es": "Texto3D",
             "en": "Text3D"
-        }
+        },
+        "conditions": ["3d"]
     },
     "Triangle3D": {
         "path": "3d/triangle3d",
@@ -69,7 +76,8 @@
             "fr": "Triangle3D",
             "es": "Triangulo3D",
             "en": "Triangle3D"
-        }
+        },
+        "conditions": ["3d"]
     },
     "Cube3D": {
         "path": "3d/cube3d",
@@ -77,7 +85,8 @@
             "fr": "Cube3D",
             "es": "Cubo3D",
             "en": "Cube3D"
-        }
+        },
+        "conditions": ["3d"]
     },
     "Light3D": {
         "path": "3d/light3d",
@@ -85,7 +94,8 @@
             "fr": "Lumière3D",
             "es": "Luz3D",
             "en": "Light3D"
-        }
+        },
+        "conditions": ["3d"]
     },
     "Point3D": {
         "path": "3d/point3d",
@@ -93,7 +103,8 @@
             "fr": "Point3D",
             "es": "Punto3D",
             "en": "Point3D"
-        }
+        },
+        "conditions": ["3d"]
     },
     "Rider3D": {
         "path": "3d/rider3d",
@@ -101,7 +112,8 @@
             "fr": "Suiveur3D",
             "es": "Seguidor3D",
             "en": "Rider3D"
-        }
+        },
+        "conditions": ["3d"]
     },
     "Segment3D": {
         "path": "3d/segment3d",
@@ -109,7 +121,8 @@
             "fr": "Segment3D",
             "es": "Segmento3D",
             "en": "Segment3D"
-        }
+        },
+        "conditions": ["3d"]
     },
     "Vector3D": {
         "path": "3d/vector3d",
@@ -117,7 +130,8 @@
             "fr": "Vecteur3D",
             "es": "Vector3D",
             "en": "Vector3D"
-        }
+        },
+        "conditions": ["3d"]
     },
     "Walker3D": {
         "path": "3d/walker3d",
@@ -125,7 +139,8 @@
             "fr": "Promeneur3D",
             "es": "Paseante3D",
             "en": "Walker3D"
-        }
+        },
+        "conditions": ["3d"]
     },
     "Path3D": {
         "path": "3d/path3d",
@@ -133,7 +148,8 @@
             "fr": "Chemin3D",
             "es": "Camino3D",
             "en": "Path3D"
-        }
+        },
+        "conditions": ["3d"]
     },
     "Sprite": {
         "path": "sprite",
