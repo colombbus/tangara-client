@@ -1,4 +1,6 @@
-tangarajs
+tangara-client
 =========
 
-An educational IDE on line for program
+An educational IDE online
+
+Tangara-client (javascript) works with Tangara-server (PHP)
