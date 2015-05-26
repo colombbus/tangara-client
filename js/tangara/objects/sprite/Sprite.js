@@ -208,6 +208,13 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
                 this.p.direction = Sprite.DIRECTION_NONE;
             }, [x,y]);
         },        
+        centerGoTo: function(x,y) {
+            this.perform(function(x,y){
+                this.p.destinationX = x ;
+                this.p.destinationY = y ;
+                this.p.direction = Sprite.DIRECTION_NONE;
+            }, [x,y]);
+        },        
         stop: function() {
             this.perform(function(){
                 this.p.destinationX = this.p.x;
@@ -711,6 +718,12 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
         x = TUtils.getInteger(x);
         y = TUtils.getInteger(y);
         this.qObject.goTo(x,y);
+    };
+    
+    Sprite.prototype._centerGoTo = function(x, y) {
+        x = TUtils.getInteger(x);
+        y = TUtils.getInteger(y);
+        this.qObject.centerGoTo(x,y);
     };
 
     Sprite.prototype._watchCollisions = function(value) {
