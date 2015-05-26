@@ -13,6 +13,7 @@ define(['jquery'], function($) {
         var ready_runtime = false;
         var ready_environment = false;
         var ready_callback = null;
+        var support3D = null;
         
         this.messages = {};
 
@@ -57,6 +58,7 @@ define(['jquery'], function($) {
             window.console.log("* Retrieving list of translated objects");
             // find objects and translate them
             var objectListUrl = this.getObjectListUrl();
+            var is3DSupported = this.is3DSupported();
             window.console.log("accessing objects list from: "+objectListUrl);
             $.ajax({
                 dataType: "json",
@@ -64,14 +66,31 @@ define(['jquery'], function($) {
                 async: false,
                 success: function(data) {
                     $.each( data, function( key, val ) {
-                        var lib = "objects/"+val['path']+"/"+key;
+                        var addObject = true;
+                        if (typeof val['conditions'] !== 'undefined') {
+                            // object rely on conditions 
+                            for (var i=0; i<val['conditions'].length; i++) {
+                                var condition = val['conditions'][i];
+                                switch (condition) {
+                                    case '3d':
+                                        if (!is3DSupported) {
+                                            console.log("skipping addition of object "+key+": 3D not supported");
+                                            addObject = false;
+                                        }
+                                        break;
+                                }
+                            }
+                        }
+                        if (addObject) {
+                            var lib = "objects/"+val['path']+"/"+key;
                             objectsPath[key] = val['path'];
-                        if (typeof val['translations'][language] !== 'undefined') {
-                            window.console.log("adding "+lib);
-                            objectLibraries.push(lib);
-                            var translatedName = val['translations'][language];
-                            translatedObjectNames.push(translatedName);
-                            tangaraObjects[translatedName] = key;
+                            if (typeof val['translations'][language] !== 'undefined') {
+                                window.console.log("adding "+lib);
+                                objectLibraries.push(lib);
+                                var translatedName = val['translations'][language];
+                                translatedObjectNames.push(translatedName);
+                                tangaraObjects[translatedName] = key;
+                            }
                         }
                     });
                 }
@@ -97,7 +116,7 @@ define(['jquery'], function($) {
         
         this.getBackendUrl = function(module) {
             var url = window.location.protocol + "//" + window.location.host + window.location.pathname.split("/").slice(0, -2).join("/");
-            url += this.config['backend-path'] + "tangarajs/";
+            url += this.config['backend-path'] + "assets/";
             if (typeof module !== "undefined"){
                 url = url + module;
             }
@@ -333,6 +352,34 @@ define(['jquery'], function($) {
         
         this.getConfig = function(value) {
             return this.config[value];
+        };
+        
+        this.is3DSupported = function() {
+            var canvas, gl;
+            if (support3D !== null)
+                return support3D;
+            try {
+                canvas = document.createElement('canvas');
+                gl = canvas.getContext('webgl');
+            } catch (e) {
+                gl = null;
+            }
+            if (gl === null) {
+                try {
+                    gl = canvas.getContext("experimental-webgl");
+                }
+                catch (e) {
+                    gl = null;
+                }
+            }
+            if (gl === null) {
+                support3D = false;
+                console.log("3D functions not supported");
+            } else {
+                support3D = true;
+                console.log("3D functions supported");
+            }
+            return support3D;
         };
         
 

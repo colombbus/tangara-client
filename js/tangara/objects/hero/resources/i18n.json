@@ -4,8 +4,8 @@
             {"name":"_setCharacter","translated":"changer","displayed":"changer(\"garçon\")"},
             {"name":"_stopAutoAsset","translated":"arrêterMouvement","displayed":"arrêterMouvement()"},
             {"name":"_startAutoAsset","translated":"démarrerMouvement","displayed":"démarrerMouvement()"},
-            {"name":"_setMovementDuration","translated":"définirDuréeMouvement","displayed":"définirDuréeMouvement(0.5)"},
-            {"name":"_setPauseDuration","translated":"définirDuréeArrêt","displayed":"définirDuréeArrêt(1.2)"},
+            {"name":"_setMovementDuration","translated":"définirDuréeMouvement","displayed":"définirDuréeMouvement(500)"},
+            {"name":"_setPauseDuration","translated":"définirDuréeArrêt","displayed":"définirDuréeArrêt(1200)"},
             {"name":"_addScene","translated":"ajouterDécor","displayed":"ajouterDécor(décor)"},
             {"name":"_mayCatch","translated":"peutAttraper","displayed":"peutAttraper(item)"},
             {"name":"_ifCatch","translated":"siAttrape","displayed":"siAttrape(item, \"commande\")"}

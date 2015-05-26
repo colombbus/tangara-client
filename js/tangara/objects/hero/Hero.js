@@ -22,22 +22,24 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
     qInstance.TWalker.extend("THero", {
         init: function(props,defaultProps) {
             this._super(qInstance._extend({
-                dtMovement:0,
-                dtPause:0,
+                dtMovement:1,
+                dtPause:1,
                 imgIndex:0,
                 lastX:0,
                 lastMove:Hero.DIRECTION_NONE,
                 frontAssetsCount:0,
                 forwardAssetsCount:0,
                 backwardAssetsCount:0,
-                durationMove:0,
-                durationPause:0,
+                defaultAssetsCount:0,
+                durationMove:1,
+                durationPause:1,
                 ellapsed:0.0,
                 autoAsset:true
             },props),defaultProps);
             this.frontAssets = [];
             this.forwardAssets = [];
             this.backwardAssets = [];
+            this.defaultAssets = [];
             this.assetOperations = [];
             this.catchableObjects = {};
         },
@@ -62,19 +64,27 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
                                     // direction changed
                                     p.imgIndex = 0;
                                 }
-                                this.p.asset = this.forwardAssets[p.imgIndex];
+                                p.asset = this.forwardAssets[p.imgIndex];
                                 p.lastMove = Sprite.DIRECTION_RIGHT;
+                            } else if (p.defaultAssetsCount > 0) {
+                                p.imgIndex = (p.imgIndex+Math.round(dt/p.dtMovement)) % p.defaultAssetsCount;
+                                p.asset = this.defaultAssets[p.imgIndex];
                             }
-                        } else if (p.backwardAssetsCount >0) {
+                        } else {
                             // moving left
-                            if (p.lastMove === Sprite.DIRECTION_LEFT) {
-                                p.imgIndex = (p.imgIndex+Math.round(dt/p.dtMovement)) % p.backwardAssetsCount;
-                            } else {
-                                // direction changed
-                                p.imgIndex = 0;
+                            if (p.backwardAssetsCount >0) {
+                                if (p.lastMove === Sprite.DIRECTION_LEFT) {
+                                    p.imgIndex = (p.imgIndex+Math.round(dt/p.dtMovement)) % p.backwardAssetsCount;
+                                } else {
+                                    // direction changed
+                                    p.imgIndex = 0;
+                                }
+                                p.asset = this.backwardAssets[p.imgIndex];
+                                p.lastMove = Sprite.DIRECTION_LEFT;
+                            } else if (p.defaultAssetsCount > 0) {
+                                p.imgIndex = (p.imgIndex+Math.round(dt/p.dtMovement)) % p.defaultAssetsCount;
+                                p.asset = this.defaultAssets[p.imgIndex];
                             }
-                            this.p.asset = this.backwardAssets[p.imgIndex];
-                            p.lastMove = Sprite.DIRECTION_LEFT;
                         }
                     } else {
                         p.ellapsed = dt;
@@ -90,9 +100,11 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
                                 // direction changed
                                 p.imgIndex = 0;
                             }
-                            this.p.asset = this.frontAssets[p.imgIndex];
+                            p.asset = this.frontAssets[p.imgIndex];
                             p.lastMove = Sprite.DIRECTION_NONE;
-                        } else {
+                        } else if (p.defaultAssetsCount > 0) {
+                            p.imgIndex = (p.imgIndex+Math.round(dt/p.dtPause)) % p.defaultAssetsCount;
+                            p.asset = this.defaultAssets[p.imgIndex];
                         }
                     } else {
                         p.ellapsed = dt;
@@ -105,13 +117,13 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
             this.addAssetOperation(function(assets) {
                 this.forwardAssets = assets;
                 this.p.forwardAssetsCount = assets.length;
-            }, [assets]);
+            }, [assets], assets);
         },
         addForwardAsset: function(asset) {
             this.addAssetOperation(function(asset) {
                 this.forwardAssets.push(asset);
                 this.p.forwardAssetsCount++;
-            }, [asset]);
+            }, [asset], asset);
         },
         removeForwardAsset: function(asset) {
             this.addAssetOperation(function(asset) {
@@ -132,13 +144,13 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
             this.addAssetOperation(function(assets) {
                 this.backwardAssets = assets;
                 this.p.backwardAssetsCount = assets.length;
-            }, [assets]);
+            }, [assets], assets);
         },
         addBackwardAsset: function(asset) {
             this.addAssetOperation(function(asset) {
                 this.backwardAssets.push(asset);
                 this.p.backwardAssetsCount++;
-            }, [asset]);
+            }, [asset], asset);
         },
         removeBackwardAsset: function(asset) {
             this.addAssetOperation(function(asset) {
@@ -159,13 +171,13 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
             this.addAssetOperation(function(value) {
                 this.frontAssets = value;
                 this.p.frontAssetsCount = value.length;
-            }, [assets]);
+            }, [assets], assets);
         },
         addFrontAsset: function(asset) {
             this.addAssetOperation(function(asset) {
                 this.frontAssets.push(asset);
                 this.p.frontAssetsCount++;
-            }, [asset]);
+            }, [asset], asset);
         },
         removeFrontAsset: function(asset) {
             this.addAssetOperation(function(asset) {
@@ -182,6 +194,33 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
                 this.p.frontAssetsCount = 0;
             }, []);
         },
+        setDefaultAssets: function(assets) {
+            this.addAssetOperation(function(value) {
+                this.defaultAssets = value;
+                this.p.defaultAssetsCount = value.length;
+            }, [assets], assets);
+        },
+        addDefaultAsset: function(asset) {
+            this.addAssetOperation(function(asset) {
+                this.defaultAssets.push(asset);
+                this.p.defaultAssetsCount++;
+            }, [asset], asset);
+        },
+        removeDefaultAsset: function(asset) {
+            this.addAssetOperation(function(asset) {
+                var index = this.defaultAssets.indexOf(asset);
+                if (index >-1) {
+                    this.defaultAssets.splice(index, 1);
+                    this.p.defaultAssetsCount--;                
+                }
+            }, [asset]);
+        },        
+        removeDefaultAssets: function() {
+            this.addAssetOperation(function() {
+                this.defaultAssets = [];
+                this.p.defaultAssetsCount = 0;
+            }, []);
+        },        
         setVelocity: function(value) {
             this._super(value);
             // compute base dt
@@ -206,23 +245,56 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
                 if (p.forwardAssetsCount>0) {
                     // we assume that forwardAssetsCount is equal to backwardAssetsCount
                     p.dtMovement = (p.durationMove/p.forwardAssetsCount)*200/p.velocity;
+                } else if (p.defaultAssetsCount>0) {
+                    // we assume that forwardAssetsCount is equal to backwardAssetsCount
+                    p.dtMovement = (p.durationMove/p.defaultAssetsCount)*200/p.velocity;
                 }
                 if (p.frontAssetsCount>0) {
                     p.dtPause = (p.durationPause/p.frontAssetsCount)*200/p.velocity;
+                } else if (p.defaultAssetsCount>0) {
+                    // we assume that forwardAssetsCount is equal to backwardAssetsCount
+                    p.dtPause = (p.durationPause/p.defaultAssetsCount)*200/p.velocity;
                 }
             }, []);
         },
 
-        addAssetOperation: function(action, parameters) {
-            this.assetOperations.push([action, parameters]);
+        addAssetOperation: function(action, parameters, asset) {
+            if (typeof asset === 'undefined') {
+                this.assetOperations.push([action, parameters]);
+            } else {
+                this.assetOperations.push([action, parameters, asset]);
+            }
+                
         },
         
         performAssetOperations: function() {
             while (this.assetOperations.length>0) {
-                var operation = this.assetOperations.shift();
+                var operation = this.assetOperations[0];
+                var test = true;
+                if (operation.length>2) {
+                    // This operation require a test on assets first
+                    var asset = operation[2];
+                    if (asset instanceof Array) {
+                        // several assets have to be checked
+                        for (var i = 0; i<asset.length; i++) {
+                            if (!qInstance.assets[asset[i]]) {
+                                // one of the assets is not loaded yet
+                                test = false;
+                                break;
+                            }
+                        }
+                    } else if (!qInstance.assets[asset]) {
+                        // only one asset has to be checked: not loaded
+                        test = false;
+                    }
+                }
+                if (!test) {
+                    // Assets are missing: we break here
+                    break;
+                }
+                this.assetOperations.shift();
                 operation[0].apply(this, operation[1]);
             }
-            
         },
         
         stopAutoAsset: function() {
@@ -297,6 +369,11 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
                     backwardAssets.push(parent.addImage(name+"/"+backwardImages[i], parent.translatedBackward, false));
                 }
                 parent.qObject.setBackwardAssets(backwardAssets);
+                // remove default imageSet
+                try {
+                    parent._removeImageSet("");
+                } catch (e) {}
+                parent.qObject.removeDefaultAssets();
                 // set initialized to false, to be sure that location will be set after next image is displayed
                 // (and width and height are correctly set)
                 parent.qObject.p.initialized = false;
@@ -323,7 +400,11 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
                 specialSet = "backward";
             } else if (set === this.translatedForward) {
                 specialSet = "forward";
+            } else if (set === "") {
+                specialSet = "default";
             }
+        } else {
+            specialSet = "default";
         }
         return specialSet;
     };
@@ -331,16 +412,19 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
     Hero.prototype._addImage = function(name, set) {
         var specialSet = this.checkSet(set);
         var currentLocation = false;
-        if (specialSet !== false && !this.custom) {
+        if (!this.custom && specialSet !== false) {
             // We begin to customize: we remove default sets
             try {
-                this._removeImageSet(this.getMessage("front"));                    
+                this._removeImageSet(this.translatedFront);                    
             } catch (e) {}
             try {
-                this._removeImageSet(this.getMessage("forward"));
+                this._removeImageSet(this.translatedForward);
             } catch (e) {}
             try {
-                this._removeImageSet(this.getMessage("backward"));
+                this._removeImageSet(this.translatedBackward);
+            } catch (e) {}
+            try {
+                this._removeImageSet("");
             } catch (e) {}
             if (this.qObject.p.initialized) {
                 currentLocation = this.qObject.getLocation();
@@ -357,6 +441,9 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
                     break;
                 case "forward":
                     this.qObject.addForwardAsset(asset);
+                    break;
+                case "default":
+                    this.qObject.addDefaultAsset(asset);
                     break;
             }
             this.qObject.computeDts();
@@ -393,6 +480,9 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
                 case "forward":
                     this.qObject.removeForwardAsset(asset);
                     break;
+                case "default":
+                    this.qObject.removeDefaultAsset(asset);
+                    break;
             }
             this.qObject.computeDts();
         }
@@ -412,17 +502,22 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
                 case "forward":
                     this.qObject.removeForwardAssets();
                     break;
+                case "default":
+                    this.qObject.removeDefaultAssets();
+                    break;
             }
             this.qObject.computeDts();
         }
     };
     
     Hero.prototype._setMovementDuration = function(value) {
-        this.qObject.setMovementDuration(value);
+        value = TUtils.getInteger(value);
+        this.qObject.setMovementDuration(value/1000);
     };
     
     Hero.prototype._setPauseDuration = function(value) {
-        this.qObject.setPauseDuration(value);
+        value = TUtils.getInteger(value);
+        this.qObject.setPauseDuration(value/1000);
     };
     
     Hero.prototype._addScene = function(object) {

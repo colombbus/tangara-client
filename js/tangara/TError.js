@@ -1,10 +1,16 @@
-define(['jquery', 'TEnvironment'], function ($, TEnvironment) {
+define(['jquery', 'TEnvironment', 'TUtils'], function($, TEnvironment, TUtils) {
     function TError(e) {
         var message = "";
         var lines = [];
         var programName = null;
         var code = null;
-
+        
+        var detectRegex_undefined = /(\S*)\sis\snot\sdefined/i;
+        var detectRegex_not_a_function = /(\S*)\sis\snot\sa\sfunction/i;
+        var detectRegex_syntax_error = /Unexpected\stoken\s/i;
+        var detectRegex_not_a_variable = /Can\'t\sfind\svariable\:\s(\S*)/i;
+        var detectRegex_unterminated_string = /Unterminated\sstring\sconstant/i;
+        
         // Initialization from error object
         if (typeof e !== 'undefined') {
             if (typeof e === 'string') {
@@ -24,7 +30,16 @@ define(['jquery', 'TEnvironment'], function ($, TEnvironment) {
 
         function translate(text) {
             if (typeof TError.errors !== 'undefined' && typeof TError.errors[text] !== 'undefined') {
-                return TError.errors[text];
+                var translatedText = TError.errors[text];
+                if (arguments.length > 1) {
+                    // message has to be parsed
+                    var elements = arguments;
+                    translatedText = translatedText.replace(/{(\d+)}/g, function(match, number) {
+                        number = parseInt(number) + 1;
+                        return typeof elements[number] !== 'undefined' ? elements[number] : match;
+                    });
+                }
+                return translatedText;
             } else {
                 return text;
             }
@@ -63,6 +78,46 @@ define(['jquery', 'TEnvironment'], function ($, TEnvironment) {
 
         this.getCode = function () {
             return code;
+        };
+        
+        this.detectError = function() {
+            // Undefined 
+            var result = detectRegex_undefined.exec(message);
+            if (result !== null && result.length > 0) {
+                var name = result[1];
+                name = TUtils.convertUnicode(name);
+                message = translate("runtime-error-undefined", name);
+                return;
+            }
+            // Not a function 
+            var result = detectRegex_not_a_function.exec(message);
+            if (result !== null && result.length > 0) { 
+                var name = result[1];
+                name = TUtils.convertUnicode(name);
+                if (name === 'undefined') {
+                    message = translate("runtime-error-undefined-not-a-function");                    
+                } else {
+                    message = translate("runtime-error-not-a-function", name);
+                } 
+                return;
+            }
+            var result = detectRegex_syntax_error.exec(message);
+            if (result !== null) {
+                message = translate("runtime-error-syntax-error");
+                return;
+            }
+            var result = detectRegex_not_a_variable.exec(message);
+            if (result !== null && result.length > 0) { 
+                var name = result[1];
+                name = TUtils.convertUnicode(name);
+                message = translate("runtime-error-not-variable-error", name);
+                return;
+            }
+            var result = detectRegex_unterminated_string.exec(message);
+            if (result !== null) {
+                message = translate("runtime-error-unterminated-string-error");
+                return;
+            }            
         };
     }
 

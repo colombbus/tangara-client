@@ -46,6 +46,11 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
         },
         setBlockDisplayed: function(value) {
             this.p.showBlock = value;
+        },
+        reinit: function() {
+            this.p.initialized = false;
+            this.p.asset = false;
+            this.p.assetBlock = false;            
         }
     });
     
@@ -58,24 +63,11 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
         // check if image actually loaded
         if (qInstance.assets[asset]) {
             if (name === this.backgroundName) {
-                console.log("setting background");
                 qObject.setBackground(asset);
-                // Check that block is loaded too
-                var blockName = this.blockName;
-                var blockAsset = this.images[blockName];
-                if (!qInstance.assets[blockAsset]) {
-                    // block not already loaded: wait for it
-                    this.setDisplayedImage(blockName);
-                } else {
-                    // block loaded: compute transparency mask
-                    this.computeTransparencyMask(blockAsset);
-                    console.log("setting block #1");
-                    qObject.setBlock(blockAsset);
-                }
-            } else if (name === this.blockName) {
+            } 
+            if (name === this.blockName) {
                 // block loaded. Compute Transparency Mask
                 this.computeTransparencyMask(asset);
-                console.log("setting block #2");
                 qObject.setBlock(asset);
             }
         } else {
@@ -116,11 +108,12 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
                 parent.addImage(parent.blockName, "elements", false);
                 // set initialized to false, to be sure that location will be set after next image is displayed
                 // (and width and height are correctly set)
-                parent.qObject.p.initialized = false;
-                parent.setDisplayedImage(parent.backgroundName);
+                parent.qObject.reinit();
                 if (currentLocation !== false) {
                     parent.qObject.setLocation(currentLocation.x, currentLocation.y);
                 }
+                parent.setDisplayedImage(parent.blockName);
+                parent.setDisplayedImage(parent.backgroundName);
             }
         }).fail(function(jqxhr, textStatus, error) {
             throw new Error(TUtils.format(parent.getMessage("unknwon character"), name));
@@ -137,11 +130,19 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
 
     Scene.prototype._setBackground = function(name) {
         name = TUtils.getString(name);
+        var currentLocation = false;
+        if (this.qObject.p.initialized) {
+            currentLocation = this.qObject.getLocation();
+        }
         try {
             this.removeImage(this.backgroundName);
         } catch (e) {}
         this.backgroundName = name;
         this.addImage(this.backgroundName, "elements", true);
+        this.qObject.p.initialized = false;
+        if (currentLocation !== false) {
+            this.qObject.setLocation(currentLocation.x, currentLocation.y);
+        }
         this.setDisplayedImage(this.backgroundName);
     };
 
@@ -154,7 +155,14 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
         this.qObject.p.initialized = false;
         this.addImage(this.blockName, "elements", true);
         this.setDisplayedImage(this.blockName);
-    };    
+    };
+    
+    Scene.prototype._setTransparent = function(red, green, blue) {
+        Sprite.prototype._setTransparent.call(this, red, green, blue);
+        if (typeof this.images[this.blockName] !== 'undefined') {
+            this.computeTransparencyMask(this.images[this.blockName]);
+        }
+    };
     
     TEnvironment.internationalize(Scene, true);
     

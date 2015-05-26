@@ -24,7 +24,14 @@ define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink
         TRuntime.setCurrentProgramName(name);
         TRuntime.executeStatements(statements);
     };
-
+    /**
+     * Permits to cleanup all screen, commands and log
+     * ie: to display another program
+     */
+    Tangara.prototype._init = function() {
+        TUI.clear();
+    };
+    
     Tangara.prototype._pause = function() {
         TRuntime.stop();
     };

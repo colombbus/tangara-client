@@ -42,7 +42,7 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'jquery', 'jquer
         domSidebarUploadButton.appendChild(imageUpload);
         domSidebarUploadButton.appendChild(document.createTextNode(TEnvironment.getMessage("resource_upload_files")));
         $(domSidebarUploadButton).click(function() {
-            $(domSidebarUploadInput).click();
+            $("#tsidebar-upload-input").click();
         });
         domSidebarUploadHeader.appendChild(domSidebarUploadButton);
         domSidebarUpload.appendChild(domSidebarUploadHeader);
@@ -124,6 +124,7 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'jquery', 'jquer
                 dataType: 'json',
                 url:TEnvironment.getBackendUrl('addresource'),
                 paramName:'resources[]',
+                dropZone: $(domSidebarResources),
                 add: function (e, data) {
                     var newDivs=[];
                     var newNames=[];
@@ -365,7 +366,8 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'jquery', 'jquer
             // rename
             nameDiv.onclick = function(e) {
                 var parent = $(this).parent();
-                if (parent.hasClass('tsidebar-current')) {
+                if (parent.hasClass('tsidebar-current') && !$(this).hasClass('tsidebar-renaming')) {
+                    parent.attr("draggable", "false");
                     $(this).addClass('tsidebar-renaming');
                     var renameElement = document.createElement("textarea");
                     renameElement.className="tsidebar-rename";
@@ -380,6 +382,7 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'jquery', 'jquer
                             // Escape was pressed
                             $(this).parent().removeClass('tsidebar-renaming');
                             $(renameElement).remove();
+                            parent.attr("draggable", "true");
                         }
                     });
                     renameElement.onblur = function() {TUI.renameResource(name, renameElement.value);};
@@ -509,7 +512,7 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'jquery', 'jquer
                 $domSidebarResources.stop().animate({scrollTop: $domSidebarResources.scrollTop()+parent.position().top}, 1000);
                 TUI.setEditionEnabled(true);
              }
-        }
+        };
         
         this.viewResource = function(name) {
             viewer.show(name);
