@@ -65,6 +65,12 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment', ], function (TObject, T
         getLocation: function () {
             return {x: Math.round(this.p.x - this.p.w / 2), y: Math.round(this.p.y - this.p.h / 2)};
         },
+        getXCenter: function () {
+            return Math.round(this.p.x);
+        },
+        getYCenter: function () {
+            return Math.round(this.p.x);
+        },
         getX: function () {
             return Math.round(this.p.x - this.p.w / 2);
         },
@@ -112,6 +118,13 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment', ], function (TObject, T
         this.qObject.setLocation(x, y);
     };
 
+    TGraphicalObject.prototype._getXCenter = function () {
+        return this.qObject.getXCenter();
+    };
+
+    TGraphicalObject.prototype._getYCenter = function () {
+        return this.qObject.getYCenter();
+    };
     TGraphicalObject.prototype._getX = function () {
         return this.qObject.getX();
     };
