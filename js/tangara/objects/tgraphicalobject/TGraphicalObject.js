@@ -61,6 +61,16 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function (TObject, TUt
                 this.p.scale = scale * 1;
             }, [scale]);
         },
+        zoomIn: function (scale) {
+            this.perform(function (scale) {
+                this.p.scale = scale + this.p.scale;
+            }, [scale]);
+        },
+        zoomOut: function (scale) {
+            this.perform(function (scale) {
+                this.p.scale = scale - this.p.scale;
+            }, [scale]);
+        },
         rotate: function (angle) {
             this.perform(function (angle) {
                 this.p.angle = this.p.angle + angle;
@@ -114,6 +124,13 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function (TObject, TUt
 
     TGraphicalObject.prototype.getQObject = function () {
         return this.qObject;
+    };
+
+    TGraphicalObject.prototype._zoomIn = function (factor) {
+        this.qObject.zoomIn(factor);
+    };
+    TGraphicalObject.prototype._zoomOut = function (factor) {
+        this.qObject.zoomOut(factor);
     };
     TGraphicalObject.prototype._scale = function (factor) {
         //TODO: parseFloat
