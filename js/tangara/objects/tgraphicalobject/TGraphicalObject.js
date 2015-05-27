@@ -68,7 +68,7 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function (TObject, TUt
         },
         zoomOut: function (scale) {
             this.perform(function (scale) {
-                this.p.scale = scale - this.p.scale;
+                this.p.scale = -scale + this.p.scale;
             }, [scale]);
         },
         rotate: function (angle) {
