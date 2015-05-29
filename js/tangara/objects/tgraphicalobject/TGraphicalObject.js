@@ -89,7 +89,7 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function (TObject, TUt
             return Math.round(this.p.x);
         },
         getYCenter: function () {
-            return Math.round(this.p.x);
+            return Math.round(this.p.y);
         },
         getX: function () {
             return Math.round(this.p.x - this.p.w / 2);
