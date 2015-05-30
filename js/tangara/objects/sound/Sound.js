@@ -1,7 +1,7 @@
 define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function (TObject, TUtils, TRuntime, TEnvironment) {
     var Sound = function (name) {
         TObject.call(this, name);
-
+        var qInstance;
         this.sounds = new Array();
         this.soundSets = new Array();
         this.loop = false;
@@ -13,11 +13,11 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function (TObject, TUt
     Sound.prototype.constructor = Sound;
     Sound.prototype.className = "Sound";
 
-    var qInstance = TRuntime.getQuintusInstance();
+    this.qInstance = TRuntime.getQuintusInstance();
 
-    Sound.prototype.qInstance = qInstance;
+    Sound.prototype.qInstance = this.qInstance;
 
-    Sound.prototype.qAudio = qInstance.audio;
+    Sound.prototype.qAudio = this.qInstance.audio;
 
     Sound.prototype.addSound = function (name, set, project) {
         name = TUtils.getString(name);
