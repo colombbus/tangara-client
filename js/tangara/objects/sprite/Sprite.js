@@ -1,5 +1,5 @@
-define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'], function($, TEnvironment, TUtils, CommandManager, TGraphicalObject) {
-    var Sprite = function(name) {
+define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'], function ($, TEnvironment, TUtils, CommandManager, TGraphicalObject) {
+    var Sprite = function (name) {
         TGraphicalObject.call(this);
         this.images = new Array();
         this.imageSets = new Array();
@@ -8,42 +8,42 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
         this.displayedSet = "";
         this.displayedIndex = "";
         if (typeof name === 'string') {
-          this._setImage(name);
+            this._setImage(name);
         }
     };
-    
+
     Sprite.prototype = Object.create(TGraphicalObject.prototype);
     Sprite.prototype.constructor = Sprite;
     Sprite.prototype.className = "Sprite";
-    
+
     Sprite.DIRECTION_NONE = 0x00;
     Sprite.DIRECTION_LEFT = 0x01;
     Sprite.DIRECTION_RIGHT = 0x02;
     Sprite.DIRECTION_UP = 0x04;
     Sprite.DIRECTION_DOWN = 0x08;
-    
+
     var qInstance = Sprite.prototype.qInstance;
-        
+
     qInstance.TGraphicalObject.extend("TSprite", {
-        init: function(props,defaultProps) {
+        init: function (props, defaultProps) {
             this._super(qInstance._extend({
                 destinationX: 0,
                 destinationY: 0,
-                velocity:200,
-                type:TGraphicalObject.TYPE_SPRITE,
-                direction:'none',
-                category:'',
-                moving:false,
-                hasCollisionCommands:false,
-                collisionWatched:false,
-                frozen:false
-            },props),defaultProps);
+                velocity: 200,
+                type: TGraphicalObject.TYPE_SPRITE,
+                direction: 'none',
+                category: '',
+                moving: false,
+                hasCollisionCommands: false,
+                collisionWatched: false,
+                frozen: false
+            }, props), defaultProps);
             this.watchCollisions(true);
             this.encounteredObjects = new Array();
             this.lastEncounteredObjects = new Array();
             this.reciprocalCol = new Array();
         },
-        checkCollisions: function() {
+        checkCollisions: function () {
             if (this.p.moving) {
                 // Look for other sprites
                 this.encounteredObjects = [];
@@ -51,7 +51,7 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
                 var skip = 0;
                 var collided = this.stage.TsearchSkip(this, TGraphicalObject.TYPE_SPRITE, skip);
                 var collision = false, object;
-                while(collided && !collision) {
+                while (collided && !collision) {
                     object = collided.obj;
                     this.encounteredObjects.push(object);
                     if (this.lastEncounteredObjects.indexOf(object) === -1) {
@@ -73,12 +73,12 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
                     collided.magnitude = 0;
                     collided.separate[0] = 0;
                     collided.separate[1] = 0;
-                    object.trigger('hit',collided);
-                    object.trigger('hit.sprite',collided);
+                    object.trigger('hit', collided);
+                    object.trigger('hit.sprite', collided);
                 }
             }
         },
-        objectEncountered: function(col) {
+        objectEncountered: function (col) {
             if (this.p.collisionWatched && this.p.hasCollisionCommands) {
                 // TODO add event object with info on collision
                 var object = col.obj;
@@ -87,11 +87,11 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
                     var category = object.getCategory();
                     // 1st check collision commands with this object
                     if (typeof this.spriteCollisionCommands !== 'undefined' && this.spriteCollisionCommands.hasCommands(id)) {
-                        this.spriteCollisionCommands.executeCommands({'field':id});
+                        this.spriteCollisionCommands.executeCommands({'field': id});
                     }
                     // 2nd check collision commands with object's category
                     if (typeof this.categoryCollisionCommands !== 'undefined' && this.categoryCollisionCommands.hasCommands(category)) {
-                        this.categoryCollisionCommands.executeCommands({'field':category});
+                        this.categoryCollisionCommands.executeCommands({'field': category});
                     }
                     // 3rd check general collision commands
                     if (typeof this.collisionCommands !== 'undefined' && this.collisionCommands.hasCommands()) {
@@ -99,12 +99,12 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
                     }
                 }
             }
-        },        
-        step: function(dt) {
+        },
+        step: function (dt) {
             var p = this.p;
             p.moving = false;
             if (!p.dragging && !p.frozen) {
-                var step = p.velocity*dt;
+                var step = p.velocity * dt;
                 switch (p.direction) {
                     case Sprite.DIRECTION_NONE:
                         if (p.x < p.destinationX) {
@@ -123,117 +123,119 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
                         }
                         break;
                     case Sprite.DIRECTION_RIGHT:
-                        p.x+=step;
+                        p.x += step;
                         p.moving = true;
                         break;
                     case Sprite.DIRECTION_LEFT:
-                        p.x-=step;
+                        p.x -= step;
                         p.moving = true;
                         break;
                     case Sprite.DIRECTION_UP:
-                        p.y-=step;
+                        p.y -= step;
                         p.moving = true;
                         break;
                     case Sprite.DIRECTION_DOWN:
-                        p.y+=step;
+                        p.y += step;
                         p.moving = true;
                         break;
-              }
-              this.checkCollisions();
+                }
+                this.checkCollisions();
             }
         },
-        designTouchEnd: function(touch) {
-          this.p.destinationX = this.p.x;
-          this.p.destinationY = this.p.y;
-          this._super(touch);
+        designTouchEnd: function (touch) {
+            this.p.destinationX = this.p.x;
+            this.p.destinationY = this.p.y;
+            this._super(touch);
         },
-        setLocation: function(x,y) {
-            this._super(x,y);
-            this.perform(function(){
-                this.p.destinationX = this.p.x;this.p.destinationY = this.p.y;
-                this.p.direction = Sprite.DIRECTION_NONE;
-            }, {});
-        },
-        setCenterLocation: function(x,y) {
-            this._super(x,y);
-            this.perform(function(){
-                this.p.destinationX = this.p.x;this.p.destinationY = this.p.y;
-                this.p.direction = Sprite.DIRECTION_NONE;
-            }, {});
-        },
-        moveForward: function(value) {
-            this.perform(function(value){
-                this.p.destinationX+=value;
-            }, [value]);
-        },
-        alwaysMoveForward: function() {
-            this.perform(function(){
-                this.p.direction = Sprite.DIRECTION_RIGHT;
-            }, {});
-        },
-        moveBackward: function(value) {
-            this.perform(function(value){
-                this.p.destinationX-=value;
-            }, [value]);
-        },
-        alwaysMoveBackward: function() {
-            this.perform(function(){
-                this.p.direction = Sprite.DIRECTION_LEFT;
-            }, {});
-        },
-        moveUpward: function(value) {
-            this.perform(function(value){
-                this.p.destinationY-=value;
-            }, [value]);
-        },
-        alwaysMoveUpward: function() {
-            this.perform(function(){
-                this.p.direction = Sprite.DIRECTION_UP;
-            }, {});
-        },
-        moveDownward: function(value) {
-            this.perform(function(value){
-                this.p.destinationY+=value;
-            }, [value]);
-        },
-        alwaysMoveDownward: function() {
-            this.perform(function(){
-                this.p.direction = Sprite.DIRECTION_DOWN;
-            }, {});
-        },
-        goTo: function(x,y) {
-            this.perform(function(x,y){
-                this.p.destinationX = x + this.p.w / 2;
-                this.p.destinationY = y + this.p.h / 2;
-                this.p.direction = Sprite.DIRECTION_NONE;
-            }, [x,y]);
-        },        
-        centerGoTo: function(x,y) {
-            this.perform(function(x,y){
-                this.p.destinationX = x ;
-                this.p.destinationY = y ;
-                this.p.direction = Sprite.DIRECTION_NONE;
-            }, [x,y]);
-        },        
-        stop: function() {
-            this.perform(function(){
+        setLocation: function (x, y) {
+            this._super(x, y);
+            this.perform(function () {
                 this.p.destinationX = this.p.x;
                 this.p.destinationY = this.p.y;
                 this.p.direction = Sprite.DIRECTION_NONE;
             }, {});
         },
-        setVelocity: function(value) {
-            this.perform(function(value){
-                this.p.velocity = value*2;
+        setCenterLocation: function (x, y) {
+            this._super(x, y);
+            this.perform(function () {
+                this.p.destinationX = this.p.x;
+                this.p.destinationY = this.p.y;
+                this.p.direction = Sprite.DIRECTION_NONE;
+            }, {});
+        },
+        moveForward: function (value) {
+            this.perform(function (value) {
+                this.p.destinationX += value;
             }, [value]);
         },
-        setCategory: function(name) {
+        alwaysMoveForward: function () {
+            this.perform(function () {
+                this.p.direction = Sprite.DIRECTION_RIGHT;
+            }, {});
+        },
+        moveBackward: function (value) {
+            this.perform(function (value) {
+                this.p.destinationX -= value;
+            }, [value]);
+        },
+        alwaysMoveBackward: function () {
+            this.perform(function () {
+                this.p.direction = Sprite.DIRECTION_LEFT;
+            }, {});
+        },
+        moveUpward: function (value) {
+            this.perform(function (value) {
+                this.p.destinationY -= value;
+            }, [value]);
+        },
+        alwaysMoveUpward: function () {
+            this.perform(function () {
+                this.p.direction = Sprite.DIRECTION_UP;
+            }, {});
+        },
+        moveDownward: function (value) {
+            this.perform(function (value) {
+                this.p.destinationY += value;
+            }, [value]);
+        },
+        alwaysMoveDownward: function () {
+            this.perform(function () {
+                this.p.direction = Sprite.DIRECTION_DOWN;
+            }, {});
+        },
+        goTo: function (x, y) {
+            this.perform(function (x, y) {
+                this.p.destinationX = x + this.p.w / 2;
+                this.p.destinationY = y + this.p.h / 2;
+                this.p.direction = Sprite.DIRECTION_NONE;
+            }, [x, y]);
+        },
+        centerGoTo: function (x, y) {
+            this.perform(function (x, y) {
+                this.p.destinationX = x;
+                this.p.destinationY = y;
+                this.p.direction = Sprite.DIRECTION_NONE;
+            }, [x, y]);
+        },
+        stop: function () {
+            this.perform(function () {
+                this.p.destinationX = this.p.x;
+                this.p.destinationY = this.p.y;
+                this.p.direction = Sprite.DIRECTION_NONE;
+            }, {});
+        },
+        setVelocity: function (value) {
+            this.perform(function (value) {
+                this.p.velocity = value * 2;
+            }, [value]);
+        },
+        setCategory: function (name) {
             this.p.category = name;
         },
-        getCategory: function() {
+        getCategory: function () {
             return this.p.category;
         },
-        addCollisionCommand: function(command, param) {
+        addCollisionCommand: function (command, param) {
             if (typeof param === 'undefined') {
                 // collisions with all sprites
                 if (typeof this.collisionCommands === 'undefined') {
@@ -244,7 +246,7 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
                 // collision with a given category
                 if (typeof this.categoryCollisionCommands === 'undefined') {
                     this.categoryCollisionCommands = new CommandManager();
-                }            
+                }
                 this.categoryCollisionCommands.addCommand(command, param);
             } else if (TUtils.checkObject(param)) {
                 // collision with a given sprite
@@ -257,8 +259,8 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
                 this.p.hasCollisionCommands = true;
             }
         },
-        watchCollisions: function(value) {
-            this.perform(function(value){
+        watchCollisions: function (value) {
+            this.perform(function (value) {
                 if (value === this.p.collisionWatched)
                     return;
                 if (value) {
@@ -269,62 +271,62 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
                 this.p.collisionWatched = value;
             }, [value]);
         },
-        getId: function() {
+        getId: function () {
             return this.p.id;
         },
-        toString: function() {
-            return "Sprite_"+this.getId();
+        toString: function () {
+            return "Sprite_" + this.getId();
         },
-        freeze: function(value) {
+        freeze: function (value) {
             this.p.frozen = value;
             this._super(value);
         },
         /*addTransparency: function(red, green, blue) {
-            this.perform(function(red,green,blue) {
-                var canvas = document.createElement('canvas');
-                var asset = this.p.asset;
-                var image = qInstance.asset(asset);
-                var ctx = canvas.getContext('2d');
-                var width = image.width;
-                var height = image.height;
-                canvas.width = width;
-                canvas.height = height;
-                this.p.transparencyMask = new Array();
-                var mask = this.p.transparencyMask;
-                var row=-1, col=width;
-                ctx.drawImage(image, 0, 0 );
-                var imageData = ctx.getImageData(0, 0, width, height);
-                var data = imageData.data;
-                for (var i=0;i<data.length;i+=4) {
-                    col++;
-                    if (col>=width) {
-                        col = 0;
-                        row++;
-                        mask[row] = new Array();
-                    }
-                    var r=data[i];
-                    var g=data[i+1];
-                    var b=data[i+2];
-                    if (r===red && g===green && b===blue) {
-                        data[i+3] = 0;
-                    }
-                    mask[row][col] = (data[i+3] === 0)?true:false;
-                }
-                imageData.data = data;
-                ctx.putImageData(imageData,0,0);
-                image.src = canvas.toDataURL();
-            }, [red, green, blue]);
-        },*/
-        removeAsset: function() {
+         this.perform(function(red,green,blue) {
+         var canvas = document.createElement('canvas');
+         var asset = this.p.asset;
+         var image = qInstance.asset(asset);
+         var ctx = canvas.getContext('2d');
+         var width = image.width;
+         var height = image.height;
+         canvas.width = width;
+         canvas.height = height;
+         this.p.transparencyMask = new Array();
+         var mask = this.p.transparencyMask;
+         var row=-1, col=width;
+         ctx.drawImage(image, 0, 0 );
+         var imageData = ctx.getImageData(0, 0, width, height);
+         var data = imageData.data;
+         for (var i=0;i<data.length;i+=4) {
+         col++;
+         if (col>=width) {
+         col = 0;
+         row++;
+         mask[row] = new Array();
+         }
+         var r=data[i];
+         var g=data[i+1];
+         var b=data[i+2];
+         if (r===red && g===green && b===blue) {
+         data[i+3] = 0;
+         }
+         mask[row][col] = (data[i+3] === 0)?true:false;
+         }
+         imageData.data = data;
+         ctx.putImageData(imageData,0,0);
+         image.src = canvas.toDataURL();
+         }, [red, green, blue]);
+         },*/
+        removeAsset: function () {
             this.p.asset = null;
         }
-      });
-    
+    });
+
     Sprite.prototype.qSprite = qInstance.TSprite;
-    
+
     // MOVEMENT MANAGEMENT
-    
-    Sprite.prototype._moveForward = function(value) {
+
+    Sprite.prototype._moveForward = function (value) {
         if (typeof value === 'undefined') {
             this._alwaysMoveForward();
         } else {
@@ -333,11 +335,11 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
         }
     };
 
-    Sprite.prototype._alwaysMoveForward = function() {
+    Sprite.prototype._alwaysMoveForward = function () {
         this.qObject.alwaysMoveForward();
     };
 
-    Sprite.prototype._moveBackward = function(value) {
+    Sprite.prototype._moveBackward = function (value) {
         if (typeof value === 'undefined') {
             this._alwaysMoveBackward();
         } else {
@@ -346,11 +348,11 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
         }
     };
 
-    Sprite.prototype._alwaysMoveBackward = function() {
+    Sprite.prototype._alwaysMoveBackward = function () {
         this.qObject.alwaysMoveBackward();
     };
-    
-    Sprite.prototype._moveUpward = function(value) {
+
+    Sprite.prototype._moveUpward = function (value) {
         if (typeof value === 'undefined') {
             this._alwaysMoveUpward();
         } else {
@@ -359,11 +361,11 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
         }
     };
 
-    Sprite.prototype._alwaysMoveUpward = function() {
+    Sprite.prototype._alwaysMoveUpward = function () {
         this.qObject.alwaysMoveUpward();
     };
 
-    Sprite.prototype._moveDownward = function(value) {
+    Sprite.prototype._moveDownward = function (value) {
         if (typeof value === 'undefined') {
             this._alwaysMoveDownward();
         } else {
@@ -371,36 +373,36 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
             this.qObject.moveDownward(value);
         }
     };
-    
-    Sprite.prototype._alwaysMoveDownward = function() {
+
+    Sprite.prototype._alwaysMoveDownward = function () {
         this.qObject.alwaysMoveDownward();
     };
 
-    Sprite.prototype._stop = function() {
+    Sprite.prototype._stop = function () {
         this.qObject.stop();
     };
-    
-    Sprite.prototype._setVelocity = function(value) {
+
+    Sprite.prototype._setVelocity = function (value) {
         value = TUtils.getInteger(value);
         this.qObject.setVelocity(value);
     };
-    
+
     // IMAGES MANAGEMENT
-    
+
     Sprite.waitingForImage = new Array();
-    
-    Sprite.prototype._addImage = function(name, set) {
+
+    Sprite.prototype._addImage = function (name, set) {
         this.addImage(name, set, true);
     };
-    
-    
-    Sprite.colorMatch = function(color, red, green, blue) {
-        if (Math.abs(color[0]+color[1]+color[2]-red-green-blue)<30)
+
+
+    Sprite.colorMatch = function (color, red, green, blue) {
+        if (Math.abs(color[0] + color[1] + color[2] - red - green - blue) < 30)
             return true;
         return false;
     };
-    
-    Sprite.prototype.addImage = function(name, set, project) {
+
+    Sprite.prototype.addImage = function (name, set, project) {
         name = TUtils.getString(name);
         var asset;
         // add image only if not already added
@@ -426,7 +428,7 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
                 this.imageSets[set].push(name);
                 var spriteObject = this;
                 var loadedAsset = asset;
-                qInstance.load(asset, function() {
+                qInstance.load(asset, function () {
                     // Unregister onload event otherwise every transparency manipulation will call this
                     // function again.
                     var image = qInstance.asset(loadedAsset);
@@ -435,37 +437,37 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
                     // 1st handle transparency
                     // Note that transparency settings of current Sprite will affect image for every other Sprites
                     // using the same asset
-                    if (spriteObject.transparentColors.length>0) {
+                    if (spriteObject.transparentColors.length > 0) {
                         var canvas = document.createElement('canvas');
                         var ctx = canvas.getContext('2d');
                         var width = image.width;
                         var height = image.height;
                         canvas.width = width;
                         canvas.height = height;
-                        ctx.drawImage(image, 0, 0 );
+                        ctx.drawImage(image, 0, 0);
                         var imageData = ctx.getImageData(0, 0, width, height);
                         var data = imageData.data;
                         var color;
-                        for (var i=0;i<data.length;i+=4) {
-                            var r=data[i];
-                            var g=data[i+1];
-                            var b=data[i+2];
-                            for (var j=0; j<spriteObject.transparentColors.length;j++) {
+                        for (var i = 0; i < data.length; i += 4) {
+                            var r = data[i];
+                            var g = data[i + 1];
+                            var b = data[i + 2];
+                            for (var j = 0; j < spriteObject.transparentColors.length; j++) {
                                 color = spriteObject.transparentColors[j];
                                 if (Sprite.colorMatch(color, r, g, b)) {
-                                    data[i+3] = 0;
+                                    data[i + 3] = 0;
                                     break;
                                 }
                             }
                         }
                         imageData.data = data;
-                        ctx.putImageData(imageData,0,0);
-                        image.onload = function() {
+                        ctx.putImageData(imageData, 0, 0);
+                        image.onload = function () {
                             image.onload = null;
                             // 2nd set asset for all sprites waiting for this image
                             if (typeof Sprite.waitingForImage[name] !== 'undefined') {
                                 // in case _displayImage was called while loading, set image for waiting sprites
-                                while (Sprite.waitingForImage[name].length>0) {
+                                while (Sprite.waitingForImage[name].length > 0) {
                                     var sprite = Sprite.waitingForImage[name].pop();
                                     sprite.setDisplayedImage(name);
                                 }
@@ -477,7 +479,7 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
                         // 2nd set asset for all sprites waiting for this image
                         if (typeof Sprite.waitingForImage[name] !== 'undefined') {
                             // in case _displayImage was called while loading, set image for waiting sprites
-                            while (Sprite.waitingForImage[name].length>0) {
+                            while (Sprite.waitingForImage[name].length > 0) {
                                 var sprite = Sprite.waitingForImage[name].pop();
                                 sprite.setDisplayedImage(name);
                             }
@@ -494,12 +496,12 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
         }
         return asset;
     };
-    
+
     Sprite.prototype._removeImage = function (name, set) {
         this.removeImage(name, set);
     };
-    
-    Sprite.prototype.removeImage = function(name, set) {
+
+    Sprite.prototype.removeImage = function (name, set) {
         if (typeof set === 'undefined') {
             set = "";
         } else {
@@ -509,20 +511,20 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
         if (typeof this.imageSets[set] === 'undefined') {
             throw new Error(this.getMessage("wrong set"));
         }
-        
+
         var index = this.imageSets[set].indexOf(name);
-        
-        if (index <0 ) {
+
+        if (index < 0) {
             throw new Error(this.getMessage("resource not found", name));
         }
-        
-        this.imageSets[set].splice(index,1);
-        
+
+        this.imageSets[set].splice(index, 1);
+
         // remove sprite from waitingForImage if ever
         if (typeof Sprite.waitingForImage[name] !== 'undefined') {
             var index2 = Sprite.waitingForImage[name].indexOf(this);
             if (index2 > -1) {
-                Sprite.waitingForImage[name].splice(index2,1);
+                Sprite.waitingForImage[name].splice(index2, 1);
             }
         }
 
@@ -533,10 +535,10 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
             this.displayedImage = "";
             this.displayedIndex = "";
         }
-        
+
         // TODO: remove from  images ONLY IF image not used in other set
         delete this.images[name];
-        
+
         // return asset
         return qInstance.asset(name);
     };
@@ -550,29 +552,29 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
         if (typeof this.imageSets[name] === 'undefined') {
             throw new Error(this.getMessage("wrong set"));
         }
-        
+
         this.emptyImageSet(name);
-        
+
         delete this.imageSets[name];
         if (this.displayedSet === name) {
             // set was the currently used: remove image from sprite
             this.qObject.removeAsset();
             this.displayedImage = "";
             this.displayedSet = "";
-            this.displayedIndex = "";            
+            this.displayedIndex = "";
         }
     };
-    
-    Sprite.prototype.emptyImageSet = function(name) {
-        for (var i = 0; i<this.imageSets[name].length; i++) {
+
+    Sprite.prototype.emptyImageSet = function (name) {
+        for (var i = 0; i < this.imageSets[name].length; i++) {
             var imageName = this.imageSets[name][i];
             if (typeof Sprite.waitingForImage[imageName] !== 'undefined') {
                 var index2 = Sprite.waitingForImage[imageName].indexOf(this);
                 if (index2 > -1) {
-                    Sprite.waitingForImage[imageName].splice(index2,1);
+                    Sprite.waitingForImage[imageName].splice(index2, 1);
                 }
             }
-            
+
             if (this.displayedImage === imageName) {
                 // remove asset
                 this.qObject.removeAsset();
@@ -582,8 +584,8 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
             delete this.images[imageName];
         }
     };
-    
-    Sprite.prototype.setDisplayedImage = function(name) {
+
+    Sprite.prototype.setDisplayedImage = function (name) {
         var asset = this.images[name];
         var qObject = this.qObject;
         this.displayedImage = name;
@@ -603,8 +605,8 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
             return false;
         }
     };
-    
-    Sprite.prototype._displayImage = function(name) {
+
+    Sprite.prototype._displayImage = function (name) {
         name = TUtils.getString(name);
         if (typeof this.images[name] !== 'undefined') {
             if (this.displayedImage !== name) {
@@ -615,7 +617,7 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
         }
     };
 
-    Sprite.prototype._displayNextImage = function(set) {
+    Sprite.prototype._displayNextImage = function (set) {
         if (typeof set === 'undefined') {
             set = "";
         } else {
@@ -636,7 +638,7 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
         }
     };
 
-    Sprite.prototype._displayPreviousImage = function(set) {
+    Sprite.prototype._displayPreviousImage = function (set) {
         if (typeof set === 'undefined') {
             set = "";
         } else {
@@ -657,32 +659,32 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
         }
     };
 
-    Sprite.prototype._setImage = function(name) {
+    Sprite.prototype._setImage = function (name) {
         this._addImage(name);
         this._displayImage(name);
     };
-    
+
     // COLLISION MANAGEMENT
-    
-    Sprite.prototype._setCategory = function(name) {
+
+    Sprite.prototype._setCategory = function (name) {
         name = TUtils.getString(name);
         this.qObject.setCategory(name);
     };
-    
-    Sprite.prototype._ifCollision = function(param1, param2) {
+
+    Sprite.prototype._ifCollision = function (param1, param2) {
         param1 = TUtils.getCommand(param1);
         this.qObject.addCollisionCommand(param1, param2);
     };
 
-    Sprite.prototype._ifCollisionWith = function(who, command) {
+    Sprite.prototype._ifCollisionWith = function (who, command) {
         this._ifCollision(command, who);
     };
 
-    Sprite.prototype.toString = function() {
+    Sprite.prototype.toString = function () {
         return this.qObject.toString();
     };
-    
-    Sprite.prototype._setTransparent = function(red, green, blue) {
+
+    Sprite.prototype._setTransparent = function (red, green, blue) {
         var color = TUtils.getColor(red, green, blue);
         this.transparentColors.push(color);
         var canvas = document.createElement('canvas');
@@ -698,40 +700,43 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
                     var height = image.height;
                     canvas.width = width;
                     canvas.height = height;
-                    ctx.drawImage(image, 0, 0 );
+                    ctx.drawImage(image, 0, 0);
                     var imageData = ctx.getImageData(0, 0, width, height);
                     var data = imageData.data;
-                    for (var i=0;i<data.length;i+=4) {
-                        if (Sprite.colorMatch(color, data[i], data[i+1], data[i+2])) {
-                            data[i+3] = 0;
+                    for (var i = 0; i < data.length; i += 4) {
+                        if (Sprite.colorMatch(color, data[i], data[i + 1], data[i + 2])) {
+                            data[i + 3] = 0;
                         }
                     }
                     imageData.data = data;
-                    ctx.putImageData(imageData,0,0);
+                    ctx.putImageData(imageData, 0, 0);
                     image.src = canvas.toDataURL();
                 }
             }
         }
     };
-    
-    Sprite.prototype._goTo = function(x, y) {
-        x = TUtils.getInteger(x);
-        y = TUtils.getInteger(y);
-        this.qObject.goTo(x,y);
+
+    Sprite.prototype.couleurTransparente = function (red, green, blue) {
+        this._setTransparent(red, green, blue);
     };
-    
-    Sprite.prototype._centerGoTo = function(x, y) {
+    Sprite.prototype._goTo = function (x, y) {
         x = TUtils.getInteger(x);
         y = TUtils.getInteger(y);
-        this.qObject.centerGoTo(x,y);
+        this.qObject.goTo(x, y);
     };
 
-    Sprite.prototype._watchCollisions = function(value) {
+    Sprite.prototype._centerGoTo = function (x, y) {
+        x = TUtils.getInteger(x);
+        y = TUtils.getInteger(y);
+        this.qObject.centerGoTo(x, y);
+    };
+
+    Sprite.prototype._watchCollisions = function (value) {
         value = TUtils.getBoolean(value);
         this.qObject.watchCollisions(value);
     };
-    
-    Sprite.prototype.isReady = function(callback, arguments) {
+
+    Sprite.prototype.isReady = function (callback, arguments) {
         if (this.qObject.p.initialized) {
             return true;
         } else {
@@ -740,10 +745,10 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject']
             }
             return false;
         }
-    };    
+    };
 
     TEnvironment.internationalize(Sprite, true);
-    
+
     return Sprite;
 });
 
