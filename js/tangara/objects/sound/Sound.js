@@ -1,7 +1,7 @@
 define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function (TObject, TUtils, TRuntime, TEnvironment) {
     var Sound = function (name) {
         TObject.call(this, name);
-        var qInstance;
+
         this.sounds = new Array();
         this.soundSets = new Array();
         this.loop = false;
@@ -13,11 +13,9 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function (TObject, TUt
     Sound.prototype.constructor = Sound;
     Sound.prototype.className = "Sound";
 
-    this.qInstance = TRuntime.getQuintusInstance();
+    var qInstance = TRuntime.getQuintusInstance();
 
-    var qA = this.qInstance.audio;
-
-    Sound.prototype.qInstance = this.qInstance;
+    Sound.prototype.qInstance = qInstance;
 
     Sound.prototype.qAudio = this.qInstance.audio;
 
@@ -71,11 +69,11 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function (TObject, TUt
     Sound.prototype._play = function (name) {
         var asset = this.sounds[name];
         // TODO: wait for loading
-        qA.play(asset, {loop: this.loop});
+        this.qAudio.play(asset, {loop: this.loop});
     };
     Sound.prototype._stop = function (name) {
         var asset = this.sounds[name];
-        qA.stop(asset);
+        this.qAudio.stop(asset);
     };
     TEnvironment.internationalize(Sound, true);
     return Sound;
