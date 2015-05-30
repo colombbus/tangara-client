@@ -21,7 +21,7 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment', 'TUtils'], fun
             this.initRuntimeFrame();
 
             // create quintusInstance;
-            quintusInstance = Q.include("Sprites, Scenes, 2D, UI, Anim, Input, Touch");
+            quintusInstance = Q.include("Sprites, Scenes, 2D, UI, Anim, Input, Touch, Audio").enableSound();
             this.tweakQuintus();
 
             // declare global variables
@@ -91,7 +91,7 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment', 'TUtils'], fun
             return runtimeFrame[objectName].className;
         };
 
-        this.execute = function(commands, parameter, logCommands, lineNumbers) {
+        this.execute = function (commands, parameter, logCommands, lineNumbers) {
             if (typeof logCommands === 'undefined') {
                 logCommands = true;
             }
@@ -137,7 +137,7 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment', 'TUtils'], fun
                 if (currentProgramName === null) {
                     error.setCode(object.getValue());
                 }
-                error.detectError();                
+                error.detectError();
                 this.logError(error);
             }
         };
