@@ -15,6 +15,8 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function (TObject, TUt
 
     this.qInstance = TRuntime.getQuintusInstance();
 
+    var qA = this.qInstance.audio;
+
     Sound.prototype.qInstance = this.qInstance;
 
     Sound.prototype.qAudio = this.qInstance.audio;
@@ -69,11 +71,11 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function (TObject, TUt
     Sound.prototype._play = function (name) {
         var asset = this.sounds[name];
         // TODO: wait for loading
-        this.qAudio.play(asset, {loop: this.loop});
+        qA.play(asset, {loop: this.loop});
     };
     Sound.prototype._stop = function (name) {
         var asset = this.sounds[name];
-        this.qAudio.stop(asset);
+        qA.stop(asset);
     };
     TEnvironment.internationalize(Sound, true);
     return Sound;
