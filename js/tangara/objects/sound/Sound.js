@@ -17,7 +17,7 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function (TObject, TUt
 
     Sound.prototype.qInstance = qInstance;
 
-    Sound.prototype.qAudio = this.qInstance.audio;
+    Sound.prototype.qAudio = qInstance.audio;
 
     Sound.prototype.addSound = function (name, set, project) {
         name = TUtils.getString(name);
