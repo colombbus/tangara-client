@@ -1,14 +1,14 @@
-define(['jquery', 'TEnvironment', 'TObject3D'], function($, TEnvironment, TObject3D) {
+define(['jquery', 'TEnvironment', 'TObject3D'], function ($, TEnvironment, TObject3D) {
     /**
      *  A Point3D is a basic 3D element but a complex object can:</br>
      *  -set a name</br>
      *  -be displayed in Space3D as 3 Segment3D </br>
      *  </br>
      *  Another Point3D can defined a Point3D
-     *  
-     * @return Point3D 
+     *
+     * @return Point3D
      */
-    var Point3D = function(x, y, z) {
+    var Point3D = function (x, y, z) {
         this._setCoordinates(x, y, z);
         this.createName();
         var vectorPoint;
@@ -30,19 +30,19 @@ define(['jquery', 'TEnvironment', 'TObject3D'], function($, TEnvironment, TObjec
     /**
      * Get the Point3D's name
      * TODO: display it in Space3D
-     * 
+     *
      * @returns String Name of the Point3D
      */
-    Point3D.prototype._getName = function() {
+    Point3D.prototype._getName = function () {
         return this.name;
     };
 
     /**
      * Set the Point3D's name
      * @param String n
-     * 
+     *
      */
-    Point3D.prototype._setName = function(n) {
+    Point3D.prototype._setName = function (n) {
         this.name = n;
         this.redraw();
     };
@@ -51,7 +51,7 @@ define(['jquery', 'TEnvironment', 'TObject3D'], function($, TEnvironment, TObjec
      * Get x coordinate of a Point3D
      * @returns Number X coordinate
      */
-    Point3D.prototype._getX = function() {
+    Point3D.prototype._getX = function () {
         return this.pointX;
     };
 
@@ -59,7 +59,7 @@ define(['jquery', 'TEnvironment', 'TObject3D'], function($, TEnvironment, TObjec
      * Get y coordinate of a Point3D
      * @returns Number Y coordinate
      */
-    Point3D.prototype._getY = function() {
+    Point3D.prototype._getY = function () {
         return this.pointY;
     };
 
@@ -67,7 +67,7 @@ define(['jquery', 'TEnvironment', 'TObject3D'], function($, TEnvironment, TObjec
      * Get z coordinate of a Point3D
      * @returns Number Z coordinate
      */
-    Point3D.prototype._getZ = function() {
+    Point3D.prototype._getZ = function () {
         return this.pointZ;
     };
 
@@ -76,7 +76,7 @@ define(['jquery', 'TEnvironment', 'TObject3D'], function($, TEnvironment, TObjec
      * @param Number x
      * @returns undefined
      */
-    Point3D.prototype._setX = function(x) {
+    Point3D.prototype._setX = function (x) {
         if (typeof x === 'undefined')
             this.pointX = 0;
         else
@@ -89,7 +89,7 @@ define(['jquery', 'TEnvironment', 'TObject3D'], function($, TEnvironment, TObjec
      * @param Number y
      * @returns undefined
      */
-    Point3D.prototype._setY = function(y) {
+    Point3D.prototype._setY = function (y) {
         if (typeof y === 'undefined')
             this.pointY = 0;
         else
@@ -102,7 +102,7 @@ define(['jquery', 'TEnvironment', 'TObject3D'], function($, TEnvironment, TObjec
      * @param Number z coordinate
      * @returns undefined
      */
-    Point3D.prototype._setZ = function(z) {
+    Point3D.prototype._setZ = function (z) {
         if (typeof z === 'undefined')
             this.pointZ = 0;
         else
@@ -112,12 +112,12 @@ define(['jquery', 'TEnvironment', 'TObject3D'], function($, TEnvironment, TObjec
 
     /**
      * Set X, Y, Z coordinates of a Point3D
-     * 
+     *
      * @param Number x coordinate
      * @param Number y coordinate
      * @param Number z coordinate
      */
-    Point3D.prototype._setCoordinates = function(x, y, z) {
+    Point3D.prototype._setCoordinates = function (x, y, z) {
         if (typeof x === 'object' || x instanceof Point3D) {
             var point = x;
             this._setX(point._getX());
@@ -130,14 +130,14 @@ define(['jquery', 'TEnvironment', 'TObject3D'], function($, TEnvironment, TObjec
         }
         this.redraw();
     };
-    Point3D.prototype._translate = function(x, y, z) {
+    Point3D.prototype._translate = function (x, y, z) {
         //mesh.translate(BABYLON.Axis.X, 1.0, BABYLON.Space.WORLD);
     };
 
     /**
      * Show a Point3D
      */
-    Point3D.prototype._show = function() {
+    Point3D.prototype._show = function () {
         if ((typeof this.xlines !== 'undefined') ||
                 (typeof this.ylines !== 'undefined') ||
                 (typeof this.zlines !== 'undefined')) {
@@ -149,7 +149,7 @@ define(['jquery', 'TEnvironment', 'TObject3D'], function($, TEnvironment, TObjec
     /**
      * Hide a Point3D
      */
-    Point3D.prototype._hide = function() {
+    Point3D.prototype._hide = function () {
         if ((typeof this.xlines !== 'undefined') ||
                 (typeof this.ylines !== 'undefined') ||
                 (typeof this.zlines !== 'undefined')) {
@@ -164,18 +164,18 @@ define(['jquery', 'TEnvironment', 'TObject3D'], function($, TEnvironment, TObjec
      * @param Space3D scene3d
      * @returns {undefined}
      */
-    Point3D.prototype._setSpace = function(scene3d) {
-        if (typeof scene3d === 'undefined') {
+    Point3D.prototype._setSpace = function (scene3d) {
+        if (typeof scene3d !== 'undefined') {
             TObject3D.prototype._setSpace.call(this, scene3d);
             this.redraw();
         }
     };
 
     /**
-     * Draw or redraw a 3 segments to show a Point3D 
+     * Draw or redraw a 3 segments to show a Point3D
      * in a Space3D
      */
-    Point3D.prototype.redraw = function() {
+    Point3D.prototype.redraw = function () {
         if ((typeof this._getX() === 'undefined') ||
                 (typeof this._getY() === 'undefined') ||
                 (typeof this._getZ() === 'undefined') ||
@@ -212,7 +212,7 @@ define(['jquery', 'TEnvironment', 'TObject3D'], function($, TEnvironment, TObjec
         this.zlines.color = new BABYLON.Color3(0, 1, 0); //green
     };
 
-    Point3D.prototype.toString = function() {
+    Point3D.prototype.toString = function () {
         return "Point3D";
     };
 
@@ -225,16 +225,16 @@ define(['jquery', 'TEnvironment', 'TObject3D'], function($, TEnvironment, TObjec
  * TESTS
  o=new Point3D()
  tangara.écrire("x : " + o._getX())
- 
+
  p=new Point3D(1,2,3)
  tangara.écrire("x : " + p._getX())
  p._setX(5)
  tangara.écrire("x : " + p._getX())
  p._setCoordinates(o)
  tangara.écrire("x : " + p._getX())
- 
+
  o._setX(8)
  q=new Point3D(o)
  tangara.écrire("x : " + q._getX())
- * 
+ *
  */
