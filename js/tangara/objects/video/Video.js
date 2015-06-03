@@ -5,11 +5,15 @@ define(['jquery', 'TObject', 'TUtils', 'TRuntime', 'TEnvironment', 'TCanvas'], f
 
 
         //$("video").attr("type", "video/mp4");
-        $("video").append('<source src="http://localhost/tangara-client/images/minions.mp4" type="video/mp4" style="width: 500px; height: 500px;"></source>');
 
+        $("video").draggable();
+        $("video").append('<source src="http://localhost/tangara-client/images/minions.mp4" type="video/mp4" style="width: 500px; height: 500px;"></source>');
         //$("video").attr("src", TUtils.getString("minions.mp4"));
         //"assets/minions.mp4"
-
+        this.domVideo = document.getElementById("tvideo");
+        this.domVideo.addEventListener("canplay", function (e) {
+            console.log("peut être lue !!");
+        });
 
 
         this.video = new Array();
@@ -26,11 +30,6 @@ define(['jquery', 'TObject', 'TUtils', 'TRuntime', 'TEnvironment', 'TCanvas'], f
     //var tInstance = new Tracking();
     var tInstance = new Object();
     Video.prototype.qInstance = tInstance;
-
-
-
-
-    Video.prototype.qAudio = tInstance.audio;
 
     Video.prototype.addSound = function (name, set, project) {
         name = TUtils.getString(name);
@@ -74,15 +73,25 @@ define(['jquery', 'TObject', 'TUtils', 'TRuntime', 'TEnvironment', 'TCanvas'], f
     };
 
     Video.prototype._loop = function (state) {
-        if (state)
-            this.loop = true;
-        else
-            this.loop = false;
+        this.domVideo.loop = state;
     };
     Video.prototype._play = function (name) {
         var asset = this.video[name];
-        // TODO: wait for loading
-        this.qAudio.play(asset, {loop: this.loop});
+
+        this.domVideo.play();
+    };
+    Video.prototype._pause = function () {
+        this.domVideo.pause();
+    };
+    Video.prototype._displayControls = function (state) {
+        if (state)
+            $(this.domVideo).attr('controls', true);
+        else
+            $(this.domVideo).removeAttr('controls');
+    };
+
+    Video.prototype._mute = function (state) {
+        this.domVideo.muted = state;
     };
     Video.prototype._stop = function (name) {
         var asset = this.video[name];
