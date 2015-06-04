@@ -375,6 +375,24 @@ define(['TError'], function(TError) {
             defaultEvalStatement(statement);
         };
         
+        evalRepeatStatement = function(statement) {
+            if (typeof statement.controls === 'undefined') {
+                var count=evalExpression(statement.count, true);
+                if (isNaN(count)) {
+                    //TODO: throw real TError
+                    throw "count is not an integer";
+                }
+                statement.controls = {count: count};
+            }
+            if (statement.controls.count>0) {
+                statement.controls.count--;
+                insertStatement(statement.body);
+                return false;
+            } else {
+                return true;
+            }
+        };
+
         evalVariableDeclaration = function(declaration) {
             for (var i = 0; i<declaration.declarations.length; i++) {
                 var declarator = declaration.declarations[i];
@@ -446,6 +464,9 @@ define(['TError'], function(TError) {
                         break;
                     case "DebuggerStatement":
                         result = evalDebuggerStatement(statement);
+                        break;
+                    case "RepeatStatement":
+                        result = evalRepeatStatement(statement);
                         break;
                     case "ParametersDeclaration":
                     case "VariableDeclaration":
