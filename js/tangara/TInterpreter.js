@@ -261,35 +261,26 @@ define(['TError'], function(TError) {
         };
         
         evalSwitchStatement = function(statement) {
-            throw "TODO: switch";            
-            /*
-            
-            
-            
-            var interpreter = this;
-            this.evalExpression(statement.discriminant, function(value) {
-                var i = -1;
-                function testNextCase() {
-                    i++;
-                    if (i<statement.cases.length) {
-                        var switchCase = statement.cases[i];
-                        if (switchCase.test === null) {
-                            interpreter.evalStatement(switchCase.consequent, testNextCase);
-                        } else {
-                            interpreter.evalExpression(switchCase.test, true, function(result) {
-                                if (value === result) {
-                                    interpreter.evalStatement(switchCase.consequent, testNextCase);
-                                } else {
-                                    testNextCase();
-                                }
-                            });
-                        }
-                    } else {
-                        callback.call(interpreter);
-                    }
-                }
-                testNextCase();
-            }, true);*/
+            if (typeof statement.controls === 'undefined') {
+                statement.controls = {index:0, discriminant:evalExpression(statement.discriminant, true)};
+            }
+            var result = false;
+            var switchCase;
+            while(statement.controls.index<statement.cases.length && !result) {
+                switchCase = statement.cases[statement.controls.index];
+                if (switchCase.test === null) {
+                    result = true;
+                } else {
+                    result = (statement.controls.discriminant === evalExpression(switchCase.test, true));
+                } 
+                statement.controls.index++;
+            }
+            if (result) {
+                insertStatements(switchCase.consequent);
+                return false;
+            } else {
+                return true;
+            }
         };
 
         evalReturnStatement = function(statement) {
@@ -303,6 +294,7 @@ define(['TError'], function(TError) {
             } else {
                 // on function call: we just stop evaluation
                 stop();
+                return true;
             }
         };
 
@@ -327,35 +319,39 @@ define(['TError'], function(TError) {
         };
 
         evalDoWhileStatement = function(statement) {
-            throw "TODO: dowhile";
-            /*
-            var interpreter = this;
-            function loop() {
-                interpreter.evalExpression(statement.test, function(test) {
-                    if (test) {
-                        interpreter.evalStatement(statement.body, loop);
-                    } else {
-                        callback.call(interpreter);
-                    }
-                }, true);
+            if (typeof statement.controls === 'undefined') {
+                statement.controls = {init:false};
             }
-            this.evalStatement(statement.body, loop);*/
+            if (!statement.controls.init) {
+                // first body execution has not occured yet
+                insertStatement(statement.body);
+                statement.controls.init = true;
+                return false;
+            } else {
+                var result = evalExpression(statement.test, true);
+                if (result) {
+                    insertStatement(statement.body);
+                    // statement not consumed
+                    return false;
+                } else {
+                    // statement consumed
+                    return true;
+                }                
+            }
         };
 
         evalForStatement = function(statement) {
-            var controls = {init:false};
-            if (typeof statement.controls !== 'undefined') {
-                controls = statement.controls;
+            if (typeof statement.controls === 'undefined') {
+                statement.controls = {init:false};
             }
-            if (!controls.init) {
+            if (!statement.controls.init) {
                 // init has not been performed yet
                 if (statement.init.type === "VariableDeclaration") {
                     insertStatement(statement.init);
                 } else {
                     insertStatement({type:"ExpressionStatement", expression:statement.init});
                 }
-                controls.init = true;
-                statement.controls = controls;
+                statement.controls.init = true;
                 return false;
             } else {
                 var result = evalExpression(statement.test, true);
