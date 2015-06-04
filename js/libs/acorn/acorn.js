@@ -282,6 +282,10 @@
   var _while = {keyword: "while", isLoop: true}, _with = {keyword: "with"}, _new = {keyword: "new", beforeExpr: true};
   var _this = {keyword: "this"};
 
+// TWEAK TANGARA
+  var _repeat = {keyword: "repeat", isLoop: true};
+// END TWEAK
+
   // The keywords that denote values.
 
   var _null = {keyword: "null", atomValue: null}, _true = {keyword: "true", atomValue: true};
@@ -305,6 +309,11 @@
                       "typeof": {keyword: "typeof", prefix: true, beforeExpr: true},
                       "void": {keyword: "void", prefix: true, beforeExpr: true},
                       "delete": {keyword: "delete", prefix: true, beforeExpr: true}};
+
+// TWEAK TANGARA
+  keywordTypes["repeat"] = _repeat;
+// END TWEAK
+
 
   // Punctuation token types. Again, the `type` property is purely for debugging.
 
@@ -434,7 +443,8 @@
 
   // And the keywords.
 
-  var isKeyword = makePredicate("break case catch continue debugger default do else finally for function if return switch throw try var while with null true false instanceof typeof void delete new in this");
+  // TWEAK FOR TANGARA: added 'repeat' as keyword
+  var isKeyword = makePredicate("break case catch continue debugger default do else finally for function if return switch throw try var while with null true false instanceof typeof void delete new in this repeat");
 
   // ## Character categories
 
@@ -1355,6 +1365,16 @@
       node.body = parseStatement();
       labels.pop();
       return finishNode(node, "WhileStatement");
+
+// TWEAK FOR TANGARA : added _repeat 
+    case _repeat:
+      next();
+      node.count = parseParenExpression();
+      labels.push(loopLabel);
+      node.body = parseStatement();
+      labels.pop();
+      return finishNode(node, "RepeatStatement");
+// END OF TWEAK
 
     case _with:
       if (strict) raise(tokStart, "'with' in strict mode");
