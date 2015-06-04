@@ -268,7 +268,7 @@ define(['TEnvironment'], function(TEnvironment) {
                 }
             );
             return result;
-        }
+        };
 
         
     };
