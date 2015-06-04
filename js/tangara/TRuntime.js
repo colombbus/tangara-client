@@ -133,7 +133,9 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment', 'TInterpreter'
         };
         
         this.executeStatements = function(statements) {
-            var i = -1;
+            interpreter.addStatements(statements);
+            
+            /*var i = -1;
             var runtime = this;
             function evalNextStatement() {
                 i++;
@@ -144,7 +146,7 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment', 'TInterpreter'
                     });
                 }
             }
-            evalNextStatement();
+            evalNextStatement();*/
         };
 
         this.executeFrom = function(object) {
@@ -184,6 +186,7 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment', 'TInterpreter'
 
         this.setLog = function(element) {
             log = element;
+            interpreter.setLog(element);
         };
 
         this.logCommand = function(command) {
