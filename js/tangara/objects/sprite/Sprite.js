@@ -683,12 +683,16 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
     Sprite.prototype.toString = function () {
         return this.qObject.toString();
     };
-
-    Sprite.prototype._setTransparent = function (red, green, blue) {
+    
+    Sprite.prototype.setTransparent = function (red, green, blue, callbacks) {
         var color = TUtils.getColor(red, green, blue);
         this.transparentColors.push(color);
         var canvas = document.createElement('canvas');
+        if (typeof callbacks === 'undefined') {
+            callbacks = {};
+        }
         var key;
+        var parent = this;        
         for (key in this.images) {
             if (this.images.hasOwnProperty(key)) {
                 var asset = this.images[key];
@@ -710,10 +714,29 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
                     }
                     imageData.data = data;
                     ctx.putImageData(imageData, 0, 0);
+                    if (typeof callbacks[key] !== 'undefined') {
+                        var callback = callbacks[key];
+                        image.onload = function() {
+                            image.onload = null;
+                            callback.apply(parent);
+                        };
+                    }
                     image.src = canvas.toDataURL();
                 }
             }
         }
+    }
+
+    Sprite.prototype._setTransparent = function (red, green, blue) {
+        var callbacks = {};
+        if (typeof this.displayedImage !== 'undefined') {
+            var parent = this;
+            this.qObject.p.initialized = false;
+            callbacks[this.displayedImage] = function() {
+                parent.setDisplayedImage(this.displayedImage);
+            };
+        }
+        this.setTransparent(red, green, blue, callbacks);
     };
 
     Sprite.prototype.couleurTransparente = function (red, green, blue) {

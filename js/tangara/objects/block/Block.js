@@ -162,11 +162,15 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite'], f
     };
     
     Block.prototype._setTransparent = function(red, green, blue) {
-        Sprite.prototype._setTransparent.call(this, red, green, blue);
+        var callbacks = {};
         if (this.transparentColors.length>0  && this.displayedImage !== "") {
+            var parent = this;
+            callbacks[this.displayedImage] = function() {
             // reset current image, in order to compute transparency mask
-            this.setDisplayedImage(this.displayedImage);
+                parent.setDisplayedImage(this.displayedImage);
+            };
         }
+        Sprite.prototype.setTransparent.call(this, red, green, blue, callbacks);
     };
     
     TEnvironment.internationalize(Block, true);
