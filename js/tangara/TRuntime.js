@@ -275,6 +275,15 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment', 'TUtils'], fun
         this.getCurrentProgramName = function () {
             return currentProgramName;
         };
+        
+        
+        this.preloadResources = function(project, callback, options) {
+            var resources = project.getResourcesNames();
+            for (var i=0;i<resources.length;i++) {
+                quintusInstance.preload(project.getResourceLocation(resources[i]));
+            }
+            quintusInstance.preload(callback, options);
+        };
 
         this.tweakQuintus = function () {
             // Tweak Quintus to be able to look for sprites while skipping some of them

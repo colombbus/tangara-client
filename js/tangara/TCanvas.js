@@ -27,6 +27,12 @@ define(['jquery', 'TRuntime'], function ($, TRuntime) {
             var y = event.clientY + domCanvasOut.scrollTop;
             $domCanvasDesignMouse.text(x + "," + y);
         };
+        
+        var domCanvasLoading = document.createElement("div");
+        domCanvasLoading.id = "tcanvas-loading";
+        var domCanvasLoadingValue = document.createElement("div");
+        domCanvasLoadingValue.id = "tcanvas-loading-value";
+        domCanvasLoading.appendChild(domCanvasLoadingValue);
 
         /**
          *
@@ -105,6 +111,18 @@ define(['jquery', 'TRuntime'], function ($, TRuntime) {
                 $domCanvasDesignMouse.off("mouseover", designMouseSideHandler);
             }
         };
+        this.showLoading = function() {
+            domCanvasOut.appendChild(domCanvasLoading);
+        };
+        this.setLoadingValue = function(count, total) {
+            var value = Math.round(count*100/total);
+            $(domCanvasLoadingValue).text(value+"%");
+        };
+        this.removeLoading = function() {
+            domCanvasOut.removeChild(domCanvasLoading);
+        };
+        
+        
     }
 
     return TCanvas;

@@ -27,13 +27,20 @@ function load() {
             canvas.displayed();
             // trigger resize in order for canvas to update its size (and remove the 5px bottom margin)
             $(window).resize();
+            canvas.showLoading();
             TEnvironment.frameReady(function() {
                 TLink.setProjectId(init_projectId);
                 currentProject.init();
                 TEnvironment.setProject(currentProject);            
                 var statements = TLink.getProgramStatements(init_programName);
                 TRuntime.setCurrentProgramName(init_programName);
-                TRuntime.executeStatements(statements);
+                
+                TRuntime.preloadResources(currentProject,function() {
+                    canvas.removeLoading();
+                    TRuntime.executeStatements(statements);
+                }, {progressCallback:function(count, total) {
+                    canvas.setLoadingValue(count, total);
+                }});
             });
         });
         var currentProject = new TProject();
