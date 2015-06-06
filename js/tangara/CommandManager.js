@@ -36,13 +36,9 @@ define(['TRuntime'], function(TRuntime) {
             }
         }
         if (typeof field === 'undefined') {
-            for (i = 0; i < this.commands.length; i++) {
-                TRuntime.execute(this.commands[i], parameter, this.logging);
-            }
+            TRuntime.execute(this.commands, parameter, this.logging);
         } else if (typeof this.commands[field] !== 'undefined') {
-            for (i = 0; i < this.commands[field].length; i++) {
-                TRuntime.execute(this.commands[field][i], parameter, this.logging);
-            }
+            TRuntime.execute(this.commands[field], parameter, this.logging);
         }
     };
 

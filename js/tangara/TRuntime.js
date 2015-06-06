@@ -98,6 +98,10 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment', 'TUtils'], fun
             try {
                 if (typeof commands === 'string' || commands instanceof String) {
                     runtimeFrame.eval(commands);
+                } else if (Array.isArray(commands)) {
+                    for (var i=0; i<commands.length; i++) {
+                        runtimeFrame.eval(commands[i]);
+                    }
                 } else if (typeof commands === 'function' || commands instanceof Function) {
                     // TOTO: see if we need to check if function is actually declared in runtimeFrame
                     commands.call(runtimeFrame, parameter);
