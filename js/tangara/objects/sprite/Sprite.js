@@ -725,7 +725,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
                 }
             }
         }
-    }
+    };
 
     Sprite.prototype._setTransparent = function (red, green, blue) {
         var callbacks = {};
