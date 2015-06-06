@@ -281,42 +281,6 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
             this.p.frozen = value;
             this._super(value);
         },
-        /*addTransparency: function(red, green, blue) {
-         this.perform(function(red,green,blue) {
-         var canvas = document.createElement('canvas');
-         var asset = this.p.asset;
-         var image = qInstance.asset(asset);
-         var ctx = canvas.getContext('2d');
-         var width = image.width;
-         var height = image.height;
-         canvas.width = width;
-         canvas.height = height;
-         this.p.transparencyMask = new Array();
-         var mask = this.p.transparencyMask;
-         var row=-1, col=width;
-         ctx.drawImage(image, 0, 0 );
-         var imageData = ctx.getImageData(0, 0, width, height);
-         var data = imageData.data;
-         for (var i=0;i<data.length;i+=4) {
-         col++;
-         if (col>=width) {
-         col = 0;
-         row++;
-         mask[row] = new Array();
-         }
-         var r=data[i];
-         var g=data[i+1];
-         var b=data[i+2];
-         if (r===red && g===green && b===blue) {
-         data[i+3] = 0;
-         }
-         mask[row][col] = (data[i+3] === 0)?true:false;
-         }
-         imageData.data = data;
-         ctx.putImageData(imageData,0,0);
-         image.src = canvas.toDataURL();
-         }, [red, green, blue]);
-         },*/
         removeAsset: function () {
             this.p.asset = null;
         }
