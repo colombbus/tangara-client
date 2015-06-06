@@ -93,10 +93,7 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
             url: configUrl,
             async: false,
             success: function(data) {
-                var currentLocation = false;
-                if (parent.qObject.p.initialized) {
-                    currentLocation = parent.qObject.getLocation();
-                }
+                var currentLocation = parent.qObject.getLocation();
                 var backImage = data['images']['background'];
                 var blockImage = data['images']['block'];
                 try {
@@ -109,9 +106,7 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
                 // set initialized to false, to be sure that location will be set after next image is displayed
                 // (and width and height are correctly set)
                 parent.qObject.reinit();
-                if (currentLocation !== false) {
-                    parent.qObject.setLocation(currentLocation.x, currentLocation.y);
-                }
+                parent.qObject.setLocation(currentLocation.x, currentLocation.y);
                 parent.setDisplayedImage(parent.blockName);
                 parent.setDisplayedImage(parent.backgroundName);
             }
@@ -137,9 +132,7 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
         this.backgroundName = name;
         this.addImage(this.backgroundName, "elements", true);
         this.qObject.p.initialized = false;
-        if (currentLocation !== false) {
-            this.qObject.setLocation(currentLocation.x, currentLocation.y);
-        }
+        this.qObject.setLocation(currentLocation.x, currentLocation.y);
         this.setDisplayedImage(this.backgroundName);
     };
 
