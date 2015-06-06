@@ -29,7 +29,7 @@ define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink
      * ie: to display another program
      */
     Tangara.prototype._init = function() {
-        TUI.clear();
+        TRuntime.clear();
     };
     
     Tangara.prototype._pause = function() {
