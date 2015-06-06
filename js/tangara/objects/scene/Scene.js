@@ -130,10 +130,7 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
 
     Scene.prototype._setBackground = function(name) {
         name = TUtils.getString(name);
-        var currentLocation = false;
-        if (this.qObject.p.initialized) {
-            currentLocation = this.qObject.getLocation();
-        }
+        var currentLocation = this.qObject.getLocation();
         try {
             this.removeImage(this.backgroundName);
         } catch (e) {}
