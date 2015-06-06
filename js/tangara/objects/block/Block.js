@@ -168,7 +168,7 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite'], f
             var parent = this;
             callbacks[this.displayedImage] = function() {
             // reset current image, in order to compute transparency mask
-                parent.setDisplayedImage(this.displayedImage);
+                parent.setDisplayedImage(parent.displayedImage);
             };
         }
         Sprite.prototype.setTransparent.call(this, red, green, blue, callbacks);
