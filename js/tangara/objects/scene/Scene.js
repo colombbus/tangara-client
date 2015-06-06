@@ -51,6 +51,14 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
             this.p.initialized = false;
             this.p.asset = false;
             this.p.assetBlock = false;            
+        },
+        removeBlock: function() {
+            this.p.initialized = false;
+            this.p.assetBlock = false;            
+        },
+        removeBackground: function() {
+            this.p.initialized = false;
+            this.p.asset = false;            
         }
     });
     
@@ -131,7 +139,7 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
         } catch (e) {}
         this.backgroundName = name;
         this.addImage(this.backgroundName, "elements", true);
-        this.qObject.p.initialized = false;
+        this.qObject.removeBackground();
         this.qObject.setLocation(currentLocation.x, currentLocation.y);
         this.setDisplayedImage(this.backgroundName);
     };
@@ -142,7 +150,7 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
             this.removeImage(this.blockName);
         } catch (e) {}
         this.blockName = name;
-        this.qObject.p.initialized = false;
+        this.qObject.removeBlock();
         this.addImage(this.blockName, "elements", true);
         this.setDisplayedImage(this.blockName);
     };
@@ -151,7 +159,7 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
         var callbacks = {};
         if (typeof this.images[this.blockName] !== 'undefined') {
             var parent = this;
-            this.qObject.p.initialized = false;
+            this.qObject.removeBlock();
             callbacks[this.blockName] = function() {
                 // reset block image in order to compute transparency mask
                 parent.setDisplayedImage(parent.blockName);
@@ -159,7 +167,7 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
         }
         if (typeof this.images[this.backgroundName] !== 'undefined') {
             var parent = this;
-            this.qObject.p.initialized = false;
+            this.qObject.removeBackground();
             callbacks[this.backgroundName] = function() {
                 parent.setDisplayedImage(parent.backgroundName);
             };
