@@ -432,6 +432,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
                     // Unregister onload event otherwise every transparency manipulation will call this
                     // function again.
                     var image = qInstance.asset(loadedAsset);
+                    
                     image.onload = null;
 
                     // 1st handle transparency
@@ -714,12 +715,15 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
                     }
                     imageData.data = data;
                     ctx.putImageData(imageData, 0, 0);
+                    // otherwise onload is not called in safari
+                    image.src = '';
                     if (typeof callbacks[key] !== 'undefined') {
-                        var callback = callbacks[key];
-                        image.onload = function() {
-                            image.onload = null;
-                            callback.apply(parent);
-                        };
+                        (function(img, callback) {
+                            img.onload = function() {
+                                img.onload = null;
+                                callback.apply(parent);
+                            };
+                        })(image, callbacks[key]);
                     }
                     image.src = canvas.toDataURL();
                 }

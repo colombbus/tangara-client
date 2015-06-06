@@ -167,6 +167,13 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
                 parent.setDisplayedImage(parent.blockName);
             };
         }
+        if (typeof this.images[this.backgroundName] !== 'undefined') {
+            var parent = this;
+            this.qObject.p.initialized = false;
+            callbacks[this.backgroundName] = function() {
+                parent.setDisplayedImage(parent.backgroundName);
+            };
+        }
         Sprite.prototype._setTransparent.call(this, red, green, blue, callbacks);
     };
     
