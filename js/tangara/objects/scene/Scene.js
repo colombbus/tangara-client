@@ -161,6 +161,7 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
         var callbacks = {};
         if (typeof this.images[this.blockName] !== 'undefined') {
             var parent = this;
+            this.qObject.p.initialized = false;
             callbacks[this.blockName] = function() {
                 // reset block image in order to compute transparency mask
                 parent.setDisplayedImage(parent.blockName);

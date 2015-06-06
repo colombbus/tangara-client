@@ -164,6 +164,7 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite'], f
     Block.prototype._setTransparent = function(red, green, blue) {
         var callbacks = {};
         if (this.transparentColors.length>0  && this.displayedImage !== "") {
+            this.qObject.p.initialized = false;
             var parent = this;
             callbacks[this.displayedImage] = function() {
             // reset current image, in order to compute transparency mask
