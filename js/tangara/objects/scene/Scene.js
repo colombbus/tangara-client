@@ -159,7 +159,7 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
     
     Scene.prototype._setTransparent = function(red, green, blue) {
         Sprite.prototype._setTransparent.call(this, red, green, blue);
-        if (typeof this.images[this.blockName] !== 'undefined') {
+        if (typeof this.images[this.blockName] !== 'undefined' && qInstance.assets[this.images[this.blockName]]) {
             this.computeTransparencyMask(this.images[this.blockName]);
         }
     };
