@@ -232,13 +232,17 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment', 'TUtils'], fun
             }
         };
 
-        this.clear = function () {
-            // TODO: clear RuntimeFrame as well (e.g. to erase declared functions)
+        this.clearGraphics = function() {
             while (tGraphicalObjects.length > 0) {
                 var object = tGraphicalObjects[0];
                 // deleteObject will remove object from tGraphicalObjects
                 object.deleteObject();
             }
+        };
+        
+        this.clear = function () {
+            // TODO: clear RuntimeFrame as well (e.g. to erase declared functions)
+            this.clearGraphics();
             while (tObjects.length > 0) {
                 var object = tObjects[0];
                 // deleteObject will remove object from tGraphicalObjects
