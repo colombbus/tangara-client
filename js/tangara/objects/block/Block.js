@@ -128,16 +128,15 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite'], f
     Block.prototype.setDisplayedImage = function(name) {
         if (Sprite.prototype.setDisplayedImage.call(this, name)) {
             // compute transparency mask
-            var asset = this.images[name];
-            this.computeTransparencyMask(asset);
+            this.computeTransparencyMask(name);
             return true;
         } else {
             return false;
         }
     };
     
-    Block.prototype.computeTransparencyMask = function(asset) {
-        var image = qInstance.asset(asset);
+    Block.prototype.computeTransparencyMask = function(name) {
+        var image = this.resources.get(name);
         var canvas = document.createElement('canvas');
         var ctx = canvas.getContext('2d');
         var width = image.width;

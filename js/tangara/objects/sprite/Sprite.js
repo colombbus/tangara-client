@@ -1,4 +1,4 @@
-define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'], function ($, TEnvironment, TUtils, CommandManager, TGraphicalObject) {
+define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager', 'TGraphicalObject'], function ($, TEnvironment, TUtils, CommandManager, ResourceManager, TGraphicalObject) {
     var Sprite = function (name) {
         TGraphicalObject.call(this);
         this.images = new Array();
@@ -7,9 +7,14 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
         this.displayedImage = "";
         this.displayedSet = "";
         this.displayedIndex = "";
+        this.resources = new ResourceManager();
+        this.qObject.setResources(this.resources);
+        this.waitingForImage = "";
         if (typeof name === 'string') {
             this._setImage(name);
         }
+        
+        
     };
 
     Sprite.prototype = Object.create(TGraphicalObject.prototype);
@@ -36,13 +41,46 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
                 moving: false,
                 hasCollisionCommands: false,
                 collisionWatched: false,
-                frozen: false
+                frozen: false,
+                asset: null
             }, props), defaultProps);
             this.watchCollisions(true);
             this.encounteredObjects = new Array();
             this.lastEncounteredObjects = new Array();
             this.reciprocalCol = new Array();
+            this.resources = {};
         },
+        setResources: function(r) {
+            this.resources = r;
+        },
+        asset: function(name,resize) {
+            if(!name) { 
+                if (this.p.asset) {
+                    return this.resources.getUnchecked(this.p.asset);
+                } else {
+                    return null;
+                }
+            }
+            this.p.asset = name;
+            if(resize) {
+                this.size(true);
+                qInstance._generatePoints(this,true);
+            }
+        },
+        removeAsset: function() {
+            this.p.asset = null;
+        },
+        draw: function(ctx) {
+            var p = this.p;
+            if(p.sheet) {
+              this.sheet().draw(ctx,-p.cx,-p.cy,p.frame);
+            } else if(p.asset) {
+              ctx.drawImage(this.resources.getUnchecked(p.asset),-p.cx,-p.cy);
+            } else if(p.color) {
+              ctx.fillStyle = p.color;
+              ctx.fillRect(-p.cx,-p.cy,p.w,p.h);
+            }
+        },       
         checkCollisions: function () {
             if (this.p.moving) {
                 // Look for other sprites
@@ -280,9 +318,6 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
         freeze: function (value) {
             this.p.frozen = value;
             this._super(value);
-        },
-        removeAsset: function () {
-            this.p.asset = null;
         }
     });
 
@@ -359,109 +394,33 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
         this.addImage(name, set, true);
     };
 
-
-    Sprite.colorMatch = function (color, red, green, blue) {
-        if (Math.abs(color[0] + color[1] + color[2] - red - green - blue) < 30)
-            return true;
-        return false;
-    };
-
     Sprite.prototype.addImage = function (name, set, project) {
         name = TUtils.getString(name);
         var asset;
-        // add image only if not already added
-        // TODO: allow using the same image in several sets
-        if (typeof this.images[name] === 'undefined') {
-            try {
-                if (project) {
-                    // asset from project
-                    asset = TEnvironment.getProjectResource(name);
-                } else {
-                    // asset from object itself
-                    asset = this.getResource(name);
-                }
-                this.images[name] = asset;
-                if (typeof set === 'undefined') {
-                    set = "";
-                } else {
-                    set = TUtils.getString(set);
-                }
-                if (typeof this.imageSets[set] === 'undefined') {
-                    this.imageSets[set] = new Array();
-                }
-                this.imageSets[set].push(name);
-                var spriteObject = this;
-                var loadedAsset = asset;
-                qInstance.load(asset, function () {
-                    // Unregister onload event otherwise every transparency manipulation will call this
-                    // function again.
-                    var image = qInstance.asset(loadedAsset);
-                    
-                    image.onload = null;
-
-                    // 1st handle transparency
-                    // Note that transparency settings of current Sprite will affect image for every other Sprites
-                    // using the same asset
-                    if (spriteObject.transparentColors.length > 0) {
-                        var canvas = document.createElement('canvas');
-                        var ctx = canvas.getContext('2d');
-                        var width = image.width;
-                        var height = image.height;
-                        canvas.width = width;
-                        canvas.height = height;
-                        ctx.drawImage(image, 0, 0);
-                        var imageData = ctx.getImageData(0, 0, width, height);
-                        var data = imageData.data;
-                        var color;
-                        for (var i = 0; i < data.length; i += 4) {
-                            var r = data[i];
-                            var g = data[i + 1];
-                            var b = data[i + 2];
-                            for (var j = 0; j < spriteObject.transparentColors.length; j++) {
-                                color = spriteObject.transparentColors[j];
-                                if (Sprite.colorMatch(color, r, g, b)) {
-                                    data[i + 3] = 0;
-                                    break;
-                                }
-                            }
-                        }
-                        imageData.data = data;
-                        ctx.putImageData(imageData, 0, 0);
-                        image.onload = function () {
-                            image.onload = null;
-                            // 2nd set asset for all sprites waiting for this image
-                            if (typeof Sprite.waitingForImage[name] !== 'undefined') {
-                                // in case _displayImage was called while loading, set image for waiting sprites
-                                while (Sprite.waitingForImage[name].length > 0) {
-                                    var sprite = Sprite.waitingForImage[name].pop();
-                                    sprite.setDisplayedImage(name);
-                                }
-                                Sprite.waitingForImage[name] = undefined;
-                            }
-                        };
-                        image.src = canvas.toDataURL();
-                    } else {
-                        // 2nd set asset for all sprites waiting for this image
-                        if (typeof Sprite.waitingForImage[name] !== 'undefined') {
-                            // in case _displayImage was called while loading, set image for waiting sprites
-                            while (Sprite.waitingForImage[name].length > 0) {
-                                var sprite = Sprite.waitingForImage[name].pop();
-                                sprite.setDisplayedImage(name);
-                            }
-                            Sprite.waitingForImage[name] = undefined;
-                        }
-                    }
-                });
-            }
-            catch (e) {
-                throw new Error(this.getMessage("file not found", name));
-            }
-        } else {
-            asset = this.images[name];
+        if (project) {
+            // asset from project
+            asset = TEnvironment.getProjectResource(name);
+        } else {
+            // asset from object itself
+            asset = this.getResource(name);
         }
-        return asset;
+        if (typeof set === 'undefined') {
+            set = "";
+        } else {
+            set = TUtils.getString(set);
+        }
+        if (typeof this.imageSets[set] === 'undefined') {
+            this.imageSets[set] = new Array();
+        }
+        this.imageSets[set].push(name);        
+        var spriteObject = this;
+        this.resources.add(name, asset, function() {
+            if (name === spriteObject.waitingForImage) {
+                spriteObject.setDisplayedImage(name);
+            }
+        });
     };
-
+    
     Sprite.prototype._removeImage = function (name, set) {
         this.removeImage(name, set);
     };
@@ -484,15 +443,11 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
         }
 
         this.imageSets[set].splice(index, 1);
-
-        // remove sprite from waitingForImage if ever
-        if (typeof Sprite.waitingForImage[name] !== 'undefined') {
-            var index2 = Sprite.waitingForImage[name].indexOf(this);
-            if (index2 > -1) {
-                Sprite.waitingForImage[name].splice(index2, 1);
-            }
+        
+        // if sprite was waiting for this image, remove it
+        if (this.waitingForImage === name) {
+            this.waitingForImage = '';
         }
-
         // if removed image was current image, remove asset
         if (this.displayedImage === name) {
             // remove asset
@@ -500,12 +455,9 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
             this.displayedImage = "";
             this.displayedIndex = "";
         }
-
+        
         // TODO: remove from  images ONLY IF image not used in other set
-        delete this.images[name];
-
-        // return asset
-        return qInstance.asset(name);
+        this.resources.remove(name);
     };
 
     Sprite.prototype._removeImageSet = function (name) {
@@ -533,52 +485,46 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
     Sprite.prototype.emptyImageSet = function (name) {
         for (var i = 0; i < this.imageSets[name].length; i++) {
             var imageName = this.imageSets[name][i];
-            if (typeof Sprite.waitingForImage[imageName] !== 'undefined') {
-                var index2 = Sprite.waitingForImage[imageName].indexOf(this);
-                if (index2 > -1) {
-                    Sprite.waitingForImage[imageName].splice(index2, 1);
-                }
+            // if sprite was waiting for this image, remove it
+            if (this.waitingForImage === imageName) {
+                this.waitingForImage = '';
             }
-
+            // if removed image was current image, remove image
             if (this.displayedImage === imageName) {
                 // remove asset
                 this.qObject.removeAsset();
                 this.displayedImage = "";
                 this.displayedIndex = "";
             }
-            delete this.images[imageName];
+
+            this.resources.remove(name);
         }
     };
 
     Sprite.prototype.setDisplayedImage = function (name) {
-        var asset = this.images[name];
-        var qObject = this.qObject;
         this.displayedImage = name;
-        // check if image actually loaded
-        if (qInstance.assets[asset]) {
-            qObject.asset(asset, true);
+        var image = this.resources.get(name);
+        if (image === false) {
+            // asset not ready
+            this.waitingForImage = name;
+            return false;
+        } else {
+            var qObject = this.qObject;
+            qObject.asset(name, true);
             if (!qObject.p.initialized) {
                 qObject.initialized();
             }
             return true;
-        } else {
-            // otherwise, image will be displayed once loaded
-            if (typeof Sprite.waitingForImage[name] === 'undefined') {
-                Sprite.waitingForImage[name] = new Array();
-            }
-            Sprite.waitingForImage[name].push(this);
-            return false;
         }
     };
 
     Sprite.prototype._displayImage = function (name) {
         name = TUtils.getString(name);
-        if (typeof this.images[name] !== 'undefined') {
-            if (this.displayedImage !== name) {
-                this.setDisplayedImage(name);
-            }
-        } else {
+        if (!this.resources.has(name)) {
             throw new Error(this.getMessage("resource not found", name));
+        }
+        if (this.displayedImage !== name) {
+            this.setDisplayedImage(name);
         }
     };
 
@@ -651,48 +597,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
     
     Sprite.prototype.setTransparent = function (red, green, blue, callbacks) {
         var color = TUtils.getColor(red, green, blue);
-        this.transparentColors.push(color);
-        var canvas = document.createElement('canvas');
-        if (typeof callbacks === 'undefined') {
-            callbacks = {};
-        }
-        var key;
-        var parent = this;        
-        for (key in this.images) {
-            if (this.images.hasOwnProperty(key)) {
-                var asset = this.images[key];
-                // check if image actually loaded
-                if (qInstance.assets[asset]) {
-                    var image = qInstance.asset(asset);
-                    var ctx = canvas.getContext('2d');
-                    var width = image.width;
-                    var height = image.height;
-                    canvas.width = width;
-                    canvas.height = height;
-                    ctx.drawImage(image, 0, 0);
-                    var imageData = ctx.getImageData(0, 0, width, height);
-                    var data = imageData.data;
-                    for (var i = 0; i < data.length; i += 4) {
-                        if (Sprite.colorMatch(color, data[i], data[i + 1], data[i + 2])) {
-                            data[i + 3] = 0;
-                        }
-                    }
-                    imageData.data = data;
-                    ctx.putImageData(imageData, 0, 0);
-                    // otherwise onload is not called in safari
-                    image.src = '';
-                    if (typeof callbacks[key] !== 'undefined') {
-                        (function(img, callback) {
-                            img.onload = function() {
-                                img.onload = null;
-                                callback.apply(parent);
-                            };
-                        })(image, callbacks[key]);
-                    }
-                    image.src = canvas.toDataURL();
-                }
-            }
-        }
+        this.resources.addTransparentColor(color, callbacks);
     };
 
     Sprite.prototype._setTransparent = function (red, green, blue) {
@@ -701,7 +606,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
             var parent = this;
             this.qObject.p.initialized = false;
             callbacks[this.displayedImage] = function() {
-                parent.setDisplayedImage(this.displayedImage);
+                parent.setDisplayedImage(parent.displayedImage);
             };
         }
         this.setTransparent(red, green, blue, callbacks);
