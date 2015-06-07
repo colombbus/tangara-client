@@ -394,31 +394,39 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
         this.addImage(name, set, true);
     };
 
-    Sprite.prototype.addImage = function (name, set, project) {
+    Sprite.prototype.addImage = function (name, set, project, callback) {
         name = TUtils.getString(name);
         var asset;
-        if (project) {
-            // asset from project
-            asset = TEnvironment.getProjectResource(name);
-        } else {
-            // asset from object itself
-            asset = this.getResource(name);
-        }
-        if (typeof set === 'undefined') {
-            set = "";
-        } else {
-            set = TUtils.getString(set);
-        }
-        if (typeof this.imageSets[set] === 'undefined') {
-            this.imageSets[set] = new Array();
-        }
-        this.imageSets[set].push(name);        
-        var spriteObject = this;
-        this.resources.add(name, asset, function() {
-            if (name === spriteObject.waitingForImage) {
-                spriteObject.setDisplayedImage(name);
+        try {
+            if (project) {
+                // asset from project
+                asset = TEnvironment.getProjectResource(name);
+            } else {
+                // asset from object itself
+                asset = this.getResource(name);
             }
-        });
+            if (typeof set === 'undefined') {
+                set = "";
+            } else {
+                set = TUtils.getString(set);
+            }
+            if (typeof this.imageSets[set] === 'undefined') {
+                this.imageSets[set] = new Array();
+            }
+            this.imageSets[set].push(name);        
+            var spriteObject = this;
+            this.resources.add(name, asset, function() {
+                if (name === spriteObject.waitingForImage) {
+                    spriteObject.setDisplayedImage(name);
+                }
+                if (typeof callback !== 'undefined') {
+                    callback.call(spriteObject);
+                }
+            });
+        }
+        catch (e) {
+            throw new Error(this.getMessage("file not found", name));
+        }
     };
     
     Sprite.prototype._removeImage = function (name, set) {
@@ -503,18 +511,18 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
 
     Sprite.prototype.setDisplayedImage = function (name) {
         this.displayedImage = name;
-        var image = this.resources.get(name);
-        if (image === false) {
-            // asset not ready
-            this.waitingForImage = name;
-            return false;
-        } else {
+        if (this.resources.ready(name)) {
+            // image ready
             var qObject = this.qObject;
             qObject.asset(name, true);
             if (!qObject.p.initialized) {
                 qObject.initialized();
             }
             return true;
+        } else {
+            // image not ready
+            this.waitingForImage = name;
+            return false;
         }
     };
 
@@ -604,6 +612,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
         var callbacks = {};
         if (typeof this.displayedImage !== 'undefined') {
             var parent = this;
+            this.qObject.removeAsset();
             this.qObject.p.initialized = false;
             callbacks[this.displayedImage] = function() {
                 parent.setDisplayedImage(parent.displayedImage);

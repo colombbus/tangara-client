@@ -3,6 +3,7 @@ define(['TRuntime'], function(TRuntime) {
         this.resources = {};
         this.transparent = false;
         this.transparentColors = [];
+        this.loadingCallbacks = {};
     };
     
     var qInstance = TRuntime.getQuintusInstance();    
@@ -10,6 +11,7 @@ define(['TRuntime'], function(TRuntime) {
     ResourceManager.STATE_COMPUTING = 1;
     ResourceManager.STATE_READY = 2;
     
+    ResourceManager.waitingForImage = {};
     
     getNewResource = function(state, resource, update) {
         if (typeof state === "undefined") {
@@ -21,7 +23,7 @@ define(['TRuntime'], function(TRuntime) {
         if (typeof update === 'undefined') {
             update = false;
         }
-        return {state:state, resource:resource, update:update};
+        return {state:state, resource:resource, update:update, delete:false};
     };
     
     colorMatch = function (color, red, green, blue) {
@@ -38,19 +40,44 @@ define(['TRuntime'], function(TRuntime) {
             }
         }
         this.resources[name] = getNewResource();
-        
+
         var manager = this;
-        qInstance.load(asset, function () {
-            manager.resources[name]['resource'] = qInstance.asset(asset);
-            if (manager.transparent) {
-                manager.addTransparency(name, callback);
-            } else {
-                manager.resources[name]['state'] = ResourceManager.STATE_READY;
-                if (typeof callback !== 'undefined') {
-                    callback.call(manager);
+        
+        var loadingCallback = function() {
+            if (!manager.gc(name)) {
+                manager.resources[name]['resource'] = qInstance.asset(asset);
+                if (manager.transparent) {
+                    manager.addTransparency(name, callback);
+                } else {
+                    manager.resources[name]['state'] = ResourceManager.STATE_READY;
+                    if (typeof callback !== 'undefined') {
+                        callback.call(manager);
+                    }
                 }
+            }    
+        };
+        
+        if (qInstance.assets[asset]) {
+            // already loaded
+            loadingCallback.call(this);
+        } else {
+            // we need to load asset
+            if (typeof ResourceManager.waitingForImage[name] === 'undefined') {
+                // we are the first to load this image
+                ResourceManager.waitingForImage[name] = [];
+                ResourceManager.waitingForImage[name].push(loadingCallback);
+                qInstance.load(asset, function () {
+                    var callbacks = ResourceManager.waitingForImage[name];
+                    for (var i=0;i<callbacks.length;i++) {
+                        callbacks[i].call(manager);
+                    }
+                    delete ResourceManager.waitingForImage[name];
+                });
+            } else {
+                // image is already loading
+                ResourceManager.waitingForImage[name].push(loadingCallback);
             }
-        });
+        }
         return true;
      };
      
@@ -110,15 +137,17 @@ define(['TRuntime'], function(TRuntime) {
         var newImage = new Image();
         var manager = this;
         newImage.onload = function () {
-            if (manager.resources[name]['update']) {
-                // update required: add transparency again
-                manager.resources[name]['update'] = false;
-                manager.addTransparency(name, callback);
-            } else {
-                manager.resources[name]['resource'] = newImage;
-                manager.resources[name]['state'] = ResourceManager.STATE_READY;
-                if (typeof callback !== 'undefined') {
-                    callback.call(manager);
+            if (!manager.gc(name)) {
+                if (manager.resources[name]['update']) {
+                    // update required: add transparency again
+                    manager.resources[name]['update'] = false;
+                    manager.addTransparency(name, callback);
+                } else {
+                    manager.resources[name]['resource'] = newImage;
+                    manager.resources[name]['state'] = ResourceManager.STATE_READY;
+                    if (typeof callback !== 'undefined') {
+                        callback.call(manager);
+                    }
                 }
             }
         };
@@ -161,12 +190,25 @@ define(['TRuntime'], function(TRuntime) {
         return this.resources[name]['resource'];
      };     
      
-     ResourceManager.prototype.remove = function(name) {
+    ResourceManager.prototype.remove = function(name) {
         if (typeof this.resources[name] === 'undefined') {
             return false;
         }
-        delete this.resources[name];
-     };
+        if (this.resources[name]['state'] === ResourceManager.STATE_READY) {
+            delete this.resources[name];
+        } else {
+            this.resources[name]['delete'] = true;
+        }
+    };
+     
+    ResourceManager.prototype.gc = function(name) {
+        if (this.resources[name]['delete']) {
+            delete this.resources[name];
+            return true;
+        }
+        return false;
+    };
+    
 
     ResourceManager.prototype.has = function(name) {
         return (typeof this.resources[name] !== 'undefined');        
