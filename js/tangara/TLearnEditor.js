@@ -52,7 +52,7 @@ define(['TParser', 'TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jquery', 'ace/
 
             aceEditor.completers = [consoleCompleter];
 
-            this.enableMethodHelper();
+            //this.enableMethodHelper();
 
         };
 
