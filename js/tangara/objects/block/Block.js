@@ -1,7 +1,6 @@
 define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite'], function($, TEnvironment, TGraphicalObject, Sprite) {
     var Block = function(name) {
         Sprite.call(this,name);
-        this.transparentColor = null;
     };
     
     Block.prototype = Object.create(Sprite.prototype);
@@ -128,16 +127,15 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite'], f
     Block.prototype.setDisplayedImage = function(name) {
         if (Sprite.prototype.setDisplayedImage.call(this, name)) {
             // compute transparency mask
-            var asset = this.images[name];
-            this.computeTransparencyMask(asset);
+            this.computeTransparencyMask(name);
             return true;
         } else {
             return false;
         }
     };
     
-    Block.prototype.computeTransparencyMask = function(asset) {
-        var image = qInstance.asset(asset);
+    Block.prototype.computeTransparencyMask = function(name) {
+        var image = this.resources.get(name);
         var canvas = document.createElement('canvas');
         var ctx = canvas.getContext('2d');
         var width = image.width;
@@ -158,14 +156,6 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite'], f
                 mask[row] = new Array();
             }
             mask[row][col] = (data[i+3] === 0)?true:false;
-        }
-    };
-    
-    Block.prototype._setTransparent = function(red, green, blue) {
-        Sprite.prototype._setTransparent.call(this, red, green, blue);
-        if (this.transparentColors.length>0  && this.displayedImage !== "") {
-            // reset current image, in order to compute transparency mask
-            this.setDisplayedImage(this.displayedImage);
         }
     };
     

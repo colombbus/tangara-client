@@ -1,4 +1,4 @@
-define(['jquery', 'TRuntime'], function($, TRuntime) {
+define(['jquery', 'TRuntime'], function ($, TRuntime) {
 
     function TCanvas() {
         var domCanvasOut = document.createElement("div");
@@ -22,20 +22,23 @@ define(['jquery', 'TRuntime'], function($, TRuntime) {
         domCanvasOut.appendChild(domCanvas3d);
         domCanvasOut.appendChild(domCanvas);
         var qStage;
-        var designMouseHandler = function(event) {
+        var designMouseHandler = function (event) {
             var x = event.clientX + domCanvasOut.scrollLeft;
             var y = event.clientY + domCanvasOut.scrollTop;
             $domCanvasDesignMouse.text(x + "," + y);
         };
-        var canvasToCanvas3DTransferHandler = function(event) {
-            $domCanvas3d.trigger(event);
-            console.log("type " + event.type);
-        };
+        
+        var domCanvasLoading = document.createElement("div");
+        domCanvasLoading.id = "tcanvas-loading";
+        var domCanvasLoadingValue = document.createElement("div");
+        domCanvasLoadingValue.id = "tcanvas-loading-value";
+        domCanvasLoading.appendChild(domCanvasLoadingValue);
+
         /**
-         * 
-         * @param event 
+         *
+         * @param event
          */
-        var designMouseSideHandler = function(event) {
+        var designMouseSideHandler = function (event) {
             if ($domCanvasDesignMouse.hasClass("left-design")) {
                 $domCanvasDesignMouse.removeClass("left-design");
                 $domCanvasDesignMouse.addClass("right-design");
@@ -47,24 +50,24 @@ define(['jquery', 'TRuntime'], function($, TRuntime) {
             }
         };
 
-        this.addGraphicalObject = function(object) {
+        this.addGraphicalObject = function (object) {
             if (typeof qStage !== 'undefined') {
                 qStage.insert(object.getQObject());
             }
         };
-        this.removeGraphicalObject = function(object) {
+        this.removeGraphicalObject = function (object) {
             qStage.remove(object.getQObject());
         };
-        this.getElement = function() {
+        this.getElement = function () {
             return domCanvasOut;
         };
-        this.displayed = function() {
+        this.displayed = function () {
             var qInstance = TRuntime.getQuintusInstance();
             qInstance.setup("tcanvas", {maximize: true}).touch(qInstance.SPRITE_ALL);
             qInstance.stageScene(null);
             qStage = qInstance.stage();
             // resize canvas and its container when window is resized
-            $(window).resize(function(e) {
+            $(window).resize(function (e) {
                 var outer = $(domCanvasOut);
                 var width = outer.width();
                 var height = outer.height();
@@ -83,17 +86,18 @@ define(['jquery', 'TRuntime'], function($, TRuntime) {
                 qStage.defaults['h'] = height;
             });
         };
-        this.show = function() {
+        this.show = function () {
             $(domCanvasOut).show();
         };
-        this.hide = function() {
+        this.hide = function () {
             $(domCanvasOut).hide();
         };
-        this.setDesignMode = function(value) {
+        this.setDesignMode = function (value) {
             if (value) {
                 $(domCanvasDesign).show();
                 $(domCanvas).on("mousemove", designMouseHandler);
                 $domCanvasDesignMouse.on("mouseover", designMouseSideHandler);
+
 //                $domCanvas3d.on("click", function(e) {
 //                    console.log("c3D clicked");
 //                    if (e.clientY > $(this).outerHeight() - 14) {
@@ -107,6 +111,18 @@ define(['jquery', 'TRuntime'], function($, TRuntime) {
                 $domCanvasDesignMouse.off("mouseover", designMouseSideHandler);
             }
         };
+        this.showLoading = function() {
+            domCanvasOut.appendChild(domCanvasLoading);
+        };
+        this.setLoadingValue = function(count, total) {
+            var value = Math.round(count*100/total);
+            $(domCanvasLoadingValue).text(value+"%");
+        };
+        this.removeLoading = function() {
+            domCanvasOut.removeChild(domCanvasLoading);
+        };
+        
+        
     }
 
     return TCanvas;

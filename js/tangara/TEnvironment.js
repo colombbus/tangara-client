@@ -97,7 +97,6 @@ define(['jquery'], function($) {
             });
             this.ready();
         };
-        
 
         this.getBaseUrl = function() {
             return window.location.protocol + "//" + window.location.host + window.location.pathname.split("/").slice(0, -1).join("/");

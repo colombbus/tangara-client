@@ -151,6 +151,14 @@
         },
         "conditions": ["3d"]
     },
+    "Sound": {
+        "path": "sound",
+        "translations": {
+            "fr": "Son",
+            "es": "Sonido",
+            "en": "Sound"
+        }
+    },
     "Sprite": {
         "path": "sprite",
         "translations": {

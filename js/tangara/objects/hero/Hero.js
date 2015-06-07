@@ -277,13 +277,13 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
                     if (asset instanceof Array) {
                         // several assets have to be checked
                         for (var i = 0; i<asset.length; i++) {
-                            if (!qInstance.assets[asset[i]]) {
+                            if (!this.resources.ready(asset[i])) {
                                 // one of the assets is not loaded yet
                                 test = false;
                                 break;
                             }
                         }
-                    } else if (!qInstance.assets[asset]) {
+                    } else if (!this.resources.ready(asset)) {
                         // only one asset has to be checked: not loaded
                         test = false;
                     }
@@ -338,17 +338,17 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
             url: configUrl,
             async: false,
             success: function(data) {
-                var currentLocation = false;
-                if (parent.qObject.p.initialized) {
-                    currentLocation = parent.qObject.getLocation();
-                }
+                parent.qObject.p.initialized = false;
+                var currentLocation = parent.qObject.getLocation();
                 var frontImages = data['images']['front'];
                 var frontAssets = [];
                 try {
                     parent._removeImageSet(parent.translatedFront);
                 } catch (e) {}
                 for (var i=0; i<frontImages.length; i++) {
-                    frontAssets.push(parent.addImage(name+"/"+frontImages[i], parent.translatedFront, false));
+                    var imageName = name+"/"+frontImages[i];
+                    parent.addImage(imageName, parent.translatedFront, false);
+                    frontAssets.push(imageName);
                 }
                 parent.qObject.setFrontAssets(frontAssets);
                 var forwardImages = data['images']['forward'];
@@ -357,7 +357,9 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
                     parent._removeImageSet(parent.translatedForward);
                 } catch (e) {}
                 for (var i=0; i<forwardImages.length; i++) {
-                    forwardAssets.push(parent.addImage(name+"/"+forwardImages[i], parent.translatedForward, false));
+                    var imageName = name+"/"+forwardImages[i];
+                    parent.addImage(imageName, parent.translatedForward, false);
+                    forwardAssets.push(imageName);
                 }
                 parent.qObject.setForwardAssets(forwardAssets);
                 var backwardImages = data['images']['backward'];
@@ -366,7 +368,9 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
                     parent._removeImageSet(parent.translatedBackward);
                 } catch (e) {}
                 for (var i=0; i<backwardImages.length; i++) {
-                    backwardAssets.push(parent.addImage(name+"/"+backwardImages[i], parent.translatedBackward, false));
+                    var imageName = name+"/"+backwardImages[i];
+                    parent.addImage(imageName, parent.translatedBackward, false);
+                    backwardAssets.push(imageName);
                 }
                 parent.qObject.setBackwardAssets(backwardAssets);
                 // remove default imageSet
@@ -374,13 +378,8 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
                     parent._removeImageSet("");
                 } catch (e) {}
                 parent.qObject.removeDefaultAssets();
-                // set initialized to false, to be sure that location will be set after next image is displayed
-                // (and width and height are correctly set)
-                parent.qObject.p.initialized = false;
                 parent._displayNextImage(parent.translatedFront);
-                if (currentLocation !== false) {
-                    parent.qObject.setLocation(currentLocation.x, currentLocation.y);
-                }
+                parent.qObject.setLocation(currentLocation.x, currentLocation.y);
                 parent.qObject.setDurations(data['durationMove'], data['durationPause']);
                 parent.custom = false;
             }
@@ -426,24 +425,22 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
             try {
                 this._removeImageSet("");
             } catch (e) {}
-            if (this.qObject.p.initialized) {
-                currentLocation = this.qObject.getLocation();
-            }
+            currentLocation = this.qObject.getLocation();
         }
-        var asset = this.addImage(name, set, true);
+        this.addImage(name, set, true);
         if (specialSet !== false) {
             switch (specialSet) {
                 case "front":
-                    this.qObject.addFrontAsset(asset);
+                    this.qObject.addFrontAsset(name);
                     break;
                 case "backward":
-                    this.qObject.addBackwardAsset(asset);
+                    this.qObject.addBackwardAsset(name);
                     break;
                 case "forward":
-                    this.qObject.addForwardAsset(asset);
+                    this.qObject.addForwardAsset(name);
                     break;
                 case "default":
-                    this.qObject.addDefaultAsset(asset);
+                    this.qObject.addDefaultAsset(name);
                     break;
             }
             this.qObject.computeDts();
