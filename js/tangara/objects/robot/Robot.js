@@ -5,7 +5,7 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManager
         this.synchronousManager = new SynchronousManager();
         this.qObject.synchronousManager = this.synchronousManager;
         var qObject = this.qObject;
-        var resource = this.getResource("robot.gif");
+        var resource = this.getResource("robot.png");
         qInstance.load(resource, function() {
             qObject.asset(resource, true);
             qObject.initialized();

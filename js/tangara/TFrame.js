@@ -1,3 +1,5 @@
+
+
 define(['jquery', 'split-pane','TCanvas', 'TEditor', 'TSidebar', 'TUI', 'TConsole', 'TToolbar','TLog', 'TRuntime', 'TEnvironment'], function($, SplitPane, TCanvas, TEditor, TSidebar, TUI, TConsole, TToolbar, TLog, TRuntime, TEnvironment) {
     function TFrame() {
         var initialized = false;
