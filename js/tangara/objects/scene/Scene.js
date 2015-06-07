@@ -91,14 +91,12 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
             url: configUrl,
             async: false,
             success: function(data) {
-                var currentLocation = parent.qObject.getLocation();
                 var backImage = data['images']['background'];
                 var blockImage = data['images']['block'];
                 try {
                     parent._removeImageSet("elements");
                 } catch (e) {}
                 parent.qObject.reinit();
-                parent.qObject.setLocation(currentLocation.x, currentLocation.y);
                 var backgroundName = name+"/"+backImage;
                 parent.backgroundName = backgroundName;
                 var blockName = name+"/"+blockImage;
@@ -106,7 +104,9 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
                 parent.addImage(backgroundName, "elements", false, function() {
                     // background may have change during loading
                     if (parent.backgroundName === backgroundName) {
+                        var currentLocation = parent.qObject.getLocation();
                         parent.qObject.setBackground(backgroundName);
+                        parent.qObject.setLocation(currentLocation.x, currentLocation.y);
                     }
                 });
                 parent.addImage(blockName, "elements", false, function() {
@@ -138,12 +138,12 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
         this.backgroundName = name;
         var sceneObject = this;
         var qObject = this.qObject;
-        var currentLocation = qObject.getLocation();
         qObject.removeBackground();
-        qObject.setLocation(currentLocation.x, currentLocation.y);
         this.addImage(name, "elements", true, function() {
             if (name === sceneObject.backgroundName) {
+                var currentLocation = qObject.getLocation();
                 qObject.setBackground(name);
+                qObject.setLocation(currentLocation.x, currentLocation.y);
             }
         });
     };
