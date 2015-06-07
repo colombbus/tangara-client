@@ -64,22 +64,6 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
     
     Scene.prototype.qSprite = qInstance.TScene;
     
-    /*Scene.prototype.setDisplayedImage = function(name) {
-        this.displayedImage = name;
-        var image = this.resources.get(name);
-        if (image === false) {
-            // asset not ready
-            this.waitingForImage = name;
-            return false;
-        } else {
-            var qObject = this.qObject;
-            if (name === this.backgroundName) {
-                qObject.setBackground(name);
-            } 
-            return true;
-        }
-    };   */
-    
     Scene.prototype._setScene = function(name) {
         name = TUtils.getString(name);
         name = this.getMessage(name);
@@ -166,23 +150,22 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
     };
     
     Scene.prototype._setTransparent = function(red, green, blue) { 
-        var callbacks = {};
         if (this.resources.has(this.blockName)) {
-            var parent = this;
             this.qObject.removeBlock();
-            callbacks[this.blockName] = function() {
-                parent.computeTransparencyMask(parent.blockName);
-                parent.qObject.setBlock(parent.blockName);
-            };
         }
         if (this.resources.has(this.backgroundName)) {
-            var parent = this;
             this.qObject.removeBackground();
-            callbacks[this.backgroundName] = function() {
-                parent.qObject.setBackground(parent.backgroundName);
-            };
         }
-        Sprite.prototype.setTransparent.call(this, red, green, blue, callbacks);
+        var parent = this;
+        Sprite.prototype.setTransparent.call(this, red, green, blue, function(name) {
+            if (name === parent.blockName) {
+                parent.computeTransparencyMask(name);
+                parent.qObject.setBlock(name);
+            }
+            if (name === parent.backgroundName) {
+                parent.qObject.setBackground(name);
+            }
+        });
     };
     
     TEnvironment.internationalize(Scene, true);

@@ -81,22 +81,13 @@ define(['TRuntime'], function(TRuntime) {
         return true;
      };
      
-     ResourceManager.prototype.addTransparentColor = function(color, callbacks) {
-        if (typeof callbacks === 'undefined') {
-            callbacks = {};
-        }
+     ResourceManager.prototype.addTransparentColor = function(color, callback) {
         this.transparentColors.push(color);
         this.transparent = true;
         for (var name in this.resources) {
             if (this.resources.hasOwnProperty(name)) {
                 if (this.resources[name]['state'] === ResourceManager.STATE_READY) {
-                    
-                    // add transparency only if image already loaded
-                   if (typeof callbacks[name] !== 'undefined') {
-                       this.addTransparency(name, callbacks[name]);
-                   } else {
-                       this.addTransparency(name);
-                   }
+                    this.addTransparency(name, callback);
                 } else {
                     // update will be required when loading complete
                     this.resources[name]['update'] = true;
@@ -146,7 +137,7 @@ define(['TRuntime'], function(TRuntime) {
                     manager.resources[name]['resource'] = newImage;
                     manager.resources[name]['state'] = ResourceManager.STATE_READY;
                     if (typeof callback !== 'undefined') {
-                        callback.call(manager);
+                        callback.call(manager, name);
                     }
                 }
             }

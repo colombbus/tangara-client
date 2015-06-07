@@ -4,9 +4,9 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
         this.images = new Array();
         this.imageSets = new Array();
         this.transparentColors = new Array();
-        this.displayedImage = "";
+        this.displayedImage = null;
         this.displayedSet = "";
-        this.displayedIndex = "";
+        this.displayedIndex = 0;
         this.resources = new ResourceManager();
         this.qObject.setResources(this.resources);
         this.waitingForImage = "";
@@ -69,6 +69,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
         },
         removeAsset: function() {
             this.p.asset = null;
+            this.p.initialized = false;
         },
         draw: function(ctx) {
             var p = this.p;
@@ -460,8 +461,8 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
         if (this.displayedImage === name) {
             // remove asset
             this.qObject.removeAsset();
-            this.displayedImage = "";
-            this.displayedIndex = "";
+            this.displayedImage = null;
+            this.displayedIndex = 0;
         }
         
         // TODO: remove from  images ONLY IF image not used in other set
@@ -484,9 +485,9 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
         if (this.displayedSet === name) {
             // set was the currently used: remove image from sprite
             this.qObject.removeAsset();
-            this.displayedImage = "";
+            this.displayedImage = null;
             this.displayedSet = "";
-            this.displayedIndex = "";
+            this.displayedIndex = 0;
         }
     };
 
@@ -501,8 +502,8 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
             if (this.displayedImage === imageName) {
                 // remove asset
                 this.qObject.removeAsset();
-                this.displayedImage = "";
-                this.displayedIndex = "";
+                this.displayedImage = null;
+                this.displayedIndex = 0;
             }
 
             this.resources.remove(name);
@@ -609,16 +610,15 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
     };
 
     Sprite.prototype._setTransparent = function (red, green, blue) {
-        var callbacks = {};
-        if (typeof this.displayedImage !== 'undefined') {
-            var parent = this;
+        if (this.displayedImage) {
             this.qObject.removeAsset();
-            this.qObject.p.initialized = false;
-            callbacks[this.displayedImage] = function() {
-                parent.setDisplayedImage(parent.displayedImage);
-            };
         }
-        this.setTransparent(red, green, blue, callbacks);
+        var parent = this;
+        this.setTransparent(red, green, blue, function(name) {
+            if (parent.displayedImage === name) {
+                parent.setDisplayedImage(name);
+            }
+        });
     };
 
     Sprite.prototype.couleurTransparente = function (red, green, blue) {

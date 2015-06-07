@@ -1,7 +1,6 @@
 define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite'], function($, TEnvironment, TGraphicalObject, Sprite) {
     var Block = function(name) {
         Sprite.call(this,name);
-        this.transparentColor = null;
     };
     
     Block.prototype = Object.create(Sprite.prototype);
@@ -158,20 +157,6 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite'], f
             }
             mask[row][col] = (data[i+3] === 0)?true:false;
         }
-    };
-    
-    Block.prototype._setTransparent = function(red, green, blue) {
-        var callbacks = {};
-        if (this.transparentColors.length>0  && this.displayedImage !== "") {
-            this.qObject.p.initialized = false;
-            var parent = this;
-            this.qObject.removeAsset();            
-            callbacks[this.displayedImage] = function() {
-            // reset current image, in order to compute transparency mask
-                parent.setDisplayedImage(parent.displayedImage);
-            };
-        }
-        Sprite.prototype.setTransparent.call(this, red, green, blue, callbacks);
     };
     
     TEnvironment.internationalize(Block, true);
