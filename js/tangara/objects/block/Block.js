@@ -165,6 +165,7 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite'], f
         if (this.transparentColors.length>0  && this.displayedImage !== "") {
             this.qObject.p.initialized = false;
             var parent = this;
+            this.qObject.removeAsset();            
             callbacks[this.displayedImage] = function() {
             // reset current image, in order to compute transparency mask
                 parent.setDisplayedImage(parent.displayedImage);
