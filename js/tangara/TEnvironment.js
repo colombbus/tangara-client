@@ -36,6 +36,9 @@ define(['jquery'], function($) {
                 success: function(data) {
                     $.extend(parent.config, data);
                     parent.debug = parent.config['debug'];
+                    if (parent.config['document-domain']) {
+                        document.domain = parent.config['document-domain'];
+                    }                    
                 }
             });
             window.console.log("* Retrieving translated messages");
