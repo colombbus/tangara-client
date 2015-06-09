@@ -1,35 +1,22 @@
-define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManager', 'TGraphicalObject'], function($, TEnvironment, TUtils, CommandManager, SynchronousManager, TGraphicalObject) {
+define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManager', 'objects/hero/Hero'], function($, TEnvironment, TUtils, CommandManager, SynchronousManager, Hero) {
     var Robot = function() {
-        TGraphicalObject.call(this);
+        Hero.call(this, "robot");
         this.step = 50;
         this.synchronousManager = new SynchronousManager();
         this.qObject.synchronousManager = this.synchronousManager;
         var qObject = this.qObject;
-        var resource = this.getResource("robot.png");
-        qInstance.load(resource, function() {
-            qObject.asset(resource, true);
-            qObject.initialized();
-        });
     };
     
-    Robot.prototype = Object.create(TGraphicalObject.prototype);
+    
+    Robot.prototype = Object.create(Hero.prototype);
     Robot.prototype.constructor = Robot;
     Robot.prototype.className = "Robot";
     
     var qInstance = Robot.prototype.qInstance;
         
-    qInstance.TGraphicalObject.extend("TRobot", {
+    qInstance.THero.extend("TRobot", {
         init: function(props,defaultProps) {
             this._super(qInstance._extend({
-                destinationX: 0,
-                destinationY: 0,
-                velocity:200,
-                type:TGraphicalObject.TYPE_SPRITE,
-                category:'',
-                moving:false,
-                hasCollisionCommands:false,
-                collisionWatched:false,
-                frozen:false,
                 inMovement:false,
                 encountered:[],
                 carriedItems:[]
@@ -37,24 +24,9 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManager
             this.watchCollisions(true);
         },
         step: function(dt) {
+            this._super(dt);
             var p = this.p;
-            p.moving = false;
             if (!p.dragging && !p.frozen) {
-                var step = p.velocity*dt;
-                if (p.x < p.destinationX) {
-                    p.x = Math.min(p.x + step, p.destinationX);
-                    p.moving = true;
-                } else if (p.x > p.destinationX) {
-                    p.x = Math.max(p.x - step, p.destinationX);
-                    p.moving = true;
-                }
-                if (p.y < p.destinationY) {
-                    p.y = Math.min(p.y + step, p.destinationY);
-                    p.moving = true;
-                } else if (p.y > p.destinationY) {
-                    p.y = Math.max(p.y - step, p.destinationY);
-                    p.moving = true;
-                }
                 if (p.moving) {
                     var x = p.x - p.w/2;
                     var y = p.y - p.h/2;
@@ -68,23 +40,6 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManager
                     this.synchronousManager.end();
                 }
             }
-        },
-        designTouchEnd: function(touch) {
-          this.p.destinationX = this.p.x;
-          this.p.destinationY = this.p.y;
-          this._super(touch);
-        },
-        setLocation: function(x,y) {
-            this._super(x,y);
-            this.perform(function(){
-                this.p.destinationX = this.p.x;this.p.destinationY = this.p.y;
-            }, {});
-        },
-        setCenterLocation: function(x,y) {
-            this._super(x,y);
-            this.perform(function(){
-                this.p.destinationX = this.p.x;this.p.destinationY = this.p.y;
-            }, {});
         },
         moveForward: function(value) {
             this.perform(function(value){
@@ -112,11 +67,6 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManager
                 this.p.inMovement = true;
                 this.synchronousManager.begin();
                 this.p.destinationY+=value;
-            }, [value]);
-        },
-        setVelocity: function(value) {
-            this.perform(function(value){
-                this.p.velocity = value*2;
             }, [value]);
         },
         countItems: function() {
@@ -151,52 +101,6 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManager
         },
         countCarriedItems: function() {
             return this.p.carriedItems.length;
-        },
-        addCollisionCommand: function(command, param) {
-            if (typeof param === 'undefined') {
-                // collisions with all sprites
-                if (typeof this.collisionCommands === 'undefined') {
-                    this.collisionCommands = new CommandManager();
-                }
-                this.collisionCommands.addCommand(command);
-            } else if (TUtils.checkString(param)) {
-                // collision with a given category
-                if (typeof this.categoryCollisionCommands === 'undefined') {
-                    this.categoryCollisionCommands = new CommandManager();
-                }            
-                this.categoryCollisionCommands.addCommand(command, param);
-            } else if (TUtils.checkObject(param)) {
-                // collision with a given sprite
-                if (typeof this.spriteCollisionCommands === 'undefined') {
-                    this.spriteCollisionCommands = new CommandManager();
-                }
-                this.spriteCollisionCommands.addCommand(command, param.getQObject().getId());
-            }
-            if (!this.p.hasCollisionCommands) {
-                this.p.hasCollisionCommands = true;
-            }
-        },
-        watchCollisions: function(value) {
-            this.perform(function(value){
-                if (value === this.p.collisionWatched)
-                    return;
-                if (value) {
-                    this.on("hit", this, "objectEncountered");
-                } else {
-                    this.off("hit", this, "objectEncountered");
-                }
-                this.p.collisionWatched = value;
-            }, [value]);
-        },
-        getId: function() {
-            return this.p.id;
-        },
-        toString: function() {
-            return "Robot_"+this.getId();
-        },
-        freeze: function(value) {
-            this.p.frozen = value;
-            this._super(value);
         }
       });
     
@@ -236,11 +140,18 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManager
         this.qObject.moveDownward(value);
     };
     
-    Robot.prototype._setVelocity = function(value) {
-        value = TUtils.getInteger(value);
-        this.qObject.setVelocity(value);
+    Robot.prototype._alwaysMoveDownward = function () {
     };
     
+    Robot.prototype._alwaysMoveUpward = function () {
+    };
+
+    Robot.prototype._alwaysMoveBackward = function () {
+    };
+
+    Robot.prototype._alwaysMoveForward = function () {
+    };
+        
     Robot.prototype._setStep = function(value) {
         value = TUtils.getInteger(value);
         this.step = value;
@@ -262,31 +173,6 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManager
     Robot.prototype._countCarriedItems = function() {
         return this.qObject.countCarriedItems();
     };
-
-    // COLLISION MANAGEMENT
-    /*
-    Sprite.prototype._setCategory = function(name) {
-        name = TUtils.getString(name);
-        this.qObject.setCategory(name);
-    };
-    
-    Sprite.prototype._ifCollision = function(param1, param2) {
-        param1 = TUtils.getCommand(param1);
-        this.qObject.addCollisionCommand(param1, param2);
-    };
-
-    Sprite.prototype._ifCollisionWith = function(who, command) {
-        this._ifCollision(command, who);
-    };
-
-    Sprite.prototype.toString = function() {
-        return this.qObject.toString();
-    };
-    
-    Sprite.prototype._watchCollisions = function(value) {
-        value = TUtils.getBoolean(value);
-        this.qObject.watchCollisions(value);
-    };*/
 
     TEnvironment.internationalize(Robot, true);
     
