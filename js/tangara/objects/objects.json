@@ -270,5 +270,13 @@
             "es": "TBD",
             "en": "Robot"
         }
-    }    
+    },
+    "Learn": {
+        "path": "learn",
+        "translations": {
+            "fr": "learn",
+            "es": "learn",
+            "en": "learn"
+        }
+    }
 }

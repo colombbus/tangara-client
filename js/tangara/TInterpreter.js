@@ -29,7 +29,7 @@ define(['TError'], function(TError) {
         
         /* Lifecycle management */
         
-        this.clear = function() {
+        clear = function() {
             definedFunctions = {};
             localVariables = [];
             currentVariables = [];
@@ -41,6 +41,10 @@ define(['TError'], function(TError) {
             stackPointer = [0];
             executionLevel = 0;
             callers = [];
+        };
+        
+        this.clear = function() {
+            clear();
         };
 
         this.suspend = function() {
@@ -134,7 +138,9 @@ define(['TError'], function(TError) {
                 }
                 running = false;
             } catch (err) {
-                running = false;
+                console.log("on passe bien par ici");
+                clear();
+                //running = false;
                 throw err;
             }
         };

@@ -7,7 +7,7 @@ body, html {
 }
 
 body {
-    background-color:#FFFFFF;
+    background-color:#DFDFDF;
     overflow:hidden;
 }
 
@@ -15,67 +15,49 @@ body {
     height:100%;
 }
 
+#tlearnframe-main {
+    position:absolute;
+    width:100%;
+    top:0;
+    bottom:40px;
+}
+
 #tlearnframe-left {
-    width:400px;
+    width:393px;
     float:left;
     height:100%;
+    margin-right:7px;
 }
 
 #tlearnframe-steps {
     float:left;
     height:100%;
-    width:42px;
-    background-color:#5d5d5d;
-    margin:2px;
-    border:2px solid #323232;
-    background-image:url(../images/parcours.png);
-    background-position: center 10px;
-    background-repeat:no-repeat;
+    width:40px;
 }
 
 #tlearnframe-lesson {
-    margin-left:52px;
-    margin-top:2px;
-    margin-bottom:2px;
-    background-color:#5d5d5d;
+    margin-left:40px;
+    background-color:#5e5e5e;
     height:100%;
-    border-top:20px solid #9f9f9F;
-    border-bottom:20px solid #9f9f9F;
-    border-left:2px solid #9f9f9F;
-    border-right:2px solid #9f9f9F;
-    margin-right:2px;
     padding:10px;
-    box-sizing:border-box;
     color:#FFFFFF;
+    box-sizing:border-box;
 }
 
 #tlearnframe-lesson .code {
-    color:#45fffd;
+    color:#F6A71F;
 }
 
 #tlearnframe-right {
-    background-color:white;
     margin-left:400px;
     height:100%;
-}
-
-#tcanvas {
-    background-color:#ffffff;
     position:relative;
-    overflow:hidden;
 }
-
 #tlearnframe-canvas {
-    height:60%;
-    position:relative;
-    background-color:#9f9f9f;
-    margin:2px;
-    padding:10px;
-}
-
-#tcanvas-outer {
-    height:100%;
-    border:2px solid #000000;
+    position:absolute;
+    top:0;
+    bottom:240px;
+    width:100%;
 }
 
 #tcanvas_container {
@@ -83,7 +65,16 @@ body {
     height:100%;
     position:relative;
     overflow:hidden;
-    margin:5px;
+}
+
+#tcanvas-outer {
+    height:100%;
+    background-color:#ffffff;
+}
+
+#tcanvas {
+    position:relative;
+    overflow:hidden;
 }
 
 .runtime-frame {
@@ -110,9 +101,53 @@ body {
     color:#A7A7A7;
 }
 
+#tlearnframe-message {
+    position:absolute;
+    width:100%;
+    bottom:0;
+    left:0;
+    min-height:50px;
+    padding:10px;
+    display:none;
+    box-sizing:border-box;
+}
+
+#tlearnframe-message.tlearnframe-error {
+    background-color:#ef6e13;
+    color:#ffffff;
+}
+
+#tlearnframe-message.tlearnframe-message {
+    background-color:#58422a;
+    color:#ffffff;
+}
+
+#tlearnframe-message-close {
+    display:block;
+    float:right;
+    width:18px;
+    height:18px;
+    margin-right:5px;
+    margin-top:2px;
+    background-image:url(../images/clear_grey.png);
+}
+
+#tlearnframe-bottom {
+    height:240px;
+    width:100%;
+    position:absolute;
+    bottom:0;
+}
+
+#tlearnframe-buttons {
+    height:40px;
+    line-height:40px;
+    vertical-align:middle;
+    text-align:center;
+}
+
 #tlearneditor {
-    height:30%;
-    border:solid 2px #9f9f9f;
+    height:200px;
 }
 
 #tlearneditor-text {
@@ -120,13 +155,6 @@ body {
 }
 
 #tlearneditor-text .ace_content {
-}
-
-#tlearnframe-bottom {
-    border:solid 2px #9f9f9f;
-    background-color:#3f3f3f;
-    height:10%;
-    text-align:center;
 }
 
 .ttoolbar-button
@@ -141,15 +169,10 @@ body {
     padding-bottom:3px;
     padding-left:8px;
     padding-right:8px;
-    color:#000000;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-    border-style:solid;
-    border-width:1px;
-    border-color:transparent;
-    background-color:transparent;
+    color:#5E5E5E;
     cursor:pointer;
+    border:none;
+    background-color:transparent;
 }
 
 .ttoolbar-button-image {
@@ -164,9 +187,6 @@ body {
     opacity:1;
 }
 .ttoolbar-button-execute {
-    background-color:#45fffd;
-    /*border-color:#4D9E89;*/
-    color:#5d5d5d;
 }
 
 .ttoolbar-button-execute .ttoolbar-button-image {
@@ -175,14 +195,43 @@ body {
 
 .ttoolbar-button-execute:hover,
 .ttoolbar-button-clear:hover {
-    color:#FF0000;
+    color:#F6A71F;
 }
 
-.ttoolbar-button-execute:active {
-    background-color:#4D9E89;
+.ttoolbar-button-execute:active,
+.ttoolbar-button-clear:active {
+    color:#E47637;
 }
-
 
 .ttoolbar-button-clear {
-    background-color:#ffffff;
+}
+
+#tlearnframe-loading {
+    position:absolute;
+    background-color:#FFFFFF;
+    width:100%;
+    height:100%;
+    top:0;
+    left:0;
+}
+
+#tlearnframe-credits {
+    position:absolute;
+    width:100%;
+    bottom:0;
+    height:40px;
+    line-height:40px;
+    vertical-align:middle;
+    text-align:center;
+    color:#5e5e5e;
+    font-size:10px;
+}
+
+#tlearnframe-credits a {
+    color:#5e5e5e;
+    text-decoration:none;
+}
+
+#tlearnframe-credits a:hover {
+    color:#E47637;
 }

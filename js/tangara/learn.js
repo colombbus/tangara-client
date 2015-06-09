@@ -52,7 +52,11 @@ function load() {
             // trigger resize in order for canvas to update its size (and remove the 5px bottom margin)
             $(window).resize();
             TEnvironment.frameReady(function() {
-                frame.init();                
+                try  {
+                    frame.init();
+                } catch (e) 
+                {}
+                frame.loadStep(1);
             });
         });
     });

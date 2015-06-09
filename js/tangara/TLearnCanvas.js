@@ -11,14 +11,12 @@ define(['jquery', 'TRuntime'], function ($, TRuntime) {
         var $domCanvasDesignMouse = $(domCanvasDesignMouse);
         $domCanvasDesignMouse.addClass("right-design");
 
-        // start with design mode off
-        domCanvasDesign.style.display = "none";
-        domCanvasOut.appendChild(domCanvasDesign);
         var domCanvas3d = document.createElement("canvas");
         domCanvas3d.id = "tcanvas3d";
         var $domCanvas3d = $(domCanvas3d);
         var domCanvas = document.createElement("canvas");
         domCanvas.id = "tcanvas";
+        $(domCanvas).css("visibility", "hidden");
         domCanvasOut.appendChild(domCanvas3d);
         domCanvasOut.appendChild(domCanvas);
         var qStage;
@@ -34,21 +32,7 @@ define(['jquery', 'TRuntime'], function ($, TRuntime) {
         domCanvasLoadingValue.id = "tcanvas-loading-value";
         domCanvasLoading.appendChild(domCanvasLoadingValue);
 
-        /**
-         *
-         * @param event
-         */
-        var designMouseSideHandler = function (event) {
-            if ($domCanvasDesignMouse.hasClass("left-design")) {
-                $domCanvasDesignMouse.removeClass("left-design");
-                $domCanvasDesignMouse.addClass("right-design");
-                return;
-            }
-            else {
-                $domCanvasDesignMouse.removeClass("right-design");
-                $domCanvasDesignMouse.addClass("left-design");
-            }
-        };
+        domCanvasOut.appendChild(domCanvasLoading);
 
         this.addGraphicalObject = function (object) {
             if (typeof qStage !== 'undefined') {
@@ -95,25 +79,6 @@ define(['jquery', 'TRuntime'], function ($, TRuntime) {
         this.hide = function () {
             $(domCanvasOut).hide();
         };
-        this.setDesignMode = function (value) {
-            if (value) {
-                $(domCanvasDesign).show();
-                $(domCanvas).on("mousemove", designMouseHandler);
-                $domCanvasDesignMouse.on("mouseover", designMouseSideHandler);
-
-//                $domCanvas3d.on("click", function(e) {
-//                    console.log("c3D clicked");
-//                    if (e.clientY > $(this).outerHeight() - 14) {
-//                        alert('clicked on the bottom border!');
-//                    }
-//                });
-            } else {
-                $(domCanvasDesign).hide();
-                $domCanvasDesignMouse.text("");
-                $(domCanvas).off("mousemove", designMouseHandler);
-                $domCanvasDesignMouse.off("mouseover", designMouseSideHandler);
-            }
-        };
         this.showLoading = function() {
             domCanvasOut.appendChild(domCanvasLoading);
         };
@@ -125,7 +90,7 @@ define(['jquery', 'TRuntime'], function ($, TRuntime) {
             domCanvasOut.removeChild(domCanvasLoading);
         };
         
-        
+       
     }
 
     return TLearnCanvas;

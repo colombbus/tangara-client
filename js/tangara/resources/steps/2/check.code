@@ -1,0 +1,6 @@
+if (learn.hasStatement({expression:{ callee:{object: {name: 'bob'}, property:{name: 'avancer'}}}}) || 
+    learn.hasStatement({expression:{ callee:{object: {name: 'bob'}, property:{name: 'reculer'}}}}) ||
+    learn.hasStatement({expression:{ callee:{object: {name: 'bob'}, property:{name: 'monter'}}}}) ||
+    learn.hasStatement({expression:{ callee:{object: {name: 'bob'}, property:{name: 'descendre'}}}})) {
+    learn.validateStep();
+}
