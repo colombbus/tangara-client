@@ -1,5 +1,5 @@
 b = new Bloc("block.png")
-s = new Animation("clear.png")
+s = new Animation("sensor.png")
 s.définirPosition(560, 80);
 learn.set("atteint", false);
 bob = new Robot()
