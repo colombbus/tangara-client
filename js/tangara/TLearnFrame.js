@@ -1,6 +1,10 @@
 define(['jquery','TLearnCanvas', 'TLearnEditor', 'TLearnLog', 'TRuntime', 'TEnvironment', 'TParser', 'objects/learn/Learn'], function($, TCanvas, TEditor, TLog, TRuntime, TEnvironment, TParser, Learn) {
     function TLearnFrame() {
         var initialized = false;
+        var MAX_STEP = 5;
+        var steps = [];
+        
+        
         var domFrame = document.createElement("div");
         domFrame.id = "tlearnframe";
         var mainFrame = document.createElement("div");
@@ -10,18 +14,41 @@ define(['jquery','TLearnCanvas', 'TLearnEditor', 'TLearnLog', 'TRuntime', 'TEnvi
         leftDiv.id = "tlearnframe-left";
         var stepsDiv = document.createElement("div");
         stepsDiv.id = "tlearnframe-steps";
+       
         leftDiv.appendChild(stepsDiv);
-        var lessonDiv = document.createElement("div");
-        lessonDiv.id = "tlearnframe-lesson";
+        var instructionDiv = document.createElement("div");
+        instructionDiv.id = "tlearnframe-instruction";
         
-        var lessonH2 = document.createElement("h2");
-        var lessonTitle = "Instructions";
-        lessonH2.appendChild(document.createTextNode(lessonTitle));
-        lessonDiv.appendChild(lessonH2);
-        var lessonContent = document.createElement("div");
-        lessonContent.id = "tlearnframe-instructions";
-        lessonDiv.appendChild(lessonContent);
-        leftDiv.appendChild(lessonDiv);
+        var instructionH2 = document.createElement("h2");
+        var instructionTitle = "Instructions";
+        instructionH2.appendChild(document.createTextNode(instructionTitle));
+        instructionDiv.appendChild(instructionH2);
+        var instructionContent = document.createElement("div");
+        instructionContent.id = "tlearnframe-instructions";
+        instructionDiv.appendChild(instructionContent);
+
+        var instructionNav = document.createElement("div");
+        instructionNav.id = "tlearnframe-navigation";
+        var buttonPrevious = document.createElement("button");
+        buttonPrevious.className = "ttoolbar-button ttoolbar-button-previous";
+        var imagePrevious = document.createElement("img");
+        imagePrevious.src = TEnvironment.getBaseUrl() + "/images/play_orange_inverted.png";
+        imagePrevious.className = "ttoolbar-button-image";
+        buttonPrevious.appendChild(imagePrevious);
+        buttonPrevious.appendChild(document.createTextNode(TEnvironment.getMessage('button-previous')));
+        instructionNav.appendChild(buttonPrevious);
+        var buttonNext = document.createElement("button");
+        buttonNext.className = "ttoolbar-button ttoolbar-button-next";
+        var imageNext = document.createElement("img");
+        imageNext.src = TEnvironment.getBaseUrl() + "/images/play_orange.png";
+        imageNext.className = "ttoolbar-button-image";
+        buttonNext.appendChild(document.createTextNode(TEnvironment.getMessage('button-next')));
+        buttonNext.appendChild(imageNext);
+        instructionNav.appendChild(buttonNext);
+        
+        instructionDiv.appendChild(instructionNav);
+        
+        leftDiv.appendChild(instructionDiv);
         
         var rightDiv = document.createElement("div");
         rightDiv.id = "tlearnframe-right";
@@ -48,10 +75,7 @@ define(['jquery','TLearnCanvas', 'TLearnEditor', 'TLearnLog', 'TRuntime', 'TEnvi
         var $messageDiv = $(messageDiv);
         var $messageContentDiv = $(messageContentDiv);
         rightDiv.appendChild(canvasDiv);
-        /*Img = document.createElement("img");
-        loadingImg.src = TEnvironment.getBaseUrl() + "/images/loader2.gif";
-        loadingDiv.appendChild(loadingImg);
-        canvasDiv.appendChild(loadingDiv)*/
+
         var bottomDiv = document.createElement("div");
         bottomDiv.id = "tlearnframe-bottom";
         
@@ -83,6 +107,20 @@ define(['jquery','TLearnCanvas', 'TLearnEditor', 'TLearnLog', 'TRuntime', 'TEnvi
         
         rightDiv.appendChild(bottomDiv);
         
+        var lessonDiv = document.createElement("div");
+        lessonDiv.id = "tlearnframe-lesson";
+        var $lesson = $(lessonDiv);
+        var lessonCongratsDiv = document.createElement("div");
+        lessonCongratsDiv.id = "tlearnframe-lesson-congrats";
+        $(lessonCongratsDiv).text("Bravo !");
+        lessonDiv.appendChild(lessonCongratsDiv);
+        var lessonContentDiv = document.createElement("div");
+        lessonContentDiv.id = "tlearnframe-lesson-content";
+        var $lessonContent = $(lessonContentDiv);
+        lessonDiv.appendChild(lessonContentDiv);
+        rightDiv.appendChild(lessonDiv);
+        
+        
         mainFrame.appendChild(leftDiv);
         mainFrame.appendChild(rightDiv);
         
@@ -98,13 +136,14 @@ define(['jquery','TLearnCanvas', 'TLearnEditor', 'TLearnLog', 'TRuntime', 'TEnvi
         var log = new TLog();
         var startStatements;
         var checkStatements;
+        var lessonHTML;
         // Plug Runtime with Canvas and Log
         TRuntime.setCanvas(canvas);
         TRuntime.setLog(log);
         Learn.setFrame(this);
         log.setFrame(this);
         var step = 1;
-        var MAX_STEP = 2;
+        var bottomLesson = 207;
         
         this.getElement = function() {
             return domFrame;
@@ -117,11 +156,36 @@ define(['jquery','TLearnCanvas', 'TLearnEditor', 'TLearnLog', 'TRuntime', 'TEnvi
             var frame = this;
             buttonExecute.onclick = function() { frame.execute(); };
             buttonClear.onclick = function() { frame.clear(); };
+            buttonPrevious.onclick = function() { frame.loadStep(step-1); };
+            buttonNext.onclick = function() { frame.loadStep(step+1); };
         };
         
+        
         this.init = function() {
+            var height = $lesson.height();
+            $lesson.css('top',-height+"px");
+            $lesson.css('bottom',height+bottomLesson+"px");
+            $lesson.css('visibility', 'visible');
+            $lesson.hide();
             $("#tcanvas").css('visibility', 'visible');
             canvas.removeLoading();
+            var frame = this;
+            function getStepHandler(number) {
+                return function() {
+                    if (steps[number]) {
+                        frame.loadStep(number);
+                    }
+                };
+            };
+            for (var i=1; i<=MAX_STEP;i++) {
+                steps[i] = false;
+                var domStep = document.createElement("a");
+                domStep.className = "tlearnframe-step";
+                domStep.id = "tlearnframe-step-"+i;
+                domStep.href="#";
+                domStep.onclick = getStepHandler(i);
+                stepsDiv.appendChild(domStep);
+            }
         };
         
         this.execute = function() {
@@ -152,10 +216,11 @@ define(['jquery','TLearnCanvas', 'TLearnEditor', 'TLearnLog', 'TRuntime', 'TEnvi
         };
         
         this.validateStep = function() {
-            window.alert("bravo !");
-            step++;
-            if (step <= MAX_STEP) {
-                this.loadStep(step);
+            $("#tlearnframe-step-"+step).addClass("tlearnframe-step-ok");
+            steps[step] = true;
+            if (step < MAX_STEP) {
+                $(buttonNext).show();
+                this.openLesson();
             }
         };
         
@@ -182,6 +247,9 @@ define(['jquery','TLearnCanvas', 'TLearnEditor', 'TLearnLog', 'TRuntime', 'TEnvi
         };
         
         this.loadStep = function(number) {
+            if ($lesson.is(":visible")) {
+                this.closeLesson();
+            }
             console.log("loading step #"+number);
             TRuntime.clear();
             editor.clear();
@@ -236,10 +304,46 @@ define(['jquery','TLearnCanvas', 'TLearnEditor', 'TLearnLog', 'TRuntime', 'TEnvi
                     window.console.log("Error loading check script for step #"+number);
                 }
             });
+
+            // load lesson HTML
+            $.ajax({
+                dataType: "text",
+                url: TEnvironment.getResource("steps/"+number+"/lesson.html"),
+                global:false,
+                async: true,
+                success: function(data) {
+                    lessonHTML = data;
+                },
+                error: function(data, status, error) {
+                    window.console.log("Error loading lesson HTML for step #"+number);
+                    lessonHTML = "";
+                }
+            });
             
-            
+            $("#tlearnframe-step-"+step).removeClass("tlearnframe-step-current");
+            step = number;
+            $("#tlearnframe-step-"+step).addClass("tlearnframe-step-current");
+            if (step>1) {
+                $(buttonPrevious).show();
+            } else {
+                $(buttonPrevious).hide();
+            }
+            if (step < MAX_STEP && steps[step]) {
+                $(buttonNext).show();
+            } else {
+                $(buttonNext).hide();
+            }
+        };
+        
+        this.openLesson = function() {
+            $lessonContent.html(lessonHTML);
+            $lesson.show().stop().animate({top:"0px", bottom:bottomLesson+"px"}, 600);
         };
 
+        this.closeLesson = function() {
+            var height = $lesson.height();
+            $lesson.stop().animate({top:-height+"px", bottom:height+bottomLesson+"px"}, 600, function(){$(this).hide();});
+        };
 
     }
     

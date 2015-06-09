@@ -1,7 +1,9 @@
-define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink'], function($, TEnvironment, TRuntime, TUtils, TObject, TLink) {
+define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'TObject', 'TLink'], function($, TEnvironment, TRuntime, TUtils, SynchronousManager, TObject, TLink) {
     var Learn = function() {
         // Do not call parent constructor, as we don't want this object to be erased when clearing the
         // Runtime
+        this.synchronousManager = new SynchronousManager();
+        
     };
 
     Learn.prototype = Object.create(TObject.prototype);
@@ -79,6 +81,13 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink'], fun
         }
     };
 
+    Learn.prototype.wait = function(delay) {
+        this.synchronousManager.begin();
+        var parent = this;
+        window.setTimeout(function() {
+            parent.synchronousManager.end();
+        }, delay);
+    };
 
     TEnvironment.internationalize(Learn);
 

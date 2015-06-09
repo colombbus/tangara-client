@@ -1,3 +1,4 @@
+learn.wait(1000);
 if (learn.hasStatement({expression:{ callee:{object: {name: 'bob'}, property:{name: 'avancer'}}}}) || 
     learn.hasStatement({expression:{ callee:{object: {name: 'bob'}, property:{name: 'reculer'}}}}) ||
     learn.hasStatement({expression:{ callee:{object: {name: 'bob'}, property:{name: 'monter'}}}}) ||

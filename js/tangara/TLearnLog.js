@@ -78,7 +78,6 @@ define(['jquery', 'TEnvironment'], function($, TEnvironment) {
                     domLog.scrollTop = domLog.scrollHeight;
                 }
             }*/
-            console.log("executing command: "+text);
         };
 
         this.addError = function(error) {
