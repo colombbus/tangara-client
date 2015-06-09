@@ -44,9 +44,9 @@ define(['TRuntime', 'TUtils', 'TParser'], function(TRuntime, TUtils, TParser) {
             }
         }
         if (typeof field === 'undefined') {
-            TRuntime.execute(this.commands, parameter, this.logging);
+            TRuntime.executeNow(this.commands, parameter, this.logging);
         } else if (typeof this.commands[field] !== 'undefined') {
-            TRuntime.execute(this.commands[field], parameter, this.logging);
+            TRuntime.executeNow(this.commands[field], parameter, this.logging);
         }
     };
 

@@ -94,6 +94,10 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment', 'TInterpreter'
             }
             return runtimeFrame[objectName].className;
         };
+        
+        this.executeNow = function(commands, parameter, logCommands, lineNumbers) {
+            this.executeStatementsNow(commands);
+        };
 
         this.execute = function(commands, parameter, logCommands, lineNumbers) {
             // TODO: detect function calls

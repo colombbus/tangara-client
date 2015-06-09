@@ -1,6 +1,6 @@
 define(['jquery','TLearnCanvas', 'TLearnEditor', 'TLearnLog', 'TRuntime', 'TEnvironment', 'TParser', 'objects/learn/Learn'], function($, TCanvas, TEditor, TLog, TRuntime, TEnvironment, TParser, Learn) {
     function TLearnFrame() {
-        var MAX_STEP = 5;
+        var MAX_STEP = 3;
         var steps = [];
         
         
@@ -219,8 +219,8 @@ define(['jquery','TLearnCanvas', 'TLearnEditor', 'TLearnLog', 'TRuntime', 'TEnvi
             steps[step] = true;
             if (step < MAX_STEP) {
                 $(buttonNext).show();
-                this.openLesson();
             }
+            this.openLesson();
         };
         
         this.invalidateStep = function(message) {
