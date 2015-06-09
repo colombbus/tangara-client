@@ -136,6 +136,11 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment', 'TInterpreter'
             return true;*/
         };
         
+        
+        this.executeStatementsNow = function(statements) {
+            interpreter.insertStatements(statements);
+        };
+        
         this.executeStatements = function(statements) {
             interpreter.addStatements(statements);
             
@@ -228,7 +233,7 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment', 'TInterpreter'
         
         this.resume = function() {
             interpreter.resume();
-        }
+        };
 
         this.addObject = function (object) {
             tObjects.push(object);

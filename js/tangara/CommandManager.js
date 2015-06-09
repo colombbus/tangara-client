@@ -11,13 +11,17 @@ define(['TRuntime', 'TUtils', 'TParser'], function(TRuntime, TUtils, TParser) {
         }
         if (typeof field === 'undefined') {
             // simple command provided
-            this.commands.push(command);
+            for (var i =0; i<command.length; i++) {
+                this.commands.push(command[i]);
+            }
         } else {
             // command with parameters
             if (typeof this.commands[field] === 'undefined') {
                 this.commands[field] = new Array();
             }
-            this.commands[field].push(command);
+            for (var i =0; i<command.length; i++) {
+                this.commands[field].push(command[i]);
+            }
         }
     };
     

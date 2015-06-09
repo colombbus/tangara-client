@@ -21,7 +21,6 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManager
                 encountered:[],
                 carriedItems:[]
             },props),defaultProps);
-            this.watchCollisions(true);
         },
         step: function(dt) {
             this._super(dt);

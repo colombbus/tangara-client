@@ -20,6 +20,7 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
     
     var statements = [];
     var frame = false;
+    var values = {};
     
     Learn.prototype.setStatements = function(value) {
         statements = value;
@@ -36,22 +37,18 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
     function check(statement, value) {
         for (var key in value) {
             if (typeof statement[key] === "undefined") {
-                console.log("key "+key+"not found in statement");
                 return false;
             }
             if (typeof value[key] === 'object') {
                 if (typeof statement[key] === 'object') {
                     if (!check(statement[key], value[key])) {
-                        console.log("object key "+key+"not equal in statement");
                         return false;
                     }
                 } else {
-                    console.log("key "+key+"not object in statement");
                     return false;
                 }
             } else {
                 if (value[key] !== statement[key]) {
-                    console.log("key "+key+"not equal in statement");
                     return false;
                 }
             }
@@ -87,6 +84,26 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
         window.setTimeout(function() {
             parent.synchronousManager.end();
         }, delay);
+    };
+    
+    Learn.prototype.set = function(name, value) {
+        values[name] = value;
+    };
+    
+    Learn.prototype.get = function(name) {
+        if (typeof values[name] !== 'undefined') {
+            return values[name];
+        } else {
+            return false;
+        }
+    };
+    
+    Learn.prototype.log = function(value) {
+        console.log(value);
+    };
+
+    Learn.prototype.debug = function(value) {
+        console.debug(value);
     };
 
     TEnvironment.internationalize(Learn);

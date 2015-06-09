@@ -1,6 +1,5 @@
 define(['jquery','TLearnCanvas', 'TLearnEditor', 'TLearnLog', 'TRuntime', 'TEnvironment', 'TParser', 'objects/learn/Learn'], function($, TCanvas, TEditor, TLog, TRuntime, TEnvironment, TParser, Learn) {
     function TLearnFrame() {
-        var initialized = false;
         var MAX_STEP = 5;
         var steps = [];
         
@@ -250,6 +249,9 @@ define(['jquery','TLearnCanvas', 'TLearnEditor', 'TLearnLog', 'TRuntime', 'TEnvi
             if ($lesson.is(":visible")) {
                 this.closeLesson();
             }
+            if ($messageDiv.is(":visible")) {
+                this.hideMessage();
+            }
             console.log("loading step #"+number);
             TRuntime.clear();
             editor.clear();
@@ -322,6 +324,7 @@ define(['jquery','TLearnCanvas', 'TLearnEditor', 'TLearnLog', 'TRuntime', 'TEnvi
             
             $("#tlearnframe-step-"+step).removeClass("tlearnframe-step-current");
             step = number;
+            TEnvironment.getProject().setStep(step);
             $("#tlearnframe-step-"+step).addClass("tlearnframe-step-current");
             if (step>1) {
                 $(buttonPrevious).show();

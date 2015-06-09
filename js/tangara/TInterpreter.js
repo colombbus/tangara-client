@@ -94,6 +94,13 @@ define(['TError'], function(TError) {
             }
         };
 
+        this.insertStatements = function(statements) {
+            insertStatements(statements);
+            if (!running) {
+                this.start();
+            }
+        };
+
         insertStatement = function(statement) {
             statement.inserted = true;
             stack[executionLevel].unshift(statement);

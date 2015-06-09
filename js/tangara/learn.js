@@ -27,7 +27,7 @@ require.config({
 // Start the main app logic.
 
 function load() {
-    require(['jquery', 'TEnvironment', 'TRuntime', 'TLearnFrame', 'TProject'],function($, TEnvironment, TRuntime, TLearnFrame, TProject) {
+    require(['jquery', 'TEnvironment', 'TRuntime', 'TLearnFrame', 'TLearnProject'],function($, TEnvironment, TRuntime, TLearnFrame, TProject) {
         window.console.log("*******************");
         window.console.log("* Loading Runtime *");
         window.console.log("*******************");
@@ -45,7 +45,6 @@ function load() {
         window.console.log("* Initiating link *");
         window.console.log("*******************");
         var currentProject = new TProject();
-        currentProject.init();
         TEnvironment.setProject(currentProject);
         $(document).ready( function() {
             frame.displayed();

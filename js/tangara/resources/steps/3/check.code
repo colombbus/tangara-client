@@ -1,0 +1,26 @@
+learn.wait(1000);
+learn.log("VALEUR :");
+learn.debug(learn.get("atteint"));
+if (learn.get("atteint")) {
+    learn.validateStep();
+} else {
+    if (learn.hasStatement({expression:{ callee:{object: {name: 'bob'}, property:{name: 'avancer'}}}}) && 
+    learn.hasStatement({expression:{ callee:{object: {name: 'bob'}, property:{name: 'monter'}}}}) &&
+    learn.hasStatement({expression:{ callee:{object: {name: 'bob'}, property:{name: 'descendre'}}}})) {
+        learn.invalidateStep("Courage ! Tu es sur la bonne voie...");
+    } else if (learn.hasStatement({expression:{ callee:{object: {name: 'bob'}, property:{name: 'avancer'}}}}) || 
+    learn.hasStatement({expression:{ callee:{object: {name: 'bob'}, property:{name: 'monter'}}}}) ||
+    learn.hasStatement({expression:{ callee:{object: {name: 'bob'}, property:{name: 'descendre'}}}})) {
+        learn.invalidateStep("Il y a de l'idée...");
+    }
+}
+
+/*
+bob.avancer()
+bob.descendre()
+bob.avancer()
+bob.avancer()
+bob.monter()
+bob.avancer()
+bob.avancer()
+*/
