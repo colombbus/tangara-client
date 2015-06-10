@@ -325,7 +325,7 @@ body {
     visibility:hidden;
     width:100%;
     top:0;
-    bottom:207px;
+    bottom:/*207px;*/0px;
     z-index:3;
     color:#ffffff;
     font-size:16pt;

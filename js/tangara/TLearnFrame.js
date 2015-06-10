@@ -138,7 +138,7 @@ define(['jquery','TLearnCanvas', 'TLearnEditor', 'TLearnLog', 'TRuntime', 'TEnvi
         Learn.setFrame(this);
         log.setFrame(this);
         var step = 1;
-        var bottomLesson = 207;
+        var bottomLesson = 0;/*207;*/
         
         this.getElement = function() {
             return domFrame;
