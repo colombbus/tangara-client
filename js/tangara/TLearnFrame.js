@@ -1,6 +1,6 @@
 define(['jquery','TLearnCanvas', 'TLearnEditor', 'TLearnLog', 'TRuntime', 'TEnvironment', 'TParser', 'objects/learn/Learn'], function($, TCanvas, TEditor, TLog, TRuntime, TEnvironment, TParser, Learn) {
     function TLearnFrame() {
-        var MAX_STEP = 3;
+        var MAX_STEP = 4;
         var steps = [];
         
         
@@ -18,10 +18,6 @@ define(['jquery','TLearnCanvas', 'TLearnEditor', 'TLearnLog', 'TRuntime', 'TEnvi
         var instructionDiv = document.createElement("div");
         instructionDiv.id = "tlearnframe-instruction";
         
-        var instructionH2 = document.createElement("h2");
-        var instructionTitle = "Instructions";
-        instructionH2.appendChild(document.createTextNode(instructionTitle));
-        instructionDiv.appendChild(instructionH2);
         var instructionContent = document.createElement("div");
         instructionContent.id = "tlearnframe-instructions";
         instructionDiv.appendChild(instructionContent);
@@ -303,7 +299,13 @@ define(['jquery','TLearnCanvas', 'TLearnEditor', 'TLearnLog', 'TRuntime', 'TEnvi
                     }
                 },
                 error: function(data, status, error) {
-                    window.console.log("Error loading check script for step #"+number);
+                    // no check: validate level
+                    checkStatements = false;
+                    $("#tlearnframe-step-"+number).addClass("tlearnframe-step-ok");
+                    steps[number] = true;
+                    if (number < MAX_STEP) {
+                        $(buttonNext).show();
+                    }
                 }
             });
 

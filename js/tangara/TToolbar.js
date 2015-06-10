@@ -59,7 +59,7 @@ define(['jquery','TEnvironment', 'TUI'], function($,TEnvironment, TUI) {
         var buttonExecute = document.createElement("button");
         buttonExecute.className = "ttoolbar-button ttoolbar-button-execute";
         var imageExecute = document.createElement("img");
-        imageExecute.src = TEnvironment.getBaseUrl() + "/images/play.png";
+        imageExecute.src = TEnvironment.getBaseUrl() + "/images/play_orange.png";
         imageExecute.className = "ttoolbar-button-image";
         buttonExecute.appendChild(imageExecute);
         buttonExecute.appendChild(document.createTextNode(TEnvironment.getMessage('button-execute')));
