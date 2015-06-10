@@ -57,6 +57,8 @@ define(['jquery','TEnvironment', 'TObject', 'TUtils', 'CommandManager'], functio
             if (this.loop) {
                 var self = this;
                 this.timeout = window.setTimeout(function() { self.executeActions(); }, this.delay);
+            } else {
+                this._stop();
             }
         }
     };
