@@ -3,7 +3,7 @@ define(['jquery','TEnvironment', 'TObject', 'TUtils', 'CommandManager'], functio
         TObject.call(this);
         this.commands = new CommandManager();
         this.delay = 1000;
-        this.initialDelay = 0;
+        this.initialDelay = false;
         this.running = false;
         this.wasRunning = false;
         this.timeout = null;
@@ -27,6 +27,9 @@ define(['jquery','TEnvironment', 'TObject', 'TUtils', 'CommandManager'], functio
     Clock.prototype._setDelay = function(delay) {
         delay = TUtils.getInteger(delay);
         this.delay = delay;
+        if (this.initialDelay === false) {
+            this._setInitialDelay(delay);
+        }
     };
 
     Clock.prototype._setInitialDelay = function(delay) {
