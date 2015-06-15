@@ -30,10 +30,16 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
             }
         },
         setBackground: function(asset) {
+            var oldW = this.p.w;
+            var oldH = this.p.h;
             this.p.asset = asset;
             // resize only for background
             this.size(true);
             qInstance._generatePoints(this,true);
+            this.p.x += (this.p.w - oldW)/2;
+            this.p.y += (this.p.h - oldH)/2;
+            this.p.destinationX = this.p.x;
+            this.p.destinationY = this.p.y;
             if (!this.p.initialized && this.p.assetBlock) {
                 this.initialized();
             }
@@ -86,15 +92,13 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
                 var blockName = name+"/"+blockImage;
                 parent.blockName = blockName;
                 parent.addImage(backgroundName, "elements", false, function() {
-                    // background may have change during loading
+                    // background may have changed during loading
                     if (parent.backgroundName === backgroundName) {
-                        var currentLocation = parent.qObject.getLocation();
                         parent.qObject.setBackground(backgroundName);
-                        parent.qObject.setLocation(currentLocation.x, currentLocation.y);
                     }
                 });
                 parent.addImage(blockName, "elements", false, function() {
-                    // block may have change during loading
+                    // block may have changed during loading
                     if (parent.blockName === blockName) {
                         parent.computeTransparencyMask(blockName);
                         parent.qObject.setBlock(blockName);
@@ -125,9 +129,7 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
         qObject.removeBackground();
         this.addImage(name, "elements", true, function() {
             if (name === sceneObject.backgroundName) {
-                var currentLocation = qObject.getLocation();
                 qObject.setBackground(name);
-                qObject.setLocation(currentLocation.x, currentLocation.y);
             }
         });
     };
