@@ -334,10 +334,14 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment', 'TInterpreter'
         
         this.preloadResources = function(project, callback, options) {
             var resources = project.getResourcesNames();
-            for (var i=0;i<resources.length;i++) {
-                quintusInstance.preload(project.getResourceLocation(resources[i]));
+            if (resources.length>0) {
+                for (var i=0;i<resources.length;i++) {
+                    quintusInstance.preload(project.getResourceLocation(resources[i]));
+                }
+                quintusInstance.preload(callback, options);
+            } else {
+                callback.apply(this);
             }
-            quintusInstance.preload(callback, options);
         };
 
         this.tweakQuintus = function () {
