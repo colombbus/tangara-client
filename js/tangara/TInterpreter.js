@@ -145,9 +145,7 @@ define(['TError'], function(TError) {
                 }
                 running = false;
             } catch (err) {
-                console.log("on passe bien par ici");
                 clear();
-                //running = false;
                 throw err;
             }
         };
