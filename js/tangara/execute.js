@@ -13,16 +13,18 @@ require.config({
 });
 
 function load() {
-    require(['jquery', 'TEnvironment', 'TRuntime', 'TCanvas', 'TProject', 'TLink'],function($, TEnvironment, TRuntime, TCanvas, TProject, TLink) {
+    require(['jquery', 'TEnvironment', 'TRuntime', 'TCanvas', 'TProject', 'TLink', 'TExecutionLog'],function($, TEnvironment, TRuntime, TCanvas, TProject, TLink, TExecutionLog) {
         window.console.log("*******************");
         window.console.log("* Loading Runtime *");
         window.console.log("*******************");
         TRuntime.load(TEnvironment.getLanguage(), TEnvironment.getObjectListUrl());
 
-        canvas = new TCanvas();
-        domCanvas = canvas.getElement();
+        var canvas = new TCanvas();
+        var domCanvas = canvas.getElement();
         $("body").append(domCanvas);
         TRuntime.setCanvas(canvas);
+        var log = new TExecutionLog();
+        TRuntime.setLog(log);
         $(document).ready( function() {
             canvas.displayed();
             // trigger resize in order for canvas to update its size (and remove the 5px bottom margin)
