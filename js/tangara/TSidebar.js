@@ -1,4 +1,4 @@
-define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'jquery', 'jquery-ui/widget', 'iframe-transport', 'fileupload'], function(TUI, TEnvironment, TProgram, TError, TViewer, $) {
+define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'TTextEditor', 'jquery', 'jquery-ui/widget', 'iframe-transport', 'fileupload'], function(TUI, TEnvironment, TProgram, TError, TViewer, TTextEditor, $) {
 
     function TSidebar() {
         var domSidebar = document.createElement("div");
@@ -85,7 +85,7 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'jquery', 'jquer
         var empty = true;
         var uploadingDivs = {};
         
-        var viewer = new TViewer;
+        var viewer = new TViewer();
         
         viewer.setNextHandler(function() {
             var current = $domSidebarFiles.find('.tsidebar-current');
@@ -109,7 +109,9 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'jquery', 'jquer
             $domSidebarResources.stop().animate({scrollTop: $domSidebarResources.scrollTop()+prevImage.position().top}, 1000);
             var name = prevImage.find('.tsidebar-file-name').text();
             return name;
-        });        
+        });
+        
+        var textEditor = new TTextEditor();
         
         this.getElement = function() {
             return domSidebar;
@@ -361,6 +363,10 @@ define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'jquery', 'jquer
                     // select and open in viewer
                     var clickedName = parent.find('.tsidebar-file-name div').text();
                     viewer.show(clickedName);
+                } else if (parent.hasClass('tsidebar-type-text')) {
+                    // select and open in viewer
+                    var clickedName = parent.find('.tsidebar-file-name div').text();
+                    textEditor.loadText(clickedName);
                 }
             };
             // rename

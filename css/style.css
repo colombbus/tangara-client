@@ -412,6 +412,18 @@ textarea.tsidebar-rename {
     background-image:url('../images/video_white.png');
 }
 
+.tsidebar-type-text  .tsidebar-file-icon {
+    background-image:url('../images/text.png');    
+}
+
+.tsidebar-type-text  .tsidebar-file-icon:hover {
+    background-image:url('../images/text_red.png');    
+}
+
+.tsidebar-type-text.tsidebar-current  .tsidebar-file-icon {
+    background-image:url('../images/text_white.png');
+}
+
 .tsidebar-file.tsidebar-current {
     color:#FFFFFF;
     background-color:#E47637;
@@ -967,6 +979,15 @@ textarea.tsidebar-rename {
 .tviewer-creation-button:hover {
     color:#990000;
     background-color:#DEDEDE;
+}
+
+.tviewer-text-editor {
+    position:absolute;
+    top:30px;
+    bottom:30px;
+    left:30px;
+    right:30px;
+    background-color:#FFFFFF;
 }
 
 .ttoolbar-creation-button-image {
