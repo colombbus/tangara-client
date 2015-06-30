@@ -97,6 +97,7 @@
         "viewer-creation-height":"Hauteur (en pixels)",
         "viewer-creation-cancel":"Annuler",
         "viewer-creation-create":"Créer",
+        "viewer-creation-save":"Enregistrer",
         "viewer-creation-name-empty":"Nom vide",
         "viewer-creation-width-empty":"Largeur vide",
         "viewer-creation-width-nan":"La largeur doit être un nombre entier",
