@@ -1,4 +1,4 @@
-define(['TError'], function(TError) {
+define(['TError', 'utils/TUtils'], function(TError, TUtils) {
     function TInterpreter() {
         var runtimeFrame;
         var definedFunctions = {};
@@ -650,7 +650,7 @@ define(['TError'], function(TError) {
         evalLiteral = function(expression) {
             var value;
             if (typeof expression.value === "string") {
-                value = "\""+expression.value+"\"";                
+                value = "\""+TUtils.addslashes(expression.value)+"\"";
             } else {
                 value = expression.value;
             }
