@@ -1,4 +1,4 @@
-define(['jquery','ui/TLearnCanvas', 'ui/TLearnEditor', 'ui/TLearnLog', 'TRuntime', 'TEnvironment', 'TParser', 'objects/learn/Learn'], function($, TCanvas, TEditor, TLog, TRuntime, TEnvironment, TParser, Learn) {
+define(['jquery','ui/TLearnCanvas', 'ui/TLearnEditor', 'ui/TLearnLog', 'TRuntime', 'TEnvironment', 'TParser', 'objects/teacher/Teacher'], function($, TCanvas, TEditor, TLog, TRuntime, TEnvironment, TParser, Teacher) {
     function TLearnFrame() {
         var MAX_STEP = 4;
         var steps = [];
@@ -135,7 +135,7 @@ define(['jquery','ui/TLearnCanvas', 'ui/TLearnEditor', 'ui/TLearnLog', 'TRuntime
         // Plug Runtime with Canvas and Log
         TRuntime.setCanvas(canvas);
         TRuntime.setLog(log);
-        Learn.setFrame(this);
+        Teacher.setFrame(this);
         log.setFrame(this);
         var step = 1;
         var bottomLesson = 0;/*207;*/
@@ -189,7 +189,7 @@ define(['jquery','ui/TLearnCanvas', 'ui/TLearnEditor', 'ui/TLearnLog', 'TRuntime
                 var statements = editor.getStatements();
                 TRuntime.executeStatements(statements);
                 //TODO: only if no error
-                Learn.setStatements(editor.getStatements());
+                Teacher.setStatements(editor.getStatements());
                 if (checkStatements) {
                     TRuntime.executeStatements(checkStatements);
                 }

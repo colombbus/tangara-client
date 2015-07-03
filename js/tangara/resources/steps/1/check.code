@@ -1,7 +1,7 @@
-//learn.dumpStatements();
-learn.wait(1000);
-if (learn.hasStatement({expression: { left:{name: 'bob'}, operator:'=', right:{type:'NewExpression', callee:{name: 'Robot'}}}})) { 
-    learn.validateStep();
-} else if (learn.hasStatement({expression: { operator:'=', right:{type:'NewExpression', callee:{name: 'Robot'}}}})) { 
-    learn.invalidateStep("Pas mal, mais ce serait mieux s'il s'appelait bob !");
+//teacher.dumpStatements();
+teacher.wait(1000);
+if (teacher.hasStatement({expression: { left:{name: 'bob'}, operator:'=', right:{type:'NewExpression', callee:{name: 'Robot'}}}})) { 
+    teacher.validateStep();
+} else if (teacher.hasStatement({expression: { operator:'=', right:{type:'NewExpression', callee:{name: 'Robot'}}}})) { 
+    teacher.invalidateStep("Pas mal, mais ce serait mieux s'il s'appelait bob !");
 }

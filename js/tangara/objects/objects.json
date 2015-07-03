@@ -271,12 +271,12 @@
             "en": "Robot"
         }
     },
-    "Learn": {
-        "path": "learn",
+    "Teacher": {
+        "path": "teacher",
         "translations": {
-            "fr": "learn",
-            "es": "learn",
-            "en": "learn"
+            "fr": "teacher",
+            "es": "teacher",
+            "en": "teacher"
         }
     }
 }

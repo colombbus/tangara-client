@@ -1,14 +1,14 @@
 define(['jquery', 'TEnvironment', 'TRuntime', 'utils/TUtils', 'utils/SynchronousManager', 'TObject', 'TLink'], function($, TEnvironment, TRuntime, TUtils, SynchronousManager, TObject, TLink) {
-    var Learn = function() {
+    var Teacher = function() {
         // Do not call parent constructor, as we don't want this object to be erased when clearing the
         // Runtime
         this.synchronousManager = new SynchronousManager();
         
     };
 
-    Learn.prototype = Object.create(TObject.prototype);
-    Learn.prototype.constructor = Learn;
-    Learn.prototype.className = "Learn";
+    Teacher.prototype = Object.create(TObject.prototype);
+    Teacher.prototype.constructor = Teacher;
+    Teacher.prototype.className = "Teacher";
 
     /*Tangara.prototype._write = function(value) {
         value = TUtils.getString(value);
@@ -22,15 +22,15 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'utils/TUtils', 'utils/Synchronous
     var frame = false;
     var values = {};
     
-    Learn.prototype.setStatements = function(value) {
+    Teacher.prototype.setStatements = function(value) {
         statements = value;
     };
 
-    Learn.prototype.dumpStatements = function(value) {
+    Teacher.prototype.dumpStatements = function(value) {
         console.debug(statements);
     };
     
-    Learn.prototype.setFrame = function(value) {
+    Teacher.prototype.setFrame = function(value) {
         frame = value;
     };
     
@@ -56,7 +56,7 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'utils/TUtils', 'utils/Synchronous
         return true;
     }
 
-    Learn.prototype.hasStatement = function(value) {
+    Teacher.prototype.hasStatement = function(value) {
         for (var i=0; i<statements.length; i++) {
             var statement = statements[i];
             if (check(statement, value)) {
@@ -66,19 +66,19 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'utils/TUtils', 'utils/Synchronous
         return false;
     };
     
-    Learn.prototype.validateStep = function() {
+    Teacher.prototype.validateStep = function() {
         if (frame) {
             frame.validateStep();
         }
     };
 
-    Learn.prototype.invalidateStep = function(message) {
+    Teacher.prototype.invalidateStep = function(message) {
         if (frame) {
             frame.invalidateStep(message);
         }
     };
 
-    Learn.prototype.wait = function(delay) {
+    Teacher.prototype.wait = function(delay) {
         this.synchronousManager.begin();
         var parent = this;
         window.setTimeout(function() {
@@ -86,11 +86,11 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'utils/TUtils', 'utils/Synchronous
         }, delay);
     };
     
-    Learn.prototype.set = function(name, value) {
+    Teacher.prototype.set = function(name, value) {
         values[name] = value;
     };
     
-    Learn.prototype.get = function(name) {
+    Teacher.prototype.get = function(name) {
         if (typeof values[name] !== 'undefined') {
             return values[name];
         } else {
@@ -98,19 +98,19 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'utils/TUtils', 'utils/Synchronous
         }
     };
     
-    Learn.prototype.log = function(value) {
+    Teacher.prototype.log = function(value) {
         console.log(value);
     };
 
-    Learn.prototype.debug = function(value) {
+    Teacher.prototype.debug = function(value) {
         console.debug(value);
     };
 
-    TEnvironment.internationalize(Learn);
+    TEnvironment.internationalize(Teacher);
 
-    var learnInstance = new Learn();
+    var teacherInstance = new Teacher();
 
-    return learnInstance;
+    return teacherInstance;
 });
 
 
