@@ -8,6 +8,10 @@ define(['TRuntime', 'utils/TUtils', 'TParser'], function(TRuntime, TUtils, TPars
         if (TUtils.checkString(command)) {
             // command is a string: we parse it
             command = TParser.parse(command);
+        } else if (TUtils.checkFunction(command)) {
+            var functionName = TUtils.getFunctionName(command);
+            command = [{type:"ExpressionStatement", expression:{type:"CallExpression", callee:{type:"Identifier", name:functionName}, arguments:[]}}];
+            // TODO: handle parameters
         }
         if (typeof field === 'undefined') {
             // simple command provided
@@ -34,6 +38,7 @@ define(['TRuntime', 'utils/TUtils', 'TParser'], function(TRuntime, TUtils, TPars
     };
     
     CommandManager.prototype.executeCommands = function(parameters) {
+        // TODO: handle parameters
         var i, parameter, field;
         if (typeof parameters !== 'undefined') {
             if (typeof parameters['parameter'] !== 'undefined') {
