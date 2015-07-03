@@ -13,7 +13,7 @@ require.config({
 });
 
 function load() {
-    require(['jquery', 'TEnvironment', 'TRuntime', 'TCanvas', 'TProject', 'TLink', 'TExecutionLog'],function($, TEnvironment, TRuntime, TCanvas, TProject, TLink, TExecutionLog) {
+    require(['jquery', 'TEnvironment', 'TRuntime', 'ui/TCanvas', 'TProject', 'TLink', 'ui/TExecutionLog'],function($, TEnvironment, TRuntime, TCanvas, TProject, TLink, TExecutionLog) {
         window.console.log("*******************");
         window.console.log("* Loading Runtime *");
         window.console.log("*******************");

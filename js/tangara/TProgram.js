@@ -1,4 +1,4 @@
-define(['TParser', 'TLink', 'TEnvironment', 'TUtils'], function(TParser, TLink, TEnvironment, TUtils) {
+define(['TParser', 'TLink', 'TEnvironment', 'utils/TUtils'], function(TParser, TLink, TEnvironment, TUtils) {
 
     function TProgram(value) {
         var statements = new Array();

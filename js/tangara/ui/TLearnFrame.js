@@ -1,4 +1,4 @@
-define(['jquery','TLearnCanvas', 'TLearnEditor', 'TLearnLog', 'TRuntime', 'TEnvironment', 'TParser', 'objects/learn/Learn'], function($, TCanvas, TEditor, TLog, TRuntime, TEnvironment, TParser, Learn) {
+define(['jquery','ui/TLearnCanvas', 'ui/TLearnEditor', 'ui/TLearnLog', 'TRuntime', 'TEnvironment', 'TParser', 'objects/learn/Learn'], function($, TCanvas, TEditor, TLog, TRuntime, TEnvironment, TParser, Learn) {
     function TLearnFrame() {
         var MAX_STEP = 4;
         var steps = [];

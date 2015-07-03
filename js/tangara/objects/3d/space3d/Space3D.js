@@ -1,4 +1,4 @@
-define(['jquery', 'babylon', 'TEnvironment', 'TUtils', 'TObject', 'CommandManager'], function($, babylon, TEnvironment, TUtils, TObject, CommandManager) {
+define(['jquery', 'babylon', 'TEnvironment', 'utils/TUtils', 'TObject', 'utils/CommandManager'], function($, babylon, TEnvironment, TUtils, TObject, CommandManager) {
     var Space3D = function() {
         this.scene = new BABYLON.Scene(engine);
         this.camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -10), this.scene);

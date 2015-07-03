@@ -1,4 +1,4 @@
-define(['jquery', 'TUI', 'TDesignLog', 'TEnvironment'], function($, TUI, TDesignLog, TEnvironment) {
+define(['jquery', 'ui/TUI', 'ui/TDesignLog', 'TEnvironment'], function($, TUI, TDesignLog, TEnvironment) {
     function TLog() {
         var domOuterLog = document.createElement("div");
         domOuterLog.id = "tlog-outer";

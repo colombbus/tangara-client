@@ -1,4 +1,4 @@
-define(['TEnvironment', 'TObject', 'TUtils', 'TRuntime'], function(TEnvironment, TObject, TUtils) {
+define(['TEnvironment', 'TObject', 'utils/TUtils', 'TRuntime'], function(TEnvironment, TObject, TUtils) {
     var Random = function() {
         TObject.call(this);
     };

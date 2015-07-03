@@ -1,4 +1,4 @@
-define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink'], function ($, TUI, TEnvironment, TRuntime, TUtils, TObject, TLink) {
+define(['jquery', 'ui/TUI', 'TEnvironment', 'TRuntime', 'utils/TUtils', 'TObject', 'TLink'], function ($, TUI, TEnvironment, TRuntime, TUtils, TObject, TLink) {
     var Tangara = function () {
         // Do not call parent constructor, as we don't want this object to be erased when clearing the
         // Runtime

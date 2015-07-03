@@ -1,4 +1,4 @@
-define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'objects/block/Block', 'TUtils'], function($, TEnvironment, TGraphicalObject, Sprite, Block, TUtils) {
+define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'objects/block/Block', 'utils/TUtils'], function($, TEnvironment, TGraphicalObject, Sprite, Block, TUtils) {
     var Scene = function(name) {
         Block.call(this);
         if (typeof(name)==='undefined') {

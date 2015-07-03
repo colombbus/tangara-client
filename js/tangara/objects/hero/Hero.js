@@ -1,4 +1,4 @@
-define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'objects/walker/Walker', 'TUtils'], function($, TEnvironment, TGraphicalObject, Sprite, Walker, TUtils) {
+define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'objects/walker/Walker', 'utils/TUtils'], function($, TEnvironment, TGraphicalObject, Sprite, Walker, TUtils) {
     var Hero = function(name) {
         Walker.call(this);
         if (typeof(name)==='undefined') {

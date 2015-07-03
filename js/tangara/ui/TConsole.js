@@ -1,4 +1,4 @@
-define(['TUI', 'TParser', 'TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jquery', 'ace/ace', 'ace/autocomplete', 'ace/range'], function (TUI, TParser, TLog, TEnvironment, TUtils, TRuntime, $, ace, ace_autocomplete, ace_range) {
+define(['ui/TUI', 'TParser', 'ui/TLog', 'TEnvironment', 'utils/TUtils', 'TRuntime', 'jquery', 'ace/ace', 'ace/autocomplete', 'ace/range'], function (TUI, TParser, TLog, TEnvironment, TUtils, TRuntime, $, ace, ace_autocomplete, ace_range) {
 
     function TConsole() {
         var domConsole = document.createElement("div");

@@ -1,4 +1,4 @@
-define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TUtils, TEnvironment, TError, TParser) {
+define(['jquery', 'utils/TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TUtils, TEnvironment, TError, TParser) {
     var TLink = function() {
         var projectId = false;
         

@@ -1,4 +1,4 @@
-define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'objects/text/Text'], function ($, TEnvironment, TUtils, TGraphicalObject, Text) {
+define(['jquery', 'TEnvironment', 'utils/TUtils', 'TGraphicalObject', 'objects/text/Text'], function ($, TEnvironment, TUtils, TGraphicalObject, Text) {
     var Score = function (string) {
         if (typeof string === 'undefined') {
             string = "Score : ";

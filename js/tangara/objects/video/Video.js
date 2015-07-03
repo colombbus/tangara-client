@@ -1,4 +1,4 @@
-define(['jquery', 'TObject', 'TUtils', 'TRuntime', 'TEnvironment', 'TCanvas'], function ($, TObject, TUtils, TRuntime, TEnvironment, TCanvas) {
+define(['jquery', 'TObject', 'utils/TUtils', 'TRuntime', 'TEnvironment', 'ui/TCanvas'], function ($, TObject, TUtils, TRuntime, TEnvironment, TCanvas) {
     var Video = function (name) {
         TObject.call(this, name);
 

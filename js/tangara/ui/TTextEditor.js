@@ -1,4 +1,4 @@
-define(['TEnvironment', 'TUI', 'jquery'], function(TEnvironment, TUI, $) {
+define(['TEnvironment', 'ui/TUI', 'jquery'], function(TEnvironment, TUI, $) {
     function TTextEditor() {
         var domMain = document.createElement("div");
         domMain.className= "tviewer-main";

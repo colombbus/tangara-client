@@ -61,7 +61,7 @@ require.config({
 // Start the main app logic.
 
 function load() {
-    require(['jquery', 'TEnvironment', 'TRuntime', 'TFrame', 'TProject'],function($, TEnvironment, TRuntime, TFrame, TProject) {
+    require(['jquery', 'TEnvironment', 'TRuntime', 'ui/TFrame', 'TProject'],function($, TEnvironment, TRuntime, TFrame, TProject) {
         window.console.log("*******************");
         window.console.log("* Loading Runtime *");
         window.console.log("*******************");

@@ -1,4 +1,4 @@
-define(['jquery','TEnvironment', 'TUI'], function($,TEnvironment, TUI) {
+define(['jquery','TEnvironment', 'ui/TUI'], function($,TEnvironment, TUI) {
     function TToolbar() {
         var domToolbar = document.createElement("div");
         domToolbar.id = "ttoolbar";

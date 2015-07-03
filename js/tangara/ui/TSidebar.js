@@ -1,4 +1,4 @@
-define(['TUI', 'TEnvironment', 'TProgram', 'TError', 'TViewer', 'TTextEditor', 'jquery', 'jquery-ui/widget', 'iframe-transport', 'fileupload'], function(TUI, TEnvironment, TProgram, TError, TViewer, TTextEditor, $) {
+define(['ui/TUI', 'TEnvironment', 'TProgram', 'TError', 'ui/TViewer', 'ui/TTextEditor', 'jquery', 'jquery-ui/widget', 'iframe-transport', 'fileupload'], function(TUI, TEnvironment, TProgram, TError, TViewer, TTextEditor, $) {
 
     function TSidebar() {
         var domSidebar = document.createElement("div");

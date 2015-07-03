@@ -1,4 +1,4 @@
-define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManager', 'objects/hero/Hero'], function($, TEnvironment, TUtils, CommandManager, SynchronousManager, Hero) {
+define(['jquery','TEnvironment', 'utils/TUtils', 'utils/CommandManager', 'utils/SynchronousManager', 'objects/hero/Hero'], function($, TEnvironment, TUtils, CommandManager, SynchronousManager, Hero) {
     var Robot = function() {
         Hero.call(this, "robot");
         this.step = 50;

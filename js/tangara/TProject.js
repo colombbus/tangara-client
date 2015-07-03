@@ -1,4 +1,4 @@
-define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError'], function(TLink, TProgram, TEnvironment, TUtils, TError) {
+define(['TLink', 'TProgram', 'TEnvironment', 'utils/TUtils', 'TError'], function(TLink, TProgram, TEnvironment, TUtils, TError) {
     function TProject() {
         
         var name;

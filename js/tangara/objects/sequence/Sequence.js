@@ -1,4 +1,4 @@
-define(['jquery','TEnvironment', 'TObject', 'TUtils', 'TRuntime'], function($, TEnvironment, TObject, TUtils, TRuntime) {
+define(['jquery','TEnvironment', 'TObject', 'utils/TUtils', 'TRuntime'], function($, TEnvironment, TObject, TUtils, TRuntime) {
     var Sequence = function() {
         TObject.call(this);
         this.actions = new Array();

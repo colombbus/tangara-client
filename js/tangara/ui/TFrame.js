@@ -1,6 +1,6 @@
 
 
-define(['jquery', 'split-pane','TCanvas', 'TEditor', 'TSidebar', 'TUI', 'TConsole', 'TToolbar','TLog', 'TRuntime', 'TEnvironment'], function($, SplitPane, TCanvas, TEditor, TSidebar, TUI, TConsole, TToolbar, TLog, TRuntime, TEnvironment) {
+define(['jquery', 'split-pane','ui/TCanvas', 'ui/TEditor', 'ui/TSidebar', 'ui/TUI', 'ui/TConsole', 'ui/TToolbar','ui/TLog', 'TRuntime', 'TEnvironment'], function($, SplitPane, TCanvas, TEditor, TSidebar, TUI, TConsole, TToolbar, TLog, TRuntime, TEnvironment) {
     function TFrame() {
         var initialized = false;
         var domFrame = document.createElement("div");

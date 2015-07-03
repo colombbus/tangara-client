@@ -1,4 +1,4 @@
-define(['jquery','TEnvironment', 'TObject', 'TUtils', 'CommandManager'], function($, TEnvironment, TObject, TUtils, CommandManager) {
+define(['jquery','TEnvironment', 'TObject', 'utils/TUtils', 'utils/CommandManager'], function($, TEnvironment, TObject, TUtils, CommandManager) {
     var Clock = function() {
         TObject.call(this);
         this.commands = new CommandManager();

@@ -1,4 +1,4 @@
-define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'], function($, TEnvironment, TUtils, CommandManager, TGraphicalObject) {
+define(['jquery', 'TEnvironment', 'utils/TUtils', 'utils/CommandManager', 'TGraphicalObject'], function($, TEnvironment, TUtils, CommandManager, TGraphicalObject) {
     var Text = function(label) {
         TGraphicalObject.call(this);
         if (TUtils.checkString(label)) {
