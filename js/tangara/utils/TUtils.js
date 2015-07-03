@@ -543,6 +543,13 @@ define(['TEnvironment'], function (TEnvironment) {
                 replace(/'/g, '\\\'').
                 replace(/"/g, '\\"');
          };
+         
+         this.getFunctionName = function(object) {
+            var string = object.toString();
+            string = string.substr('function '.length);
+            string = string.substr(0, string.indexOf('('));
+            return string;
+         };
 
     };
     var utilInstance = new TUtils();
