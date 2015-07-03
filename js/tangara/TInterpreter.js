@@ -420,6 +420,21 @@ define(['TError', 'utils/TUtils'], function(TError, TUtils) {
         evalFunctionDeclaration = function(declaration) {
             var identifier = evalExpression(declaration.id);
             definedFunctions[identifier] = {'body':declaration.body, 'params':declaration.params};
+            // still declare function, so that it can be recognized later on
+            // e.g. if used in an identifier expression
+            var params = declaration.params;
+            var paramsString;
+            if (params.length>0) {
+                paramsString = "("+params[0].name;
+                for (var i=1; i<params.length;i++) {
+                    paramsString += ","+params[i].name
+                }
+                paramsString += ")";
+            } else {
+                paramsString = '()';
+            }
+            console.log("function "+identifier+paramsString+declaration.body.raw);
+            defaultEval("function "+identifier+paramsString+declaration.body.raw);
             return true;
         };
         
