@@ -1,4 +1,4 @@
-define(['jquery','TEnvironment', 'TObject', 'utils/TUtils', 'TRuntime'], function($, TEnvironment, TObject, TUtils, TRuntime) {
+define(['jquery','TEnvironment', 'TObject', 'utils/TUtils', 'TRuntime', 'TParser'], function($, TEnvironment, TObject, TUtils, TRuntime, TParser) {
     var Sequence = function() {
         TObject.call(this);
         this.actions = new Array();
@@ -21,6 +21,13 @@ define(['jquery','TEnvironment', 'TObject', 'utils/TUtils', 'TRuntime'], functio
     
     Sequence.prototype._addCommand = function(command) {
         command = TUtils.getCommand(command);
+        if (TUtils.checkString(command)) {
+            // command is a string: we parse it
+            command = TParser.parse(command);
+        } else if (TUtils.checkFunction(command)) {
+            var functionName = TUtils.getFunctionName(command);
+            command = [{type:"ExpressionStatement", expression:{type:"CallExpression", callee:{type:"Identifier", name:functionName}, arguments:[]}}];
+        }
         this.actions.push({type:Sequence.TYPE_COMMAND,value:command});
     };
 
@@ -45,7 +52,7 @@ define(['jquery','TEnvironment', 'TObject', 'utils/TUtils', 'TRuntime'], functio
             var action = this.actions[this.index];
             if (action.type === Sequence.TYPE_COMMAND) {
                 // execute command
-                TRuntime.execute(action.value, null, this.logCommands);
+                TRuntime.executeNow(action.value, null, this.logCommands);
                 this.nextAction();
             } else if (action.type === Sequence.TYPE_DELAY) {
                 var self = this;
