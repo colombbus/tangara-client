@@ -10,7 +10,7 @@ define(['TRuntime', 'utils/TUtils', 'TParser'], function(TRuntime, TUtils, TPars
             command = TParser.parse(command);
         } else if (TUtils.checkFunction(command)) {
             var functionName = TUtils.getFunctionName(command);
-            command = [{type:"ExpressionStatement", expression:{type:"CallExpression", callee:{type:"Identifier", name:functionName}, arguments:[]}}];
+            command = [{type:"ExpressionStatement", expression:{type:"CallExpression", callee:{type:"Identifier", name:functionName}, arguments:[]}, raw:functionName}];
             // TODO: handle parameters
         }
         if (typeof field === 'undefined') {
@@ -19,7 +19,7 @@ define(['TRuntime', 'utils/TUtils', 'TParser'], function(TRuntime, TUtils, TPars
                 this.commands.push(command[i]);
             }
         } else {
-            // command with parameters
+            // command with associated field
             if (typeof this.commands[field] === 'undefined') {
                 this.commands[field] = new Array();
             }
