@@ -433,7 +433,6 @@ define(['TError', 'utils/TUtils'], function(TError, TUtils) {
             } else {
                 paramsString = '()';
             }
-            console.log("function "+identifier+paramsString+declaration.body.raw);
             defaultEval("function "+identifier+paramsString+declaration.body.raw);
             return true;
         };
@@ -532,7 +531,7 @@ define(['TError', 'utils/TUtils'], function(TError, TUtils) {
                 } else {
                     if (!(err instanceof TError)) {
                         var error = new TError(err);
-                        error.setLines([statement.start,statement.end]);
+                        error.setLines([statement.loc.start.line,statement.loc.end.line]);
                         error.detectError();
                         throw error;
                     } else {
@@ -741,7 +740,7 @@ define(['TError', 'utils/TUtils'], function(TError, TUtils) {
             } catch (err) {
                 if (!(err instanceof TError)) {
                     var error = new TError(err);
-                    error.setLines([expression.start,expression.end]);
+                    error.setLines([expression.loc.start.line,expression.loc.end.line]);
                     error.detectError();
                     throw error;
                 } else {
