@@ -101,15 +101,16 @@ define(['TError', 'utils/TUtils'], function(TError, TUtils) {
             }
         };
 
-        insertStatement = function(statement) {
+        insertStatement = function(statement, log) {
             statement.inserted = true;
+            statement.log = log;
             stack[executionLevel].unshift(statement);
             stackPointer[executionLevel]++;
         };
 
-        insertStatements = function(statements) {
+        insertStatements = function(statements, log) {
             for (var i=statements.length-1; i>=0; i--) {
-                insertStatement(statements[i]);
+                insertStatement(statements[i], log);
             }
         };
         
@@ -131,7 +132,7 @@ define(['TError', 'utils/TUtils'], function(TError, TUtils) {
                         // We haven't changed execution level
                         if (consume === true) {
                             stack[executionLevel].splice(stackPointer[executionLevel], 1);
-                            if (typeof statement.inserted === 'undefined') {
+                            if (typeof statement.inserted === 'undefined' || statement.log) {
                                 logCommand(statement.raw);
                             }
                             if (typeof statement.controls !== 'undefined') {
