@@ -95,93 +95,49 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment', 'TInterpreter'
             return runtimeFrame[objectName].className;
         };
         
-        this.executeNow = function(commands, parameter, logCommands, lineNumbers) {
-            this.executeStatementsNow(commands);
-        };
 
-        this.execute = function(commands, parameter, logCommands, lineNumbers) {
-            // TODO: detect function calls
-            this.executeStatements(commands);
-            
-            
-            
-            
-            
-            
-            // TO BE CONTINUED
-            /*if (typeof logCommands === 'undefined') {
-                logCommands = true;
-            }
-            try {
-                if (typeof commands === 'string' || commands instanceof String) {
-                    runtimeFrame.eval(commands);
-                } else if (Array.isArray(commands)) {
-                    for (var i=0; i<commands.length; i++) {
-                        runtimeFrame.eval(commands[i]);
-                    }
-                } else if (typeof commands === 'function' || commands instanceof Function) {
-                    // TOTO: see if we need to check if function is actually declared in runtimeFrame
-                    commands.call(runtimeFrame, parameter);
-                }
-                if (logCommands) {
-                    this.logCommand(commands);
-                }
-            } catch (e) {
-                var error = new TError(e);
-                error.setCode(commands);
-                error.setProgramName(currentProgramName);
-                if (typeof lineNumbers !== null) {
-                    error.setLines(lineNumbers);
-                }
+        // COMMANDS EXECUTION
+
+        this.handleError = function(err, value, lines) {
+            var error;
+            if (!(err instanceof TError)) {
+                error = new TError(err);
                 error.detectError();
-                this.logError(error);
-                return false;
+            } else {
+                error = err;
+            }            
+            error.setProgramName(currentProgramName);
+            if (currentProgramName === null) {
+                error.setCode(value);
             }
-            return true;*/
-        };
-        
-        
-        this.executeStatementsNow = function(statements) {
-            interpreter.insertStatements(statements);
+            if (!lines) {
+                error.setLines([]);
+            }
+            this.logError(error);
         };
         
         this.executeStatements = function(statements) {
             interpreter.addStatements(statements);
-            
-            /*var i = -1;
-            var runtime = this;
-            function evalNextStatement() {
-                i++;
-                if (i<statements.length) {
-                    interpreter.evalStatement(statements[i], function() {
-                        runtime.logCommand(statements[i].raw);
-                        evalNextStatement.call(runtime);
-                    });
-                }
+        };
+        
+        this.executeStatementsNow = function(statements, log) {
+            interpreter.insertStatements(statements, log);
+        };
+        
+        this.executeNow = function(commands, parameter, logCommands) {
+            try {
+                this.executeStatementsNow(commands, logCommands);
+            } catch (error) {
+                this.handleError(error, commands.raw, false);
             }
-            evalNextStatement();*/
         };
 
         this.executeFrom = function (object) {
             try {
                 var statements = object.getStatements();
                 this.executeStatements(statements);
-            } catch (err) {
-                if (!(err instanceof TError)) {
-                    var error = new TError(err);
-                    error.setProgramName(currentProgramName);
-                    if (currentProgramName === null) {
-                        error.setCode(object.getValue());
-                    }
-                    error.detectError();
-                    this.logError(error);
-                } else {
-                    err.setProgramName(currentProgramName);
-                    if (currentProgramName === null) {
-                        err.setCode(object.getValue());
-                    }                    
-                    this.logError(err);
-                }
+            } catch (error) {
+                this.handlerError(error, object.getValue(), true);
             }
         };
 
