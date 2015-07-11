@@ -70,18 +70,17 @@ function load() {
         window.console.log("***************************");
         window.console.log("* Building User Interface *");
         window.console.log("***************************");
-        frame = new TFrame();
-        domFrame = frame.getElement();
-        $("body").append(domFrame);
-
-        window.console.log("*******************");
-        window.console.log("* Initiating link *");
-        window.console.log("*******************");
-        var currentProject = new TProject();
-        currentProject.init();
-        TEnvironment.setProject(currentProject);
-        $(document).ready( function() {
-            frame.displayed();
+        frame = new TFrame(function(component) {
+	        $("body").append(component);
+	        window.console.log("*******************");
+	        window.console.log("* Initiating link *");
+	        window.console.log("*******************");
+	        var currentProject = new TProject();
+	        currentProject.init();
+	        TEnvironment.setProject(currentProject);
+	        $(document).ready( function() {
+	            frame.displayed();
+	        });
         });
     });
 }

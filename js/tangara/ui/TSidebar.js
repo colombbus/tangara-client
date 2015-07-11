@@ -1,132 +1,98 @@
-define(['ui/TUI', 'TEnvironment', 'TProgram', 'TError', 'ui/TViewer', 'ui/TTextEditor', 'jquery', 'jquery-ui/widget', 'iframe-transport', 'fileupload'], function(TUI, TEnvironment, TProgram, TError, TViewer, TTextEditor, $) {
+define(['ui/TComponent', 'ui/TUI', 'TEnvironment', 'TProgram', 'TError', 'ui/TViewer', 'ui/TTextEditor', 'jquery', 'jquery-ui/widget', 'iframe-transport', 'fileupload'], function(TComponent, TUI, TEnvironment, TProgram, TError, TViewer, TTextEditor, $) {
 
-    function TSidebar() {
-        var domSidebar = document.createElement("div");
-        domSidebar.id = "tsidebar";
-        
-        var domSwitch = document.createElement("div");
-        domSwitch.id = "tsidebar-switch";
-        var switchPrograms = document.createElement("div");
-        switchPrograms.id = "tsidebar-switch-programs";
-        switchPrograms.title = TEnvironment.getMessage("switch-programs");
-        var switchResources = document.createElement("div");
-        switchResources.id = "tsidebar-switch-resources";
-        switchResources.title = TEnvironment.getMessage("switch-resources");
-        domSwitch.appendChild(switchPrograms);
-        domSwitch.appendChild(switchResources);
-        domSidebar.appendChild(domSwitch);
-        switchPrograms.onclick = function(e) { TUI.displayPrograms();};
-        switchResources.onclick = function(e) { TUI.displayResources();};
-
-        var domSidebarPrograms = document.createElement("div");
-        domSidebarPrograms.id = "tsidebar-programs";
-        domSidebar.appendChild(domSidebarPrograms);
-
-        var domSidebarResources = document.createElement("div");
-        domSidebarResources.id = "tsidebar-resources";
-        var domSidebarUpload = document.createElement("form");
-        domSidebarUpload.id = "tsidebar-upload";
-        domSidebarUpload.setAttribute("method", "post");
-        domSidebarUpload.setAttribute("enctype", "multipart/form-data");
-        var domSidebarUploadHeader = document.createElement("div");
-        domSidebarUploadHeader.id = "tsidebar-upload-header";
-        var domSidebarUploadInput = document.createElement("input");
-        domSidebarUploadInput.id = "tsidebar-upload-input";
-        domSidebarUploadInput.setAttribute("type", "file");
-        domSidebarUploadInput.setAttribute("multiple", "multiple");
-        domSidebarUploadHeader.appendChild(domSidebarUploadInput);
-        var domSidebarUploadButton = document.createElement("div");
-        domSidebarUploadButton.id = "tsidebar-upload-button";
-        var imageUpload = document.createElement("img");
-        imageUpload.src = TEnvironment.getBaseUrl() + "/images/upload.png";
-        domSidebarUploadButton.appendChild(imageUpload);
-        domSidebarUploadButton.appendChild(document.createTextNode(TEnvironment.getMessage("resource_upload_files")));
-        $(domSidebarUploadButton).click(function() {
-            $("#tsidebar-upload-input").click();
-        });
-        domSidebarUploadHeader.appendChild(domSidebarUploadButton);
-        domSidebarUpload.appendChild(domSidebarUploadHeader);
-        var domSidebarFiles = document.createElement("div");
-        domSidebarFiles.id = "tsidebar-files";
-        domSidebarUpload.appendChild(domSidebarFiles);
-        domSidebarResources.appendChild(domSidebarUpload);
-        var domEmptyMedia = document.createElement("div");
-        domEmptyMedia.id="tsidebar-resources-empty";
-        var domEmptyMediaP = document.createElement("p");
-        domEmptyMediaP.appendChild(document.createTextNode(TEnvironment.getMessage("empty-media-library")));
-        domEmptyMedia.appendChild(domEmptyMediaP);
-        domSidebarResources.appendChild(domEmptyMedia);
-        
-        
-        domSidebar.appendChild(domSidebarResources);
-
-        var $domSidebarPrograms = $(domSidebarPrograms);
-        var $domSidebarFiles = $(domSidebarFiles);
-        var $domSidebarResources = $(domSidebarResources);
-        
-        $domSidebarResources.addClass("loading");
-        $domSidebarPrograms.addClass("loading");
-        
-        // set tab index in order for the div to receive keyboard events
-        $domSidebarResources.attr("tabindex", "0");
-        $domSidebarResources.on("keydown", function(event) {
-            switch(event.which){
-                case 8: // backspace
-                case 46: // suppr
-                    if ($domSidebarResources.find(".tsidebar-renaming").length === 0 && $domSidebarResources.find(".tsidebar-current").length > 0 ) {
-                        // we are not renaming a resource
-                        TUI.delete();
-                    }
-                    break;
-            }            
-        });
-        
+    function TSidebar(callback) {
+	    
+	    var $sidebar, $sidebarUpload, $sidebarPrograms, $sidebarFiles, $sidebarResources, $switchPrograms, $switchResources, $emptyMedia;
+        var viewer;
+        var textEditor;
         var programsVisible = false;
         var empty = true;
         var uploadingDivs = {};
-        
-        var viewer = new TViewer();
-        
-        viewer.setNextHandler(function() {
-            var current = $domSidebarFiles.find('.tsidebar-current');
-            var nextImage = current.next('.tsidebar-type-image');
-            if (nextImage.length === 0)
-                nextImage = $domSidebarFiles.find('.tsidebar-type-image:first');
-            current.removeClass('tsidebar-current');
-            nextImage.addClass('tsidebar-current');
-            $domSidebarResources.stop().animate({scrollTop: $domSidebarResources.scrollTop()+nextImage.position().top}, 1000);
-            var name = nextImage.find('.tsidebar-file-name').text();
-            return name;
-        });
 
-        viewer.setPrevHandler(function() {
-            var current = $domSidebarFiles.find('.tsidebar-current');
-            var prevImage = current.prev('.tsidebar-type-image');
-            if (prevImage.length === 0)
-                prevImage = $domSidebarFiles.find('.tsidebar-type-image:last');
-            current.removeClass('tsidebar-current');
-            prevImage.addClass('tsidebar-current');
-            $domSidebarResources.stop().animate({scrollTop: $domSidebarResources.scrollTop()+prevImage.position().top}, 1000);
-            var name = prevImage.find('.tsidebar-file-name').text();
-            return name;
-        });
         
-        var textEditor = new TTextEditor();
+	    TComponent.call(this, "TSidebar.html", function(component) {
+		    $sidebar = component;
+		    $sidebarUpload = component.find("#tsidebar-upload");
+		    $switchPrograms = component.find("#tsidebar-switch-programs");
+		    $switchPrograms.prop("title", TEnvironment.getMessage("switch-programs"));
+		    $switchPrograms.click(function(e) {
+			    TUI.displayPrograms();
+		    });
+		    $switchResources = component.find("#tsidebar-switch-resources");
+		    $switchResources.prop("title", TEnvironment.getMessage("switch-resources"));
+		    $switchResources.click(function(e) {
+			    TUI.displayResources();
+		    });
+		    var $sidebarUploadButton = component.find("#tsidebar-upload-button");
+		    $sidebarUploadButton.append(TEnvironment.getMessage("resource_upload_files"));
+		    var emptyMediaP = component.find("#tsidebar-resources-empty p");
+		    emptyMediaP.append(TEnvironment.getMessage("empty-media-library"));
+		    
+		    $sidebarPrograms = component.find("#tsidebar-programs");
+		    $sidebarResources = component.find("#tsidebar-resources");		    
+	        $sidebarResources.addClass("loading");
+	        $sidebarPrograms.addClass("loading");;
+		    $sidebarFiles = component.find("#tsidebar-files");
+		    $emptyMedia = component.find("#tsidebar-resources-empty");
+		    
+            $sidebarResources.on("keydown", function(event) {
+	            switch(event.which){
+    	            case 8: // backspace
+					case 46: // suppr
+                    	if ($sidebarResources.find(".tsidebar-renaming").length === 0 && $sidebarResources.find(".tsidebar-current").length > 0 ) {
+                        	// we are not renaming a resource
+							TUI.delete();
+						}
+						break;
+				}            
+			});
+		    
+		    var self = this;
+		    
+		    viewer = new TViewer(function (c) {
+		        viewer.setNextHandler(function() {
+		            var current = $sidebarFiles.find('.tsidebar-current');
+		            var nextImage = current.next('.tsidebar-type-image');
+		            if (nextImage.length === 0)
+		                nextImage = $domSidebarFiles.find('.tsidebar-type-image:first');
+		            current.removeClass('tsidebar-current');
+		            nextImage.addClass('tsidebar-current');
+		            $sidebarResources.stop().animate({scrollTop: $sidebarResources.scrollTop()+nextImage.position().top}, 1000);
+		            var name = nextImage.find('.tsidebar-file-name').text();
+		            return name;
+		        });
+		
+		        viewer.setPrevHandler(function() {
+		            var current = $sidebarFiles.find('.tsidebar-current');
+		            var prevImage = current.prev('.tsidebar-type-image');
+		            if (prevImage.length === 0)
+		                prevImage = $domSidebarFiles.find('.tsidebar-type-image:last');
+		            current.removeClass('tsidebar-current');
+		            prevImage.addClass('tsidebar-current');
+		            $sidebarResources.stop().animate({scrollTop: $sidebarResources.scrollTop()+prevImage.position().top}, 1000);
+		            var name = prevImage.find('.tsidebar-file-name').text();
+		            return name;
+		        });
+			    
+				textEditor = new TTextEditor(function (d) {
+					if (typeof callback !== 'undefined') {
+						callback.call(self, component);
+					}
+				})    
+		    });
+	    });
         
-        this.getElement = function() {
-            return domSidebar;
-        };
-        
+                
         this.displayed = function() {
             this.displayPrograms();
             this.init();
             // Set up blueimp fileupload plugin
             // TODO: make use of acceptFileTypes and maxFileSize
-            $(domSidebarUpload).fileupload({
+            $sidebarUpload.fileupload({
                 dataType: 'json',
                 url:TEnvironment.getBackendUrl('addresource'),
                 paramName:'resources[]',
-                dropZone: $(domSidebarResources),
+                dropZone: $sidebarResources,
                 add: function (e, data) {
                     var newDivs=[];
                     var newNames=[];
@@ -146,19 +112,19 @@ define(['ui/TUI', 'TEnvironment', 'TProgram', 'TError', 'ui/TViewer', 'ui/TTextE
                             domProgress.appendChild(domBar);
                             div.appendChild(domProgress);
                             var index = project.uploadingResource(file.name);
-                            var where = $domSidebarFiles.find('.tsidebar-file:eq('+index+')');
+                            var where = $sidebarFiles.find('.tsidebar-file:eq('+index+')');
                             if (where.length > 0)
                                 where.before(div);
                             else 
-                                $domSidebarFiles.append(div);
+                                $sidebarFiles.append(div);
                             newDivs.push(div);
                             uploadingDivs[file.name] = $(div);
                         }
                         if (empty) {
-                            domSidebarResources.removeChild(domEmptyMedia);
+                            $sidebarResources.remove($emptyMedia);
                             empty = false;
                         }
-                        $domSidebarResources.stop().animate({scrollTop: $domSidebarResources.scrollTop()+$(div).position().top}, 1000);
+                        $sidebarResources.stop().animate({scrollTop: $sidebarResources.scrollTop()+$(div).position().top}, 1000);
                         data.submit();
                     } catch (error) {
                         // error
@@ -169,11 +135,11 @@ define(['ui/TUI', 'TEnvironment', 'TProgram', 'TError', 'ui/TViewer', 'ui/TTextE
                         }
                         // 2nd remove loading resources div
                         for (var i=0; i<newDivs.length;i++) {
-                            domSidebarFiles.removeChild(newDivs[i]);
+                            $sidebarFiles.get(0).removeChild(newDivs[i]);
                         }
                         // 3rd check if there is some file left, otherwise add "empty" message
-                        if (!domSidebarFiles.hasChildNodes() && !empty) {
-                            domSidebarResources.appendChild(domEmptyMedia);
+                        if ($sidebarFiles.children().length() === 0 && !empty) {
+                            $sidebarResources.append($domEmptyMedia);
                             empty = true;
                         }
                         
@@ -241,17 +207,17 @@ define(['ui/TUI', 'TEnvironment', 'TProgram', 'TError', 'ui/TViewer', 'ui/TTextE
         };
         
         this.init = function() {
-            $domSidebarPrograms.removeClass("loading");
+            $sidebarPrograms.removeClass("loading");
             this.updatePrograms();
-            $domSidebarResources.removeClass("loading");
+            $sidebarResources.removeClass("loading");
             this.updateResources();
         };
 
         this.load = function() {
-            domSidebarPrograms.innerHTML = "";
-            domSidebarFiles.innerHTML = "";
-            $domSidebarPrograms.addClass("loading");
-            $domSidebarResources.addClass("loading");
+            $sidebarPrograms.empty();
+            $sidebarFiles.empty();
+            $sidebarPrograms.addClass("loading");
+            $sidebarResources.addClass("loading");
         };
         
         this.updatePrograms = function() {
@@ -261,7 +227,7 @@ define(['ui/TUI', 'TEnvironment', 'TProgram', 'TError', 'ui/TViewer', 'ui/TTextE
             var currentProgram = TUI.getCurrentProgram();
             var editedNames = [];
             
-            domSidebarPrograms.innerHTML = "";
+            $sidebarPrograms.empty();
 
             function addElement(name, id, displayedName, edited, current) {
                 var element = document.createElement("div");
@@ -311,7 +277,7 @@ define(['ui/TUI', 'TEnvironment', 'TProgram', 'TError', 'ui/TViewer', 'ui/TTextE
                     closeElement.onclick = function(e) { TUI.closeProgram(name);e.stopPropagation();};
                     element.appendChild(closeElement);
                 }
-                domSidebarPrograms.appendChild(element);
+                $sidebarPrograms.append(element);
             }
 
             var currentName = "";
@@ -411,19 +377,19 @@ define(['ui/TUI', 'TEnvironment', 'TProgram', 'TError', 'ui/TViewer', 'ui/TTextE
             
             function addElement(name, type) {
                 var div = getResourceDiv(name, type, false);
-                domSidebarFiles.appendChild(div);
+                $sidebarFiles.append(div);
             }
             
-            domSidebarFiles.innerHTML = "";
+            $sidebarFiles.empty();
             if (resourcesNames.length === 0) {
                 // no media: add message
                 if (!empty) {
-                    domSidebarResources.appendChild(domEmptyMedia);
+                    $sidebarResources.append($emptyMedia);
                     empty = true;
                 }
             } else {
                 if (empty) {
-                    domSidebarResources.removeChild(domEmptyMedia);
+                    $sidebarResources.remove($emptyMedia);
                     empty = false;
                 }
                 for (var i=0; i<resourcesNames.length; i++) {
@@ -466,22 +432,22 @@ define(['ui/TUI', 'TEnvironment', 'TProgram', 'TError', 'ui/TViewer', 'ui/TTextE
         };
         
         this.show = function() {
-            $(domSidebar).show();
+            $sidebar.show();
         };
         
         this.hide = function() {
-            $(domSidebar).hide();
+            $sidebar.hide();
         };
         
         this.displayPrograms = function() {
             if (!programsVisible) {
-                $(domSidebarPrograms).show();
-                $(switchPrograms).addClass("active");
-                $(domSidebarResources).hide();
-                $(switchResources).removeClass("active");
-                $(domSidebar).animate({width:"250px"}, 500);
+                $sidebarPrograms.show();
+                $switchPrograms.addClass("active");
+                $sidebarResources.hide();
+                $switchResources.removeClass("active");
+                $sidebar.animate({width:"250px"}, 500);
                 programsVisible = true;
-                var edition = ($(domSidebarPrograms).find(".tsidebar-current").length>0);
+                var edition = ($sidebarPrograms.find(".tsidebar-current").length>0);
                 TUI.setEditionEnabled(edition);
             }
         };
@@ -494,13 +460,13 @@ define(['ui/TUI', 'TEnvironment', 'TProgram', 'TError', 'ui/TViewer', 'ui/TTextE
                     TUI.addLogError(error);
                     return false;
                 } else {
-                    $(domSidebarPrograms).hide();
-                    $(switchPrograms).removeClass("active");
-                    $(domSidebarResources).show();
-                    $(switchResources).addClass("active");
-                    $(domSidebar).animate({width:"440px"}, 500);
+                    $sidebarPrograms.hide();
+                    $switchPrograms.removeClass("active");
+                    $sidebarResources.show();
+                    $switchResources.addClass("active");
+                    $sidebar.animate({width:"440px"}, 500);
                     programsVisible = false;
-                    var edition = ($(domSidebarResources).find(".tsidebar-current").length>0);
+                    var edition = ($sidebarResources.find(".tsidebar-current").length>0);
                     TUI.setEditionEnabled(edition);
                     return true;
                 }
@@ -515,7 +481,7 @@ define(['ui/TUI', 'TEnvironment', 'TProgram', 'TError', 'ui/TViewer', 'ui/TTextE
                 $('.tsidebar-file').removeClass('tsidebar-current');
                 var parent = element.first().parent();
                 parent.addClass('tsidebar-current');
-                $domSidebarResources.stop().animate({scrollTop: $domSidebarResources.scrollTop()+parent.position().top}, 1000);
+                $sidebarResources.stop().animate({scrollTop: $sidebarResources.scrollTop()+parent.position().top}, 1000);
                 TUI.setEditionEnabled(true);
              }
         };
@@ -525,7 +491,7 @@ define(['ui/TUI', 'TEnvironment', 'TProgram', 'TError', 'ui/TViewer', 'ui/TTextE
         };
         
         this.getCurrentResourceName = function() {
-            var currentDiv = $domSidebarResources.find('.tsidebar-current .tsidebar-file-name div');
+            var currentDiv = $sidebarResources.find('.tsidebar-current .tsidebar-file-name div');
             if (currentDiv.length<0)
                 return false;
             return currentDiv.text();
@@ -536,6 +502,9 @@ define(['ui/TUI', 'TEnvironment', 'TProgram', 'TError', 'ui/TViewer', 'ui/TTextE
         };
         
     }
+
+    TSidebar.prototype = Object.create(TComponent.prototype);
+    TSidebar.prototype.constructor = TSidebar;    
     
     return TSidebar;
 });

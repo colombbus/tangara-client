@@ -1,12 +1,19 @@
-define(['jquery','TEnvironment'], function($, TEnvironment) {
-    function TDesignLog() {
-        var domDesignLog = document.createElement("div");
-        domDesignLog.id = "tdesign-log";
-        var $designLog = $(domDesignLog);
-        
-        $designLog.click(function (e) {
-            $designLog.find(".tdesign-log-row").removeClass("selected");
-        });
+define(['jquery','TEnvironment', 'ui/TComponent'], function($, TEnvironment, TComponent) {
+
+    function TDesignLog(callback) {
+	    var $designLog;
+	    
+	    TComponent.call(this, {id:"tdesign-log"}, function(component) {
+		    $designLog = component;
+
+	        $designLog.click(function (e) {
+	            $designLog.find(".tdesign-log-row").removeClass("selected");
+	        });
+
+			if (typeof callback !== 'undefined') {
+				callback.call(this, component);
+			}
+	    });
         
         var dragHandler = function(event) {
             var element = $(event.currentTarget);
@@ -73,10 +80,6 @@ define(['jquery','TEnvironment'], function($, TEnvironment) {
             event.stopPropagation();
         };
         
-        this.getElement = function() {
-            return domDesignLog;
-        };
-        
         this.isEmpty = function() {
             return $designLog.is(':empty');
         };
@@ -110,7 +113,7 @@ define(['jquery','TEnvironment'], function($, TEnvironment) {
                 domElement.setAttribute("draggable", "true");
                 domElement.ondragstart = dragHandler;
                 $(domElement).click(clickHandler);
-                domDesignLog.scrollTop = domDesignLog.scrollHeight;
+                $designLog.scrollTop($designLog.prop("scrollHeight"));
                 //$designLog.selectable();
             }
         };
@@ -120,6 +123,9 @@ define(['jquery','TEnvironment'], function($, TEnvironment) {
         };
         
     }
+    
+    TDesignLog.prototype = Object.create(TComponent.prototype);
+    TDesignLog.prototype.constructor = TDesignLog;    
     
     return TDesignLog;
 });

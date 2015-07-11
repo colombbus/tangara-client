@@ -1,13 +1,16 @@
-define(['ui/TUI', 'TParser', 'ui/TLog', 'TEnvironment', 'utils/TUtils', 'TRuntime', 'jquery', 'ace/ace', 'ace/autocomplete', 'ace/range'], function (TUI, TParser, TLog, TEnvironment, TUtils, TRuntime, $, ace, ace_autocomplete, ace_range) {
+define(['ui/TUI', 'TParser', 'ui/TLog', 'TEnvironment', 'utils/TUtils', 'TRuntime', 'jquery', 'ace/ace', 'ace/autocomplete', 'ace/range', 'ui/TComponent'], function (TUI, TParser, TLog, TEnvironment, TUtils, TRuntime, $, ace, ace_autocomplete, ace_range, TComponent) {
 
-    function TConsole() {
-        var domConsole = document.createElement("div");
-        domConsole.id = "tconsole";
-
-        var domConsoleText = document.createElement("div");
-        domConsoleText.id = "tconsole-text";
-        // for iOS to show keyboard
-        domConsole.appendChild(domConsoleText);
+    function TConsole(callback) {
+	    var $console, $consoleText;
+	    
+        TComponent.call(this, "TConsole.html", function(component) {
+	        $console = component;
+	        $consoleText = component.find("#tconsole-text");
+	        
+	        if (typeof callback !== 'undefined') {
+		        callback.call(this, component);
+	        }
+        });
 
         var AceRange = ace_range.Range;
         var AceAutocomplete = ace_autocomplete.Autocomplete;
@@ -22,12 +25,8 @@ define(['ui/TUI', 'TParser', 'ui/TLog', 'TEnvironment', 'utils/TUtils', 'TRuntim
         var popupTimeout;
         var triggerPopup = false;
 
-        this.getElement = function () {
-            return domConsole;
-        };
-
         this.displayed = function () {
-            aceEditor = ace.edit(domConsoleText.id);
+            aceEditor = ace.edit($consoleText.attr("id"));
             aceEditor.getSession().setMode("ace/mode/javascript");
             // Disable JSHint
             aceEditor.getSession().setUseWorker(false);
@@ -148,17 +147,17 @@ define(['ui/TUI', 'TParser', 'ui/TLog', 'TEnvironment', 'utils/TUtils', 'TRuntim
         };
 
         this.show = function () {
-            $(domConsole).show();
+            $console.show();
             aceEditor.focus();
         };
 
         this.hide = function () {
-            $(domConsole).hide();
+            $console.hide();
         };
 
         this.getHeight = function () {
             if (computedHeight === -1) {
-                computedHeight = $(domConsole).outerHeight(false);
+                computedHeight = $console.outerHeight(false);
             }
             return computedHeight;
         };
@@ -274,6 +273,9 @@ define(['ui/TUI', 'TParser', 'ui/TLog', 'TEnvironment', 'utils/TUtils', 'TRuntim
 //            readOnly: true // false if this command should not apply in readOnly mode
 //        };
     }
+    
+    TConsole.prototype = Object.create(TComponent.prototype);
+    TConsole.prototype.constructor = TConsole;
 
     return TConsole;
 });

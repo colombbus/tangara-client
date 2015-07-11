@@ -1,48 +1,39 @@
-define(['jquery', 'ui/TUI', 'ui/TDesignLog', 'TEnvironment'], function($, TUI, TDesignLog, TEnvironment) {
-    function TLog() {
-        var domOuterLog = document.createElement("div");
-        domOuterLog.id = "tlog-outer";
-        var domInnerLog = document.createElement("div");
-        domInnerLog.id = "tlog-inner";
-        var domSwitch = document.createElement("div");
-        domSwitch.id = "tlog-switch";
-        var switchLog = document.createElement("div");
-        switchLog.id = "tlog-switch-log";
-        switchLog.title = TEnvironment.getMessage("switch-log");
-        switchLog.className="active";
-        var switchDesign = document.createElement("div");
-        switchDesign.id = "tlog-switch-design";
-        switchDesign.title = TEnvironment.getMessage("switch-design");
-        switchLog.onclick = function(e) { TUI.hideDesignLog();};
-        switchDesign.onclick = function(e) { TUI.showDesignLog();};
-        domSwitch.appendChild(switchLog);
-        domSwitch.appendChild(switchDesign);
-        domOuterLog.appendChild(domSwitch);
-        var domLog = document.createElement("div");
-        domLog.id = "tlog";
-        domInnerLog.appendChild(domLog);
-        var designLog = new TDesignLog();
-        var domDesignLog = designLog.getElement();
-        domInnerLog.appendChild(domDesignLog);
-        domOuterLog.appendChild(domInnerLog);
-        var $log = $(domLog); 
-        var $designLog = $(domDesignLog);
-        var $switch = $(domSwitch);
-        var $innerLog = $(domInnerLog); 
-        
-        
+define(['ui/TComponent', 'jquery', 'ui/TUI', 'ui/TDesignLog', 'TEnvironment'], function(TComponent, $, TUI, TDesignLog, TEnvironment) {
+    function TLog(callback) {
+	    var designLog;
+	    var $amin, $log, $designLog, $switch, $innerLog, $switchLog, $switchDesign;
         var rowCount = 0;
         var currentRow = 0;
         var scrollTop = 0;
-        
         var currentHeight = -1;
-        
         var errors = new Array();
-        
-        this.getElement = function() {
-            return domOuterLog;
-        };
-
+	    
+	    TComponent.call(this, "TLog.html", function(component) {
+		    $main = component;
+			$log = component.find("#tlog");
+			$switch = component.find("#tlog-switch");
+			$innerLog = component.find("#tlog-inner");
+			$switchDesign = $switch.find("#tlog-switch-design");
+			$switchDesign.click(function(e) {
+				TUI.showDesignLog();	
+			});
+			$switchDesign.prop("title",TEnvironment.getMessage("switch-design"));
+			$switchLog = $switch.find("#tlog-switch-log");
+			$switchLog.click(function(e) {
+				TUI.hideDesignLog();				
+			});
+			$switchLog.prop("title",TEnvironment.getMessage("switch-log"));
+			// add designLog
+			var self = this;
+			designLog = new TDesignLog(function(c) {
+				component.find("#TDesignLog").replaceWith(c);
+				$designLog = c;
+				if (typeof callback != 'undefined') {
+					callback.call(self, component);
+				}
+			});
+	    });
+                
         this.displayed = function() {
             this.update();
             $designLog.hide();
@@ -52,8 +43,8 @@ define(['jquery', 'ui/TUI', 'ui/TDesignLog', 'TEnvironment'], function($, TUI, T
         this.update = function() {
             // compute the margin from the height of "tframe-bottom-top" div
             var height = $("#tframe-bottom-top").height();
-            domOuterLog.style.marginTop = "-"+height+"px";
-            domOuterLog.style.paddingTop = height+"px";
+            $main.css("margin-top", "-"+height+"px");
+            $main.css("padding-top", height+"px");
         };
 
         this.addCommand = function(text) {
@@ -67,8 +58,8 @@ define(['jquery', 'ui/TUI', 'ui/TDesignLog', 'TEnvironment'], function($, TUI, T
                     rowCount++;
                     currentRow = rowCount;
                     row.appendChild(document.createTextNode(line));
-                    domLog.appendChild(row);
-                    domLog.scrollTop = domLog.scrollHeight;
+                    $log.append(row);
+                    $log.scrollTop($log.prop('scrollHeight'));
                 }
             }
         };
@@ -108,8 +99,8 @@ define(['jquery', 'ui/TUI', 'ui/TDesignLog', 'TEnvironment'], function($, TUI, T
                 row.appendChild(document.createTextNode(message));
                 wrapper.appendChild(row);
             }
-            domLog.appendChild(wrapper);
-            domLog.scrollTop = domLog.scrollHeight;
+            $log.append(wrapper);
+            $log.scrollTop($log.prop("scrollHeight"));
         };
         
         this.addMessage = function(text) {
@@ -117,13 +108,13 @@ define(['jquery', 'ui/TUI', 'ui/TDesignLog', 'TEnvironment'], function($, TUI, T
                 var row = document.createElement("div");
                 row.className = "tlog-row tlog-message";
                 row.appendChild(document.createTextNode(text));
-                domLog.appendChild(row);
-                domLog.scrollTop = domLog.scrollHeight;
+                $log.append(row);
+				$log.scrollTop($log.prop("scrollHeight"));
             }
         };
         
         this.clear = function() {
-            domLog.innerHTML = '';
+	        $log.empty();
             rowCount = 0;
             currentRow = 0;
             errors.length = 0;
@@ -168,11 +159,11 @@ define(['jquery', 'ui/TUI', 'ui/TDesignLog', 'TEnvironment'], function($, TUI, T
         };
 
         this.saveScroll = function() {
-            scrollTop = $(domLog).scrollTop();
+            scrollTop = $log.scrollTop();
         };
         
         this.restoreScroll = function() {
-            $(domLog).scrollTop(scrollTop);
+            $log.scrollTop(scrollTop);
         };
         
         this.getError = function(index) {
@@ -185,16 +176,16 @@ define(['jquery', 'ui/TUI', 'ui/TDesignLog', 'TEnvironment'], function($, TUI, T
         this.showDesignLog = function() {
             $log.hide();
             $designLog.show();
-            $(switchLog).removeClass("active");
-            $(switchDesign).addClass("active");
+            $switchLog.removeClass("active");
+            $switchDesign.addClass("active");
             this.showSwitch();
         };
         
         this.hideDesignLog = function(hideSwitchIfEmpty) {
             $designLog.hide();
             $log.show();
-            $(switchDesign).removeClass("active");
-            $(switchLog).addClass("active");
+            $switchDesign.removeClass("active");
+            $switchLog.addClass("active");
             if (typeof hideSwitchIfEmpty !== 'undefined' && hideSwitchIfEmpty) {
                 if (designLog.isEmpty()) {
                     this.hideSwitch();
@@ -226,12 +217,12 @@ define(['jquery', 'ui/TUI', 'ui/TDesignLog', 'TEnvironment'], function($, TUI, T
         };
         
         this.show = function() {
-            $(domOuterLog).show();
+            $main.show();
         };
         
         this.hide = function() {
             currentHeight = $innerLog.outerHeight(false);
-            $(domOuterLog).hide();
+            $main.hide();
         };
         
         this.getHeight = function() {
@@ -242,6 +233,9 @@ define(['jquery', 'ui/TUI', 'ui/TDesignLog', 'TEnvironment'], function($, TUI, T
         };
 
     } 
+    
+    TLog.prototype = Object.create(TComponent.prototype);
+    TLog.prototype.constructor = TLog;    
     
     return TLog;
 });

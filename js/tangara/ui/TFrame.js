@@ -1,74 +1,70 @@
-
-
-define(['jquery', 'split-pane','ui/TCanvas', 'ui/TEditor', 'ui/TSidebar', 'ui/TUI', 'ui/TConsole', 'ui/TToolbar','ui/TLog', 'TRuntime', 'TEnvironment'], function($, SplitPane, TCanvas, TEditor, TSidebar, TUI, TConsole, TToolbar, TLog, TRuntime, TEnvironment) {
-    function TFrame() {
+define(['ui/TComponent', 'jquery', 'split-pane','ui/TCanvas', 'ui/TEditor', 'ui/TSidebar', 'ui/TUI', 'ui/TConsole', 'ui/TToolbar','ui/TLog', 'TRuntime', 'TEnvironment'], function(TComponent, $, SplitPane, TCanvas, TEditor, TSidebar, TUI, TConsole, TToolbar, TLog, TRuntime, TEnvironment) {
+    function TFrame(callback) {
         var initialized = false;
-        var domFrame = document.createElement("div");
-        domFrame.id = "tframe";
-        domFrame.className = "split-pane horizontal-percent";
-        var topDiv = document.createElement("div");
-        topDiv.id = "tframe-top";
-        topDiv.className = "split-pane-component";
-        // Add Canvas
-        var canvas = new TCanvas();
-        topDiv.appendChild(canvas.getElement());
-        // Add Sidebar
-        var sidebar = new TSidebar();
-        topDiv.appendChild(sidebar.getElement());
-        // Add Editor
-        var editor = new TEditor();
-        topDiv.appendChild(editor.getElement());
-
-        domFrame.appendChild(topDiv);
-
-        var separator = document.createElement("div");
-        separator.id="tframe-separator";
-        separator.className="split-pane-divider";
-        domFrame.appendChild(separator);
-
-        // Add Console, Toolbar and Log
-        var bottomDiv = document.createElement("div");
-        bottomDiv.id = "tframe-bottom";
-        bottomDiv.className = "split-pane-component";
-        // create special div to allow log to fill up remaining height
-        var bottomTopDiv = document.createElement("div");
-        bottomTopDiv.id = "tframe-bottom-top";
-        var console = new TConsole();
-        var consoleElement = console.getElement();
-        bottomTopDiv.appendChild(consoleElement);
-        var toolbar = new TToolbar();
-        var toolbarElement = toolbar.getElement();
-        bottomTopDiv.appendChild(toolbarElement);
-        bottomDiv.appendChild(bottomTopDiv);
-        var log = new TLog();
-        var logElement = log.getElement();
-        bottomDiv.appendChild(logElement);
-        domFrame.appendChild(bottomDiv);
+        var canvas, editor, sidebar, toolbar, console, log;
+        var $frame, $top, $separator, $bottom, $loading;
+	    
+	    var frame = this;
         
-        var loadingDiv = document.createElement("div");
-        loadingDiv.id = "tframe-loading";
-        var loadingImg = document.createElement("img");
-        loadingImg.src = TEnvironment.getBaseUrl() + "/images/loader2.gif";
-        loadingDiv.appendChild(loadingImg);
-        domFrame.appendChild(loadingDiv);
+	    TComponent.call(this, "TFrame.html", function(component) {
+	        waiting = ['canvas', 'editor', 'sidebar', 'toolbar', 'console', 'log'];
+	        
+	        checkWaiting = function(name) {
+		        var i = waiting.indexOf(name);
+		        if (i>-1) {
+			        waiting.splice(i,1);
+		        }
+		        if (waiting.length==0) {
+			        // Set UI
+			        TUI.setFrame(frame);
+			        TUI.setCanvas(canvas);
+			        TUI.setEditor(editor);
+			        TUI.setSidebar(sidebar);
+			        TUI.setToolbar(toolbar);
+			        TUI.setConsole(console);
+			        TUI.setLog(log);
+			        
+			        // Plug Runtime with Canvas and Log
+			        TRuntime.setCanvas(canvas);
+			        TRuntime.setLog(log);
 
-        // Set UI
-        TUI.setFrame(this);
-        TUI.setCanvas(canvas);
-        TUI.setEditor(editor);
-        TUI.setSidebar(sidebar);
-        TUI.setToolbar(toolbar);
-        TUI.setConsole(console);
-        TUI.setLog(log);
-        
-        // Plug Runtime with Canvas and Log
-        TRuntime.setCanvas(canvas);
-        TRuntime.setLog(log);
-        
-        this.getElement = function() {
-            return domFrame;
-        };
-        
+			        if (typeof callback !== 'undefined') {
+				        callback.call(this, component)
+			        }
+		        }
+			};
+		    
+		    $frame = component;
+		    $top = component.find("#tframe-top");
+		    $separator = component.find("#tframe-separator");
+		    $bottom = component.find("#tframe-bottom");
+		    $loading = component.find("#tframe-loading");
+		    canvas = new TCanvas(function(c) {
+			    component.find("#TCanvas").replaceWith(c);
+				checkWaiting("canvas");
+		    });
+		    editor = new TEditor(function(c) {
+			    component.find("#TEditor").replaceWith(c);
+				checkWaiting("editor");
+		    });
+		    sidebar = new TSidebar(function(c) {
+			    component.find("#TSidebar").replaceWith(c);
+				checkWaiting("sidebar");
+		    });
+		    toolbar = new TToolbar(function(c) {
+			    component.find("#TToolbar").replaceWith(c);
+				checkWaiting("toolbar");
+		    });
+		    console = new TConsole(function(c) {
+			    component.find("#TConsole").replaceWith(c);
+				checkWaiting("console");
+		    });
+		    log = new TLog(function(c) {
+			    component.find("#TLog").replaceWith(c);
+				checkWaiting("log");
+		    });
+	    });
+	    
         this.displayed = function() {
             canvas.displayed();
             editor.displayed();
@@ -83,23 +79,19 @@ define(['jquery', 'split-pane','ui/TCanvas', 'ui/TEditor', 'ui/TSidebar', 'ui/TU
         
         this.ready = function() {
             TEnvironment.frameReady(function() {
-                $(loadingDiv).fadeOut(1000, function() {$(this).remove();});
+                $loading.fadeOut(1000, function() {$(this).remove();});
             });
         };
         
         this.lowerSeparator = function(value) {
             if (initialized) {
-                var frameEl = $(domFrame);
-                var separatorEl = $(separator);
-                var topEl = $(topDiv);
-                var bottomEl = $(bottomDiv);
-                var totalHeight = frameEl.height();
-                var currentBottom = totalHeight - (separatorEl.position().top+separatorEl.height());
+                var totalHeight = $frame.height();
+                var currentBottom = totalHeight - ($separator.position().top+$separator.height());
                 var newBottom = ((currentBottom  - value)* 100/ totalHeight) + '%';
-                topEl.css('bottom', newBottom);
-		separatorEl.css('bottom', newBottom);
-		bottomEl.css('height', newBottom);
-		frameEl.resize();
+                $top.css('bottom', newBottom);
+				$separator.css('bottom', newBottom);
+				$bottom.css('height', newBottom);
+				$frame.resize();
             }
         };
         
@@ -122,10 +114,13 @@ define(['jquery', 'split-pane','ui/TCanvas', 'ui/TEditor', 'ui/TSidebar', 'ui/TU
             window.isUnsaved = function() {
                 return TEnvironment.getProject().isUnsaved();
             };
-        }        
-
+        }
 
     }
+ 
+    TFrame.prototype = Object.create(TComponent.prototype);
+    TFrame.prototype.constructor = TFrame;
+
     
     return TFrame;
 });

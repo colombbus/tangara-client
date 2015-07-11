@@ -1,8 +1,15 @@
-define(['jquery', 'ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 'ace/autocomplete', 'TProgram', 'TEnvironment', 'TLink', 'ui/TUI', 'utils/TUtils'], function ($, ace, ace_edit_session, ace_range, ace_undo_manager, ace_autocomplete, TProgram, TEnvironment, TLink, TUI, TUtils) {
+define(['ui/TComponent','jquery', 'ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 'ace/autocomplete', 'TProgram', 'TEnvironment', 'TLink', 'ui/TUI', 'utils/TUtils'], function (TComponent, $, ace, ace_edit_session, ace_range, ace_undo_manager, ace_autocomplete, TProgram, TEnvironment, TLink, TUI, TUtils) {
 
-    function TEditor() {
-        var domEditor = document.createElement("div");
-        domEditor.id = "teditor";
+    function TEditor(callback) {
+	    var $editor;
+	    
+	    TComponent.call(this, {id:"teditor"}, function(component) {
+		    $editor = component;
+		    if (typeof callback !== 'undefined') {
+			    callback.call(this, component);
+		    }
+	    });
+        
         var aceEditor;
         var codeChanged = false;
         var program;
@@ -19,18 +26,15 @@ define(['jquery', 'ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager',
         var disabledText = TEnvironment.getMessage("editor-disabled");
         disabledP.appendChild(document.createTextNode(disabledText));
         disabledMessage.appendChild(disabledP);
+		var $disabledMessage = $(disabledMessage);
 
         var popupTriggered = false;
         var popupTimeout;
         var triggerPopup = false;
         var editionEnabled = false;
 
-        this.getElement = function () {
-            return domEditor;
-        };
-
         this.displayed = function () {
-            aceEditor = ace.edit(domEditor.id);
+            aceEditor = ace.edit($editor.attr("id"));
             aceEditor.setShowPrintMargin(false);
             //aceEditor.renderer.setShowGutter(false);
             aceEditor.setFontSize("20px");
@@ -76,12 +80,12 @@ define(['jquery', 'ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager',
         };
 
         this.show = function () {
-            $(domEditor).show();
+            $editor.show();
             aceEditor.focus();
         };
 
         this.hide = function () {
-            $(domEditor).hide();
+            $editor.hide();
         };
 
         this.getValue = function () {
@@ -120,8 +124,8 @@ define(['jquery', 'ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager',
             if (disabled) {
                 aceEditor.setReadOnly(false);
                 aceEditor.renderer.setShowGutter(true);
-                $(domEditor).removeClass('editor-disabled');
-                domEditor.removeChild(disabledMessage);
+                $editor.removeClass('editor-disabled');
+                $editor.remove($disabledMessage);
                 disabled = false;
                 TUI.setEditionEnabled(true);
             }
@@ -146,8 +150,8 @@ define(['jquery', 'ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager',
             aceEditor.setSession(disabledSession);
             aceEditor.setReadOnly(true);
             aceEditor.renderer.setShowGutter(false);
-            $(domEditor).addClass('editor-disabled');
-            domEditor.appendChild(disabledMessage);
+            $editor.addClass('editor-disabled');
+            $editor.append($disabledMessage);
             TUI.setEditionEnabled(false);
             disabled = true;
         };
@@ -340,6 +344,9 @@ define(['jquery', 'ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager',
             readOnly: true // false if this command should not apply in readOnly mode
         };
     }
+
+    TEditor.prototype = Object.create(TComponent.prototype);
+    TEditor.prototype.constructor = TEditor;
 
     return TEditor;
 });

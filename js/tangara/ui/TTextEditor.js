@@ -1,78 +1,44 @@
-define(['TEnvironment', 'ui/TUI', 'jquery'], function(TEnvironment, TUI, $) {
-    function TTextEditor() {
-        var domMain = document.createElement("div");
-        domMain.className= "tviewer-main";
-        var domInner = document.createElement("div");
-        domInner.className= "tviewer-text";
-        var domName = document.createElement("div");
-        domName.className = "tviewer-text-name";
-        domInner.appendChild(domName);
-        var domButtonSave = document.createElement("div");
-        domButtonSave.className = "tviewer-button-save";
-        domButtonSave.title = TEnvironment.getMessage("texteditor-save");
-        domButtonSave.onclick = function() {
-            save();
-        };
-        var domButtonClose = document.createElement("div");
-        domButtonClose.className = "tviewer-button-close";
-        domButtonClose.title = TEnvironment.getMessage("texteditor-close");
-        domButtonClose.onclick = function() {
-            hide();
-        };
-        domInner.appendChild(domButtonClose);
-        var domText = document.createElement("div");
-        domText.className = "tviewer-text-editor";
-
-        var domTextArea = document.createElement("textarea");
-        domTextArea.id = "ttexteditor-text";
-        
-        domText.appendChild(domTextArea);
-        domInner.appendChild(domText);
-        
-        var buttonCancel = document.createElement("button");
-        buttonCancel.className = "tviewer-creation-cancel tviewer-creation-button";
-        buttonCancel.onclick = function() {
-            hide();
-        };
-        var imageCancel = document.createElement("img");
-        imageCancel.src = TEnvironment.getBaseUrl() + "/images/cancel.png";
-        imageCancel.className = "ttoolbar-creation-button-image";
-        buttonCancel.appendChild(imageCancel);
-        buttonCancel.appendChild(document.createTextNode(TEnvironment.getMessage("viewer-creation-cancel")));
-        var buttonSave = document.createElement("button");
-        buttonSave.className = "tviewer-creation-save tviewer-creation-button";
-        var imageSave = document.createElement("img");
-        imageSave.src = TEnvironment.getBaseUrl() + "/images/ok.png";
-        imageSave.className = "ttoolbar-creation-button-image";
-        buttonSave.appendChild(imageSave);
-        buttonSave.appendChild(document.createTextNode(TEnvironment.getMessage("viewer-creation-save")));
-        buttonSave.onclick = function() {
-            save();
-        };
-        
-        var domButtons = document.createElement("div");
-        domButtons.className = "tviewer-text-buttons";
-        domButtons.appendChild(buttonCancel);
-        domButtons.appendChild(buttonSave);
-        
-        domInner.appendChild(domButtons);
-
-        domMain.appendChild(domInner);
-        
-        var $domTextArea = $(domTextArea);
-        var $domName = $(domName);
+define(['ui/TComponent', 'TEnvironment', 'ui/TUI', 'jquery'], function(TComponent, TEnvironment, TUI, $) {
+    function TTextEditor(callback) {
+	    var $name, $textArea, $main;
         var appended = false;
         var resourceName = '';
-        
-        var $domMain = $(domMain);
+	    
+	    TComponent.call(this, "TTextEditor.html", function(component) {
+			var $buttonClose = component.find(".tviewer-button-close");
+			$buttonClose.prop("title", TEnvironment.getMessage("texteditor-close"));
+			$buttonClose.click(function(e) {
+				hide();
+			})
+			
+			var $buttonCancel = component.find(".tviewer-creation-cancel");
+			$buttonCancel.append(TEnvironment.getMessage("viewer-creation-cancel"));
+			$buttonCancel.click(function(e) {
+				hide();
+			})
+
+			var $buttonSave = component.find(".tviewer-creation-save");
+			$buttonCancel.append(TEnvironment.getMessage("viewer-creation-save"));
+			$buttonCancel.click(function(e) {
+				save();
+			})
+			
+			$main = component;
+			$textArea = component.find("#ttexteditor-text");
+			$name = component.find(".tviewer-text-name");
+			
+			if (typeof callback !== 'undefined') {
+				callback.call(this, component);
+			}			
+	    });
         
         this.loadText = function(name) {
             resourceName = name;
-            $domName.text(name);
+            $name.text(name);
             var src = TEnvironment.getProjectResource(name);
-            $domTextArea.val('');
+            $textArea.val('');
             $.get(src, null, function (data) {
-                $domTextArea.val(data);
+                $textArea.val(data);
             }, "text");
             append();
         };
@@ -80,25 +46,29 @@ define(['TEnvironment', 'ui/TUI', 'jquery'], function(TEnvironment, TUI, $) {
         var append = function() {
             if (!appended) {
                 document.body.appendChild(domMain);
-                $domMain.fadeIn();
+                $main.fadeIn();
                 appended = true;
             }
         };
         
         var hide = function() {
             if (appended) {
-                $domMain.fadeOut(function() {
-                    document.body.removeChild(domMain);                    
+                $main.fadeOut(function() {
+	                $("body").remove($main);                    
                     appended = false;
                 });
             }
         };
         
         var save = function() {
-            TUI.setResourceContent(resourceName, $domTextArea.val());
+            TUI.setResourceContent(resourceName, $textArea.val());
             hide();
         };
     }
+    
+    TTextEditor.prototype = Object.create(TComponent.prototype);
+    TTextEditor.prototype.constructor = TTextEditor;
+
 
     return TTextEditor;
 
