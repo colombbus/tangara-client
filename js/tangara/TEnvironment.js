@@ -9,7 +9,7 @@ define(['jquery'], function($) {
         var tangaraObjects = {};
         var project;
         var projectAvailable = false;
-        var ready_frame = false;
+		var ready_frame = false;
         var ready_runtime = false;
         var ready_environment = false;
         var ready_callback = null;
@@ -271,7 +271,7 @@ define(['jquery'], function($) {
         };
 
         this.getResource = function(name) {
-            return this.getBaseUrl() + "/js/tangara/resources/" + name;
+            return this.getBaseUrl() + "/resources/" + name;
         };
 
         this.getProjectResource = function(name) {
