@@ -1,32 +1,32 @@
-define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'objects/block/Block', 'TUtils'], function($, TEnvironment, TGraphicalObject, Sprite, Block, TUtils) {
+define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'objects/block/Block', 'TUtils'], function($, TEnvironment, TGraphicalObject, Sprite, Block, TUtils) {
     var Scene = function(name) {
         Block.call(this);
-        if (typeof(name)==='undefined') {
+        if (typeof (name) === 'undefined') {
             name = "nature";
         }
-        this.backgroundName="";
-        this.blockName="";
+        this.backgroundName = "";
+        this.blockName = "";
         this._setScene(name);
     };
-    
+
     Scene.prototype = Object.create(Block.prototype);
     Scene.prototype.constructor = Scene;
     Scene.prototype.className = "Scene";
-    
+
     var graphics = Scene.prototype.graphics;
-    
+
     Scene.prototype.gClass = graphics.addClass("TBlock", "TScene", {
-        init: function(props,defaultProps) {
+        init: function(props, defaultProps) {
             this._super(TUtils.extend({
-                assetBlock:null,
-                showBlock:false
-            },props),defaultProps);
+                assetBlock: null,
+                showBlock: false
+            }, props), defaultProps);
         },
         draw: function(ctx) {
             this._super(ctx);
             var p = this.p;
             if (p.showBlock && p.assetBlock) {
-                ctx.drawImage(this.resources.getUnchecked(p.assetBlock),-p.cx,-p.cy);            
+                ctx.drawImage(this.resources.getUnchecked(p.assetBlock), -p.cx, -p.cy);
             }
         },
         setBackground: function(asset) {
@@ -35,8 +35,8 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
             this.p.asset = asset;
             // resize only for background
             graphics.objectResized(this);
-            this.p.x += (this.p.w - oldW)/2;
-            this.p.y += (this.p.h - oldH)/2;
+            this.p.x += (this.p.w - oldW) / 2;
+            this.p.y += (this.p.h - oldH) / 2;
             this.p.destinationX = this.p.x;
             this.p.destinationY = this.p.y;
             if (!this.p.initialized && this.p.assetBlock) {
@@ -55,23 +55,23 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
         reinit: function() {
             this.p.initialized = false;
             this.p.asset = null;
-            this.p.assetBlock = null;            
+            this.p.assetBlock = null;
         },
         removeBlock: function() {
             this.p.initialized = false;
-            this.p.assetBlock = null;            
+            this.p.assetBlock = null;
         },
         removeBackground: function() {
             this.p.initialized = false;
-            this.p.asset = null;            
+            this.p.asset = null;
         }
     });
-    
+
     Scene.prototype._setScene = function(name) {
         name = TUtils.getString(name);
         name = this.getMessage(name);
-        var baseSceneUrl = this.getResource(name)+"/";
-        var configUrl = baseSceneUrl+"config.json";
+        var baseSceneUrl = this.getResource(name) + "/";
+        var configUrl = baseSceneUrl + "config.json";
         var parent = this;
         $.ajax({
             dataType: "json",
@@ -82,11 +82,12 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
                 var blockImage = data['images']['block'];
                 try {
                     parent._removeImageSet("elements");
-                } catch (e) {}
+                } catch (e) {
+                }
                 parent.gObject.reinit();
-                var backgroundName = name+"/"+backImage;
+                var backgroundName = name + "/" + backImage;
                 parent.backgroundName = backgroundName;
-                var blockName = name+"/"+blockImage;
+                var blockName = name + "/" + blockImage;
                 parent.blockName = blockName;
                 parent.addImage(backgroundName, "elements", false, function() {
                     // background may have changed during loading
@@ -105,8 +106,8 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
         }).fail(function(jqxhr, textStatus, error) {
             throw new Error(TUtils.format(parent.getMessage("unknwon character"), name));
         });
-    };        
-    
+    };
+
     Scene.prototype._showBlock = function() {
         this.gObject.setBlockDisplayed(true);
     };
@@ -119,7 +120,8 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
         name = TUtils.getString(name);
         try {
             this.removeImage(this.backgroundName);
-        } catch (e) {}
+        } catch (e) {
+        }
         this.backgroundName = name;
         var sceneObject = this;
         var gObject = this.gObject;
@@ -135,20 +137,21 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
         name = TUtils.getString(name);
         try {
             this.removeImage(this.blockName);
-        } catch (e) {}
+        } catch (e) {
+        }
         this.blockName = name;
         var sceneObject = this;
         var gObject = this.gObject;
         gObject.removeBlock();
-        this.addImage(name, "elements", true, function() {            
+        this.addImage(name, "elements", true, function() {
             if (name === sceneObject.blockName) {
                 sceneObject.computeTransparencyMask(name);
                 gObject.setBlock(name);
             }
         });
     };
-    
-    Scene.prototype._setTransparent = function(red, green, blue) { 
+
+    Scene.prototype._setTransparent = function(red, green, blue) {
         if (this.resources.has(this.blockName)) {
             this.gObject.removeBlock();
         }
@@ -166,9 +169,9 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
             }
         });
     };
-    
+
     TEnvironment.internationalize(Scene, true);
-    
+
     return Scene;
 });
 

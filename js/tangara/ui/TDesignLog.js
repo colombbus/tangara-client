@@ -1,20 +1,20 @@
-define(['jquery','TEnvironment', 'ui/TComponent'], function($, TEnvironment, TComponent) {
+define(['jquery', 'TEnvironment', 'ui/TComponent'], function($, TEnvironment, TComponent) {
 
     function TDesignLog(callback) {
-	    var $designLog;
-	    
-	    TComponent.call(this, {id:"tdesign-log"}, function(component) {
-		    $designLog = component;
+        var $designLog;
 
-	        $designLog.click(function (e) {
-	            $designLog.find(".tdesign-log-row").removeClass("selected");
-	        });
+        TComponent.call(this, {id: "tdesign-log"}, function(component) {
+            $designLog = component;
 
-			if (typeof callback !== 'undefined') {
-				callback.call(this, component);
-			}
-	    });
-        
+            $designLog.click(function(e) {
+                $designLog.find(".tdesign-log-row").removeClass("selected");
+            });
+
+            if (typeof callback !== 'undefined') {
+                callback.call(this, component);
+            }
+        });
+
         var dragHandler = function(event) {
             var element = $(event.currentTarget);
             var selectedElements = $designLog.find(".selected");
@@ -27,9 +27,9 @@ define(['jquery','TEnvironment', 'ui/TComponent'], function($, TEnvironment, TCo
                     var name = currentElement.find(".tdesign-log-name").text();
                     var coordinates = currentElement.find(".tdesign-log-location").text();
                     if (!first) {
-                        data += ";\n"+name+coordinates;
+                        data += ";\n" + name + coordinates;
                     } else {
-                        data += name+coordinates;
+                        data += name + coordinates;
                         first = false;
                     }
                 });
@@ -40,24 +40,24 @@ define(['jquery','TEnvironment', 'ui/TComponent'], function($, TEnvironment, TCo
                 element.addClass("selectee");
                 var name = element.find(".tdesign-log-name").text();
                 var coordinates = element.find(".tdesign-log-location").text();
-                data = name+coordinates;
+                data = name + coordinates;
             }
             event.dataTransfer.setData("text/plain", data);
         };
-        
+
         var clickHandler = function(event) {
             var $element = $(event.currentTarget);
             if (event.shiftKey) {
                 // select range
                 var startElement = $designLog.find(".selectee");
-                if (startElement.length>0) {
+                if (startElement.length > 0) {
                     var start = startElement.index();
                     var stop = $element.index();
                     var selected = $designLog.find(".tdesign-log-row");
-                    if (stop>start) {
-                        selected.slice(start,stop+1).addClass("selected");
-                    } else if (start>stop) {
-                        selected.slice(stop,start+1).addClass("selected");
+                    if (stop > start) {
+                        selected.slice(start, stop + 1).addClass("selected");
+                    } else if (start > stop) {
+                        selected.slice(stop, start + 1).addClass("selected");
                     } else {
                         // start = stop : only select $element
                         $element.addClass("selected");
@@ -79,14 +79,14 @@ define(['jquery','TEnvironment', 'ui/TComponent'], function($, TEnvironment, TCo
             }
             event.stopPropagation();
         };
-        
+
         this.isEmpty = function() {
             return $designLog.is(':empty');
         };
-        
+
         this.addObjectLocation = function(name, location) {
-            var elementId = "tdesign-log-"+name;
-            var $element = $designLog.find("#"+elementId);
+            var elementId = "tdesign-log-" + name;
+            var $element = $designLog.find("#" + elementId);
             var nameText = TEnvironment.getMessage("design-name-text", name);
             var locationText = TEnvironment.getMessage("design-location-text", location.x, location.y);
             if ($element.length > 0) {
@@ -117,15 +117,15 @@ define(['jquery','TEnvironment', 'ui/TComponent'], function($, TEnvironment, TCo
                 //$designLog.selectable();
             }
         };
-        
+
         this.clear = function() {
             $designLog.empty();
         };
-        
+
     }
-    
+
     TDesignLog.prototype = Object.create(TComponent.prototype);
-    TDesignLog.prototype.constructor = TDesignLog;    
-    
+    TDesignLog.prototype.constructor = TDesignLog;
+
     return TDesignLog;
 });

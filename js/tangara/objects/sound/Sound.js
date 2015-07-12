@@ -1,5 +1,5 @@
-define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function (TObject, TUtils, TRuntime, TEnvironment) {
-    var Sound = function (name) {
+define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function(TObject, TUtils, TRuntime, TEnvironment) {
+    var Sound = function(name) {
         TObject.call(this, name);
 
         this.sounds = new Array();
@@ -15,7 +15,7 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function (TObject, TUt
 
     var graphics = TRuntime.getGraphics();
 
-    Sound.prototype.addSound = function (name, set, project) {
+    Sound.prototype.addSound = function(name, set, project) {
         name = TUtils.getString(name);
         var asset;
         // add sound only if not already added
@@ -39,8 +39,8 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function (TObject, TUt
                 }
                 this.soundSets[set].push(name);
                 var loadedAsset = asset;
-                
-                graphics.load(asset, function () {
+
+                graphics.load(asset, function() {
                 });
             }
             catch (e) {
@@ -51,23 +51,23 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function (TObject, TUt
         }
         return asset;
     };
-    Sound.prototype._addSound = function (name, set) {
+    Sound.prototype._addSound = function(name, set) {
         this.addSound(name, set, true);
     };
 
-    Sound.prototype._loop = function (state) {
+    Sound.prototype._loop = function(state) {
         if (state)
             this.loop = true;
         else
             this.loop = false;
     };
-    Sound.prototype._play = function (name) {
+    Sound.prototype._play = function(name) {
         var asset = this.sounds[name];
         // TODO: wait for loading
         var audio = TRuntime.getGraphics().getAudio();
         audio.play(asset, {loop: this.loop});
     };
-    Sound.prototype._stop = function (name) {
+    Sound.prototype._stop = function(name) {
         var asset = this.sounds[name];
         var audio = TRuntime.getGraphics().getAudio();
         audio.stop(asset);

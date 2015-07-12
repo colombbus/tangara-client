@@ -25,18 +25,18 @@ onmessage = function(event) {
 };
 
 poll = function() {
-  var httpRequest = new XMLHttpRequest();
-  httpRequest.open("GET", fullUrl, true);
-  httpRequest.onload = function() {
-    var output = httpRequest.responseText;
-    if (output) {
-        output = output.trim();
-        if (output.length()>0) {
-            postMessage(output);
+    var httpRequest = new XMLHttpRequest();
+    httpRequest.open("GET", fullUrl, true);
+    httpRequest.onload = function() {
+        var output = httpRequest.responseText;
+        if (output) {
+            output = output.trim();
+            if (output.length() > 0) {
+                postMessage(output);
+            }
         }
-    }
-  };
-  httpRequest.send(null);
+    };
+    httpRequest.send(null);
 };
 
 start = function() {

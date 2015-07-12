@@ -5,14 +5,14 @@ define(['TRuntime'], function(TRuntime) {
         this.transparentColors = [];
         this.loadingCallbacks = {};
     };
-    
-    var graphics = TRuntime.getGraphics();    
+
+    var graphics = TRuntime.getGraphics();
     ResourceManager.STATE_LOADING = 0;
     ResourceManager.STATE_COMPUTING = 1;
     ResourceManager.STATE_READY = 2;
-    
+
     ResourceManager.waitingForImage = {};
-    
+
     getNewResource = function(state, resource, update) {
         if (typeof state === "undefined") {
             state = ResourceManager.STATE_LOADING;
@@ -23,15 +23,15 @@ define(['TRuntime'], function(TRuntime) {
         if (typeof update === 'undefined') {
             update = false;
         }
-        return {state:state, resource:resource, update:update, delete:false};
+        return {state: state, resource: resource, update: update, delete: false};
     };
-    
-    colorMatch = function (color, red, green, blue) {
+
+    colorMatch = function(color, red, green, blue) {
         if (Math.abs(color[0] + color[1] + color[2] - red - green - blue) < 30)
             return true;
         return false;
-    };  
-    
+    };
+
     ResourceManager.prototype.add = function(name, asset, callback) {
         if (typeof this.resources[name] !== 'undefined') {
             // resource already added: call callback right now
@@ -42,7 +42,7 @@ define(['TRuntime'], function(TRuntime) {
         this.resources[name] = getNewResource();
 
         var manager = this;
-        
+
         var loadingCallback = function() {
             if (!manager.gc(name)) {
                 manager.resources[name]['resource'] = graphics.getAsset(asset);
@@ -54,9 +54,9 @@ define(['TRuntime'], function(TRuntime) {
                         callback.call(manager);
                     }
                 }
-            }    
+            }
         };
-        
+
         if (graphics.getAsset(asset)) {
             // already loaded
             loadingCallback.call(this);
@@ -66,9 +66,9 @@ define(['TRuntime'], function(TRuntime) {
                 // we are the first to load this image
                 ResourceManager.waitingForImage[name] = [];
                 ResourceManager.waitingForImage[name].push(loadingCallback);
-                graphics.load(asset, function () {
+                graphics.load(asset, function() {
                     var callbacks = ResourceManager.waitingForImage[name];
-                    for (var i=0;i<callbacks.length;i++) {
+                    for (var i = 0; i < callbacks.length; i++) {
                         callbacks[i].call(manager);
                     }
                     delete ResourceManager.waitingForImage[name];
@@ -79,9 +79,9 @@ define(['TRuntime'], function(TRuntime) {
             }
         }
         return true;
-     };
-     
-     ResourceManager.prototype.addTransparentColor = function(color, callback) {
+    };
+
+    ResourceManager.prototype.addTransparentColor = function(color, callback) {
         this.transparentColors.push(color);
         this.transparent = true;
         for (var name in this.resources) {
@@ -95,9 +95,9 @@ define(['TRuntime'], function(TRuntime) {
 
             }
         }
-     };
-     
-     ResourceManager.prototype.addTransparency = function(name, callback) {
+    };
+
+    ResourceManager.prototype.addTransparency = function(name, callback) {
         this.resources[name]['state'] = ResourceManager.STATE_COMPUTING;
         this.resources[name]['update'] = false;
         var oldImage = this.resources[name]['resource'];
@@ -127,7 +127,7 @@ define(['TRuntime'], function(TRuntime) {
         ctx.putImageData(imageData, 0, 0);
         var newImage = new Image();
         var manager = this;
-        newImage.onload = function () {
+        newImage.onload = function() {
             if (!manager.gc(name)) {
                 if (manager.resources[name]['update']) {
                     // update required: add transparency again
@@ -144,24 +144,24 @@ define(['TRuntime'], function(TRuntime) {
         };
         // start loading
         newImage.src = canvas.toDataURL();
-     };
-     
-     ResourceManager.prototype.getState = function(name) {
+    };
+
+    ResourceManager.prototype.getState = function(name) {
         if (typeof this.resources[name] === 'undefined') {
             return false;
         }
         return this.resources[name]['state'];
-     };
+    };
 
     ResourceManager.prototype.ready = function(name) {
         if (typeof this.resources[name] === 'undefined') {
             return false;
         }
         return (this.resources[name]['state'] === ResourceManager.STATE_READY);
-     };
+    };
 
-    
-     ResourceManager.prototype.get = function(name) {
+
+    ResourceManager.prototype.get = function(name) {
         if (typeof this.resources[name] === 'undefined') {
             return false;
         }
@@ -169,9 +169,9 @@ define(['TRuntime'], function(TRuntime) {
             return false;
         }
         return this.resources[name]['resource'];
-     };
-     
-     ResourceManager.prototype.getUnchecked = function(name) {
+    };
+
+    ResourceManager.prototype.getUnchecked = function(name) {
         if (typeof this.resources[name] === 'undefined') {
             return false;
         }
@@ -179,8 +179,8 @@ define(['TRuntime'], function(TRuntime) {
             return false;
         }
         return this.resources[name]['resource'];
-     };     
-     
+    };
+
     ResourceManager.prototype.remove = function(name) {
         if (typeof this.resources[name] === 'undefined') {
             return false;
@@ -191,7 +191,7 @@ define(['TRuntime'], function(TRuntime) {
             this.resources[name]['delete'] = true;
         }
     };
-     
+
     ResourceManager.prototype.gc = function(name) {
         if (this.resources[name]['delete']) {
             delete this.resources[name];
@@ -199,13 +199,13 @@ define(['TRuntime'], function(TRuntime) {
         }
         return false;
     };
-    
+
 
     ResourceManager.prototype.has = function(name) {
-        return (typeof this.resources[name] !== 'undefined');        
-     };
+        return (typeof this.resources[name] !== 'undefined');
+    };
 
-    
+
     return ResourceManager;
 });
 

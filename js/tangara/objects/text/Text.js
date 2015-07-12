@@ -60,7 +60,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
     Text.prototype._setColor = function(red, green, blue) {
         var color = TUtils.getColor(red, green, blue);
         var gObject = this.gObject;
-        gObject.p.textColor = "rgb(" + color[0] + "," + color[1] + "," + color[2] + ")";        
+        gObject.p.textColor = "rgb(" + color[0] + "," + color[1] + "," + color[2] + ")";
     };
 
     TEnvironment.internationalize(Text, true);

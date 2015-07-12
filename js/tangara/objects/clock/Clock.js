@@ -1,4 +1,4 @@
-define(['jquery','TEnvironment', 'TObject', 'TUtils', 'CommandManager'], function($, TEnvironment, TObject, TUtils, CommandManager) {
+define(['jquery', 'TEnvironment', 'TObject', 'TUtils', 'CommandManager'], function($, TEnvironment, TObject, TUtils, CommandManager) {
     var Clock = function() {
         TObject.call(this);
         this.commands = new CommandManager();
@@ -10,11 +10,11 @@ define(['jquery','TEnvironment', 'TObject', 'TUtils', 'CommandManager'], functio
         this.loop = true;
         this.frozen = false;
     };
-    
+
     Clock.prototype = Object.create(TObject.prototype);
     Clock.prototype.constructor = Clock;
-    Clock.prototype.className = "Clock";    
-    
+    Clock.prototype.className = "Clock";
+
     Clock.prototype._addCommand = function(command) {
         command = TUtils.getCommand(command);
         this.commands.addCommand(command);
@@ -41,7 +41,9 @@ define(['jquery','TEnvironment', 'TObject', 'TUtils', 'CommandManager'], functio
         if (!this.running) {
             this.running = true;
             var self = this;
-            this.timeout = window.setTimeout(function() { self.executeActions(); }, this.initialDelay);
+            this.timeout = window.setTimeout(function() {
+                self.executeActions();
+            }, this.initialDelay);
         }
     };
 
@@ -52,14 +54,16 @@ define(['jquery','TEnvironment', 'TObject', 'TUtils', 'CommandManager'], functio
             this.timeout = null;
         }
     };
-    
+
     Clock.prototype.executeActions = function() {
         this.timeout = null;
         if (this.running) {
             this.commands.executeCommands();
             if (this.loop) {
                 var self = this;
-                this.timeout = window.setTimeout(function() { self.executeActions(); }, this.delay);
+                this.timeout = window.setTimeout(function() {
+                    self.executeActions();
+                }, this.delay);
             } else {
                 this._stop();
             }
@@ -75,7 +79,7 @@ define(['jquery','TEnvironment', 'TObject', 'TUtils', 'CommandManager'], functio
         value = TUtils.getBoolean(value);
         this.loop = value;
     };
-    
+
     Clock.prototype.freeze = function(value) {
         TObject.prototype.freeze.call(value);
         if (value !== this.frozen) {
@@ -96,9 +100,9 @@ define(['jquery','TEnvironment', 'TObject', 'TUtils', 'CommandManager'], functio
         value = TUtils.getBoolean(value);
         this.commands.logCommands(value);
     };
-    
+
     TEnvironment.internationalize(Clock, true);
-    
+
     return Clock;
 });
 

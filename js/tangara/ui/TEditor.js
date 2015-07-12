@@ -1,15 +1,15 @@
-define(['ui/TComponent','jquery', 'ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 'ace/autocomplete', 'TProgram', 'TEnvironment', 'TLink', 'TUI', 'TUtils'], function (TComponent, $, ace, ace_edit_session, ace_range, ace_undo_manager, ace_autocomplete, TProgram, TEnvironment, TLink, TUI, TUtils) {
+define(['ui/TComponent', 'jquery', 'ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 'ace/autocomplete', 'TProgram', 'TEnvironment', 'TLink', 'TUI', 'TUtils'], function(TComponent, $, ace, ace_edit_session, ace_range, ace_undo_manager, ace_autocomplete, TProgram, TEnvironment, TLink, TUI, TUtils) {
 
     function TEditor(callback) {
-	    var $editor;
-	    
-	    TComponent.call(this, {id:"teditor"}, function(component) {
-		    $editor = component;
-		    if (typeof callback !== 'undefined') {
-			    callback.call(this, component);
-		    }
-	    });
-        
+        var $editor;
+
+        TComponent.call(this, {id: "teditor"}, function(component) {
+            $editor = component;
+            if (typeof callback !== 'undefined') {
+                callback.call(this, component);
+            }
+        });
+
         var aceEditor;
         var codeChanged = false;
         var program;
@@ -26,14 +26,14 @@ define(['ui/TComponent','jquery', 'ace/ace', 'ace/edit_session', 'ace/range', 'a
         var disabledText = TEnvironment.getMessage("editor-disabled");
         disabledP.appendChild(document.createTextNode(disabledText));
         disabledMessage.appendChild(disabledP);
-		var $disabledMessage = $(disabledMessage);
+        var $disabledMessage = $(disabledMessage);
 
         var popupTriggered = false;
         var popupTimeout;
         var triggerPopup = false;
         var editionEnabled = false;
 
-        this.displayed = function () {
+        this.displayed = function() {
             aceEditor = ace.edit($editor.attr("id"));
             aceEditor.setShowPrintMargin(false);
             //aceEditor.renderer.setShowGutter(false);
@@ -42,7 +42,7 @@ define(['ui/TComponent','jquery', 'ace/ace', 'ace/edit_session', 'ace/range', 'a
             aceEditor.setBehavioursEnabled(false);
 
             var self = this;
-            aceEditor.on('input', function () {
+            aceEditor.on('input', function() {
                 if (!program.isModified() && editionEnabled) {
                     program.setModified(true);
                     TUI.updateSidebarPrograms();
@@ -51,7 +51,7 @@ define(['ui/TComponent','jquery', 'ace/ace', 'ace/edit_session', 'ace/range', 'a
                 self.removeError();
                 if (triggerPopup) {
                     triggerPopup = false;
-                    popupTimeout = setTimeout(function () {
+                    popupTimeout = setTimeout(function() {
                         popupTriggered = false;
                         AceAutocomplete.startCommand.exec(aceEditor);
                     }, 800);
@@ -64,7 +64,7 @@ define(['ui/TComponent','jquery', 'ace/ace', 'ace/edit_session', 'ace/range', 'a
             aceEditor.commands.addCommand({
                 name: "save",
                 bindKey: {win: "Ctrl-S", mac: "Command-S"},
-                exec: function (arg) {
+                exec: function(arg) {
                     if (editionEnabled) {
                         TUI.saveProgram();
                     }
@@ -79,48 +79,48 @@ define(['ui/TComponent','jquery', 'ace/ace', 'ace/edit_session', 'ace/range', 'a
             this.disable();
         };
 
-        this.show = function () {
+        this.show = function() {
             $editor.show();
             aceEditor.focus();
         };
 
-        this.hide = function () {
+        this.hide = function() {
             $editor.hide();
         };
 
-        this.getValue = function () {
+        this.getValue = function() {
             var simpleText = aceEditor.getSession().getValue();
             var protectedText = TUtils.addQuoteDelimiters(simpleText);
             var command = TUtils.parseQuotes(protectedText);
             return command;
         };
 
-        this.getStatements = function () {
+        this.getStatements = function() {
             this.updateProgram();
             return program.getStatements();
         };
 
-        this.updateProgram = function () {
+        this.updateProgram = function() {
             if (codeChanged) {
                 program.setCode(this.getValue());
                 codeChanged = false;
             }
         };
 
-        this.getProgram = function () {
+        this.getProgram = function() {
             return program;
         };
 
-        this.setProgram = function (value) {
+        this.setProgram = function(value) {
             program = value;
             codeChanged = true;
         };
 
-        this.getProgramName = function () {
+        this.getProgramName = function() {
             return program.getName();
         };
 
-        this.setSession = function (session) {
+        this.setSession = function(session) {
             if (disabled) {
                 aceEditor.setReadOnly(false);
                 aceEditor.renderer.setShowGutter(true);
@@ -132,21 +132,21 @@ define(['ui/TComponent','jquery', 'ace/ace', 'ace/edit_session', 'ace/range', 'a
             aceEditor.setSession(session);
         };
 
-        this.getSession = function () {
+        this.getSession = function() {
             return aceEditor.getSession();
         };
 
-        this.reset = function () {
+        this.reset = function() {
             var undo = aceEditor.getSession().getUndoManager();
             undo.reset();
             codeChanged = false;
         };
 
-        this.giveFocus = function () {
+        this.giveFocus = function() {
             aceEditor.focus();
         };
 
-        this.disable = function () {
+        this.disable = function() {
             aceEditor.setSession(disabledSession);
             aceEditor.setReadOnly(true);
             aceEditor.renderer.setShowGutter(false);
@@ -156,14 +156,14 @@ define(['ui/TComponent','jquery', 'ace/ace', 'ace/edit_session', 'ace/range', 'a
             disabled = true;
         };
 
-        this.removeError = function () {
+        this.removeError = function() {
             if (errorMarker !== null) {
                 aceEditor.getSession().removeMarker(errorMarker);
                 errorMarker = null;
             }
         };
 
-        this.setError = function (lines) {
+        this.setError = function(lines) {
             this.removeError();
             var range;
             if (lines.length > 1) {
@@ -175,12 +175,12 @@ define(['ui/TComponent','jquery', 'ace/ace', 'ace/edit_session', 'ace/range', 'a
             }
             aceEditor.navigateTo(lines[0] - 1, 0);
             // In a timer, because otherwise does not seem to work when editor mode has just been activated
-            setTimeout(function () {
+            setTimeout(function() {
                 aceEditor.scrollToLine(lines[0] - 1, true, true, null);
             }, 100);
         };
 
-        this.createSession = function (program) {
+        this.createSession = function(program) {
             var session = new AceEditSession(program.getCode());
             session.setMode("ace/mode/javascript");
             session.setUndoManager(new AceUndoManager());
@@ -189,24 +189,24 @@ define(['ui/TComponent','jquery', 'ace/ace', 'ace/edit_session', 'ace/range', 'a
             return session;
         };
 
-        this.enableMethodHelper = function () {
+        this.enableMethodHelper = function() {
             aceEditor.commands.addCommand(dotCommand);
             aceEditor.commands.addCommand(backspaceCommand);
             aceEditor.commands.addCommand(AceAutocomplete.startCommand);
         };
 
-        this.disableMethodHelper = function () {
+        this.disableMethodHelper = function() {
             aceEditor.commands.removeCommand(dotCommand);
             aceEditor.commands.removeCommand(backspaceCommand);
             aceEditor.commands.removeCommand(AceAutocomplete.startCommand);
         };
 
-        this.setEditionEnabled = function (value) {
+        this.setEditionEnabled = function(value) {
             editionEnabled = value;
         };
 
         var editorCompleter = {
-            getCompletions: function (editor, session, pos, prefix, callback) {
+            getCompletions: function(editor, session, pos, prefix, callback) {
                 pos.column--;
                 var token = session.getTokenAt(pos.row, pos.column);
                 var endToken = "(";
@@ -298,10 +298,10 @@ define(['ui/TComponent','jquery', 'ace/ace', 'ace/edit_session', 'ace/range', 'a
                 var result = regex.exec(valueBefore);
 
                 var completions = [];
-                
-                if (name == "tangara"){
+
+                if (name == "tangara") {
                     // result[1] is the important part
-                    result = [name,name];
+                    result = [name, name];
                 }
                 if (result !== null && result.length > 0) {
                     var className = result[1];
@@ -323,7 +323,7 @@ define(['ui/TComponent','jquery', 'ace/ace', 'ace/edit_session', 'ace/range', 'a
         var dotCommand = {
             name: "methodHelper",
             bindKey: {win: '.', mac: '.'},
-            exec: function (editor) {
+            exec: function(editor) {
                 triggerPopup = true;
                 return false; // let default event perform
             },
@@ -333,7 +333,7 @@ define(['ui/TComponent','jquery', 'ace/ace', 'ace/edit_session', 'ace/range', 'a
         var backspaceCommand = {
             name: "methodHelper2",
             bindKey: {win: 'Backspace', mac: 'Backspace'},
-            exec: function (editor) {
+            exec: function(editor) {
                 var cursor = editor.selection.getCursor();
                 var token = editor.getSession().getTokenAt(cursor.row, cursor.column - 1);
                 if (token !== null && token.type === "punctuation.operator" && token.value === ".") {

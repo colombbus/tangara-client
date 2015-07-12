@@ -1,39 +1,39 @@
-define(['ui/TComponent', 'jquery', 'TRuntime'], function (TComponent, $, TRuntime) {
+define(['ui/TComponent', 'jquery', 'TRuntime'], function(TComponent, $, TRuntime) {
 
     function TLearnCanvas(callback) {
-	    var $main, $canvas, $canvasLoading, $canvasLoadingValue;
-	    
+        var $main, $canvas, $canvasLoading, $canvasLoadingValue;
+
         TComponent.call(this, "TLearnCanvas.html", function(component) {
-	        $main = component;
-	        $canvas = component.find("#tcanvas");
-	        $canvasLoading = component.find("#tcanvas-loading");
-	        $canvasLoadingValue = component.find("#tcanvas-loading-value");
-	        
-	        if (typeof callback !== 'undefined') {
-		        callback.call(this, component);
-	        }
+            $main = component;
+            $canvas = component.find("#tcanvas");
+            $canvasLoading = component.find("#tcanvas-loading");
+            $canvasLoadingValue = component.find("#tcanvas-loading-value");
+
+            if (typeof callback !== 'undefined') {
+                callback.call(this, component);
+            }
         });
-	    
+
         var qStage;
         var loading = true;
-        
-        this.addGraphicalObject = function (object) {
+
+        this.addGraphicalObject = function(object) {
             if (typeof qStage !== 'undefined') {
                 qStage.insert(object.getQObject());
             }
         };
 
-        this.removeGraphicalObject = function (object) {
+        this.removeGraphicalObject = function(object) {
             qStage.remove(object.getQObject());
         };
 
-        this.displayed = function () {
+        this.displayed = function() {
             var qInstance = TRuntime.getQuintusInstance();
             qInstance.setup("tcanvas", {maximize: false}).touch(qInstance.SPRITE_ALL);
             qInstance.stageScene(null);
             qStage = qInstance.stage();
             // resize canvas and its container when window is resized
-            $(window).resize(function (e) {
+            $(window).resize(function(e) {
                 var width = $main.width();
                 var height = $main.height();
                 $canvas.width(width);
@@ -53,25 +53,25 @@ define(['ui/TComponent', 'jquery', 'TRuntime'], function (TComponent, $, TRuntim
                 qStage.defaults['h'] = height;
             });
         };
-        
-        this.show = function () {
+
+        this.show = function() {
             $main.show();
         };
-        
-        this.hide = function () {
+
+        this.hide = function() {
             $main.hide();
         };
         this.showLoading = function() {
-	        $canvasLoading.show();
+            $canvasLoading.show();
         };
         this.setLoadingValue = function(count, total) {
-            var value = Math.round(count*100/total);
-            $canvasLoadingValue.text(value+"%");
+            var value = Math.round(count * 100 / total);
+            $canvasLoadingValue.text(value + "%");
         };
         this.removeLoading = function() {
-	        $canvasLoading.hide();
+            $canvasLoading.hide();
         };
-       
+
     }
 
     TLearnCanvas.prototype = Object.create(TComponent.prototype);

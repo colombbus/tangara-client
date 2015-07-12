@@ -1,14 +1,14 @@
-define(['ui/TComponent', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jquery', 'ace/ace', 'ace/autocomplete', 'ace/range'], function (TComponent, TParser, TLog, TEnvironment, TUtils, TRuntime, $, ace, ace_autocomplete, ace_range) {
+define(['ui/TComponent', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jquery', 'ace/ace', 'ace/autocomplete', 'ace/range'], function(TComponent, TParser, TLog, TEnvironment, TUtils, TRuntime, $, ace, ace_autocomplete, ace_range) {
 
     function TLearnEditor(callback) {
-		var $editor, $editorText;
+        var $editor, $editorText;
 
         TComponent.call(this, "TLearnEditor.html", function(component) {
-	        $editor = component;
-	        $editorText = component.find("#tlearneditor-text");
-	        if (typeof callback !== 'undefined') {
-		        callback.call(this, component);
-	        }
+            $editor = component;
+            $editorText = component.find("#tlearneditor-text");
+            if (typeof callback !== 'undefined') {
+                callback.call(this, component);
+            }
         });
 
         var AceRange = ace_range.Range;
@@ -21,7 +21,7 @@ define(['ui/TComponent', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRunti
         var popupTimeout;
         var triggerPopup = false;
 
-        this.displayed = function () {
+        this.displayed = function() {
             aceEditor = ace.edit($editorText.attr("id"));
             aceEditor.getSession().setMode("ace/mode/javascript");
             // Disable JSHint
@@ -31,10 +31,10 @@ define(['ui/TComponent', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRunti
             aceEditor.setFontSize("20px");
             aceEditor.setHighlightActiveLine(false);
             aceEditor.setTheme("ace/theme/twilight");
-            aceEditor.on('input', function () {
+            aceEditor.on('input', function() {
                 if (triggerPopup) {
                     triggerPopup = false;
-                    popupTimeout = setTimeout(function () {
+                    popupTimeout = setTimeout(function() {
                         popupTriggered = false;
                         // Force Ace popup to not add gutter width when computing popup pos
                         // since gutter is not shown
@@ -54,61 +54,61 @@ define(['ui/TComponent', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRunti
 
         };
 
-        this.getValue = function () {
+        this.getValue = function() {
             var simpleText = aceEditor.getSession().getValue();
             var protectedText = TUtils.addQuoteDelimiters(simpleText);
             var command = TUtils.parseQuotes(protectedText);
             return command;
         };
 
-        this.setValue = function (value) {
+        this.setValue = function(value) {
             aceEditor.getSession().setValue(value);
             // set cursor to the end of line
             aceEditor.gotoPageDown();
         };
 
-        this.focus = function () {
+        this.focus = function() {
             aceEditor.focus();
         };
 
-        this.getStatements = function () {
+        this.getStatements = function() {
             return TParser.parse(this.getValue());
         };
 
-        this.clear = function () {
+        this.clear = function() {
             aceEditor.setValue("");
         };
 
-        this.show = function () {
+        this.show = function() {
             $editor.show();
             aceEditor.focus();
         };
 
-        this.hide = function () {
+        this.hide = function() {
             $editor.hide();
         };
 
-        this.getHeight = function () {
+        this.getHeight = function() {
             if (computedHeight === -1) {
                 computedHeight = $editor.outerHeight(false);
             }
             return computedHeight;
         };
 
-        this.enableMethodHelper = function () {
+        this.enableMethodHelper = function() {
             aceEditor.commands.addCommand(dotCommand);
             aceEditor.commands.addCommand(backspaceCommand);
             aceEditor.commands.addCommand(AceAutocomplete.startCommand);
         };
 
-        this.disableMethodHelper = function () {
+        this.disableMethodHelper = function() {
             aceEditor.commands.removeCommand(dotCommand);
             aceEditor.commands.removeCommand(backspaceCommand);
             aceEditor.commands.removeCommand(AceAutocomplete.startCommand);
         };
 
         var consoleCompleter = {
-            getCompletions: function (editor, session, pos, prefix, callback) {
+            getCompletions: function(editor, session, pos, prefix, callback) {
                 pos.column--;
                 var token = session.getTokenAt(pos.row, pos.column);
 
@@ -171,7 +171,7 @@ define(['ui/TComponent', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRunti
         var dotCommand = {
             name: "methodHelper",
             bindKey: {win: '.', mac: '.'},
-            exec: function (editor) {
+            exec: function(editor) {
                 triggerPopup = true;
                 return false; // let default event perform
             },
@@ -181,7 +181,7 @@ define(['ui/TComponent', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRunti
         var backspaceCommand = {
             name: "methodHelper2",
             bindKey: {win: 'Backspace', mac: 'Backspace'},
-            exec: function (editor) {
+            exec: function(editor) {
                 var cursor = editor.selection.getCursor();
                 var token = editor.getSession().getTokenAt(cursor.row, cursor.column - 1);
                 if (token !== null && token.type === "punctuation.operator" && token.value === ".") {
@@ -206,10 +206,10 @@ define(['ui/TComponent', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRunti
 //            readOnly: true // false if this command should not apply in readOnly mode
 //        };
     }
-    
+
     TLearnEditor.prototype = Object.create(TComponent.prototype);
-    TLearnEditor.prototype.constructor = TLearnEditor;    
-    
+    TLearnEditor.prototype.constructor = TLearnEditor;
+
 
     return TLearnEditor;
 });

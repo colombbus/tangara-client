@@ -1,10 +1,10 @@
 define(['jquery', 'quintus'], function($, Quintus) {
-	function TGraphics() {
+    function TGraphics() {
         var Q = Quintus();
         Q.include("Sprites, Scenes, 2D, UI, Anim, Input, Touch, Audio").enableSound();
-        
-		// Tweak Quintus to be able to look for sprites while skipping some of them
-        Q._TdetectSkip = function (obj, iterator, context, arg1, arg2, skip) {
+
+        // Tweak Quintus to be able to look for sprites while skipping some of them
+        Q._TdetectSkip = function(obj, iterator, context, arg1, arg2, skip) {
             var result;
             if (obj == null) {
                 return;
@@ -34,7 +34,7 @@ define(['jquery', 'quintus'], function($, Quintus) {
             }
         };
 
-        Q.Stage.prototype._TgridCellCheckSkip = function (type, id, obj, collisionMask, skip) {
+        Q.Stage.prototype._TgridCellCheckSkip = function(type, id, obj, collisionMask, skip) {
             if (Q._isUndefined(collisionMask) || collisionMask & type) {
                 var obj2 = this.index[id];
                 if (obj2 && obj2 !== obj && Q.overlap(obj, obj2)) {
@@ -50,7 +50,7 @@ define(['jquery', 'quintus'], function($, Quintus) {
         };
 
 
-        Q.Stage.prototype.TsearchSkip = function (obj, collisionMask, skip) {
+        Q.Stage.prototype.TsearchSkip = function(obj, collisionMask, skip) {
             var col;
 
             // If the object doesn't have a grid, regrid it
@@ -85,7 +85,7 @@ define(['jquery', 'quintus'], function($, Quintus) {
         Q.touchStage = [0];
         Q.touchType = 0;
 
-        Q._TdetectTouch = function (obj, iterator, context, arg1, arg2) {
+        Q._TdetectTouch = function(obj, iterator, context, arg1, arg2) {
             var result = false, id = -1, col;
             if (obj == null) {
                 return;
@@ -112,7 +112,7 @@ define(['jquery', 'quintus'], function($, Quintus) {
             }
         };
 
-        Q.Stage.prototype._TgridCellCheckTouch = function (type, id, obj, collisionMask, minId) {
+        Q.Stage.prototype._TgridCellCheckTouch = function(type, id, obj, collisionMask, minId) {
             if (Q._isUndefined(collisionMask) || collisionMask & type) {
                 var obj2 = this.index[id];
                 if (obj2 && obj2 !== obj && !obj2.p.hidden && obj2.p.id > minId && Q.overlap(obj, obj2)) {
@@ -127,7 +127,7 @@ define(['jquery', 'quintus'], function($, Quintus) {
             }
         };
 
-        Q.Stage.prototype.TsearchTouch = function (obj, collisionMask) {
+        Q.Stage.prototype.TsearchTouch = function(obj, collisionMask) {
             var col;
 
             // If the object doesn't have a grid, regrid it
@@ -155,7 +155,7 @@ define(['jquery', 'quintus'], function($, Quintus) {
             return false;
         };
 
-        Q.TouchSystem.prototype.touch = function (e) {
+        Q.TouchSystem.prototype.touch = function(e) {
             var touches = e.changedTouches || [e];
 
             for (var i = 0; i < touches.length; i++) {
@@ -203,7 +203,7 @@ define(['jquery', 'quintus'], function($, Quintus) {
             //e.preventDefault();
         };
 
-        Q.touch = function (type, stage) {
+        Q.touch = function(type, stage) {
             Q.untouch();
             Q.touchType = type || Q.SPRITE_UI;
             Q.touchStage = stage || [2, 1, 0];
@@ -216,72 +216,72 @@ define(['jquery', 'quintus'], function($, Quintus) {
             }
             return Q;
         };
-        
+
         this.getInstance = function() {
-	        return Q;
+            return Q;
         };
-        
+
         this.pause = function() {
             if (Q.loop) {
                 Q.pauseGame();
             }
         }
 
-		this.unpause = function() {
+        this.unpause = function() {
             if (!Q.loop) {
                 Q.unpauseGame();
             }
-		};
-		
-		this.preloadResources = function(project, callback, options) {
+        };
+
+        this.preloadResources = function(project, callback, options) {
             var resources = project.getResourcesNames();
-            if (resources.length>0) {
-                for (var i=0;i<resources.length;i++) {
+            if (resources.length > 0) {
+                for (var i = 0; i < resources.length; i++) {
                     Q.preload(project.getResourceLocation(resources[i]));
                 }
                 Q.preload(callback, options);
             } else {
                 callback.apply(this);
             }
-		};
-		
-		this.load = function(resources, callback) {
-			Q.load(resources, callback);
-		};
-		
-		this.addClass = function(param1, param2, param3) {
-			var ancestor, name, object;
-			if (typeof param3 !== 'undefined') {
-				ancestor = param1;
-				name = param2;
-				object = param3;
-			} else {
-				ancestor = "Sprite";
-				name = param1;
-				object = param2;
-			}
-			Q[ancestor].extend(name, object);
-			return Q[name];
-		};
-		
-		this.getEasing = function(name) {
-			return Q.Easing[name];	
-		};
-		
-		this.insertObject = function(object, into) {
+        };
+
+        this.load = function(resources, callback) {
+            Q.load(resources, callback);
+        };
+
+        this.addClass = function(param1, param2, param3) {
+            var ancestor, name, object;
+            if (typeof param3 !== 'undefined') {
+                ancestor = param1;
+                name = param2;
+                object = param3;
+            } else {
+                ancestor = "Sprite";
+                name = param1;
+                object = param2;
+            }
+            Q[ancestor].extend(name, object);
+            return Q[name];
+        };
+
+        this.getEasing = function(name) {
+            return Q.Easing[name];
+        };
+
+        this.insertObject = function(object, into) {
             Q.stage().insert(object, into);
-		};
-		
-		this.removeObject = function(object) {
-	        Q.stage().remove(object);
-		};
-		
-		this.setCanvas = function(id) {
-	        Q.setup(id, {maximize: true}).touch(Q.SPRITE_ALL);
-	        Q.stageScene(null);
-		};
-		
-		this.resize = function(width, height) {
+        };
+
+        this.removeObject = function(object) {
+            Q.stage().remove(object);
+        };
+
+        this.setCanvas = function(id) {
+            Q.setup(id, {maximize: true}).touch(Q.SPRITE_ALL);
+            Q.stageScene(null);
+        };
+
+        this.resize = function(width, height) {
             Q.el.style.height = height + "px";
             Q.el.style.width = width + "px";
             Q.el.width = width;
@@ -295,31 +295,31 @@ define(['jquery', 'quintus'], function($, Quintus) {
             var stage = Q.stage();
             stage.defaults['w'] = width;
             stage.defaults['h'] = height;
-		};
-		
-		this.objectResized = function(object) {
-	        object.size(true);
-	        Q._generatePoints(object,true);
-		};
-		
-		this.getAsset = function(name) {
-			return Q.asset(name);
-		};
-		
-		this.getContext = function() {
-			return Q.ctx;
-		};
-		
-		this.getElement = function() {
-			return Q.el;
-		};
-		
-		this.getAudio = function() {
-	    	return Q.audio;
-		};
-		
-	}
-	
-	return TGraphics;
-	
+        };
+
+        this.objectResized = function(object) {
+            object.size(true);
+            Q._generatePoints(object, true);
+        };
+
+        this.getAsset = function(name) {
+            return Q.asset(name);
+        };
+
+        this.getContext = function() {
+            return Q.ctx;
+        };
+
+        this.getElement = function() {
+            return Q.el;
+        };
+
+        this.getAudio = function() {
+            return Q.audio;
+        };
+
+    }
+
+    return TGraphics;
+
 });

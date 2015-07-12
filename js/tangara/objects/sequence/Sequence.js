@@ -1,4 +1,4 @@
-define(['jquery','TEnvironment', 'TObject', 'TUtils', 'TRuntime', 'TParser'], function($, TEnvironment, TObject, TUtils, TRuntime, TParser) {
+define(['jquery', 'TEnvironment', 'TObject', 'TUtils', 'TRuntime', 'TParser'], function($, TEnvironment, TObject, TUtils, TRuntime, TParser) {
     var Sequence = function() {
         TObject.call(this);
         this.actions = new Array();
@@ -10,15 +10,15 @@ define(['jquery','TEnvironment', 'TObject', 'TUtils', 'TRuntime', 'TParser'], fu
         this.wasRunning = false;
         this.logCommands = true;
     };
-    
+
     Sequence.prototype = Object.create(TObject.prototype);
     Sequence.prototype.constructor = Sequence;
-    Sequence.prototype.className = "Sequence";    
-    
+    Sequence.prototype.className = "Sequence";
+
     Sequence.TYPE_COMMAND = 0x01;
     Sequence.TYPE_DELAY = 0x02;
     Sequence.MINIMUM_LOOP = 100;
-    
+
     Sequence.prototype._addCommand = function(command) {
         command = TUtils.getCommand(command);
         if (TUtils.checkString(command)) {
@@ -26,16 +26,16 @@ define(['jquery','TEnvironment', 'TObject', 'TUtils', 'TRuntime', 'TParser'], fu
             command = TParser.parse(command);
         } else if (TUtils.checkFunction(command)) {
             var functionName = TUtils.getFunctionName(command);
-            command = [{type:"ExpressionStatement", expression:{type:"CallExpression", callee:{type:"Identifier", name:functionName}, arguments:[]}}];
+            command = [{type: "ExpressionStatement", expression: {type: "CallExpression", callee: {type: "Identifier", name: functionName}, arguments: []}}];
         }
-        this.actions.push({type:Sequence.TYPE_COMMAND,value:command});
+        this.actions.push({type: Sequence.TYPE_COMMAND, value: command});
     };
 
     Sequence.prototype._addDelay = function(delay) {
         delay = TUtils.getInteger(delay);
-        this.actions.push({type:Sequence.TYPE_DELAY,value:delay});
+        this.actions.push({type: Sequence.TYPE_DELAY, value: delay});
     };
-    
+
     Sequence.prototype.nextAction = function() {
         this.timeout = null;
         this.index++;
@@ -56,11 +56,13 @@ define(['jquery','TEnvironment', 'TObject', 'TUtils', 'TRuntime', 'TParser'], fu
                 this.nextAction();
             } else if (action.type === Sequence.TYPE_DELAY) {
                 var self = this;
-                this.timeout = window.setTimeout(function() { self.nextAction(); }, action.value);
+                this.timeout = window.setTimeout(function() {
+                    self.nextAction();
+                }, action.value);
             }
         }
     };
-    
+
     Sequence.prototype._start = function() {
         if (this.running) {
             // Sequence is already running: restart it
@@ -79,7 +81,7 @@ define(['jquery','TEnvironment', 'TObject', 'TUtils', 'TRuntime', 'TParser'], fu
             this.timeout = null;
         }
     };
-    
+
     Sequence.prototype._pause = function() {
         this.running = false;
         if (this.timeout !== null) {
@@ -87,7 +89,7 @@ define(['jquery','TEnvironment', 'TObject', 'TUtils', 'TRuntime', 'TParser'], fu
             this.timeout = null;
         }
     };
-    
+
     Sequence.prototype._unpause = function() {
         this.running = true;
         this.nextAction();
@@ -103,19 +105,19 @@ define(['jquery','TEnvironment', 'TObject', 'TUtils', 'TRuntime', 'TParser'], fu
         if (value) {
             // WARNING: in order to prevent Tangara freeze, check that there is at least a total delay of MINIMUM_LOOP in actions
             var totalDelay = 0;
-            for (var i=0; i<this.actions.length;i++) {
+            for (var i = 0; i < this.actions.length; i++) {
                 var action = this.actions[i];
                 if (action.type === Sequence.TYPE_DELAY) {
                     totalDelay += action.value;
                 }
             }
             if (totalDelay < Sequence.MINIMUM_LOOP) {
-                throw new Error(this.getMessage("freeze warning",Sequence.MINIMUM_LOOP));
+                throw new Error(this.getMessage("freeze warning", Sequence.MINIMUM_LOOP));
             }
-        }            
+        }
         this.loop = value;
     };
-    
+
     Sequence.prototype.freeze = function(value) {
         TObject.prototype.freeze.call(value);
         if (value !== this.frozen) {
@@ -138,7 +140,7 @@ define(['jquery','TEnvironment', 'TObject', 'TUtils', 'TRuntime', 'TParser'], fu
     };
 
     TEnvironment.internationalize(Sequence, true);
-    
+
     return Sequence;
 });
 

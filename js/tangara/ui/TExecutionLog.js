@@ -16,28 +16,28 @@ define([], function() {
                 message = 'undefined error';
             }
             if (typeof message === 'string') {
-                window.console.log("error: "+message);
+                window.console.log("error: " + message);
             }
         };
-        
+
         this.addMessage = function(text) {
-            window.console.log("message: "+text);
+            window.console.log("message: " + text);
         };
-        
+
         this.clear = function() {
         };
 
         this.saveScroll = function() {
         };
-        
+
         this.restoreScroll = function() {
         };
-        
+
         this.getError = function(index) {
-           return null;           
+            return null;
         };
-        
-    } 
-    
+
+    }
+
     return TExecutionLog;
 });

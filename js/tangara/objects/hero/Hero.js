@@ -1,7 +1,7 @@
-define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'objects/walker/Walker', 'TUtils'], function($, TEnvironment, TGraphicalObject, Sprite, Walker, TUtils) {
+define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'objects/walker/Walker', 'TUtils'], function($, TEnvironment, TGraphicalObject, Sprite, Walker, TUtils) {
     var Hero = function(name) {
         Walker.call(this);
-        if (typeof(name)==='undefined') {
+        if (typeof (name) === 'undefined') {
             name = "tangy";
         }
         this.translatedForward = this.getMessage("forward");
@@ -9,33 +9,33 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
         this.translatedFront = this.getMessage("front");
         this.custom = false;
         this._setCharacter(name);
-        
+
     };
     // TODO: use Quintus animations
-    
+
     Hero.prototype = Object.create(Walker.prototype);
     Hero.prototype.constructor = Hero;
     Hero.prototype.className = "Hero";
-    
+
     var graphics = Hero.prototype.graphics;
-    
+
     Hero.prototype.gClass = graphics.addClass("TWalker", "THero", {
-        init: function(props,defaultProps) {
+        init: function(props, defaultProps) {
             this._super(TUtils.extend({
-                dtMovement:1,
-                dtPause:1,
-                imgIndex:0,
-                lastX:0,
-                lastMove:Hero.DIRECTION_NONE,
-                frontAssetsCount:0,
-                forwardAssetsCount:0,
-                backwardAssetsCount:0,
-                defaultAssetsCount:0,
-                durationMove:1,
-                durationPause:1,
-                ellapsed:0.0,
-                autoAsset:true
-            },props),defaultProps);
+                dtMovement: 1,
+                dtPause: 1,
+                imgIndex: 0,
+                lastX: 0,
+                lastMove: Hero.DIRECTION_NONE,
+                frontAssetsCount: 0,
+                forwardAssetsCount: 0,
+                backwardAssetsCount: 0,
+                defaultAssetsCount: 0,
+                durationMove: 1,
+                durationPause: 1,
+                ellapsed: 0.0,
+                autoAsset: true
+            }, props), defaultProps);
             this.frontAssets = [];
             this.forwardAssets = [];
             this.backwardAssets = [];
@@ -46,20 +46,20 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
         step: function(dt) {
             this._super(dt);
             var p = this.p;
-            dt+=p.ellapsed;
+            dt += p.ellapsed;
             this.performAssetOperations();
-            var deltaX = Math.round(p.x-p.lastX);
+            var deltaX = Math.round(p.x - p.lastX);
             if (p.autoAsset && !p.dragging && !p.frozen) {
-                if (p.moving && deltaX !==0) {
+                if (p.moving && deltaX !== 0) {
                     // we are moving
-                    if (dt>p.dtMovement) {
+                    if (dt > p.dtMovement) {
                         p.ellapsed = 0;
                         // display next image
                         if (deltaX > 0) {
                             // moving right
                             if (p.forwardAssetsCount > 0) {
                                 if (p.lastMove === Sprite.DIRECTION_RIGHT) {
-                                    p.imgIndex = (p.imgIndex+Math.round(dt/p.dtMovement)) % p.forwardAssetsCount;
+                                    p.imgIndex = (p.imgIndex + Math.round(dt / p.dtMovement)) % p.forwardAssetsCount;
                                 } else {
                                     // direction changed
                                     p.imgIndex = 0;
@@ -67,14 +67,14 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
                                 p.asset = this.forwardAssets[p.imgIndex];
                                 p.lastMove = Sprite.DIRECTION_RIGHT;
                             } else if (p.defaultAssetsCount > 0) {
-                                p.imgIndex = (p.imgIndex+Math.round(dt/p.dtMovement)) % p.defaultAssetsCount;
+                                p.imgIndex = (p.imgIndex + Math.round(dt / p.dtMovement)) % p.defaultAssetsCount;
                                 p.asset = this.defaultAssets[p.imgIndex];
                             }
                         } else {
                             // moving left
-                            if (p.backwardAssetsCount >0) {
+                            if (p.backwardAssetsCount > 0) {
                                 if (p.lastMove === Sprite.DIRECTION_LEFT) {
-                                    p.imgIndex = (p.imgIndex+Math.round(dt/p.dtMovement)) % p.backwardAssetsCount;
+                                    p.imgIndex = (p.imgIndex + Math.round(dt / p.dtMovement)) % p.backwardAssetsCount;
                                 } else {
                                     // direction changed
                                     p.imgIndex = 0;
@@ -82,7 +82,7 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
                                 p.asset = this.backwardAssets[p.imgIndex];
                                 p.lastMove = Sprite.DIRECTION_LEFT;
                             } else if (p.defaultAssetsCount > 0) {
-                                p.imgIndex = (p.imgIndex+Math.round(dt/p.dtMovement)) % p.defaultAssetsCount;
+                                p.imgIndex = (p.imgIndex + Math.round(dt / p.dtMovement)) % p.defaultAssetsCount;
                                 p.asset = this.defaultAssets[p.imgIndex];
                             }
                         }
@@ -91,11 +91,11 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
                     }
                 } else if (p.initialized) {
                     // not moving forward nor backward
-                    if (dt>p.dtPause) {
+                    if (dt > p.dtPause) {
                         p.ellapsed = 0;
-                        if (p.frontAssetsCount >0) {
+                        if (p.frontAssetsCount > 0) {
                             if (p.lastMove === Sprite.DIRECTION_NONE) {
-                                p.imgIndex = (p.imgIndex+Math.round(dt/p.dtPause)) % p.frontAssetsCount;
+                                p.imgIndex = (p.imgIndex + Math.round(dt / p.dtPause)) % p.frontAssetsCount;
                             } else {
                                 // direction changed
                                 p.imgIndex = 0;
@@ -103,7 +103,7 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
                             p.asset = this.frontAssets[p.imgIndex];
                             p.lastMove = Sprite.DIRECTION_NONE;
                         } else if (p.defaultAssetsCount > 0) {
-                            p.imgIndex = (p.imgIndex+Math.round(dt/p.dtPause)) % p.defaultAssetsCount;
+                            p.imgIndex = (p.imgIndex + Math.round(dt / p.dtPause)) % p.defaultAssetsCount;
                             p.asset = this.defaultAssets[p.imgIndex];
                         }
                     } else {
@@ -128,9 +128,9 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
         removeForwardAsset: function(asset) {
             this.addAssetOperation(function(asset) {
                 var index = this.forwardAssets.indexOf(asset);
-                if (index >-1) {
+                if (index > -1) {
                     this.forwardAssets.splice(index, 1);
-                    this.p.forwardAssetsCount--;                
+                    this.p.forwardAssetsCount--;
                 }
             }, [asset]);
         },
@@ -155,9 +155,9 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
         removeBackwardAsset: function(asset) {
             this.addAssetOperation(function(asset) {
                 var index = this.backwardAssets.indexOf(asset);
-                if (index >-1) {
+                if (index > -1) {
                     this.backwardAssets.splice(index, 1);
-                    this.p.backwardAssetsCount--;                
+                    this.p.backwardAssetsCount--;
                 }
             }, [asset]);
         },
@@ -182,12 +182,12 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
         removeFrontAsset: function(asset) {
             this.addAssetOperation(function(asset) {
                 var index = this.frontAssets.indexOf(asset);
-                if (index >-1) {
+                if (index > -1) {
                     this.frontAssets.splice(index, 1);
-                    this.p.frontAssetsCount--;                
+                    this.p.frontAssetsCount--;
                 }
             }, [asset]);
-        },        
+        },
         removeFrontAssets: function() {
             this.addAssetOperation(function() {
                 this.frontAssets = [];
@@ -209,18 +209,18 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
         removeDefaultAsset: function(asset) {
             this.addAssetOperation(function(asset) {
                 var index = this.defaultAssets.indexOf(asset);
-                if (index >-1) {
+                if (index > -1) {
                     this.defaultAssets.splice(index, 1);
-                    this.p.defaultAssetsCount--;                
+                    this.p.defaultAssetsCount--;
                 }
             }, [asset]);
-        },        
+        },
         removeDefaultAssets: function() {
             this.addAssetOperation(function() {
                 this.defaultAssets = [];
                 this.p.defaultAssetsCount = 0;
             }, []);
-        },        
+        },
         setVelocity: function(value) {
             this._super(value);
             // compute base dt
@@ -233,50 +233,48 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
         },
         setMovementDuration: function(value) {
             this.p.durationMove = value;
-            this.computeDts();            
+            this.computeDts();
         },
         setPauseDuration: function(value) {
             this.p.durationPause = value;
-            this.computeDts();            
+            this.computeDts();
         },
         computeDts: function() {
             this.addAssetOperation(function() {
                 var p = this.p;
-                if (p.forwardAssetsCount>0) {
+                if (p.forwardAssetsCount > 0) {
                     // we assume that forwardAssetsCount is equal to backwardAssetsCount
-                    p.dtMovement = (p.durationMove/p.forwardAssetsCount)*200/p.velocity;
-                } else if (p.defaultAssetsCount>0) {
+                    p.dtMovement = (p.durationMove / p.forwardAssetsCount) * 200 / p.velocity;
+                } else if (p.defaultAssetsCount > 0) {
                     // we assume that forwardAssetsCount is equal to backwardAssetsCount
-                    p.dtMovement = (p.durationMove/p.defaultAssetsCount)*200/p.velocity;
+                    p.dtMovement = (p.durationMove / p.defaultAssetsCount) * 200 / p.velocity;
                 }
-                if (p.frontAssetsCount>0) {
-                    p.dtPause = (p.durationPause/p.frontAssetsCount)*200/p.velocity;
-                } else if (p.defaultAssetsCount>0) {
+                if (p.frontAssetsCount > 0) {
+                    p.dtPause = (p.durationPause / p.frontAssetsCount) * 200 / p.velocity;
+                } else if (p.defaultAssetsCount > 0) {
                     // we assume that forwardAssetsCount is equal to backwardAssetsCount
-                    p.dtPause = (p.durationPause/p.defaultAssetsCount)*200/p.velocity;
+                    p.dtPause = (p.durationPause / p.defaultAssetsCount) * 200 / p.velocity;
                 }
             }, []);
         },
-
         addAssetOperation: function(action, parameters, asset) {
             if (typeof asset === 'undefined') {
                 this.assetOperations.push([action, parameters]);
             } else {
                 this.assetOperations.push([action, parameters, asset]);
             }
-                
+
         },
-        
         performAssetOperations: function() {
-            while (this.assetOperations.length>0) {
+            while (this.assetOperations.length > 0) {
                 var operation = this.assetOperations[0];
                 var test = true;
-                if (operation.length>2) {
+                if (operation.length > 2) {
                     // This operation require a test on assets first
                     var asset = operation[2];
                     if (asset instanceof Array) {
                         // several assets have to be checked
-                        for (var i = 0; i<asset.length; i++) {
+                        for (var i = 0; i < asset.length; i++) {
                             if (!this.resources.ready(asset[i])) {
                                 // one of the assets is not loaded yet
                                 test = false;
@@ -296,15 +294,12 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
                 operation[0].apply(this, operation[1]);
             }
         },
-        
         stopAutoAsset: function() {
             this.p.autoAsset = false;
         },
-
         startAutoAsset: function() {
             this.p.autoAsset = true;
         },
-        
         mayCatch: function(object) {
             var id = object.getgObject().getId();
             if (typeof (this.catchableObjects[id]) === 'undefined') {
@@ -324,12 +319,12 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
 
 
     });
-    
+
     Hero.prototype._setCharacter = function(name) {
         name = TUtils.getString(name);
         name = this.getMessage(name);
-        var baseCharacterUrl = this.getResource(name)+"/";
-        var configUrl = baseCharacterUrl+"config.json";
+        var baseCharacterUrl = this.getResource(name) + "/";
+        var configUrl = baseCharacterUrl + "config.json";
         var parent = this;
         $.ajax({
             dataType: "json",
@@ -342,9 +337,10 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
                 var frontAssets = [];
                 try {
                     parent._removeImageSet(parent.translatedFront);
-                } catch (e) {}
-                for (var i=0; i<frontImages.length; i++) {
-                    var imageName = name+"/"+frontImages[i];
+                } catch (e) {
+                }
+                for (var i = 0; i < frontImages.length; i++) {
+                    var imageName = name + "/" + frontImages[i];
                     parent.addImage(imageName, parent.translatedFront, false);
                     frontAssets.push(imageName);
                 }
@@ -353,9 +349,10 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
                 var forwardAssets = [];
                 try {
                     parent._removeImageSet(parent.translatedForward);
-                } catch (e) {}
-                for (var i=0; i<forwardImages.length; i++) {
-                    var imageName = name+"/"+forwardImages[i];
+                } catch (e) {
+                }
+                for (var i = 0; i < forwardImages.length; i++) {
+                    var imageName = name + "/" + forwardImages[i];
                     parent.addImage(imageName, parent.translatedForward, false);
                     forwardAssets.push(imageName);
                 }
@@ -364,9 +361,10 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
                 var backwardAssets = [];
                 try {
                     parent._removeImageSet(parent.translatedBackward);
-                } catch (e) {}
-                for (var i=0; i<backwardImages.length; i++) {
-                    var imageName = name+"/"+backwardImages[i];
+                } catch (e) {
+                }
+                for (var i = 0; i < backwardImages.length; i++) {
+                    var imageName = name + "/" + backwardImages[i];
                     parent.addImage(imageName, parent.translatedBackward, false);
                     backwardAssets.push(imageName);
                 }
@@ -374,7 +372,8 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
                 // remove default imageSet
                 try {
                     parent._removeImageSet("");
-                } catch (e) {}
+                } catch (e) {
+                }
                 parent.gObject.removeDefaultAssets();
                 parent._displayNextImage(parent.translatedFront);
                 parent.gObject.setLocation(currentLocation.x, currentLocation.y);
@@ -386,7 +385,7 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
         });
 
     };
-    
+
     Hero.prototype.checkSet = function(set) {
         var specialSet = false;
         if (typeof set !== 'undefined') {
@@ -405,24 +404,28 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
         }
         return specialSet;
     };
-    
+
     Hero.prototype._addImage = function(name, set) {
         var specialSet = this.checkSet(set);
         var currentLocation = false;
         if (!this.custom && specialSet !== false) {
             // We begin to customize: we remove default sets
             try {
-                this._removeImageSet(this.translatedFront);                    
-            } catch (e) {}
+                this._removeImageSet(this.translatedFront);
+            } catch (e) {
+            }
             try {
                 this._removeImageSet(this.translatedForward);
-            } catch (e) {}
+            } catch (e) {
+            }
             try {
                 this._removeImageSet(this.translatedBackward);
-            } catch (e) {}
+            } catch (e) {
+            }
             try {
                 this._removeImageSet("");
-            } catch (e) {}
+            } catch (e) {
+            }
             currentLocation = this.gObject.getLocation();
         }
         this.addImage(name, set, true);
@@ -452,7 +455,7 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
             }
         }
     };
-    
+
     Hero.prototype._stopAutoAsset = function() {
         this.gObject.stopAutoAsset();
     };
@@ -460,8 +463,8 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
     Hero.prototype._startAutoAsset = function() {
         this.gObject.startAutoAsset();
     };
-    
-    Hero.prototype._removeImage = function (name, set) {
+
+    Hero.prototype._removeImage = function(name, set) {
         var specialSet = this.checkSet(set);
         var asset = this.removeImage(name, set);
         if (specialSet !== false) {
@@ -482,8 +485,8 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
             this.gObject.computeDts();
         }
     };
-    
-    Hero.prototype._removeImageSet = function (name) {
+
+    Hero.prototype._removeImageSet = function(name) {
         var specialSet = this.checkSet(name);
         Sprite.prototype._removeImageSet.call(this, name);
         if (specialSet !== false) {
@@ -504,26 +507,26 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
             this.gObject.computeDts();
         }
     };
-    
+
     Hero.prototype._setMovementDuration = function(value) {
         value = TUtils.getInteger(value);
-        this.gObject.setMovementDuration(value/1000);
+        this.gObject.setMovementDuration(value / 1000);
     };
-    
+
     Hero.prototype._setPauseDuration = function(value) {
         value = TUtils.getInteger(value);
-        this.gObject.setPauseDuration(value/1000);
+        this.gObject.setPauseDuration(value / 1000);
     };
-    
+
     Hero.prototype._addScene = function(object) {
         this._addBlock(object);
     };
-    
+
     Hero.prototype._mayCatch = function(object) {
         object = TUtils.getObject(object);
         this.gObject.mayCatch(object);
     };
-    
+
     Hero.prototype._ifCatch = function(object, command) {
         object = TUtils.getObject(object);
         command = TUtils.getString(command);
@@ -532,6 +535,6 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
     };
 
     TEnvironment.internationalize(Hero, true);
-    
+
     return Hero;
 });

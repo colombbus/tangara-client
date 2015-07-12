@@ -8,7 +8,7 @@ define(['TParser', 'TLink', 'TEnvironment', 'TUtils'], function(TParser, TLink, 
         var newProgram = false;
         var modified = false;
         var codeChanged = false;
-        
+
         if (TUtils.checkString(value)) {
             name = value;
         } else {
@@ -19,12 +19,12 @@ define(['TParser', 'TLink', 'TEnvironment', 'TUtils'], function(TParser, TLink, 
             var index = 0;
             do {
                 index++;
-                name = TEnvironment.getMessage('program-new',index);
+                name = TEnvironment.getMessage('program-new', index);
             } while (used.indexOf(name) > -1)
-            window.console.log("New name : "+name);
+            window.console.log("New name : " + name);
             newProgram = true;
         }
-        
+
         this.save = function() {
             if (newProgram) {
                 // First create program
@@ -38,19 +38,19 @@ define(['TParser', 'TLink', 'TEnvironment', 'TUtils'], function(TParser, TLink, 
                     codeChanged = false;
                 } catch (e) {
                     statements = [];
-                    window.console.log("Error parsing program '"+name+"'");
+                    window.console.log("Error parsing program '" + name + "'");
                 }
             }
             TLink.saveProgram(name, code, statements);
             modified = false;
         };
-        
+
         this.load = function() {
             code = TLink.getProgramCode(name);
             codeChanged = true;
             loaded = true;
         };
-        
+
         function parse() {
             if (code.trim().length > 0) {
                 statements = TParser.parse(code);
@@ -71,30 +71,30 @@ define(['TParser', 'TLink', 'TEnvironment', 'TUtils'], function(TParser, TLink, 
             }
             return code;
         };
-        
+
         this.getStatements = function() {
             if (codeChanged) {
                 parse();
             }
             return statements;
         };
-        
+
         this.getName = function() {
             return name;
         };
-        
+
         this.getDisplayedName = function() {
             if (modified) {
-                return TEnvironment.getMessage("program-modified", name);                
+                return TEnvironment.getMessage("program-modified", name);
             } else {
                 return name;
             }
         };
-        
+
         this.setName = function(value) {
-            name = value;            
+            name = value;
         };
-        
+
         this.rename = function(value) {
             if (!newProgram) {
                 TLink.renameProgram(name, value);
@@ -106,11 +106,11 @@ define(['TParser', 'TLink', 'TEnvironment', 'TUtils'], function(TParser, TLink, 
                 newProgram = false;
             }
         };
-        
+
         this.getId = function() {
             return TProgram.findId(name);
         };
-        
+
         this.setModified = function(value) {
             modified = value;
         };
@@ -122,31 +122,32 @@ define(['TParser', 'TLink', 'TEnvironment', 'TUtils'], function(TParser, TLink, 
         this.isNew = function() {
             return newProgram;
         };
-        
+
         this.delete = function() {
             if (!newProgram) {
                 TLink.deleteProgram(name);
             }
         };
     }
-    
+
     function hashCode(value) {
         var hash = 0, i, chr, len;
-        if (value.length === 0) return hash;
+        if (value.length === 0)
+            return hash;
         for (i = 0, len = value.length; i < len; i++) {
-            chr   = value.charCodeAt(i);
-            hash  = ((hash << 5) - hash) + chr;
+            chr = value.charCodeAt(i);
+            hash = ((hash << 5) - hash) + chr;
             hash |= 0; // Convert to 32bit integer
         }
         return hash.toString(16);
     }
-    
-    
+
+
     TProgram.findId = function(name) {
         var id = hashCode(name);
         return id;
     };
-    
+
     return TProgram;
 });
 

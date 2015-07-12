@@ -1,125 +1,131 @@
-define(['ui/TComponent', 'TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPaint', 'wPaint/plugins/main','wPaint/plugins/text', 'wPaint/plugins/shapes', 'wPaint/plugins/flip', 'wPaint/plugins/file'], function(TComponent, TUI, TEnvironment, $) {
+define(['ui/TComponent', 'TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPaint', 'wPaint/plugins/main', 'wPaint/plugins/text', 'wPaint/plugins/shapes', 'wPaint/plugins/flip', 'wPaint/plugins/file'], function(TComponent, TUI, TEnvironment, $) {
     function TViewer(callback) {
         var currentName = '';
-        var currentWidth =0;
-        var currentHeight =0;        
+        var currentWidth = 0;
+        var currentHeight = 0;
         var nextHandler = null;
         var prevHandler = null;
         var $main, $title, $imageContainer, $image, $editor, $editorImage, $creation, $message, $creationMessage, $buttonCreate;
         var image;
         var editorInitialized = false;
 
-		TComponent.call(this, "TViewer.html", function(component) {
-			$main = component;
-			$title = component.find(".tviewer-title");
-			$imageContainer = component.find(".tviewer-image");
-			$image = $imageContainer.find("img");
-			image = $image.get(0);
-			$editor = component.find(".tviewer-editor");
-			$editorImage = component.find(".tviewer-editor-image");
-			$creation = component.find(".tviewer-creation");
-			$message = component.find(".tviewer-editor-message");
-			$creationMessage = component.find(".tviewer-creation-message");
-			
-			$image.load(function(e) {
-				$imageContainer.show();
+        TComponent.call(this, "TViewer.html", function(component) {
+            $main = component;
+            $title = component.find(".tviewer-title");
+            $imageContainer = component.find(".tviewer-image");
+            $image = $imageContainer.find("img");
+            image = $image.get(0);
+            $editor = component.find(".tviewer-editor");
+            $editorImage = component.find(".tviewer-editor-image");
+            $creation = component.find(".tviewer-creation");
+            $message = component.find(".tviewer-editor-message");
+            $creationMessage = component.find(".tviewer-creation-message");
+
+            $image.load(function(e) {
+                $imageContainer.show();
                 imageDisplayed = true;
                 $main.removeClass("loading");
                 updateImageSize();
                 currentWidth = image.naturalWidth;
                 currentHeight = image.naturalHeight;
-                $title.text(currentName+" ("+currentWidth+"x"+currentHeight+")");				
-			});
-			
-			var $edit = component.find(".tviewer-button-edit");
-			$edit.prop("title",TEnvironment.getMessage("viewer-edit"));
-			$edit.click(function(e) { edit(); });
-			var $duplicate = component.find(".tviewer-button-duplicate");
-			$duplicate.prop("title",TEnvironment.getMessage("viewer-duplicate"));
-			$duplicate.click(function(e) {
-				try { 
-                	TUI.duplicateResource(currentName);
-				} catch (error) {
-	                message(error.getMessage());
-				}      
-			});
-			var $closes = component.find(".tviewer-button-close");
-			$closes.prop("title",TEnvironment.getMessage("viewer-close"));
-			$closes.click(function(e) { hide(); });
-			
-			var $left = component.find(".tviewer-button-left");
-			$left.click(function(e) { 
-				if (prevHandler !== null) {
-                	displayImage(prevHandler());
-            	}
-			});
+                $title.text(currentName + " (" + currentWidth + "x" + currentHeight + ")");
+            });
 
-			var $right = component.find(".tviewer-button-right");
-			$right.click(function(e) { 
-	            if (nextHandler !== null) {
-	                displayImage(nextHandler());
-	            }
-	        });
-	        
-	        var $creationTitle = component.find(".tviewer-creation-title");
-	        $creationTitle.append(TEnvironment.getMessage("viewer-creation-title"));
-	        var $nameLabel = component.find(".tviewer-creation-label-name");
-	        $nameLabel.append(TEnvironment.getMessage("viewer-creation-name"));
-	        var $widthLabel = component.find(".tviewer-creation-label-width");
-	        $widthLabel.append(TEnvironment.getMessage("viewer-creation-width"));
-	        var $heightLabel = component.find(".tviewer-creation-label-height");
-	        $heightLabel.append(TEnvironment.getMessage("viewer-creation-height"));
-	        var $name = component.find("input[name='name']");
-	        var $width = component.find("input[name='width']");
-	        var $height = component.find("input[name='height']");
-	        
-	        var $buttonCancel = component.find(".tviewer-creation-cancel");
-	        $buttonCancel.click(function(e) { hide(); });
-	        $buttonCancel.append(TEnvironment.getMessage("viewer-creation-cancel"));
-	        $buttonCreate = component.find(".tviewer-creation-create");
-	        $buttonCreate.click(function(e) { 
-	            if (checkCreation()) {
-	                try {
-	                    TUI.createResource($name.val(), $width.val(), $height.val());
-	                } catch (error) {
-	                    message(error.getMessage());
-	                }
-	            }
-	        });
-	        $buttonCreate.append(TEnvironment.getMessage("viewer-creation-create"));
-			
-	        $main.addClass("loading");
-	        $main.hide();
-	        $imageContainer.hide();
-	        $editor.hide();
-	        $creation.hide();
-	        $message.hide();
-	        $creationMessage.hide();
-	        
-	        if (typeof callback !== 'undefined') {
-		        callback.call(this, component);
-			}
-		});
+            var $edit = component.find(".tviewer-button-edit");
+            $edit.prop("title", TEnvironment.getMessage("viewer-edit"));
+            $edit.click(function(e) {
+                edit();
+            });
+            var $duplicate = component.find(".tviewer-button-duplicate");
+            $duplicate.prop("title", TEnvironment.getMessage("viewer-duplicate"));
+            $duplicate.click(function(e) {
+                try {
+                    TUI.duplicateResource(currentName);
+                } catch (error) {
+                    message(error.getMessage());
+                }
+            });
+            var $closes = component.find(".tviewer-button-close");
+            $closes.prop("title", TEnvironment.getMessage("viewer-close"));
+            $closes.click(function(e) {
+                hide();
+            });
+
+            var $left = component.find(".tviewer-button-left");
+            $left.click(function(e) {
+                if (prevHandler !== null) {
+                    displayImage(prevHandler());
+                }
+            });
+
+            var $right = component.find(".tviewer-button-right");
+            $right.click(function(e) {
+                if (nextHandler !== null) {
+                    displayImage(nextHandler());
+                }
+            });
+
+            var $creationTitle = component.find(".tviewer-creation-title");
+            $creationTitle.append(TEnvironment.getMessage("viewer-creation-title"));
+            var $nameLabel = component.find(".tviewer-creation-label-name");
+            $nameLabel.append(TEnvironment.getMessage("viewer-creation-name"));
+            var $widthLabel = component.find(".tviewer-creation-label-width");
+            $widthLabel.append(TEnvironment.getMessage("viewer-creation-width"));
+            var $heightLabel = component.find(".tviewer-creation-label-height");
+            $heightLabel.append(TEnvironment.getMessage("viewer-creation-height"));
+            var $name = component.find("input[name='name']");
+            var $width = component.find("input[name='width']");
+            var $height = component.find("input[name='height']");
+
+            var $buttonCancel = component.find(".tviewer-creation-cancel");
+            $buttonCancel.click(function(e) {
+                hide();
+            });
+            $buttonCancel.append(TEnvironment.getMessage("viewer-creation-cancel"));
+            $buttonCreate = component.find(".tviewer-creation-create");
+            $buttonCreate.click(function(e) {
+                if (checkCreation()) {
+                    try {
+                        TUI.createResource($name.val(), $width.val(), $height.val());
+                    } catch (error) {
+                        message(error.getMessage());
+                    }
+                }
+            });
+            $buttonCreate.append(TEnvironment.getMessage("viewer-creation-create"));
+
+            $main.addClass("loading");
+            $main.hide();
+            $imageContainer.hide();
+            $editor.hide();
+            $creation.hide();
+            $message.hide();
+            $creationMessage.hide();
+
+            if (typeof callback !== 'undefined') {
+                callback.call(this, component);
+            }
+        });
 
         // Configuration of wPaint
-        
+
         // remove load buttons from wPaint menu
         delete $.fn.wPaint.menus.main.items.loadBg;
         delete $.fn.wPaint.menus.main.items.loadFg;
-        
+
         // Set save handler
         $.extend($.fn.wPaint.defaults, {
             saveImg: function() {
                 var imageData = $domEditorImage.wPaint("image");
-                try { 
+                try {
                     currentName = TUI.setResourceContent(currentName, imageData);
                     message(TEnvironment.getMessage('image-editor-saved', currentName));
                 } catch (error) {
                     message(error.getMessage());
                 }
-           }
+            }
         });
-        
+
         // Set texts
         $.extend($.fn.wPaint.menus.main.items.undo, {
             title: TEnvironment.getMessage("wpaint-undo")
@@ -204,22 +210,22 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPain
         });
 
         $.extend($.fn.wPaint.defaults, {
-            lineWidth:   '1',
-            fillStyle:   '#FFFFFF',
+            lineWidth: '1',
+            fillStyle: '#FFFFFF',
             strokeStyle: '#000000'
         });
-        
-        
+
+
         $.extend($.fn.wColorPicker.defaults, {
             color: '#000000'
         });
 
-        
+
         var keyHandler = function(event) {
-            switch(event.which){
+            switch (event.which) {
                 case 27: // ESC
                     hide();
-                    break;   
+                    break;
                 case 39: // right arrow
                 case 40: // down arrow
                     if (!imageEdited && !imageCreation && nextHandler !== null) {
@@ -228,7 +234,7 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPain
                     break;
                 case 37: // left arrow
                 case 38: // up arrow
-                    if (!imageEdited && !imageCreation  && prevHandler !== null) {
+                    if (!imageEdited && !imageCreation && prevHandler !== null) {
                         displayImage(prevHandler());
                     }
                     break;
@@ -239,12 +245,12 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPain
                     break;
             }
         };
-        
+
         var appended = false;
         var imageDisplayed = false;
         var imageEdited = false;
         var imageCreation = false;
-        
+
         var hide = function() {
             if (imageEdited) {
                 // was in editing mode: get back to display mode
@@ -257,7 +263,7 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPain
             } else {
                 if (appended) {
                     $main.fadeOut(function() {
-	                    $("body").remove($main);
+                        $("body").remove($main);
                     });
                     $(window).off('keydown', keyHandler);
                     appended = false;
@@ -270,10 +276,10 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPain
                     $creation.hide();
                     imageCreation = false;
                 }
-                    
+
             }
         };
-        
+
         var displayImage = function(name) {
             if (imageDisplayed) {
                 $imageCreation.hide();
@@ -283,8 +289,8 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPain
             $main.addClass("loading");
             currentName = name;
             // init max dimensions: they will be set in onload
-            $image.css("max-width","");
-            $image.css("max-height","");
+            $image.css("max-width", "");
+            $image.css("max-height", "");
             var src = TEnvironment.getProjectResource(name);
             if (image.src === src) {
                 // image was the previous one: just call image.onload
@@ -294,24 +300,24 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPain
                 image.src = src;
             }
         };
-        
+
         var updateImageSize = function() {
             $image.css("max-width", $imageContainer.width());
             $image.css("max-height", $imageContainer.height());
         };
-        
+
         var edit = function() {
             $imageContainer.hide();
             $editor.show();
             $editorImage.width(currentWidth);
             $editorImage.height(currentHeight);
-            $editorImage.css("margin-left","-"+Math.round(currentWidth/2)+"px");
-            var marginTop = Math.round(currentHeight/2);
-            $editorImage.css("margin-top","-"+marginTop+"px");
+            $editorImage.css("margin-left", "-" + Math.round(currentWidth / 2) + "px");
+            var marginTop = Math.round(currentHeight / 2);
+            $editorImage.css("margin-top", "-" + marginTop + "px");
             if (!editorInitialized) {
                 $editorImage.wPaint({
-                    path: TEnvironment.getBaseUrl()+TEnvironment.getConfig('wpaint-path'),
-                    image:TEnvironment.getProjectResource(currentName)
+                    path: TEnvironment.getBaseUrl() + TEnvironment.getConfig('wpaint-path'),
+                    image: TEnvironment.getProjectResource(currentName)
                 });
                 editorInitialized = true;
             } else {
@@ -321,12 +327,12 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPain
             }
             var pos = $editorImage.position();
             var menu = $(".wPaint-menu");
-            menu.css("top", marginTop-pos.top+10+"px");
-            menu.css("left", Math.round(currentWidth/2-menu.width()/2)+"px");
+            menu.css("top", marginTop - pos.top + 10 + "px");
+            menu.css("left", Math.round(currentWidth / 2 - menu.width() / 2) + "px");
             imageDisplayed = false;
             imageEdited = true;
         };
-        
+
         var message = function(text) {
             if (imageEdited) {
                 $message.stop().text(text).show().delay(2000).fadeOut();
@@ -334,15 +340,15 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPain
                 $creationMessage.stop().text(text).show().delay(2000).fadeOut();
             }
         };
-        
+
         this.displayed = function() {
-            
+
         };
-        
+
         this.setName = function(value) {
             currentName = value;
         };
-        
+
         this.setNextHandler = function(value) {
             nextHandler = value;
         };
@@ -350,38 +356,38 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPain
         this.setPrevHandler = function(value) {
             prevHandler = value;
         };
-        
+
         var append = function() {
             if (!appended) {
-	            $("body").append($main)
+                $("body").append($main)
                 $(window).on('keydown', keyHandler);
                 appended = true;
                 $main.fadeIn();
             }
         };
-        
+
         this.show = function(name) {
             append();
             if (imageCreation) {
                 $creation.hide();
                 imageCreation = false;
             }
-           displayImage(name);
+            displayImage(name);
         };
-        
+
         this.hide = function() {
             hide();
         };
-        
+
         this.create = function() {
             append();
-            inputName.value="";
-            inputWidth.value="";
-            inputHeight.value="";
+            inputName.value = "";
+            inputWidth.value = "";
+            inputHeight.value = "";
             $creation.show();
-            imageCreation = true;        
+            imageCreation = true;
         };
-        
+
         var checkCreation = function() {
             var name = inputName.value;
             var width = inputWidth.value;
@@ -402,7 +408,7 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPain
                 return false;
             }
             inputWidth.value = actualWidth;
-            
+
             // check height
             if (height.trim().length === 0) {
                 message(TEnvironment.getMessage("viewer-creation-height-empty"));
@@ -414,15 +420,15 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPain
                 return false;
             }
             inputHeight.value = actualHeight;
-            
+
             return true;
         };
-        
+
     }
-    
+
     TViewer.prototype = Object.create(TComponent.prototype);
     TViewer.prototype.constructor = TViewer;
-    
+
     return TViewer;
 });
 

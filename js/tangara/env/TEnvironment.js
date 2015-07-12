@@ -9,19 +9,19 @@ define(['jquery'], function($) {
         var tangaraObjects = {};
         var project;
         var projectAvailable = false;
-		var ready_frame = false;
+        var ready_frame = false;
         var ready_runtime = false;
         var ready_environment = false;
         var ready_callback = null;
         var support3D = null;
-        
+
         this.messages = {};
 
         // TODO: change this
         this.language = "fr";
 
         // Config parameters: default values
-        this.config = {"debug":false, "backend-path":"/tangara-ui/web/app.php/"};
+        this.config = {"debug": false, "backend-path": "/tangara-ui/web/app.php/"};
         this.debug;
 
         this.load = function() {
@@ -38,7 +38,7 @@ define(['jquery'], function($) {
                     parent.debug = parent.config['debug'];
                     if (parent.config['document-domain']) {
                         document.domain = parent.config['document-domain'];
-                    }                    
+                    }
                 }
             });
             window.console.log("* Retrieving translated messages");
@@ -62,22 +62,22 @@ define(['jquery'], function($) {
             // find objects and translate them
             var objectListUrl = this.getObjectListUrl();
             var is3DSupported = this.is3DSupported();
-            window.console.log("accessing objects list from: "+objectListUrl);
+            window.console.log("accessing objects list from: " + objectListUrl);
             $.ajax({
                 dataType: "json",
                 url: objectListUrl,
                 async: false,
                 success: function(data) {
-                    $.each( data, function( key, val ) {
+                    $.each(data, function(key, val) {
                         var addObject = true;
                         if (typeof val['conditions'] !== 'undefined') {
                             // object rely on conditions 
-                            for (var i=0; i<val['conditions'].length; i++) {
+                            for (var i = 0; i < val['conditions'].length; i++) {
                                 var condition = val['conditions'][i];
                                 switch (condition) {
                                     case '3d':
                                         if (!is3DSupported) {
-                                            console.log("skipping addition of object "+key+": 3D not supported");
+                                            console.log("skipping addition of object " + key + ": 3D not supported");
                                             addObject = false;
                                         }
                                         break;
@@ -85,10 +85,10 @@ define(['jquery'], function($) {
                             }
                         }
                         if (addObject) {
-                            var lib = "objects/"+val['path']+"/"+key;
+                            var lib = "objects/" + val['path'] + "/" + key;
                             objectsPath[key] = val['path'];
                             if (typeof val['translations'][language] !== 'undefined') {
-                                window.console.log("adding "+lib);
+                                window.console.log("adding " + lib);
                                 objectLibraries.push(lib);
                                 var translatedName = val['translations'][language];
                                 translatedObjectNames.push(translatedName);
@@ -116,11 +116,11 @@ define(['jquery'], function($) {
             if (object !== 'undefined')
                 return objectsPath[object];
         };
-        
+
         this.getBackendUrl = function(module) {
             var url = window.location.protocol + "//" + window.location.host + window.location.pathname.split("/").slice(0, -2).join("/");
             url += this.config['backend-path'] + "assets/";
-            if (typeof module !== "undefined"){
+            if (typeof module !== "undefined") {
                 url = url + module;
             }
             return url;
@@ -151,10 +151,12 @@ define(['jquery'], function($) {
                 configurable: false,
                 writable: false}); // DOES NOT WORK
         };
-        
-        var hideTranslatedMethod = function (aClass, translated) {
+
+        var hideTranslatedMethod = function(aClass, translated) {
             // redefine method to hide the orignal one
-            aClass.prototype[translated] = function() {throw new Error("unknown function");};
+            aClass.prototype[translated] = function() {
+                throw new Error("unknown function");
+            };
         };
 
         var addTranslatedMethods = function(aClass, file, language, hideMethods) {
@@ -190,7 +192,7 @@ define(['jquery'], function($) {
                         $.each(data[language]['methods'], function(key, val) {
                             if (hideMethods.indexOf(val['name']) == -1) {
                                 addTranslatedMethod(aClass, val['name'], val['translated']);
-                                var value = {'translated':val['translated'], 'displayed':val['displayed']};
+                                var value = {'translated': val['translated'], 'displayed': val['displayed']};
                                 classMethods[aClass.prototype.className][val.translated] = val.displayed;
                                 processedFiles[file][val['name']] = value;
                             } else {
@@ -205,10 +207,10 @@ define(['jquery'], function($) {
             }
             return hideMethods;
         };
-        
+
         var addTranslatedMessages = function(aClass, file, language) {
             if (typeof aClass.messages === "undefined") {
-                aClass.messages = {};                
+                aClass.messages = {};
             }
             if (typeof processedFiles[file] !== "undefined") {
                 // file has already been processed
@@ -223,11 +225,11 @@ define(['jquery'], function($) {
                 $.ajax({
                     dataType: "json",
                     url: file,
-                    global:false,
+                    global: false,
                     async: false,
                     success: function(data) {
                         processedFiles[file] = {};
-                        if (typeof data[language] !== 'undefined'){
+                        if (typeof data[language] !== 'undefined') {
                             $.each(data[language], function(name, value) {
                                 if (typeof aClass.messages[name] === 'undefined') {
                                     // only set message if not already set
@@ -235,16 +237,16 @@ define(['jquery'], function($) {
                                     processedFiles[file][name] = value;
                                 }
                             });
-                            window.console.log("found messages in language: "+language);
+                            window.console.log("found messages in language: " + language);
                         } else {
-                            window.console.log("found no messages for language: "+language);
+                            window.console.log("found no messages for language: " + language);
                         }
                     },
                     error: function(data, status, error) {
-                        window.console.log("Error loading messages for class: "+aClass);
+                        window.console.log("Error loading messages for class: " + aClass);
                     }
                 });
-            }            
+            }
         };
 
         this.internationalize = function(initialClass, parents) {
@@ -281,12 +283,12 @@ define(['jquery'], function($) {
         this.getMessage = function(code) {
             if (typeof this.messages[code] !== 'undefined') {
                 var message = this.messages[code];
-                if (arguments.length>1) {
+                if (arguments.length > 1) {
                     // message has to be parsed
                     var elements = arguments;
                     message = message.replace(/{(\d+)}/g, function(match, number) {
-                        number = parseInt(number)+1;
-                        return typeof elements[number] !== 'undefined' ? elements[number]:match;
+                        number = parseInt(number) + 1;
+                        return typeof elements[number] !== 'undefined' ? elements[number] : match;
                     });
                 }
                 return message;
@@ -294,23 +296,23 @@ define(['jquery'], function($) {
                 return code;
             }
         };
-        
+
         this.setProject = function(value) {
             project = value;
         };
-        
+
         this.getProject = function() {
             return project;
         };
-        
+
         this.setProjectAvailable = function(value) {
             projectAvailable = value;
         };
-        
+
         this.isProjectAvailable = function() {
             return projectAvailable;
         };
-        
+
         this.getClassMethods = function(className) {
             if (typeof classMethods[className] === 'undefined') {
                 return [];
@@ -336,27 +338,27 @@ define(['jquery'], function($) {
             ready_callback = callback;
             this.checkReady();
         };
-        
+
         this.runtimeReady = function() {
             ready_runtime = true;
             this.checkReady();
         };
-        
+
         this.ready = function() {
             ready_environment = true;
             this.checkReady();
         };
-        
+
         this.checkReady = function() {
-            if (ready_frame&&ready_runtime&&ready_environment) {
+            if (ready_frame && ready_runtime && ready_environment) {
                 ready_callback();
             }
         };
-        
+
         this.getConfig = function(value) {
             return this.config[value];
         };
-        
+
         this.is3DSupported = function() {
             var canvas, gl;
             if (support3D !== null)
@@ -384,7 +386,7 @@ define(['jquery'], function($) {
             }
             return support3D;
         };
-        
+
 
     };
 

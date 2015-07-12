@@ -1,21 +1,21 @@
 define(['TRuntime', 'TUtils', 'TParser'], function(TRuntime, TUtils, TParser) {
     var CommandManager = function() {
         this.commands = new Array();
-        this.logging= true;
+        this.logging = true;
     };
-    
+
     CommandManager.prototype.addCommand = function(command, field) {
         if (TUtils.checkString(command)) {
             // command is a string: we parse it
             command = TParser.parse(command);
         } else if (TUtils.checkFunction(command)) {
             var functionName = TUtils.getFunctionName(command);
-            command = [{type:"ExpressionStatement", expression:{type:"CallExpression", callee:{type:"Identifier", name:functionName}, arguments:[]}, raw:functionName}];
+            command = [{type: "ExpressionStatement", expression: {type: "CallExpression", callee: {type: "Identifier", name: functionName}, arguments: []}, raw: functionName}];
             // TODO: handle parameters
         }
         if (typeof field === 'undefined') {
             // simple command provided
-            for (var i =0; i<command.length; i++) {
+            for (var i = 0; i < command.length; i++) {
                 this.commands.push(command[i]);
             }
         } else {
@@ -23,12 +23,12 @@ define(['TRuntime', 'TUtils', 'TParser'], function(TRuntime, TUtils, TParser) {
             if (typeof this.commands[field] === 'undefined') {
                 this.commands[field] = new Array();
             }
-            for (var i =0; i<command.length; i++) {
+            for (var i = 0; i < command.length; i++) {
                 this.commands[field].push(command[i]);
             }
         }
     };
-    
+
     CommandManager.prototype.removeCommands = function(field) {
         if (typeof field === 'undefined') {
             this.commands.length = 0;
@@ -36,7 +36,7 @@ define(['TRuntime', 'TUtils', 'TParser'], function(TRuntime, TUtils, TParser) {
             this.commands[field] = undefined;
         }
     };
-    
+
     CommandManager.prototype.executeCommands = function(parameters) {
         // TODO: handle parameters
         var i, parameter, field;
@@ -57,16 +57,16 @@ define(['TRuntime', 'TUtils', 'TParser'], function(TRuntime, TUtils, TParser) {
 
     CommandManager.prototype.hasCommands = function(field) {
         if (typeof field === 'undefined') {
-            return this.commands.length>0;
+            return this.commands.length > 0;
         } else {
-            return ((typeof this.commands[field] !== 'undefined') && (this.commands[field].length>0));
+            return ((typeof this.commands[field] !== 'undefined') && (this.commands[field].length > 0));
         }
     };
 
     CommandManager.prototype.logCommands = function(value) {
         this.logging = value;
     };
-    
+
     return CommandManager;
 });
 

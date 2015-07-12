@@ -1,5 +1,5 @@
-define(['jquery', 'TObject', 'TUtils', 'TRuntime', 'TEnvironment', 'ui/TCanvas'], function ($, TObject, TUtils, TRuntime, TEnvironment, TCanvas) {
-    var Video = function (name) {
+define(['jquery', 'TObject', 'TUtils', 'TRuntime', 'TEnvironment', 'ui/TCanvas'], function($, TObject, TUtils, TRuntime, TEnvironment, TCanvas) {
+    var Video = function(name) {
         TObject.call(this, name);
 
 
@@ -11,7 +11,7 @@ define(['jquery', 'TObject', 'TUtils', 'TRuntime', 'TEnvironment', 'ui/TCanvas']
         //$("video").attr("src", TUtils.getString("minions.mp4"));
         //"assets/minions.mp4"
         this.domVideo = document.getElementById("tvideo");
-        this.domVideo.addEventListener("canplay", function (e) {
+        this.domVideo.addEventListener("canplay", function(e) {
             console.log("peut être lue !!");
         });
 
@@ -33,7 +33,7 @@ define(['jquery', 'TObject', 'TUtils', 'TRuntime', 'TEnvironment', 'ui/TCanvas']
     var tInstance = new Object();
     Video.prototype.qInstance = tInstance;
 
-    Video.prototype.addVideo = function (name, set, project) {
+    Video.prototype.addVideo = function(name, set, project) {
         name = TUtils.getString(name);
         var asset;
         // add video only if not already added
@@ -57,7 +57,7 @@ define(['jquery', 'TObject', 'TUtils', 'TRuntime', 'TEnvironment', 'ui/TCanvas']
                 }
                 this.videoSets[set].push(name);
                 var loadedAsset = asset;
-                graphics.load(asset, function () {
+                graphics.load(asset, function() {
                 });
             }
             catch (e) {
@@ -68,32 +68,32 @@ define(['jquery', 'TObject', 'TUtils', 'TRuntime', 'TEnvironment', 'ui/TCanvas']
         }
         return asset;
     };
-    Video.prototype._addVideo = function (name, set) {
+    Video.prototype._addVideo = function(name, set) {
         this.addVideo(name, set, true);
     };
 
-    Video.prototype._loop = function (state) {
+    Video.prototype._loop = function(state) {
         this.domVideo.loop = state;
     };
-    Video.prototype._play = function (name) {
+    Video.prototype._play = function(name) {
         var asset = this.video[name];
 
         this.domVideo.play();
     };
-    Video.prototype._pause = function () {
+    Video.prototype._pause = function() {
         this.domVideo.pause();
     };
-    Video.prototype._displayControls = function (state) {
+    Video.prototype._displayControls = function(state) {
         if (state)
             $(this.domVideo).attr('controls', true);
         else
             $(this.domVideo).removeAttr('controls');
     };
 
-    Video.prototype._mute = function (state) {
+    Video.prototype._mute = function(state) {
         this.domVideo.muted = state;
     };
-    Video.prototype._stop = function (name) {
+    Video.prototype._stop = function(name) {
         var asset = this.video[name];
         this.qAudio.stop(asset);
     };

@@ -1,4 +1,4 @@
-define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TObject', 'TRuntime'], function($, TEnvironment, TUtils, CommandManager, TObject, TRuntime) {
+define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TObject', 'TRuntime'], function($, TEnvironment, TUtils, CommandManager, TObject, TRuntime) {
     var KeyStroke = function() {
         TObject.call(this);
         this.commands = new CommandManager();
@@ -33,15 +33,15 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TObject', 'TRuntim
         if (this.keyboardEnabled) {
             return false;
         }
-        
+
         var element = TRuntime.getGraphics().getElement();
 
         // Copied from Quintus_input
         element.tabIndex = 0;
         element.style.outline = 0;
-        
-        element.addEventListener("keydown",this.listenerKeyDown, false);
-        element.addEventListener("keyup",this.listenerKeyUp, false);
+
+        element.addEventListener("keydown", this.listenerKeyDown, false);
+        element.addEventListener("keyup", this.listenerKeyUp, false);
 
         this.keyboardEnabled = true;
     };
@@ -52,8 +52,8 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TObject', 'TRuntim
         }
         var element = TRuntime.getGraphics().getElement();
 
-        element.removeEventListener("keydown",this.listenerKeyDown, false);
-        element.removeEventListener("keyup",this.listenerKeyUp, false);
+        element.removeEventListener("keydown", this.listenerKeyDown, false);
+        element.removeEventListener("keyup", this.listenerKeyUp, false);
 
         this.keyboardEnabled = false;
     };
@@ -64,16 +64,16 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TObject', 'TRuntim
         var keycode = this.getKeyCode(key);
         if (keycode !== false) {
             this.keys[keycode] = false;
-            this.commands.addCommand(command, keycode+"_down");
+            this.commands.addCommand(command, keycode + "_down");
         }
     };
-    
+
     KeyStroke.prototype._removeCommands = function(key) {
         key = TUtils.getString(key);
         var keycode = this.getKeyCode(key);
         if (keycode !== false) {
-            this.commands.removeCommands(keycode+"_down");
-            if (! this.commands.hasCommands(keycode+"up")) {
+            this.commands.removeCommands(keycode + "_down");
+            if (!this.commands.hasCommands(keycode + "up")) {
                 this.keys[keycode] = undefined;
             }
         }
@@ -93,7 +93,7 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TObject', 'TRuntim
             var keycode = this.getKeyCode(key);
             if (keycode !== false) {
                 this.keys[keycode] = false;
-                this.commands.addCommand(command, keycode+"_up");
+                this.commands.addCommand(command, keycode + "_up");
             }
         } else {
             // command to be launched when all keys are released
@@ -107,8 +107,8 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TObject', 'TRuntim
             // remove commands to be launched when a given key is released
             var keycode = this.getKeyCode(key);
             if (keycode !== false) {
-                this.commands.removeCommands(keycode+"_up");
-                if (! this.commands.hasCommands(keycode+"down")) {
+                this.commands.removeCommands(keycode + "_up");
+                if (!this.commands.hasCommands(keycode + "down")) {
                     this.keys[keycode] = undefined;
                 }
             }
@@ -118,7 +118,7 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TObject', 'TRuntim
             this.checkAllKeysUp = false;
         }
     };
-    
+
     KeyStroke.prototype._activate = function() {
         this.active = true;
     };
@@ -131,30 +131,30 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TObject', 'TRuntim
             }
         }
     };
-    
+
     KeyStroke.prototype.deleteObject = function() {
         // remove listeners
         this.disableKeyboard();
 
         // delete commands
         for (var keycode in this.keys) {
-            this.commands.removeCommands(keycode+"_down");
-            this.commands.removeCommands(keycode+"_up");
+            this.commands.removeCommands(keycode + "_down");
+            this.commands.removeCommands(keycode + "_up");
         }
         this.commands.removeCommands("key_up_all");
         this.commands = undefined;
-        
+
         // delete keys
         this.keys.length = 0;
         this.keys = undefined;
-        
-	TObject.prototype.deleteObject.call(this);
+
+        TObject.prototype.deleteObject.call(this);
     };
 
     KeyStroke.prototype.processKeyDown = function(e) {
         if (this.active) {
             var keycode = e.keyCode;
-            this.commands.executeCommands({'field':keycode+"_down"});
+            this.commands.executeCommands({'field': keycode + "_down"});
             this.keys[keycode] = true;
         }
     };
@@ -162,7 +162,7 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TObject', 'TRuntim
     KeyStroke.prototype.processKeyUp = function(e) {
         if (this.active) {
             var keycode = e.keyCode;
-            this.commands.executeCommands({'field':keycode+"_up"});
+            this.commands.executeCommands({'field': keycode + "_up"});
             this.keys[keycode] = false;
             if (this.checkAllKeysUp) {
                 for (var value in this.keys) {
@@ -171,11 +171,11 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TObject', 'TRuntim
                         return;
                     }
                 }
-                this.commands.executeCommands({'field':"key_up_all"});
+                this.commands.executeCommands({'field': "key_up_all"});
             }
         }
     };
-    
+
     KeyStroke.prototype.freeze = function(value) {
         if (value) {
             this.disableKeyboard();
@@ -184,14 +184,14 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TObject', 'TRuntim
         }
         TObject.prototype.freeze.call(this, value);
     };
-    
+
     KeyStroke.prototype._displayCommands = function(value) {
         value = TUtils.getBoolean(value);
         this.commands.logCommands(value);
     };
 
     TEnvironment.internationalize(KeyStroke, true);
-    
+
     return KeyStroke;
 });
 

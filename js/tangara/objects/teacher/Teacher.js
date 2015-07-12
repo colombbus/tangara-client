@@ -3,7 +3,7 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
         // Do not call parent constructor, as we don't want this object to be erased when clearing the
         // Runtime
         this.synchronousManager = new SynchronousManager();
-        
+
     };
 
     Teacher.prototype = Object.create(TObject.prototype);
@@ -11,17 +11,17 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
     Teacher.prototype.className = "Teacher";
 
     /*Tangara.prototype._write = function(value) {
-        value = TUtils.getString(value);
-        TUI.addLogMessage(value);
-    };*/
+     value = TUtils.getString(value);
+     TUI.addLogMessage(value);
+     };*/
 
-    
+
     //Learn.countObject
-    
+
     var statements = [];
     var frame = false;
     var values = {};
-    
+
     Teacher.prototype.setStatements = function(value) {
         statements = value;
     };
@@ -29,11 +29,11 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
     Teacher.prototype.dumpStatements = function(value) {
         console.debug(statements);
     };
-    
+
     Teacher.prototype.setFrame = function(value) {
         frame = value;
     };
-    
+
     function check(statement, value) {
         for (var key in value) {
             if (typeof statement[key] === "undefined") {
@@ -57,7 +57,7 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
     }
 
     Teacher.prototype.hasStatement = function(value) {
-        for (var i=0; i<statements.length; i++) {
+        for (var i = 0; i < statements.length; i++) {
             var statement = statements[i];
             if (check(statement, value)) {
                 return true;
@@ -65,7 +65,7 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
         }
         return false;
     };
-    
+
     Teacher.prototype.validateStep = function() {
         if (frame) {
             frame.validateStep();
@@ -85,11 +85,11 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
             parent.synchronousManager.end();
         }, delay);
     };
-    
+
     Teacher.prototype.set = function(name, value) {
         values[name] = value;
     };
-    
+
     Teacher.prototype.get = function(name) {
         if (typeof values[name] !== 'undefined') {
             return values[name];
@@ -97,7 +97,7 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
             return false;
         }
     };
-    
+
     Teacher.prototype.log = function(value) {
         console.log(value);
     };

@@ -1,38 +1,37 @@
 require.config({
-    "baseUrl":'js/tangara',
-
+    "baseUrl": 'js/tangara',
     paths: {
-        "jquery":'../libs/jquery-1.11.1/jquery-1.11.1.min',
-        "quintus":'../libs/quintus-0.2.0/quintus-all.min',
-        "acorn":'../libs/acorn/acorn',
-        "TObject":'objects/tobject/TObject',
-        "TObject3D":'objects/tobject3d/TObject3D',
-        "TGraphicalObject":'objects/tgraphicalobject/TGraphicalObject',
-		"babylon":'../libs/babylonjs/babylon.1.14',
-        "TProject":"data/Tproject",
-        "TProgram":"data/TProgram",
-        "TLearnProject":"data/TLearnProject",
-        "TEnvironment":"env/TEnvironment",
-        "TLink":"env/TLink",
-        "TInterpreter":"run/TInterpreter",
-        "TParser":"run/Tparser",
-        "TRuntime":"run/TRuntime",
-        "TGraphics":"run/TGraphics",
-        "TUI":"ui/TUI",
-        "CommandManager":"utils/CommandManager",
-        "ResourceManager":"utils/ResourceManager",
-        "SynchronousManager":"utils/SynchronousManager",
-        "TError":"utils/TError",
-        "TUtils":"utils/TUtils"		
+        "jquery": '../libs/jquery-1.11.1/jquery-1.11.1.min',
+        "quintus": '../libs/quintus-0.2.0/quintus-all.min',
+        "acorn": '../libs/acorn/acorn',
+        "TObject": 'objects/tobject/TObject',
+        "TObject3D": 'objects/tobject3d/TObject3D',
+        "TGraphicalObject": 'objects/tgraphicalobject/TGraphicalObject',
+        "babylon": '../libs/babylonjs/babylon.1.14',
+        "TProject": "data/Tproject",
+        "TProgram": "data/TProgram",
+        "TLearnProject": "data/TLearnProject",
+        "TEnvironment": "env/TEnvironment",
+        "TLink": "env/TLink",
+        "TInterpreter": "run/TInterpreter",
+        "TParser": "run/Tparser",
+        "TRuntime": "run/TRuntime",
+        "TGraphics": "run/TGraphics",
+        "TUI": "ui/TUI",
+        "CommandManager": "utils/CommandManager",
+        "ResourceManager": "utils/ResourceManager",
+        "SynchronousManager": "utils/SynchronousManager",
+        "TError": "utils/TError",
+        "TUtils": "utils/TUtils"
     }
 });
 
 function load() {
-    require(['jquery', 'TEnvironment', 'TRuntime', 'ui/TCanvas', 'TProject', 'TLink', 'ui/TExecutionLog'],function($, TEnvironment, TRuntime, TCanvas, TProject, TLink, TExecutionLog) {
+    require(['jquery', 'TEnvironment', 'TRuntime', 'ui/TCanvas', 'TProject', 'TLink', 'ui/TExecutionLog'], function($, TEnvironment, TRuntime, TCanvas, TProject, TLink, TExecutionLog) {
         window.console.log("*******************");
         window.console.log("* Loading Environment *");
         window.console.log("*******************");
-		TEnvironment.load();
+        TEnvironment.load();
 
         window.console.log("*******************");
         window.console.log("* Loading Runtime *");
@@ -45,7 +44,7 @@ function load() {
         TRuntime.setCanvas(canvas);
         var log = new TExecutionLog();
         TRuntime.setLog(log);
-        $(document).ready( function() {
+        $(document).ready(function() {
             canvas.displayed();
             // trigger resize in order for canvas to update its size (and remove the 5px bottom margin)
             $(window).resize();
@@ -53,16 +52,16 @@ function load() {
             TEnvironment.frameReady(function() {
                 TLink.setProjectId(init_projectId);
                 currentProject.init();
-                TEnvironment.setProject(currentProject);            
+                TEnvironment.setProject(currentProject);
                 var statements = TLink.getProgramStatements(init_programName);
                 TRuntime.setCurrentProgramName(init_programName);
-                
-                TRuntime.preloadResources(currentProject,function() {
+
+                TRuntime.preloadResources(currentProject, function() {
                     canvas.removeLoading();
                     TRuntime.executeStatements(statements);
-                }, {progressCallback:function(count, total) {
-                    canvas.setLoadingValue(count, total);
-                }});
+                }, {progressCallback: function(count, total) {
+                        canvas.setLoadingValue(count, total);
+                    }});
             });
         });
         var currentProject = new TProject();

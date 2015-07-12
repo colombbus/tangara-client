@@ -1,5 +1,5 @@
-define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'objects/text/Text'], function ($, TEnvironment, TUtils, TGraphicalObject, Text) {
-    var Score = function (string) {
+define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'objects/text/Text'], function($, TEnvironment, TUtils, TGraphicalObject, Text) {
+    var Score = function(string) {
         if (typeof string === 'undefined') {
             string = "Score : ";
         }
@@ -17,7 +17,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'objects/text/Te
      * Erase ScoreNumber to 0
      * 
      */
-    Score.prototype._eraseScoreNumber = function () {
+    Score.prototype._eraseScoreNumber = function() {
         this.score = 0;
         this._setText(this.label + this.score);
     };
@@ -28,7 +28,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'objects/text/Te
      * 
      * @param step number (default: 1)
      */
-    Score.prototype._increaseScore = function (step) {
+    Score.prototype._increaseScore = function(step) {
         if (typeof step === 'undefined') {
             step = 1;
         }
@@ -42,7 +42,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'objects/text/Te
      * 
      * @param step number (default: 1)
      */
-    Score.prototype._decreaseScore = function (step) {
+    Score.prototype._decreaseScore = function(step) {
         if (typeof step === 'undefined') {
             step = 1;
         }
@@ -56,7 +56,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'objects/text/Te
      * 
      * @param label string the first part of the score (default: "Score : ")
      */
-    Score.prototype._setLabel = function (label) {
+    Score.prototype._setLabel = function(label) {
         if (typeof label === 'undefined') {
             this.label = "Score : ";
         }
@@ -71,7 +71,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'objects/text/Te
      * 
      * @param number string the first part of the score (default: "Score : ")
      */
-    Score.prototype._setScoreNumber = function (number) {
+    Score.prototype._setScoreNumber = function(number) {
         this.score = TUtils.getInteger(number);
         this._setText(this.label + this.score);
     };
@@ -81,7 +81,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'objects/text/Te
      * 
      * @returns string Contains the Label
      */
-    Score.prototype._getLabel = function () {
+    Score.prototype._getLabel = function() {
         var string = this.label;
         return string;
     };
@@ -90,7 +90,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'objects/text/Te
      * Get Score Number
      * @returns string Contains the ScoreNumber
      */
-    Score.prototype._getScoreNumber = function () {
+    Score.prototype._getScoreNumber = function() {
         var string = this.score + ""; // "" to convert in string
         return string;
     };
@@ -100,7 +100,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'objects/text/Te
      * @returns string Contains the label and the score number defined in
      * Score
      */
-    Score.prototype._getScore = function () {
+    Score.prototype._getScore = function() {
         var string = this.label + this.score;
         return string;
     };

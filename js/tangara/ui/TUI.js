@@ -64,7 +64,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 consoleDisplayed = false;
             }
         };
-        
+
         this.showConsole = function() {
             if (!consoleDisplayed) {
                 toolbar.enableConsole();
@@ -143,7 +143,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 this.enableDesignMode();
             }
         };
-        
+
         this.showDesignLog = function() {
             log.showDesignLog();
             designLogDisplayed = true;
@@ -153,7 +153,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
             log.hideDesignLog(!designModeEnabled);
             designLogDisplayed = false;
         };
-        
+
         this.toggleDesignLog = function() {
             if (designLogDisplayed) {
                 this.hideDesignLog();
@@ -161,7 +161,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 this.showDesignLog();
             }
         };
-        
+
         this.clear = function(confirm) {
             var goOn = true;
             if (typeof confirm !== 'undefined' && confirm) {
@@ -179,15 +179,15 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
             if (typeof log !== 'undefined') {
                 log.addMessage(text);
             } else {
-	            window.console.log(text);
+                window.console.log(text);
             }
         };
-        
+
         this.addLogError = function(error) {
             if (typeof log !== 'undefined') {
                 log.addError(error);
             } else {
-	            window.console.error(error);
+                window.console.error(error);
             }
         };
 
@@ -196,7 +196,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 log.clear();
             }
         };
-        
+
         this.getPreviousRow = function() {
             if (typeof log !== 'undefined') {
                 return log.getPreviousRow();
@@ -208,7 +208,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 return log.getNextRow();
             }
         };
-        
+
         this.setLastRow = function() {
             if (typeof log !== 'undefined') {
                 return log.setLastRow();
@@ -236,7 +236,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 TRuntime.executeFrom(editor);
             }
         };
-        
+
         this.handleError = function(index) {
             var error = log.getError(index);
             if (error.getProgramName() === null) {
@@ -251,7 +251,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 editor.setError(error.getLines());
             }
         };
-        
+
         this.saveProgram = function() {
             var project = TEnvironment.getProject();
             editor.updateProgram();
@@ -263,8 +263,8 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 this.addLogMessage(TEnvironment.getMessage('program-saved', program.getName()));
                 this.updateProgramInfo(program);
                 editor.reset();
-            } 
-            catch(error) {
+            }
+            catch (error) {
                 this.addLogError(error);
             }
             sidebar.removeLoading(program.getName());
@@ -287,7 +287,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 // save previous session if any
                 var previousProgram = editor.getProgram();
                 if (typeof previousProgram !== 'undefined') {
-                    project.updateSession(previousProgram,editor.getSession());
+                    project.updateSession(previousProgram, editor.getSession());
                 }
                 var newProgram;
                 if (!project.isProgramEdited(name)) {
@@ -320,7 +320,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 editor.disable();
             }
         }
-        
+
         this.closeProgram = function(name) {
             var project = TEnvironment.getProject();
             var result = project.closeProgram(name);
@@ -337,14 +337,14 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 editor.giveFocus();
             }
         };
-        
+
         this.renameProgram = function(oldName, newName) {
             if (newName !== oldName) {
                 var project = TEnvironment.getProject();
                 try {
                     sidebar.showRenamingProgram(oldName);
                     project.renameProgram(oldName, newName);
-                } catch(error) {
+                } catch (error) {
                     this.addLogError(error);
                 }
             }
@@ -359,14 +359,14 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 try {
                     sidebar.showRenamingResource(name);
                     newName = project.renameResource(name, newBaseName);
-                } catch(error) {
+                } catch (error) {
                     this.addLogError(error);
                 }
             }
             this.updateSidebarResources();
             sidebar.selectResource(newName);
-        };        
-        
+        };
+
         this.setEditionEnabled = function(value) {
             if (value && TEnvironment.isProjectAvailable()) {
                 toolbar.setEditionEnabled(true);
@@ -376,7 +376,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 editor.setEditionEnabled(false);
             }
         };
-        
+
         this.updateSidebarPrograms = function() {
             sidebar.updatePrograms();
         };
@@ -384,15 +384,15 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
         this.updateSidebarResources = function() {
             sidebar.updateResources();
         };
-        
+
         this.updateProgramInfo = function(program) {
             sidebar.updateProgramInfo(program);
         };
-        
+
         this.getCurrentProgram = function() {
             return editor.getProgram();
         };
-        
+
         this.displayPrograms = function() {
             sidebar.displayPrograms();
             toolbar.enableProgramOptions();
@@ -405,7 +405,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 programsDisplayed = false;
             }
         };
-        
+
         this.delete = function() {
             var project = TEnvironment.getProject();
             if (programsDisplayed) {
@@ -416,7 +416,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                     try {
                         project.deleteProgram(name);
                         nextProgram(name);
-                    } catch(error) {
+                    } catch (error) {
                         this.addLogError(error);
                     }
                 }
@@ -431,7 +431,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                     try {
                         project.deleteResource(name);
                         nextProgram(name);
-                    } catch(error) {
+                    } catch (error) {
                         this.addLogError(error);
                     }
                 }
@@ -439,12 +439,12 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 this.updateSidebarResources();
             }
         };
-        
+
         this.recordObjectLocation = function(tObject, location) {
             var name = TRuntime.getTObjectName(tObject);
             log.addObjectLocation(name, location);
         };
-        
+
         this.toggleMinimized = function() {
             if (!minimized) {
                 // hide console
@@ -464,7 +464,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 minimized = false;
             }
         };
-        
+
         this.setResourceContent = function(name, data) {
             var newName = TEnvironment.getProject().setResourceContent(name, data);
             if (newName !== name) {
@@ -474,14 +474,14 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
             }
             return newName;
         };
-        
+
         this.duplicateResource = function(name) {
             var newName = TEnvironment.getProject().duplicateResource(name);
             this.updateSidebarResources();
             sidebar.selectResource(newName);
             sidebar.viewResource(newName);
         };
-        
+
         this.newResource = function() {
             sidebar.createResource();
         };
@@ -492,7 +492,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
             sidebar.selectResource(newName);
             sidebar.viewResource(newName);
         };
-        
+
         this.init = function() {
             editor.disable();
             sidebar.load();
@@ -501,9 +501,9 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
         };
 
     };
-    
+
     var uiInstance = new TUI();
-    
+
     return uiInstance;
 
 });

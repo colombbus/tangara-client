@@ -1,15 +1,15 @@
-define(['TUI', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jquery', 'ace/ace', 'ace/autocomplete', 'ace/range', 'ui/TComponent'], function (TUI, TParser, TLog, TEnvironment, TUtils, TRuntime, $, ace, ace_autocomplete, ace_range, TComponent) {
+define(['TUI', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jquery', 'ace/ace', 'ace/autocomplete', 'ace/range', 'ui/TComponent'], function(TUI, TParser, TLog, TEnvironment, TUtils, TRuntime, $, ace, ace_autocomplete, ace_range, TComponent) {
 
     function TConsole(callback) {
-	    var $console, $consoleText;
-	    
+        var $console, $consoleText;
+
         TComponent.call(this, "TConsole.html", function(component) {
-	        $console = component;
-	        $consoleText = component.find("#tconsole-text");
-	        
-	        if (typeof callback !== 'undefined') {
-		        callback.call(this, component);
-	        }
+            $console = component;
+            $consoleText = component.find("#tconsole-text");
+
+            if (typeof callback !== 'undefined') {
+                callback.call(this, component);
+            }
         });
 
         var AceRange = ace_range.Range;
@@ -25,7 +25,7 @@ define(['TUI', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jque
         var popupTimeout;
         var triggerPopup = false;
 
-        this.displayed = function () {
+        this.displayed = function() {
             aceEditor = ace.edit($consoleText.attr("id"));
             aceEditor.getSession().setMode("ace/mode/javascript");
             // Disable JSHint
@@ -35,10 +35,10 @@ define(['TUI', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jque
             aceEditor.setFontSize("20px");
             aceEditor.setHighlightActiveLine(false);
 
-            aceEditor.on('input', function () {
+            aceEditor.on('input', function() {
                 if (triggerPopup) {
                     triggerPopup = false;
-                    popupTimeout = setTimeout(function () {
+                    popupTimeout = setTimeout(function() {
                         popupTriggered = false;
                         // Force Ace popup to not add gutter width when computing popup pos
                         // since gutter is not shown
@@ -55,10 +55,10 @@ define(['TUI', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jque
             aceEditor.commands.addCommand({
                 name: 'executeCommand',
                 bindKey: {win: 'Return', mac: 'Return'},
-                exec: function (editor) {
+                exec: function(editor) {
                     // postpone execution due to a bug in Firefox handling synchronous ajax when in a keyboard event
                     // (insert new line)
-                    window.setTimeout(function () {
+                    window.setTimeout(function() {
                         TUI.execute();
                     }, 0);
                 },
@@ -67,7 +67,7 @@ define(['TUI', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jque
             aceEditor.commands.addCommand({
                 name: 'browseHistoryUp',
                 bindKey: {win: 'Up', mac: 'Up'},
-                exec: function (editor) {
+                exec: function(editor) {
                     var history = TUI.getPreviousRow();
                     if (history !== null) {
                         if (!browsingHistory) {
@@ -84,7 +84,7 @@ define(['TUI', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jque
             aceEditor.commands.addCommand({
                 name: 'browsehistoryDown',
                 bindKey: {win: 'Down', mac: 'Down'},
-                exec: function (editor) {
+                exec: function(editor) {
                     if (browsingHistory) {
                         var history = TUI.getNextRow();
                         if (history !== null) {
@@ -103,7 +103,7 @@ define(['TUI', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jque
             aceEditor.commands.addCommand({
                 name: 'returnToCurrentCommand',
                 bindKey: {win: 'Escape', mac: 'Escape'},
-                exec: function (editor) {
+                exec: function(editor) {
                     if (browsingHistory) {
                         editor.setValue(currentCommand);
                         editor.navigateTo(currentPosition.row, currentPosition.column);
@@ -120,62 +120,62 @@ define(['TUI', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jque
 
         };
 
-        this.getValue = function () {
+        this.getValue = function() {
             var simpleText = aceEditor.getSession().getValue();
             var protectedText = TUtils.addQuoteDelimiters(simpleText);
             var command = TUtils.parseQuotes(protectedText);
             return command;
         };
 
-        this.setValue = function (value) {
+        this.setValue = function(value) {
             aceEditor.getSession().setValue(value);
             // set cursor to the end of line
             aceEditor.gotoPageDown();
         };
 
-        this.focus = function () {
+        this.focus = function() {
             aceEditor.focus();
         };
 
-        this.getStatements = function () {
+        this.getStatements = function() {
             return TParser.parse(this.getValue());
         };
 
-        this.clear = function () {
+        this.clear = function() {
             aceEditor.setValue("");
             browsingHistory = false;
         };
 
-        this.show = function () {
+        this.show = function() {
             $console.show();
             aceEditor.focus();
         };
 
-        this.hide = function () {
+        this.hide = function() {
             $console.hide();
         };
 
-        this.getHeight = function () {
+        this.getHeight = function() {
             if (computedHeight === -1) {
                 computedHeight = $console.outerHeight(false);
             }
             return computedHeight;
         };
 
-        this.enableMethodHelper = function () {
+        this.enableMethodHelper = function() {
             aceEditor.commands.addCommand(dotCommand);
             aceEditor.commands.addCommand(backspaceCommand);
             aceEditor.commands.addCommand(AceAutocomplete.startCommand);
         };
 
-        this.disableMethodHelper = function () {
+        this.disableMethodHelper = function() {
             aceEditor.commands.removeCommand(dotCommand);
             aceEditor.commands.removeCommand(backspaceCommand);
             aceEditor.commands.removeCommand(AceAutocomplete.startCommand);
         };
 
         var consoleCompleter = {
-            getCompletions: function (editor, session, pos, prefix, callback) {
+            getCompletions: function(editor, session, pos, prefix, callback) {
                 pos.column--;
                 var token = session.getTokenAt(pos.row, pos.column);
 
@@ -238,7 +238,7 @@ define(['TUI', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jque
         var dotCommand = {
             name: "methodHelper",
             bindKey: {win: '.', mac: '.'},
-            exec: function (editor) {
+            exec: function(editor) {
                 triggerPopup = true;
                 return false; // let default event perform
             },
@@ -248,7 +248,7 @@ define(['TUI', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jque
         var backspaceCommand = {
             name: "methodHelper2",
             bindKey: {win: 'Backspace', mac: 'Backspace'},
-            exec: function (editor) {
+            exec: function(editor) {
                 var cursor = editor.selection.getCursor();
                 var token = editor.getSession().getTokenAt(cursor.row, cursor.column - 1);
                 if (token !== null && token.type === "punctuation.operator" && token.value === ".") {
@@ -273,7 +273,7 @@ define(['TUI', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jque
 //            readOnly: true // false if this command should not apply in readOnly mode
 //        };
     }
-    
+
     TConsole.prototype = Object.create(TComponent.prototype);
     TConsole.prototype.constructor = TConsole;
 

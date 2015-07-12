@@ -15,7 +15,7 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
         var frozen = false;
         var wasFrozen = false;
 
-        this.load = function (language, objectListUrl) {
+        this.load = function(language, objectListUrl) {
             // create runtime frame
             this.initRuntimeFrame();
 
@@ -26,7 +26,7 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             var libs = TEnvironment.getObjectLibraries();
             var translatedNames = TEnvironment.getTranslatedObjectNames();
             var self = this;
-            require(libs, function () {
+            require(libs, function() {
                 for (var i = 0; i < translatedNames.length; i++) {
                     window.console.log("Declaring translated object '" + translatedNames[i] + "'");
                     runtimeFrame[translatedNames[i]] = arguments[i];
@@ -36,16 +36,16 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             window.console.log("**** TRUNTIME INITIALIZED ****");
             // Ask parser to protect translated names
             TParser.protectIdentifiers(translatedNames);
-            
+
             // link interpreter to runtimeFrame
             interpreter.setRuntimeFrame(runtimeFrame);
         };
 
-        this.ready = function () {
+        this.ready = function() {
             TEnvironment.runtimeReady();
         };
 
-        this.initRuntimeFrame = function () {
+        this.initRuntimeFrame = function() {
             if (typeof runtimeFrame === 'undefined') {
                 var runtime = this;
                 var iframe = document.createElement("iframe");
@@ -55,24 +55,24 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             }
         };
 
-        this.getRuntimeFrame = function () {
+        this.getRuntimeFrame = function() {
             return runtimeFrame;
         };
 
-        this.setCallback = function (callback) {
+        this.setCallback = function(callback) {
             runtimeCallback = callback;
         };
 
-        this.getCallback = function () {
+        this.getCallback = function() {
             return runtimeCallback;
         };
 
-        this.getTObjectName = function (reference) {
+        this.getTObjectName = function(reference) {
             if (typeof reference.objectName !== 'undefined') {
                 return reference.objectName;
             }
             var name;
-            $.each(runtimeFrame, function (key, value) {
+            $.each(runtimeFrame, function(key, value) {
                 if (value === reference) {
                     name = key;
                     return false;
@@ -82,7 +82,7 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             return name;
         };
 
-        this.getTObjectClassName = function (objectName) {
+        this.getTObjectClassName = function(objectName) {
             if (typeof runtimeFrame[objectName] === 'undefined') {
                 return false;
             }
@@ -91,7 +91,7 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             }
             return runtimeFrame[objectName].className;
         };
-        
+
 
         // COMMANDS EXECUTION
 
@@ -102,7 +102,7 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
                 error.detectError();
             } else {
                 error = err;
-            }            
+            }
             error.setProgramName(currentProgramName);
             if (currentProgramName === null) {
                 error.setCode(value);
@@ -112,15 +112,15 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             }
             this.logError(error);
         };
-        
+
         this.executeStatements = function(statements) {
             interpreter.addStatements(statements);
         };
-        
+
         this.executeStatementsNow = function(statements, log) {
             interpreter.insertStatements(statements, log);
         };
-        
+
         this.executeNow = function(commands, parameter, logCommands) {
             try {
                 this.executeStatementsNow(commands, logCommands);
@@ -129,7 +129,7 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             }
         };
 
-        this.executeFrom = function (object) {
+        this.executeFrom = function(object) {
             try {
                 var statements = object.getStatements();
                 this.executeStatements(statements);
@@ -138,61 +138,61 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             }
         };
 
-        this.getGraphics = function () {
+        this.getGraphics = function() {
             return graphics;
         };
 
-        this.setLog = function (element) {
+        this.setLog = function(element) {
             log = element;
             interpreter.setLog(element);
         };
 
-        this.logCommand = function (command) {
+        this.logCommand = function(command) {
             if (typeof log !== 'undefined') {
                 log.addCommand(command);
             }
         };
 
-        this.logError = function (error) {
+        this.logError = function(error) {
             if (typeof log !== 'undefined') {
                 log.addError(error);
             } else {
-	            window.console.error(error);
+                window.console.error(error);
             }
         };
 
-        this.stop = function () {
-	        graphics.pause();
+        this.stop = function() {
+            graphics.pause();
             wasFrozen = frozen;
             this.freeze(true);
         };
 
-        this.start = function () {
-	        graphics.unpause();
+        this.start = function() {
+            graphics.unpause();
             if (!wasFrozen) {
                 this.freeze(false);
             }
         };
-        
+
         this.suspend = function() {
             interpreter.suspend();
         };
-        
+
         this.resume = function() {
             interpreter.resume();
         };
 
-        this.addObject = function (object) {
+        this.addObject = function(object) {
             tObjects.push(object);
             // initialize object with current state
             object.freeze(frozen);
         };
 
-        this.removeObject = function (object) {
+        this.removeObject = function(object) {
             var index = tObjects.indexOf(object);
             if (index > -1) {
                 tObjects.splice(index, 1);
-                $.each(runtimeFrame, function (key, value) {
+                $.each(runtimeFrame, function(key, value) {
                     if (value === object) {
                         delete runtimeFrame[key];
                         return false;
@@ -201,7 +201,7 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             }
         };
 
-        this.addGraphicalObject = function (object) {
+        this.addGraphicalObject = function(object) {
             graphics.insertObject(object.getGObject());
             tGraphicalObjects.push(object);
             // initialize object with current state
@@ -209,12 +209,12 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             object.setDesignMode(designMode);
         };
 
-        this.removeGraphicalObject = function (object) {
+        this.removeGraphicalObject = function(object) {
             var index = tGraphicalObjects.indexOf(object);
             if (index > -1) {
-	            graphics.removeObject(object.getGObject());
+                graphics.removeObject(object.getGObject());
                 tGraphicalObjects.splice(index, 1);
-                $.each(runtimeFrame, function (key, value) {
+                $.each(runtimeFrame, function(key, value) {
                     if (value === object) {
                         delete runtimeFrame[key];
                         return false;
@@ -230,8 +230,8 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
                 object.deleteObject();
             }
         };
-        
-        this.clear = function () {
+
+        this.clear = function() {
             // TODO: clear RuntimeFrame as well (e.g. to erase declared functions)
             this.clearGraphics();
             while (tObjects.length > 0) {
@@ -242,7 +242,7 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             interpreter.clear();
         };
 
-        this.setDesignMode = function (value) {
+        this.setDesignMode = function(value) {
             // TODO: handle duplicate objects
             for (var i = 0; i < tGraphicalObjects.length; i++) {
                 tGraphicalObjects[i].setDesignMode(value);
@@ -256,8 +256,8 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             } else {
                 this.resume();
             }
-            
-            for (var i = 0; i<tGraphicalObjects.length; i++) {
+
+            for (var i = 0; i < tGraphicalObjects.length; i++) {
                 tGraphicalObjects[i].freeze(value);
             }
             for (var i = 0; i < tObjects.length; i++) {
@@ -266,23 +266,23 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             frozen = value;
         };
 
-        this.setCurrentProgramName = function (name) {
+        this.setCurrentProgramName = function(name) {
             currentProgramName = name;
         };
 
-        this.getCurrentProgramName = function () {
+        this.getCurrentProgramName = function() {
             return currentProgramName;
         };
-        
+
         // TODO: find the right place for this function
         this.preloadResources = function(project, callback, options) {
             graphics.preloadResources(project, callback, options);
         };
-        
+
         this.getGraphics = function() {
-	        return graphics;
+            return graphics;
         };
-        
+
     }
 
     var runtimeInstance = new TRuntime();

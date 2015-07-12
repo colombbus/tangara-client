@@ -1,12 +1,11 @@
 define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TUtils, TEnvironment, TError, TParser) {
     var TLink = function() {
         var projectId = false;
-        
+
         this.setProjectId = function(value) {
             projectId = value;
         };
-        
-        
+
         this.getProgramList = function() {
             if (TEnvironment.debug)
                 return ["bob.tgr", "pomme.tgr", "cubeQuest.tgr"];
@@ -20,9 +19,9 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
                 $.ajax({
                     dataType: "json",
                     url: url,
-                    data:input,
+                    data: input,
                     type: "POST",
-                    global:false,
+                    global: false,
                     async: false,
                     success: function(data) {
                         checkError(data);
@@ -46,7 +45,7 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
                 $.ajax({
                     dataType: "text",
                     url: url,
-                    global:false,
+                    global: false,
                     async: false,
                     success: function(data) {
                         code = data;
@@ -58,7 +57,7 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
                 });
             } else {
                 url = TEnvironment.getBackendUrl('getcode');
-                var input = {'name':name};
+                var input = {'name': name};
                 if (projectId) {
                     input['project_id'] = projectId;
                 }
@@ -66,9 +65,9 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
                     dataType: "json",
                     url: url,
                     type: "POST",
-                    global:false,
+                    global: false,
                     async: false,
-                    data:input,
+                    data: input,
                     success: function(data) {
                         checkError(data);
                         code = data['code'];
@@ -88,7 +87,7 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
                 try {
                     var code = this.getProgramCode(name);
                     statements = TParser.parse(code);
-                } 
+                }
                 catch (e) {
                     var error = new TError(e);
                     error.setProgramName(name);
@@ -97,7 +96,7 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
                 }
             } else {
                 var url = TEnvironment.getBackendUrl('getstatements');
-                var input = {'name':name};
+                var input = {'name': name};
                 if (projectId) {
                     input['project_id'] = projectId;
                 }
@@ -105,9 +104,9 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
                     dataType: "json",
                     url: url,
                     type: "POST",
-                    global:false,
+                    global: false,
                     async: false,
-                    data:input,
+                    data: input,
                     success: function(data) {
                         checkError(data);
                         statements = data['statements'];
@@ -124,7 +123,7 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
         this.saveProgram = function(name, code, statements) {
             if (!TEnvironment.debug) {
                 var url = TEnvironment.getBackendUrl('setprogramcontent');
-                var input = {'name':name, 'code':code, 'statements':JSON.stringify(statements)};
+                var input = {'name': name, 'code': code, 'statements': JSON.stringify(statements)};
                 if (projectId) {
                     input['project_id'] = projectId;
                 }
@@ -132,9 +131,9 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
                     dataType: "json",
                     url: url,
                     type: "POST",
-                    global:false,
+                    global: false,
                     async: false,
-                    data:input,
+                    data: input,
                     success: function(data) {
                         checkError(data);
                     },
@@ -149,7 +148,7 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
         this.createProgram = function(name) {
             if (!TEnvironment.debug) {
                 var url = TEnvironment.getBackendUrl('createprogram');
-                var input = {'name':name};
+                var input = {'name': name};
                 if (projectId) {
                     input['project_id'] = projectId;
                 }
@@ -157,9 +156,9 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
                     dataType: "json",
                     url: url,
                     type: "POST",
-                    global:false,
+                    global: false,
                     async: false,
-                    data:input,
+                    data: input,
                     success: function(data) {
                         checkError(data);
                     },
@@ -174,7 +173,7 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
         this.renameProgram = function(name, newName) {
             if (!TEnvironment.debug) {
                 var url = TEnvironment.getBackendUrl('renameprogram');
-                var input = {'name':name, 'new':newName};
+                var input = {'name': name, 'new': newName};
                 if (projectId) {
                     input['project_id'] = projectId;
                 }
@@ -182,9 +181,9 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
                     dataType: "json",
                     url: url,
                     type: "POST",
-                    global:false,
+                    global: false,
                     async: false,
-                    data:input,
+                    data: input,
                     success: function(data) {
                         checkError(data);
                     },
@@ -195,11 +194,11 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
                 });
             }
         };
-        
+
         this.getResources = function() {
             if (TEnvironment.debug) {
-                return {"arbre.gif":{"type":"image"}, "arrivee.png":{"type":"image"}, "bat1.png":{"type":"image"}, "bat2.png":{"type":"image"}, "bob.png":{"type":"image"}, "bob_droite_1.png":{"type":"image"}, "bob_droite_2.png":{"type":"image"}, "bob_droite_3.png":{"type":"image"}, "bob_droite_4.png":{"type":"image"}, "bob_droite_5.png":{"type":"image"}, "bob_droite_6.png":{"type":"image"}, "bob_face.png":{"type":"image"}, "bob_gauche_1.png":{"type":"image"}, "bob_gauche_2.png":{"type":"image"}, "bob_gauche_3.png":{"type":"image"}, "bob_gauche_4.png":{"type":"image"}, "bob_gauche_5.png":{"type":"image"}, "bob_gauche_6.png":{"type":"image"}, "boum.png":{"type":"image"}, "cle.png":{"type":"image"}, "ennemi.png":{"type":"image"}, "ennemi2.png":{"type":"image"}, "ennemi3.png":{"type":"image"}, "fini.png":{"type":"image"}, "fond.png":{"type":"image"}, "game over.png":{"type":"image"}, "gameover.png":{"type":"image"}, "maison.gif":{"type":"image"}, "mechant1.png":{"type":"image"}, "mechant2.png":{"type":"image"}, "menujeu.png":{"type":"image"}, "niveau1.png":{"type":"image"}, "niveau2.png":{"type":"image"}, "niveau3.png":{"type":"image"}, "niveau4.png":{"type":"image"}, "niveau5.png":{"type":"image"}, "niveau6.png":{"type":"image"}, "niveau7.png":{"type":"image"}, "niveau8.png":{"type":"image"}, "nok1.png":{"type":"image"}, "nok2.png":{"type":"image"}, "nok3.png":{"type":"image"}, "ok.png":{"type":"image"}, "perso.png":{"type":"image"}, "pomme.gif":{"type":"image"}, "porte.png":{"type":"image"}, "porte_ouverte.png":{"type":"image"}, "sol.gif":{"type":"image"}};
-            } else {  
+                return {"arbre.gif": {"type": "image"}, "arrivee.png": {"type": "image"}, "bat1.png": {"type": "image"}, "bat2.png": {"type": "image"}, "bob.png": {"type": "image"}, "bob_droite_1.png": {"type": "image"}, "bob_droite_2.png": {"type": "image"}, "bob_droite_3.png": {"type": "image"}, "bob_droite_4.png": {"type": "image"}, "bob_droite_5.png": {"type": "image"}, "bob_droite_6.png": {"type": "image"}, "bob_face.png": {"type": "image"}, "bob_gauche_1.png": {"type": "image"}, "bob_gauche_2.png": {"type": "image"}, "bob_gauche_3.png": {"type": "image"}, "bob_gauche_4.png": {"type": "image"}, "bob_gauche_5.png": {"type": "image"}, "bob_gauche_6.png": {"type": "image"}, "boum.png": {"type": "image"}, "cle.png": {"type": "image"}, "ennemi.png": {"type": "image"}, "ennemi2.png": {"type": "image"}, "ennemi3.png": {"type": "image"}, "fini.png": {"type": "image"}, "fond.png": {"type": "image"}, "game over.png": {"type": "image"}, "gameover.png": {"type": "image"}, "maison.gif": {"type": "image"}, "mechant1.png": {"type": "image"}, "mechant2.png": {"type": "image"}, "menujeu.png": {"type": "image"}, "niveau1.png": {"type": "image"}, "niveau2.png": {"type": "image"}, "niveau3.png": {"type": "image"}, "niveau4.png": {"type": "image"}, "niveau5.png": {"type": "image"}, "niveau6.png": {"type": "image"}, "niveau7.png": {"type": "image"}, "niveau8.png": {"type": "image"}, "nok1.png": {"type": "image"}, "nok2.png": {"type": "image"}, "nok3.png": {"type": "image"}, "ok.png": {"type": "image"}, "perso.png": {"type": "image"}, "pomme.gif": {"type": "image"}, "porte.png": {"type": "image"}, "porte_ouverte.png": {"type": "image"}, "sol.gif": {"type": "image"}};
+            } else {
                 var url = TEnvironment.getBackendUrl('getresources');
                 var list = [];
                 var input = {};
@@ -211,7 +210,7 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
                     url: url,
                     data: input,
                     type: "POST",
-                    global:false,
+                    global: false,
                     async: false,
                     success: function(data) {
                         checkError(data);
@@ -231,18 +230,18 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
                 return TEnvironment.getBaseUrl() + "/tests/" + name;
             } else {
                 if (projectId) {
-                    return TEnvironment.getBackendUrl('getresource')+"/"+projectId+"/"+version+"/"+encodeURIComponent(name);
+                    return TEnvironment.getBackendUrl('getresource') + "/" + projectId + "/" + version + "/" + encodeURIComponent(name);
                 } else {
-                    return TEnvironment.getBackendUrl('getresource')+"/"+version+"/"+encodeURIComponent(name);
+                    return TEnvironment.getBackendUrl('getresource') + "/" + version + "/" + encodeURIComponent(name);
                 }
             }
         };
-        
+
         this.renameResource = function(name, newBaseName) {
             var newName = name;
             if (!TEnvironment.debug) {
                 var url = TEnvironment.getBackendUrl('renameresource');
-                var input = {'name':name, 'new':newBaseName};
+                var input = {'name': name, 'new': newBaseName};
                 if (projectId) {
                     input['project_id'] = projectId;
                 }
@@ -250,9 +249,9 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
                     dataType: "json",
                     url: url,
                     type: "POST",
-                    global:false,
+                    global: false,
                     async: false,
-                    data:input,
+                    data: input,
                     success: function(data) {
                         checkError(data);
                         if (typeof data['updated'] !== 'undefined') {
@@ -269,11 +268,11 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
             }
             return newName;
         };
-        
+
         this.deleteProgram = function(name) {
             if (!TEnvironment.debug) {
                 var url = TEnvironment.getBackendUrl('removeprogram');
-                var input = {'name':name};
+                var input = {'name': name};
                 if (projectId) {
                     input['project_id'] = projectId;
                 }
@@ -281,9 +280,9 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
                     dataType: "json",
                     url: url,
                     type: "POST",
-                    global:false,
+                    global: false,
                     async: false,
-                    data:input,
+                    data: input,
                     success: function(data) {
                         checkError(data);
                     },
@@ -298,7 +297,7 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
         this.deleteResource = function(name) {
             if (!TEnvironment.debug) {
                 var url = TEnvironment.getBackendUrl('removeresource');
-                var input = {'name':name};
+                var input = {'name': name};
                 if (projectId) {
                     input['project_id'] = projectId;
                 }
@@ -306,9 +305,9 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
                     dataType: "json",
                     url: url,
                     type: "POST",
-                    global:false,
+                    global: false,
                     async: false,
-                    data:input,
+                    data: input,
                     success: function(data) {
                         checkError(data);
                     },
@@ -319,12 +318,12 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
                 });
             }
         };
-        
+
         this.setResourceContent = function(name, data) {
-            var resource={};
+            var resource = {};
             if (!TEnvironment.debug) {
                 var url = TEnvironment.getBackendUrl('setresource');
-                var input = {'name':name, 'data':data};
+                var input = {'name': name, 'data': data};
                 if (projectId) {
                     input['project_id'] = projectId;
                 }
@@ -332,12 +331,12 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
                     dataType: "json",
                     url: url,
                     type: "POST",
-                    global:false,
+                    global: false,
                     async: false,
-                    data:input,
+                    data: input,
                     success: function(data) {
                         checkError(data);
-                        resource = {'name':data.updated, 'data':data.data};
+                        resource = {'name': data.updated, 'data': data.data};
                     },
                     error: function(data, status, error) {
                         var e = new TError(error);
@@ -347,12 +346,12 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
             }
             return resource;
         };
-        
+
         this.duplicateResource = function(name) {
-            var resource={};
+            var resource = {};
             if (!TEnvironment.debug) {
                 var url = TEnvironment.getBackendUrl('duplicateresource');
-                var input = {'name':name};
+                var input = {'name': name};
                 if (projectId) {
                     input['project_id'] = projectId;
                 }
@@ -360,12 +359,12 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
                     dataType: "json",
                     url: url,
                     type: "POST",
-                    global:false,
+                    global: false,
                     async: false,
-                    data:input,
+                    data: input,
                     success: function(data) {
                         checkError(data);
-                        resource = {'name':data.created, 'data':data.data};
+                        resource = {'name': data.created, 'data': data.data};
                     },
                     error: function(data, status, error) {
                         var e = new TError(error);
@@ -377,10 +376,10 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
         };
 
         this.createResource = function(name, data) {
-            var resource={};
+            var resource = {};
             if (!TEnvironment.debug) {
                 var url = TEnvironment.getBackendUrl('createresource');
-                var input = {'name':name, 'data':data};
+                var input = {'name': name, 'data': data};
                 if (projectId) {
                     input['project_id'] = projectId;
                 }
@@ -388,12 +387,12 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
                     dataType: "json",
                     url: url,
                     type: "POST",
-                    global:false,
+                    global: false,
                     async: false,
-                    data:input,
+                    data: input,
                     success: function(data) {
                         checkError(data);
-                        resource = {'name':data.created, 'data':data.data};
+                        resource = {'name': data.created, 'data': data.data};
                     },
                     error: function(data, status, error) {
                         var e = new TError(error);
@@ -403,18 +402,18 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
             }
             return resource;
         };
-        
-        
+
+
         function checkError(data) {
-            if (typeof data !=='undefined' && typeof data['error'] !== 'undefined') {
-                var e = new TError(TEnvironment.getMessage("backend-error-"+data['error']));
+            if (typeof data !== 'undefined' && typeof data['error'] !== 'undefined') {
+                var e = new TError(TEnvironment.getMessage("backend-error-" + data['error']));
                 throw e;
             }
         }
 
     };
-    
+
     var linkInstance = new TLink();
-    
+
     return linkInstance;
 });

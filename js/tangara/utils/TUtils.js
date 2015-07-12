@@ -1,5 +1,5 @@
-define(['TEnvironment'], function (TEnvironment) {
-    var TUtils = function () {
+define(['TEnvironment'], function(TEnvironment) {
+    var TUtils = function() {
         var QUOTE_DELIMITER = '#';
         var defaultDiacriticsRemovalap = [
             {'base': 'A', 'letters': '\u0041\u24B6\uFF21\u00C0\u00C1\u00C2\u1EA6\u1EA4\u1EAA\u1EA8\u00C3\u0100\u0102\u1EB0\u1EAE\u1EB4\u1EB2\u0226\u01E0\u00C4\u01DE\u1EA2\u00C5\u01FA\u01CD\u0200\u0202\u1EA0\u1EAC\u1EB6\u1E00\u0104\u023A\u2C6F'},
@@ -203,7 +203,7 @@ define(['TEnvironment'], function (TEnvironment) {
             purple: [128, 0, 128],
             blueviolet: [138, 43, 226]
         };
-        this.removeAccents = function (str) {
+        this.removeAccents = function(str) {
             var letters = str.split("");
             var newStr = "";
             for (var i = 0; i < letters.length; i++) {
@@ -211,76 +211,76 @@ define(['TEnvironment'], function (TEnvironment) {
             }
             return newStr;
         };
-        this.format = function (text) {
+        this.format = function(text) {
             var args = Array.prototype.slice.call(arguments, 1);
-            return text.replace(/{(\d+)}/g, function (match, number) {
+            return text.replace(/{(\d+)}/g, function(match, number) {
                 return typeof args[number] !== 'undefined' ? args[number] : match;
             });
         };
-        this.checkBoolean = function (value) {
+        this.checkBoolean = function(value) {
             return (typeof value !== 'undefined' && typeof value === 'boolean');
         };
-        this.getBoolean = function (value) {
+        this.getBoolean = function(value) {
             if (!this.checkBoolean(value)) {
                 throw new Error(TEnvironment.getMessage("wrong boolean", value));
             }
             return value;
         };
-        this.checkInteger = function (value) {
+        this.checkInteger = function(value) {
             return (typeof value !== 'undefined' && !isNaN(value));
         };
-        this.getInteger = function (value) {
+        this.getInteger = function(value) {
             if (!this.checkInteger(value)) {
                 throw new Error(TEnvironment.getMessage("wrong integer", value));
             }
             return value;
         };
-        this.checkString = function (value) {
+        this.checkString = function(value) {
             return (typeof value !== 'undefined' && (typeof value === 'string' || value instanceof String));
         };
-        this.getString = function (value) {
+        this.getString = function(value) {
             if (!this.checkString(value)) {
                 throw new Error(TEnvironment.getMessage("wrong string", value));
             }
             return value;
         };
-        this.checkFunction = function (value) {
+        this.checkFunction = function(value) {
             return (typeof value !== 'undefined' && (typeof value === 'function' || value instanceof Function));
         };
-        this.getFunction = function (value) {
+        this.getFunction = function(value) {
             if (!this.checkFunction(value)) {
                 throw new Error(TEnvironment.getMessage("wrong function", value));
             }
             return value;
         };
-        this.checkObject = function (value) {
+        this.checkObject = function(value) {
             return (typeof value === 'object' || this.checkFunction(value));
         };
-        this.getObject = function (value) {
+        this.getObject = function(value) {
             if (!this.checkObject(value)) {
                 throw new Error(TEnvironment.getMessage("wrong object", value));
             }
             return value;
         };
-        this.checkCommand = function (value) {
+        this.checkCommand = function(value) {
             return this.checkString(value) || this.checkFunction(value);
         };
-        this.getCommand = function (value) {
+        this.getCommand = function(value) {
             if (!this.checkCommand(value)) {
                 throw new Error(TEnvironment.getMessage("wrong command", value));
             }
             return value;
         };
-        this.checkArray = function (value) {
+        this.checkArray = function(value) {
             return (value instanceof Array);
         };
-        this.getArray = function (value) {
+        this.getArray = function(value) {
             if (!this.checkArray(value)) {
                 throw new Error(TEnvironment.getMessage("wrong array", value));
             }
             return value;
         };
-        this.getkeyCode = function (value) {
+        this.getkeyCode = function(value) {
             if (this.checkString(value)) {
                 if (typeof keyCodes[value] !== 'undefined') {
                     return keyCodes[value];
@@ -288,7 +288,7 @@ define(['TEnvironment'], function (TEnvironment) {
             }
             return false;
         };
-        this.getColor = function (red, green, blue) {
+        this.getColor = function(red, green, blue) {
             if (this.checkString(red)) {
                 var translated = TEnvironment.getMessage("color-" + red);
                 if (typeof colors[translated] !== 'undefined') {
@@ -304,12 +304,12 @@ define(['TEnvironment'], function (TEnvironment) {
             }
             throw new Error(TEnvironment.getMessage("wrong color"));
         };
-        this.sortArray = function (value) {
-            return value.sort(function (a, b) {
+        this.sortArray = function(value) {
+            return value.sort(function(a, b) {
                 return a.toLowerCase().localeCompare(b.toLowerCase());
             });
         };
-        this.toUnicode = function (text) {
+        this.toUnicode = function(text) {
             var result = "";
             for (var i = 0; i < text.length; i++) {
                 result += "\\u" + ("000" + text.charCodeAt(i).toString(16)).substr(-4);
@@ -319,7 +319,7 @@ define(['TEnvironment'], function (TEnvironment) {
         /**
          * Creates a String of delimiters of a given number.
          */
-        this.someDelimiters = function (level, value)
+        this.someDelimiters = function(level, value)
         {
             if (typeof value === "undefined")
                 value = QUOTE_DELIMITER;
@@ -338,7 +338,7 @@ define(['TEnvironment'], function (TEnvironment) {
          * @return
          * 		the new string
          */
-        this.parseQuotes = function (string) {
+        this.parseQuotes = function(string) {
             var result = "";
             var charactersTab = string.split('');
             var delimiterEncountered = false;
@@ -395,12 +395,12 @@ define(['TEnvironment'], function (TEnvironment) {
             }
             return result;
         };
-        
+
         this.convertUnicode = function(text) {
-            var result = text.replace(/\\u([0-9a-fA-F]{4})/g, 
-                function (whole, group1) {
-                    return String.fromCharCode(parseInt(group1, 16));
-                }
+            var result = text.replace(/\\u([0-9a-fA-F]{4})/g,
+                    function(whole, group1) {
+                        return String.fromCharCode(parseInt(group1, 16));
+                    }
             );
             return result;
         };
@@ -430,32 +430,32 @@ define(['TEnvironment'], function (TEnvironment) {
          *              @param text String the string to add quote delimiters
          */
 
-        this.isDelimiterEnded = function (text) {
+        this.isDelimiterEnded = function(text) {
             var regex = new RegExp(".*[#\\\\]$", "m");
             return regex.test(text);
         };
 
-        this.isACommand = function (text) {
+        this.isACommand = function(text) {
             var regex = new RegExp(".*[A-Za-z0-9]+\\s*.\\s*[A-Za-z0-9]+\\s*\\(\\s*$", "m");
             return regex.test(text);
         };
 
-        this.isNewInstanceStringed = function (text) {
+        this.isNewInstanceStringed = function(text) {
             var regex = new RegExp(".*[A-Za-z\\d]+\\s*=\\s*new\\s*[A-Za-z\\d]*\\s*\\(\\s*[\"\']$", "m");
             return regex.test(text);
         };
 
-        this.isComparison = function (text) {
+        this.isComparison = function(text) {
             var regex = new RegExp(".*[\\=!]?\\=\\s*$", "m");
             return regex.test(text);
         };
 
-        this.isStringElement = function (text) {
+        this.isStringElement = function(text) {
             var regex = new RegExp(".*[\\+\\,]\\s*$", "m");
             return regex.test(text);
         };
 
-        this.isElsePresent = function (text) {
+        this.isElsePresent = function(text) {
             //var regex = new RegExp("^.*else*$", "m");
             var regex = new RegExp("^.*[^[[:alpha:]]]*else[^[[:alpha:]]]*.*$", "m");
             //var regex  = new RegExp("^.*\\s*[^[[:alpha:]]]else[^[[:alpha:]]]*", "m");
@@ -465,7 +465,7 @@ define(['TEnvironment'], function (TEnvironment) {
             return regex.test(text);
         };
 
-        this.addQuoteDelimiters = function (text) {
+        this.addQuoteDelimiters = function(text) {
             try {
                 var leftPart = "";
                 var newPart = "";
@@ -531,33 +531,35 @@ define(['TEnvironment'], function (TEnvironment) {
                 return text;
             }
         };
-        
-        
+
+
         this.addslashes = function(string) {
             return string.replace(/\\/g, '\\\\').
-                replace(/\u0008/g, '\\b').
-                replace(/\t/g, '\\t').
-                replace(/\n/g, '\\n').
-                replace(/\f/g, '\\f').
-                replace(/\r/g, '\\r').
-                replace(/'/g, '\\\'').
-                replace(/"/g, '\\"');
-         };
-         
-         this.getFunctionName = function(object) {
+                    replace(/\u0008/g, '\\b').
+                    replace(/\t/g, '\\t').
+                    replace(/\n/g, '\\n').
+                    replace(/\f/g, '\\f').
+                    replace(/\r/g, '\\r').
+                    replace(/'/g, '\\\'').
+                    replace(/"/g, '\\"');
+        };
+
+        this.getFunctionName = function(object) {
             var string = object.toString();
             string = string.substr('function '.length);
             string = string.substr(0, string.indexOf('('));
             return string;
-         };
-         
-         this.extend = function(dest,source) {
-		 	if(!source) { return dest; }
-	 		for (var prop in source) {
-	 			dest[prop] = source[prop];
- 			}
- 			return dest;
-		};
+        };
+
+        this.extend = function(dest, source) {
+            if (!source) {
+                return dest;
+            }
+            for (var prop in source) {
+                dest[prop] = source[prop];
+            }
+            return dest;
+        };
 
     };
     var utilInstance = new TUtils();

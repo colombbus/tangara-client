@@ -1,11 +1,11 @@
-define(['jquery', 'babylon', 'TEnvironment', 'TObject'], function ($, babylon, TEnvironment, TObject) {
+define(['jquery', 'babylon', 'TEnvironment', 'TObject'], function($, babylon, TEnvironment, TObject) {
     /**
      * This object is the 3D parent
      *
      * @return <code>true</code> if this Object3D is followed by the camera,
      * else <code>false</code>.
      */
-    var TObject3D = function () {
+    var TObject3D = function() {
         TObject.call(this);
     };
     var object3d;
@@ -26,7 +26,7 @@ define(['jquery', 'babylon', 'TEnvironment', 'TObject'], function ($, babylon, T
      *
      * @returns Mesh the mesh created with BABYLONJS in TObject3D
      */
-    TObject3D.prototype.getMesh = function () {
+    TObject3D.prototype.getMesh = function() {
         return this.mesh;
     };
 
@@ -34,7 +34,7 @@ define(['jquery', 'babylon', 'TEnvironment', 'TObject'], function ($, babylon, T
      * Freeze() aimed to stop all animated objects in the Space3D
      * @param Boolean value
      */
-    TObject3D.prototype.freeze = function (value) {
+    TObject3D.prototype.freeze = function(value) {
         // every object may add actions to take to freeze
     };
 
@@ -46,7 +46,7 @@ define(['jquery', 'babylon', 'TEnvironment', 'TObject'], function ($, babylon, T
      * @returns String Name of the TObject3D (the class and a unique id; ie:
      * Cylinder3D9
      */
-    TObject3D.prototype.createName = function () {
+    TObject3D.prototype.createName = function() {
         this.name = this.className + ++TObject3D.id;
         return this.name;
     };
@@ -56,7 +56,7 @@ define(['jquery', 'babylon', 'TEnvironment', 'TObject'], function ($, babylon, T
      *
      * @returns String Name of the TObject3D created (className and unique id)
      */
-    TObject3D.prototype.getName = function () {
+    TObject3D.prototype.getName = function() {
         return this.name;
     };
 
@@ -64,88 +64,88 @@ define(['jquery', 'babylon', 'TEnvironment', 'TObject'], function ($, babylon, T
      * _setSpace() is used to define the scene of the Space3D
      * @param Space3D scene3d
      */
-    TObject3D.prototype._setSpace = function (scene3d) {
+    TObject3D.prototype._setSpace = function(scene3d) {
         this.scene = scene3d;
     };
 
-    TObject3D.prototype._addObject = function (object) {
+    TObject3D.prototype._addObject = function(object) {
     };
 
-    TObject3D.prototype._alwaysMoveBackward = function () {
-
-    };
-
-    TObject3D.prototype._alwaysMoveDown = function () {
+    TObject3D.prototype._alwaysMoveBackward = function() {
 
     };
 
-    TObject3D.prototype._alwaysMoveForward = function () {
+    TObject3D.prototype._alwaysMoveDown = function() {
 
     };
 
-    TObject3D.prototype._alwaysMoveLeft = function () {
+    TObject3D.prototype._alwaysMoveForward = function() {
 
     };
 
-    TObject3D.prototype._alwaysMoveRight = function () {
+    TObject3D.prototype._alwaysMoveLeft = function() {
 
     };
 
-    TObject3D.prototype._alwaysMoveUp = function () {
+    TObject3D.prototype._alwaysMoveRight = function() {
 
     };
 
-    TObject3D.prototype._displayCollisionArea = function (visibility) {
+    TObject3D.prototype._alwaysMoveUp = function() {
+
     };
 
-    TObject3D.prototype._displayCommands = function (state) {
+    TObject3D.prototype._displayCollisionArea = function(visibility) {
+    };
+
+    TObject3D.prototype._displayCommands = function(state) {
 
     };
 
     /**
      * Hide the TObject3D
      */
-    TObject3D.prototype._hide = function () {
+    TObject3D.prototype._hide = function() {
         this.object3d.visibility = false;
     };
 
-    TObject3D.prototype._ifCollision = function (command) {
+    TObject3D.prototype._ifCollision = function(command) {
     };
 
-    TObject3D.prototype._ifCollisionWith = function (e, command) {
+    TObject3D.prototype._ifCollisionWith = function(e, command) {
     };
 
-    TObject3D.prototype._loadFile = function (file) {
+    TObject3D.prototype._loadFile = function(file) {
         // file2
     };
 
-    TObject3D.prototype._moveBackward = function () {
+    TObject3D.prototype._moveBackward = function() {
     };
 
-    TObject3D.prototype._moveDown = function () {
+    TObject3D.prototype._moveDown = function() {
         // 1 arg : 0
     };
 
-    TObject3D.prototype._moveForward = function () {
+    TObject3D.prototype._moveForward = function() {
         // 1 arg : 0
     };
 
-    TObject3D.prototype._moveLeft = function () {
+    TObject3D.prototype._moveLeft = function() {
         // 1 arg : 0
     };
 
-    TObject3D.prototype._moveRight = function () {
+    TObject3D.prototype._moveRight = function() {
         // 1 arg : 0
     };
 
-    TObject3D.prototype._moveUp = function () {
+    TObject3D.prototype._moveUp = function() {
         // 1 arg : 0
     };
 
-    TObject3D.prototype._removeTexture = function () {
+    TObject3D.prototype._removeTexture = function() {
     };
 
-    TObject3D.prototype._rotate = function (degre) {
+    TObject3D.prototype._rotate = function(degre) {
         var rad = (2 * Math.PI * degre) / 360.0;
 
         if (this.axis === "X")
@@ -160,23 +160,23 @@ define(['jquery', 'babylon', 'TEnvironment', 'TObject'], function ($, babylon, T
          c._setRotationAxis("Y")
          e.ajouterObjet(c)
          c._rotate(45)
-
+         
          */
     };
 
-    TObject3D.prototype._setAngle = function () {
+    TObject3D.prototype._setAngle = function() {
 
     };
 
-    TObject3D.prototype._setCollisionArea = function () {
+    TObject3D.prototype._setCollisionArea = function() {
         // 3 arguments : 1,1,1
     };
 
-    TObject3D.prototype._setColor = function (arg1, arg2) {
+    TObject3D.prototype._setColor = function(arg1, arg2) {
         // "red", true
     };
 
-    TObject3D.prototype._setPosition = function (point) {
+    TObject3D.prototype._setPosition = function(point) {
         // arg 1 : point
         this.object3d.x = point;
         /* test
@@ -193,7 +193,7 @@ define(['jquery', 'babylon', 'TEnvironment', 'TObject'], function ($, babylon, T
      * @param {type} ax
      * @returns {undefined}
      */
-    TObject3D.prototype._setRotationAxis = function (ax) {
+    TObject3D.prototype._setRotationAxis = function(ax) {
         if (typeof ax === "string") {
             if ((ax == "X") || (ax == "x"))
                 this.axis = "X";
@@ -211,35 +211,35 @@ define(['jquery', 'babylon', 'TEnvironment', 'TObject'], function ($, babylon, T
          */
     };
 
-    TObject3D.prototype._setScale = function () {
+    TObject3D.prototype._setScale = function() {
     };
 
-    TObject3D.prototype._setSolid = function (solidnessState) {
+    TObject3D.prototype._setSolid = function(solidnessState) {
     };
 
-    TObject3D.prototype._setSpeed = function () {
+    TObject3D.prototype._setSpeed = function() {
         // speed : 10
     };
 
-    TObject3D.prototype._setTexture = function (texture) {
+    TObject3D.prototype._setTexture = function(texture) {
     };
 
     /**
      * Show the TObject3D
      */
-    TObject3D.prototype._show = function () {
+    TObject3D.prototype._show = function() {
         this.object3d.visibility = true;
     };
 
-    TObject3D.prototype._stop = function () {
+    TObject3D.prototype._stop = function() {
     };
 
-    TObject3D.prototype._translate = function (x, y, z) {
+    TObject3D.prototype._translate = function(x, y, z) {
         // arg : 0,0,0
         this.object3d = this.getMesh().translate(BABYLON.Axis.X, 1.0, BABYLON.Space.WORLD);
     };
 
-    TObject3D.prototype.toString = function () {
+    TObject3D.prototype.toString = function() {
         return "TObject3D " + this.className;
     };
 
@@ -251,7 +251,7 @@ define(['jquery', 'babylon', 'TEnvironment', 'TObject'], function ($, babylon, T
  c=new Cylindre3D()
  e.ajouterObjet(c)
  c.cacher()
-
+ 
  *
  *
  */

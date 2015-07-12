@@ -1,8 +1,8 @@
 define(['jquery', 'TEnvironment'], function($, TEnvironment) {
     function TLearnLog() {
-        
+
         var frame = null;
-        
+
         this.setFrame = function(value) {
             frame = value;
         };
@@ -26,26 +26,26 @@ define(['jquery', 'TEnvironment'], function($, TEnvironment) {
                 frame.showError(message)
             }
         };
-        
+
         this.addMessage = function(text) {
-            console.log("message: "+text);
+            console.log("message: " + text);
         };
-        
+
         this.clear = function() {
         };
-        
-        
+
+
         this.saveScroll = function() {
         };
-        
+
         this.restoreScroll = function() {
         };
-        
+
         this.getError = function(index) {
-           return null;           
+            return null;
         };
-        
-    } 
-    
+
+    }
+
     return TLearnLog;
 });
