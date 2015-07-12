@@ -36,27 +36,25 @@ function load() {
         window.console.log("***************************");
         window.console.log("* Building User Interface *");
         window.console.log("***************************");
-        frame = new TLearnFrame();
-        domFrame = frame.getElement();
-
-        $("body").append(domFrame);
-
-        window.console.log("*******************");
-        window.console.log("* Initiating link *");
-        window.console.log("*******************");
-        var currentProject = new TProject();
-        TEnvironment.setProject(currentProject);
-        $(document).ready( function() {
-            frame.displayed();
-            // trigger resize in order for canvas to update its size (and remove the 5px bottom margin)
-            $(window).resize();
-            TEnvironment.frameReady(function() {
-                try  {
-                    frame.init();
-                } catch (e) 
-                {}
-                frame.loadStep(1);
-            });
+        frame = new TLearnFrame(function(component) {
+	        $("body").append(component);
+	        window.console.log("*******************");
+	        window.console.log("* Initiating link *");
+	        window.console.log("*******************");
+	        var currentProject = new TProject();
+	        TEnvironment.setProject(currentProject);
+	        $(document).ready( function() {
+	            frame.displayed();
+	            // trigger resize in order for canvas to update its size (and remove the 5px bottom margin)
+	            $(window).resize();
+	            TEnvironment.frameReady(function() {
+	                try  {
+	                    frame.init();
+	                } catch (e) 
+	                {}
+	                frame.loadStep(1);
+	            });
+	        });
         });
     });
 }

@@ -1,4 +1,4 @@
-define(['jquery', 'TRuntime'], function ($, TRuntime) {
+define(['ui/TComponent', 'jquery', 'TRuntime'], function (TComponent, $, TRuntime) {
 
     function TLearnCanvas(callback) {
 	    var $main, $canvas, $canvasLoading, $canvasLoadingValue;
@@ -62,20 +62,14 @@ define(['jquery', 'TRuntime'], function ($, TRuntime) {
             $main.hide();
         };
         this.showLoading = function() {
-	        if (!loading) {
-	            $main.appendChild($canvasLoading);
-	            loading = true;
-            }
+	        $canvasLoading.show();
         };
         this.setLoadingValue = function(count, total) {
             var value = Math.round(count*100/total);
             $canvasLoadingValue.text(value+"%");
         };
         this.removeLoading = function() {
-	        if (loading) {
-		        $canvas.remove($canvasLoading);
-		        loading = false;
-	        }
+	        $canvasLoading.hide();
         };
        
     }

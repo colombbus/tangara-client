@@ -167,6 +167,8 @@ define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment', 'TInterpreter'
         this.logError = function (error) {
             if (typeof log !== 'undefined') {
                 log.addError(error);
+            } else {
+	            window.console.error(error);
             }
         };
 

@@ -178,12 +178,16 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
         this.addLogMessage = function(text) {
             if (typeof log !== 'undefined') {
                 log.addMessage(text);
+            } else {
+	            window.console.log(text);
             }
         };
         
         this.addLogError = function(error) {
             if (typeof log !== 'undefined') {
                 log.addError(error);
+            } else {
+	            window.console.error(error);
             }
         };
 
