@@ -1,4 +1,4 @@
-define(['TRuntime', 'utils/TUtils', 'TParser'], function(TRuntime, TUtils, TParser) {
+define(['TRuntime', 'TUtils', 'TParser'], function(TRuntime, TUtils, TParser) {
     var CommandManager = function() {
         this.commands = new Array();
         this.logging= true;

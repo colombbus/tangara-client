@@ -1,4 +1,4 @@
-define(['jquery', 'TEnvironment', 'utils/TUtils', 'utils/CommandManager', 'utils/ResourceManager', 'TGraphicalObject'], function ($, TEnvironment, TUtils, CommandManager, ResourceManager, TGraphicalObject) {
+define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager', 'TGraphicalObject'], function ($, TEnvironment, TUtils, CommandManager, ResourceManager, TGraphicalObject) {
     var Sprite = function (name) {
         TGraphicalObject.call(this);
         this.images = new Array();

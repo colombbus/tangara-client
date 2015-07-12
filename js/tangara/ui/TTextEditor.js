@@ -1,4 +1,4 @@
-define(['ui/TComponent', 'TEnvironment', 'ui/TUI', 'jquery'], function(TComponent, TEnvironment, TUI, $) {
+define(['ui/TComponent', 'TEnvironment', 'TUI', 'jquery'], function(TComponent, TEnvironment, TUI, $) {
     function TTextEditor(callback) {
 	    var $name, $textArea, $main;
         var appended = false;

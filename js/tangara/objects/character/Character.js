@@ -1,4 +1,4 @@
-define(['jquery','TEnvironment', 'utils/TUtils', 'TGraphicalObject', 'utils/CommandManager'], function($, TEnvironment, TUtils, TGraphicalObject, CommandManager) {
+define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager'], function($, TEnvironment, TUtils, TGraphicalObject, CommandManager) {
     var Character = function(characterName) {
         TGraphicalObject.call(this);
         if (typeof(characterName)==='undefined') {

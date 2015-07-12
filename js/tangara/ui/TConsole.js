@@ -1,4 +1,4 @@
-define(['ui/TUI', 'TParser', 'ui/TLog', 'TEnvironment', 'utils/TUtils', 'TRuntime', 'jquery', 'ace/ace', 'ace/autocomplete', 'ace/range', 'ui/TComponent'], function (TUI, TParser, TLog, TEnvironment, TUtils, TRuntime, $, ace, ace_autocomplete, ace_range, TComponent) {
+define(['TUI', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jquery', 'ace/ace', 'ace/autocomplete', 'ace/range', 'ui/TComponent'], function (TUI, TParser, TLog, TEnvironment, TUtils, TRuntime, $, ace, ace_autocomplete, ace_range, TComponent) {
 
     function TConsole(callback) {
 	    var $console, $consoleText;

@@ -1,4 +1,4 @@
-define(['ui/TComponent', 'jquery', 'ui/TUI', 'ui/TDesignLog', 'TEnvironment'], function(TComponent, $, TUI, TDesignLog, TEnvironment) {
+define(['ui/TComponent', 'jquery', 'TUI', 'ui/TDesignLog', 'TEnvironment'], function(TComponent, $, TUI, TDesignLog, TEnvironment) {
     function TLog(callback) {
 	    var designLog;
 	    var $amin, $log, $designLog, $switch, $innerLog, $switchLog, $switchDesign;

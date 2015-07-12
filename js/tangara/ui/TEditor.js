@@ -1,4 +1,4 @@
-define(['ui/TComponent','jquery', 'ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 'ace/autocomplete', 'TProgram', 'TEnvironment', 'TLink', 'ui/TUI', 'utils/TUtils'], function (TComponent, $, ace, ace_edit_session, ace_range, ace_undo_manager, ace_autocomplete, TProgram, TEnvironment, TLink, TUI, TUtils) {
+define(['ui/TComponent','jquery', 'ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 'ace/autocomplete', 'TProgram', 'TEnvironment', 'TLink', 'TUI', 'TUtils'], function (TComponent, $, ace, ace_edit_session, ace_range, ace_undo_manager, ace_autocomplete, TProgram, TEnvironment, TLink, TUI, TUtils) {
 
     function TEditor(callback) {
 	    var $editor;

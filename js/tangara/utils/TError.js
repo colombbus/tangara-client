@@ -1,4 +1,4 @@
-define(['jquery', 'TEnvironment', 'utils/TUtils'], function($, TEnvironment, TUtils) {
+define(['jquery', 'TEnvironment', 'TUtils'], function($, TEnvironment, TUtils) {
     function TError(e) {
         var message = "";
         var lines = [];

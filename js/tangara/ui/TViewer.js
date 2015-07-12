@@ -1,4 +1,4 @@
-define(['ui/TComponent', 'ui/TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPaint', 'wPaint/plugins/main','wPaint/plugins/text', 'wPaint/plugins/shapes', 'wPaint/plugins/flip', 'wPaint/plugins/file'], function(TComponent, TUI, TEnvironment, $) {
+define(['ui/TComponent', 'TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPaint', 'wPaint/plugins/main','wPaint/plugins/text', 'wPaint/plugins/shapes', 'wPaint/plugins/flip', 'wPaint/plugins/file'], function(TComponent, TUI, TEnvironment, $) {
     function TViewer(callback) {
         var currentName = '';
         var currentWidth =0;

@@ -1,4 +1,4 @@
-define(['jquery', 'TEnvironment', 'utils/TUtils'], function ($, TEnvironment, TUtils) {
+define(['jquery', 'TEnvironment', 'TUtils'], function ($, TEnvironment, TUtils) {
 	
 	function TComponent(component, callback) {
 		

@@ -1,4 +1,4 @@
-define(['TError', 'utils/TUtils'], function(TError, TUtils) {
+define(['TError', 'TUtils'], function(TError, TUtils) {
     function TInterpreter() {
         var runtimeFrame;
         var definedFunctions = {};

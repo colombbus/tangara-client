@@ -12,7 +12,21 @@ require.config({
         "TObject":'objects/tobject/TObject',
         "TObject3D":'objects/tobject3d/TObject3D',
         "TGraphicalObject":'objects/tgraphicalobject/TGraphicalObject',
-        "jquery-ui":'../libs/jquery.ui-1.11.2'
+        "jquery-ui":'../libs/jquery.ui-1.11.2',
+        "TProject":"data/Tproject",
+        "TProgram":"data/TProgram",
+        "TLearnProject":"data/TLearnProject",
+        "TEnvironment":"env/TEnvironment",
+        "TLink":"env/TLink",
+        "TInterpreter":"run/TInterpreter",
+        "TParser":"run/Tparser",
+        "TRuntime":"run/TRuntime",
+        "TUI":"ui/TUI",
+        "CommandManager":"utils/CommandManager",
+        "ResourceManager":"utils/ResourceManager",
+        "SynchronousManager":"utils/SynchronousManager",
+        "TError":"utils/TError",
+        "TUtils":"utils/TUtils"        
     },
     
     map:{

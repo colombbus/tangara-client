@@ -1,4 +1,4 @@
-define(['jquery', 'TEnvironment', 'TRuntime', 'utils/TUtils', 'utils/SynchronousManager', 'TObject', 'TLink'], function($, TEnvironment, TRuntime, TUtils, SynchronousManager, TObject, TLink) {
+define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'TObject', 'TLink'], function($, TEnvironment, TRuntime, TUtils, SynchronousManager, TObject, TLink) {
     var Teacher = function() {
         // Do not call parent constructor, as we don't want this object to be erased when clearing the
         // Runtime

@@ -1,4 +1,4 @@
-define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment', 'TInterpreter', 'utils/TUtils'], function($, TError, Quintus, TParser, TEnvironment, TInterpreter, TUtils) {
+define(['jquery', 'TError', 'quintus', 'TParser', 'TEnvironment', 'TInterpreter', 'TUtils'], function($, TError, Quintus, TParser, TEnvironment, TInterpreter, TUtils) {
     function TRuntime() {
         var libs = new Array();
         var translatedNames = new Array();

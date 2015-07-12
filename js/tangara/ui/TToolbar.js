@@ -1,4 +1,4 @@
-define(['ui/TComponent', 'jquery','TEnvironment', 'ui/TUI'], function(TComponent, $,TEnvironment, TUI) {
+define(['ui/TComponent', 'jquery','TEnvironment', 'TUI'], function(TComponent, $,TEnvironment, TUI) {
     function TToolbar(callback) {
 		var $buttonExecute, $buttonEditor;
 	    var $optionDesignMode, $optionClear, $optionNewProgram, $optionSaveProgram, $optionNewResource, $optionDelete;

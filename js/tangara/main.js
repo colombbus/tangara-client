@@ -5,8 +5,8 @@ require.config({
         "jquery":'../libs/jquery-1.11.1/jquery-1.11.1.min',
         "jquery_animate_enhanced":'../libs/jquery.animate-enhanced/jquery.animate-enhanced.min',
         "ace":'../libs/ace-1.1.7',
-	"babylon":'../libs/babylonjs/babylon.1.14',
-	"babylonjs":'../libs/babylon-editor/babylon-editor',
+		"babylon":'../libs/babylonjs/babylon.1.14',
+		"babylonjs":'../libs/babylon-editor/babylon-editor',
         "split-pane":'../libs/split-pane/split-pane',
         "quintus":'../libs/quintus-0.2.0/quintus-all.min',
         "acorn":'../libs/acorn/acorn',
@@ -22,7 +22,21 @@ require.config({
         "wPaint/plugins/main":'../libs/wpaint-2.5.0/plugins/main/wPaint.menu.main.min',
         "wPaint/plugins/shapes":'../libs/wpaint-2.5.0/plugins/shapes/wPaint.menu.main.shapes.min',
         "wPaint/plugins/text":'../libs/wpaint-2.5.0/plugins/text/wPaint.menu.text.min',
-        "wPaint/plugins/flip":'plugins/wPaint.menu.main.flip'
+        "wPaint/plugins/flip":'plugins/wPaint.menu.main.flip',
+        "TProject":"data/Tproject",
+        "TProgram":"data/TProgram",
+        "TLearnProject":"data/TLearnProject",
+        "TEnvironment":"env/TEnvironment",
+        "TLink":"env/TLink",
+        "TInterpreter":"run/TInterpreter",
+        "TParser":"run/Tparser",
+        "TRuntime":"run/TRuntime",
+        "TUI":"ui/TUI",
+        "CommandManager":"utils/CommandManager",
+        "ResourceManager":"utils/ResourceManager",
+        "SynchronousManager":"utils/SynchronousManager",
+        "TError":"utils/TError",
+        "TUtils":"utils/TUtils"
     },
     
     map:{

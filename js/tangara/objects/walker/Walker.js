@@ -1,4 +1,4 @@
-define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'utils/TUtils'], function($, TEnvironment, TGraphicalObject, Sprite, TUtils) {
+define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'TUtils'], function($, TEnvironment, TGraphicalObject, Sprite, TUtils) {
     var Walker = function(name) {
         Sprite.call(this,name);
     };

@@ -1,4 +1,4 @@
-define(['TObject', 'utils/TUtils', 'TRuntime', 'TEnvironment'], function (TObject, TUtils, TRuntime, TEnvironment) {
+define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function (TObject, TUtils, TRuntime, TEnvironment) {
     var Sound = function (name) {
         TObject.call(this, name);
 

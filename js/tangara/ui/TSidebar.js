@@ -1,4 +1,4 @@
-define(['ui/TComponent', 'ui/TUI', 'TEnvironment', 'TProgram', 'TError', 'ui/TViewer', 'ui/TTextEditor', 'jquery', 'jquery-ui/widget', 'iframe-transport', 'fileupload'], function(TComponent, TUI, TEnvironment, TProgram, TError, TViewer, TTextEditor, $) {
+define(['ui/TComponent', 'TUI', 'TEnvironment', 'TProgram', 'TError', 'ui/TViewer', 'ui/TTextEditor', 'jquery', 'jquery-ui/widget', 'iframe-transport', 'fileupload'], function(TComponent, TUI, TEnvironment, TProgram, TError, TViewer, TTextEditor, $) {
 
     function TSidebar(callback) {
 	    

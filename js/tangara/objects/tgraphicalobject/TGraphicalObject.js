@@ -1,4 +1,4 @@
-define(['TObject', 'utils/TUtils', 'TRuntime', 'TEnvironment'], function (TObject, TUtils, TRuntime, TEnvironment) {
+define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function (TObject, TUtils, TRuntime, TEnvironment) {
     function TGraphicalObject() {
         this.qObject = new this.qSprite();
         this._setLocation(0, 0);
