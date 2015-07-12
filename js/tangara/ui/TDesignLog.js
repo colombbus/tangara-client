@@ -109,7 +109,7 @@ define(['jquery','TEnvironment', 'ui/TComponent'], function($, TEnvironment, TCo
                 domLocation.innerHTML = locationText;
                 domElement.appendChild(domName);
                 domElement.appendChild(domLocation);
-                domDesignLog.appendChild(domElement);
+                $designLog.append(domElement);
                 domElement.setAttribute("draggable", "true");
                 domElement.ondragstart = dragHandler;
                 $(domElement).click(clickHandler);
