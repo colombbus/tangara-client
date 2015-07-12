@@ -122,7 +122,7 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TProgram', 'TError', 'ui/TViewe
                             uploadingDivs[file.name] = $(div);
                         }
                         if (empty) {
-                            $sidebarResources.remove($emptyMedia);
+                            $emptyMedia.hide();
                             empty = false;
                         }
                         $sidebarResources.stop().animate({scrollTop: $sidebarResources.scrollTop() + $(div).position().top}, 1000);
@@ -140,7 +140,7 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TProgram', 'TError', 'ui/TViewe
                         }
                         // 3rd check if there is some file left, otherwise add "empty" message
                         if ($sidebarFiles.children().length() === 0 && !empty) {
-                            $sidebarResources.append($domEmptyMedia);
+                            $emptyMedia.show();
                             empty = true;
                         }
 
@@ -395,12 +395,12 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TProgram', 'TError', 'ui/TViewe
             if (resourcesNames.length === 0) {
                 // no media: add message
                 if (!empty) {
-                    $sidebarResources.append($emptyMedia);
+                    $emptyMedia.show();
                     empty = true;
                 }
             } else {
                 if (empty) {
-                    $sidebarResources.remove($emptyMedia);
+                    $emptyMedia.hide();
                     empty = false;
                 }
                 for (var i = 0; i < resourcesNames.length; i++) {
