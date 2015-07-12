@@ -6,6 +6,7 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPain
         var nextHandler = null;
         var prevHandler = null;
         var $main, $title, $imageContainer, $image, $editor, $editorImage, $creation, $message, $creationMessage, $buttonCreate;
+        var $name, $width, $height;
         var image;
         var editorInitialized = false;
 
@@ -73,9 +74,9 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPain
             $widthLabel.append(TEnvironment.getMessage("viewer-creation-width"));
             var $heightLabel = component.find(".tviewer-creation-label-height");
             $heightLabel.append(TEnvironment.getMessage("viewer-creation-height"));
-            var $name = component.find("input[name='name']");
-            var $width = component.find("input[name='width']");
-            var $height = component.find("input[name='height']");
+            $name = component.find("input[name='name']");
+            $width = component.find("input[name='width']");
+            $height = component.find("input[name='height']");
 
             var $buttonCancel = component.find(".tviewer-creation-cancel");
             $buttonCancel.click(function(e) {
@@ -381,17 +382,17 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPain
 
         this.create = function() {
             append();
-            inputName.value = "";
-            inputWidth.value = "";
-            inputHeight.value = "";
+            $name.val("");
+            $width.val("");
+            $height.val("");
             $creation.show();
             imageCreation = true;
         };
 
         var checkCreation = function() {
-            var name = inputName.value;
-            var width = inputWidth.value;
-            var height = inputHeight.value;
+            var name = $name.val();
+            var width = $width.val();
+            var height = $height.val();
             // check name
             if (name.trim().length === 0) {
                 message(TEnvironment.getMessage("viewer-creation-name-empty"));
@@ -407,7 +408,7 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPain
                 message(TEnvironment.getMessage("viewer-creation-width-nan"));
                 return false;
             }
-            inputWidth.value = actualWidth;
+            $width.val(actualWidth);
 
             // check height
             if (height.trim().length === 0) {
@@ -419,7 +420,7 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPain
                 message(TEnvironment.getMessage("viewer-creation-height-nan"));
                 return false;
             }
-            inputHeight.value = actualHeight;
+            $height.val(actualHeight);
 
             return true;
         };
