@@ -77,6 +77,11 @@ require.config({
 function load() {
     require(['jquery', 'TEnvironment', 'TRuntime', 'ui/TFrame', 'TProject'],function($, TEnvironment, TRuntime, TFrame, TProject) {
         window.console.log("*******************");
+        window.console.log("* Loading Environment *");
+        window.console.log("*******************");
+		TEnvironment.load();
+
+        window.console.log("*******************");
         window.console.log("* Loading Runtime *");
         window.console.log("*******************");
         TRuntime.load(TEnvironment.getLanguage(), TEnvironment.getObjectListUrl());

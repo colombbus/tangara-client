@@ -390,8 +390,6 @@ define(['jquery'], function($) {
 
     var environmentInstance = new TEnvironment();
 
-    environmentInstance.load();
-
     return environmentInstance;
 });
 
