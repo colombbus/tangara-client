@@ -28,13 +28,15 @@ define(['jquery', 'TObject', 'TUtils', 'TRuntime', 'TEnvironment', 'ui/TCanvas']
     Video.prototype.className = "Video";
 
     //var tInstance = new Tracking();
+    var graphics = TRuntime.getGraphics();
+
     var tInstance = new Object();
     Video.prototype.qInstance = tInstance;
 
-    Video.prototype.addSound = function (name, set, project) {
+    Video.prototype.addVideo = function (name, set, project) {
         name = TUtils.getString(name);
         var asset;
-        // add sound only if not already added
+        // add video only if not already added
         if (typeof this.video[name] === 'undefined') {
             try {
                 if (project) {
@@ -55,9 +57,7 @@ define(['jquery', 'TObject', 'TUtils', 'TRuntime', 'TEnvironment', 'ui/TCanvas']
                 }
                 this.videoSets[set].push(name);
                 var loadedAsset = asset;
-                var qI = this.qInstance;
-                this.qInstance.load(asset, function () {
-                    var video = qI.asset(loadedAsset);
+                graphics.load(asset, function () {
                 });
             }
             catch (e) {
@@ -69,7 +69,7 @@ define(['jquery', 'TObject', 'TUtils', 'TRuntime', 'TEnvironment', 'ui/TCanvas']
         return asset;
     };
     Video.prototype._addVideo = function (name, set) {
-        this.addSound(name, set, true);
+        this.addVideo(name, set, true);
     };
 
     Video.prototype._loop = function (state) {

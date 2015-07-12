@@ -24,8 +24,7 @@ define(['ui/TComponent', 'jquery', 'split-pane','ui/TCanvas', 'ui/TEditor', 'ui/
 			        TUI.setConsole(console);
 			        TUI.setLog(log);
 			        
-			        // Plug Runtime with Canvas and Log
-			        TRuntime.setCanvas(canvas);
+			        // Plug Runtime with Log
 			        TRuntime.setLog(log);
 
 			        if (typeof callback !== 'undefined') {

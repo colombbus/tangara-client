@@ -17,11 +17,11 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
     Hero.prototype.constructor = Hero;
     Hero.prototype.className = "Hero";
     
-    var qInstance = Hero.prototype.qInstance;
+    var graphics = Hero.prototype.graphics;
     
-    qInstance.TWalker.extend("THero", {
+    Hero.prototype.gClass = graphics.addClass("TWalker", "THero", {
         init: function(props,defaultProps) {
-            this._super(qInstance._extend({
+            this._super(TUtils.extend({
                 dtMovement:1,
                 dtPause:1,
                 imgIndex:0,
@@ -306,7 +306,7 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
         },
         
         mayCatch: function(object) {
-            var id = object.getQObject().getId();
+            var id = object.getgObject().getId();
             if (typeof (this.catchableObjects[id]) === 'undefined') {
                 this.catchableObjects[id] = object;
             }
@@ -325,8 +325,6 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
 
     });
     
-    Hero.prototype.qSprite = qInstance.THero;
-    
     Hero.prototype._setCharacter = function(name) {
         name = TUtils.getString(name);
         name = this.getMessage(name);
@@ -338,8 +336,8 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
             url: configUrl,
             async: false,
             success: function(data) {
-                parent.qObject.p.initialized = false;
-                var currentLocation = parent.qObject.getLocation();
+                parent.gObject.p.initialized = false;
+                var currentLocation = parent.gObject.getLocation();
                 var frontImages = data['images']['front'];
                 var frontAssets = [];
                 try {
@@ -350,7 +348,7 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
                     parent.addImage(imageName, parent.translatedFront, false);
                     frontAssets.push(imageName);
                 }
-                parent.qObject.setFrontAssets(frontAssets);
+                parent.gObject.setFrontAssets(frontAssets);
                 var forwardImages = data['images']['forward'];
                 var forwardAssets = [];
                 try {
@@ -361,7 +359,7 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
                     parent.addImage(imageName, parent.translatedForward, false);
                     forwardAssets.push(imageName);
                 }
-                parent.qObject.setForwardAssets(forwardAssets);
+                parent.gObject.setForwardAssets(forwardAssets);
                 var backwardImages = data['images']['backward'];
                 var backwardAssets = [];
                 try {
@@ -372,15 +370,15 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
                     parent.addImage(imageName, parent.translatedBackward, false);
                     backwardAssets.push(imageName);
                 }
-                parent.qObject.setBackwardAssets(backwardAssets);
+                parent.gObject.setBackwardAssets(backwardAssets);
                 // remove default imageSet
                 try {
                     parent._removeImageSet("");
                 } catch (e) {}
-                parent.qObject.removeDefaultAssets();
+                parent.gObject.removeDefaultAssets();
                 parent._displayNextImage(parent.translatedFront);
-                parent.qObject.setLocation(currentLocation.x, currentLocation.y);
-                parent.qObject.setDurations(data['durationMove'], data['durationPause']);
+                parent.gObject.setLocation(currentLocation.x, currentLocation.y);
+                parent.gObject.setDurations(data['durationMove'], data['durationPause']);
                 parent.custom = false;
             }
         }).fail(function(jqxhr, textStatus, error) {
@@ -425,42 +423,42 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
             try {
                 this._removeImageSet("");
             } catch (e) {}
-            currentLocation = this.qObject.getLocation();
+            currentLocation = this.gObject.getLocation();
         }
         this.addImage(name, set, true);
         if (specialSet !== false) {
             switch (specialSet) {
                 case "front":
-                    this.qObject.addFrontAsset(name);
+                    this.gObject.addFrontAsset(name);
                     break;
                 case "backward":
-                    this.qObject.addBackwardAsset(name);
+                    this.gObject.addBackwardAsset(name);
                     break;
                 case "forward":
-                    this.qObject.addForwardAsset(name);
+                    this.gObject.addForwardAsset(name);
                     break;
                 case "default":
-                    this.qObject.addDefaultAsset(name);
+                    this.gObject.addDefaultAsset(name);
                     break;
             }
-            this.qObject.computeDts();
+            this.gObject.computeDts();
             if (!this.custom) {
                 this.custom = true;
-                this.qObject.p.initialized = false;
+                this.gObject.p.initialized = false;
                 this._displayNextImage(set);
                 if (currentLocation !== false) {
-                    this.qObject.setLocation(currentLocation.x, currentLocation.y);
+                    this.gObject.setLocation(currentLocation.x, currentLocation.y);
                 }
             }
         }
     };
     
     Hero.prototype._stopAutoAsset = function() {
-        this.qObject.stopAutoAsset();
+        this.gObject.stopAutoAsset();
     };
 
     Hero.prototype._startAutoAsset = function() {
-        this.qObject.startAutoAsset();
+        this.gObject.startAutoAsset();
     };
     
     Hero.prototype._removeImage = function (name, set) {
@@ -469,19 +467,19 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
         if (specialSet !== false) {
             switch (specialSet) {
                 case "front":
-                    this.qObject.removeFrontAsset(asset);
+                    this.gObject.removeFrontAsset(asset);
                     break;
                 case "backward":
-                    this.qObject.removeBackwardAsset(asset);
+                    this.gObject.removeBackwardAsset(asset);
                     break;
                 case "forward":
-                    this.qObject.removeForwardAsset(asset);
+                    this.gObject.removeForwardAsset(asset);
                     break;
                 case "default":
-                    this.qObject.removeDefaultAsset(asset);
+                    this.gObject.removeDefaultAsset(asset);
                     break;
             }
-            this.qObject.computeDts();
+            this.gObject.computeDts();
         }
     };
     
@@ -491,30 +489,30 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
         if (specialSet !== false) {
             switch (specialSet) {
                 case "front":
-                    this.qObject.removeFrontAssets();
+                    this.gObject.removeFrontAssets();
                     break;
                 case "backward":
-                    this.qObject.removeBackwardAssets();
+                    this.gObject.removeBackwardAssets();
                     break;
                 case "forward":
-                    this.qObject.removeForwardAssets();
+                    this.gObject.removeForwardAssets();
                     break;
                 case "default":
-                    this.qObject.removeDefaultAssets();
+                    this.gObject.removeDefaultAssets();
                     break;
             }
-            this.qObject.computeDts();
+            this.gObject.computeDts();
         }
     };
     
     Hero.prototype._setMovementDuration = function(value) {
         value = TUtils.getInteger(value);
-        this.qObject.setMovementDuration(value/1000);
+        this.gObject.setMovementDuration(value/1000);
     };
     
     Hero.prototype._setPauseDuration = function(value) {
         value = TUtils.getInteger(value);
-        this.qObject.setPauseDuration(value/1000);
+        this.gObject.setPauseDuration(value/1000);
     };
     
     Hero.prototype._addScene = function(object) {
@@ -523,14 +521,14 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
     
     Hero.prototype._mayCatch = function(object) {
         object = TUtils.getObject(object);
-        this.qObject.mayCatch(object);
+        this.gObject.mayCatch(object);
     };
     
     Hero.prototype._ifCatch = function(object, command) {
         object = TUtils.getObject(object);
         command = TUtils.getString(command);
-        this.qObject.mayCatch(object);
-        this.qObject.addCollisionCommand(command, object);
+        this.gObject.mayCatch(object);
+        this.gObject.addCollisionCommand(command, object);
     };
 
     TEnvironment.internationalize(Hero, true);

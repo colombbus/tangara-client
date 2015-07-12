@@ -6,7 +6,7 @@ define(['TRuntime'], function(TRuntime) {
         this.loadingCallbacks = {};
     };
     
-    var qInstance = TRuntime.getQuintusInstance();    
+    var graphics = TRuntime.getGraphics();    
     ResourceManager.STATE_LOADING = 0;
     ResourceManager.STATE_COMPUTING = 1;
     ResourceManager.STATE_READY = 2;
@@ -45,7 +45,7 @@ define(['TRuntime'], function(TRuntime) {
         
         var loadingCallback = function() {
             if (!manager.gc(name)) {
-                manager.resources[name]['resource'] = qInstance.asset(asset);
+                manager.resources[name]['resource'] = graphics.getAsset(asset);
                 if (manager.transparent) {
                     manager.addTransparency(name, callback);
                 } else {
@@ -57,7 +57,7 @@ define(['TRuntime'], function(TRuntime) {
             }    
         };
         
-        if (qInstance.assets[asset]) {
+        if (graphics.getAsset(asset)) {
             // already loaded
             loadingCallback.call(this);
         } else {
@@ -66,7 +66,7 @@ define(['TRuntime'], function(TRuntime) {
                 // we are the first to load this image
                 ResourceManager.waitingForImage[name] = [];
                 ResourceManager.waitingForImage[name].push(loadingCallback);
-                qInstance.load(asset, function () {
+                graphics.load(asset, function () {
                     var callbacks = ResourceManager.waitingForImage[name];
                     for (var i=0;i<callbacks.length;i++) {
                         callbacks[i].call(manager);

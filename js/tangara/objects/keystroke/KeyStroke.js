@@ -19,8 +19,6 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TObject', 'TRuntim
         this.enableKeyboard();
     };
 
-    var qInstance = TRuntime.getQuintusInstance();
-
     KeyStroke.prototype = Object.create(TObject.prototype);
     KeyStroke.prototype.constructor = KeyStroke;
     KeyStroke.prototype.className = "KeyStroke";
@@ -35,7 +33,8 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TObject', 'TRuntim
         if (this.keyboardEnabled) {
             return false;
         }
-        var element = qInstance.el;
+        
+        var element = TRuntime.getGraphics().getElement();
 
         // Copied from Quintus_input
         element.tabIndex = 0;
@@ -51,7 +50,7 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'TObject', 'TRuntim
         if (!this.keyboardEnabled) {
             return false;
         }
-        var element = qInstance.el;
+        var element = TRuntime.getGraphics().getElement();
 
         element.removeEventListener("keydown",this.listenerKeyDown, false);
         element.removeEventListener("keyup",this.listenerKeyUp, false);

@@ -550,6 +550,14 @@ define(['TEnvironment'], function (TEnvironment) {
             string = string.substr(0, string.indexOf('('));
             return string;
          };
+         
+         this.extend = function(dest,source) {
+		 	if(!source) { return dest; }
+	 		for (var prop in source) {
+	 			dest[prop] = source[prop];
+ 			}
+ 			return dest;
+		};
 
     };
     var utilInstance = new TUtils();

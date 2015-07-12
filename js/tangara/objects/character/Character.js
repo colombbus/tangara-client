@@ -15,11 +15,11 @@ define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager']
     Character.prototype.constructor = Character;
     Character.prototype.className = "Character";
     
-    var qInstance = Character.prototype.qInstance;
+    var graphics = Character.prototype.graphics;
     
-    qInstance.TGraphicalObject.extend("Character", {
+    Character.prototype.gClass = graphics.addClass("TGraphicalObject", "Character", {
         init: function(props,defaultProps) {
-            this._super(qInstance._extend({
+            this._super(TUtils.extend({
                 destinationX: 0,
                 destinationY: 0,
                 velocity:200,
@@ -152,9 +152,11 @@ define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager']
         }
     });
 
-    qInstance.Sprite.extend("CharacterPart", {
+	var linear = graphics.getEasing("Linear");
+	
+	var PartClass =  graphics.addClass("CharacterPart", {
         init: function(props,defaultProps) {
-            this._super(qInstance._extend({
+            this._super(TUtils.extend({
                 name:"",
                 moveUp:true,
                 initialized:false,
@@ -183,9 +185,9 @@ define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager']
             case 'chest' :
               // movement with chest and arms
               if (p.moveUp) {
-                  this.animate({y:p.y-3},1, qInstance.Easing.Linear, {callback:this.breathe});
+                  this.animate({y:p.y-3},1, linear, {callback:this.breathe});
               } else {
-                  this.animate({y:p.y+3},1, qInstance.Easing.Linear, {callback:this.breathe});
+                  this.animate({y:p.y+3},1, linear, {callback:this.breathe});
               }
               if (typeof this.leftArm !== 'undefined') {
                 this.leftArm.p.moveUp = p.moveUp;
@@ -200,27 +202,27 @@ define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager']
             case 'tail' :
               // movement with only tail
               if (p.moveUp) {
-                  this.animate({angle:p.angle+4},1, qInstance.Easing.Linear, {callback:this.breathe});
+                  this.animate({angle:p.angle+4},1, linear, {callback:this.breathe});
               } else {
-                  this.animate({angle:p.angle-4},1, qInstance.Easing.Linear, {callback:this.breathe});
+                  this.animate({angle:p.angle-4},1, linear, {callback:this.breathe});
               }
               p.moveUp = !p.moveUp;
               break;
             case 'rightArm' :
               if (!p.moving) {
                 if (p.moveUp) {
-                    this.animate({angle:p.angle+4},1, qInstance.Easing.Linear);
+                    this.animate({angle:p.angle+4},1, linear);
                 } else {
-                    this.animate({angle:p.angle-4},1, qInstance.Easing.Linear);
+                    this.animate({angle:p.angle-4},1, linear);
                 }
               }
               break;
             case 'leftArm' :
               if (!p.moving) {
                 if (p.moveUp) {
-                    this.animate({angle:p.angle-4},1, qInstance.Easing.Linear);
+                    this.animate({angle:p.angle-4},1, linear);
                 } else {
-                    this.animate({angle:p.angle+4},1, qInstance.Easing.Linear);
+                    this.animate({angle:p.angle+4},1, linear);
                 }
               }
               break;
@@ -237,14 +239,14 @@ define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager']
           p.moving = true;
           this.stopAnimation();
           var duration = Math.abs(value*p.rotationSpeed);
-          this.animate({angle:p.angle + value},duration, qInstance.Easing.Linear, {callback:this.stopMoving});
+          this.animate({angle:p.angle + value},duration, linear, {callback:this.stopMoving});
         },
         lower: function(value) {
           p = this.p;
           p.moving = true;
           this.stopAnimation();
           var duration = Math.abs(value*this.p.rotationSpeed);
-          this.animate({angle:this.p.angle - value},duration, qInstance.Easing.Linear, {callback:this.stopMoving});
+          this.animate({angle:this.p.angle - value},duration, linear, {callback:this.stopMoving});
         },
         stopMoving: function() {
             this.p.initAngle=this.p.angle;
@@ -290,52 +292,50 @@ define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager']
                 // remove collided object from the list
                 this.container.catchableObjects.splice(index, 1);
             }
-        }                
+        }
     });
-    
-    Character.prototype.qSprite = qInstance.Character;
 
     Character.prototype._moveForward = function(value) {
         value = TUtils.getInteger(value);
-        this.qObject.moveForward(value);
+        this.gObject.moveForward(value);
     };
 
     Character.prototype._moveBackward = function(value) {
         value = TUtils.getInteger(value);
-        this.qObject.moveBackward(value);
+        this.gObject.moveBackward(value);
     };
         
     Character.prototype._moveUpward = function(value) {
         value = TUtils.getInteger(value);
-        this.qObject.moveUpward(value);
+        this.gObject.moveUpward(value);
     };
 
     Character.prototype._moveDownward = function(value) {
         value = TUtils.getInteger(value);
-        this.qObject.moveDownward(value);
+        this.gObject.moveDownward(value);
     };
     
     Character.prototype._stop = function() {
-        this.qObject.stop();
+        this.gObject.stop();
     };
     
     Character.prototype.build = function(baseUrl, elements, assets) {
-        var qObject = this.qObject;
-        var qStage = qInstance.stage();
+        var gObject = this.gObject;
         // destroy previous elements
-        for (var i=0; i<qObject.children.length; i++) {
-            qObject.children[i].destroy();
+        for (var i=0; i<gObject.children.length; i++) {
+            gObject.children[i].destroy();
         }
         var chest = null;
         var leftArm = null;
         var rightArm = null;
         var leftElement = null;
         var rightElement = null;
-        qInstance.load(assets,function() {
+        var character = this;
+        graphics.load(assets,function() {
             // Add elements to character
             for (var i=0; i<elements.length; i++) {
                 var val = elements[i];
-                var element = new qInstance.CharacterPart({asset:baseUrl+ val['image'], name:val['name']});
+                var element = new PartClass({asset:baseUrl+ val['image'], name:val['name']});
                 // Set center if defined
                 if (typeof val['cx'] !== 'undefined') {
                     element.p.cx = val['cx'];
@@ -354,7 +354,7 @@ define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager']
                     element.p.mayCatch = true;
                     element.on("hit", element, "objectEncountered");
                 }
-                qStage.insert(element, qObject);
+                graphics.insertObject(element, gObject);
                 switch(val['name']) {
                     case 'leftArm' : 
                         leftElement = element;
@@ -380,14 +380,14 @@ define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager']
                   }
                   element.startAnimation();
             }
-            qObject.leftElement = leftElement;
-            qObject.rightElement = rightElement;
+            gObject.leftElement = leftElement;
+            gObject.rightElement = rightElement;
             if (chest !== null) {
                 chest.leftArm = leftArm;
                 chest.rightArm = rightArm;
             }
-            if (!qObject.p.initialized) {
-                qObject.initialized();
+            if (!gObject.p.initialized) {
+                gObject.initialized();
             }
         });
     };
@@ -426,33 +426,33 @@ define(['jquery','TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager']
     
     Character.prototype._raiseLeftArm = function(value) {
         value = TUtils.getInteger(value);
-        this.qObject.raiseLeftArm(value);
+        this.gObject.raiseLeftArm(value);
     };
 
     Character.prototype._raiseRightArm = function(value) {
         value = TUtils.getInteger(value);
-        this.qObject.raiseRightArm(value);
+        this.gObject.raiseRightArm(value);
     };
     
     Character.prototype._lowerLeftArm = function(value) {
         value = TUtils.getInteger(value);
-        this.qObject.lowerLeftArm(value);
+        this.gObject.lowerLeftArm(value);
     };
 
     Character.prototype._lowerRightArm = function(value) {
         value = TUtils.getInteger(value);
-        this.qObject.lowerRightArm(value);
+        this.gObject.lowerRightArm(value);
     };
     
     Character.prototype._mayCatch = function(object, command) {
         object = TUtils.getObject(object);
         command = TUtils.getCommand(command);
-        var qObject = this.getQObject();
-        if (typeof object.getQObject === 'undefined') {
+        var gObject = this.gObject;
+        if (typeof object.getGObject === 'undefined') {
             throw new Error("wrong object type");
         }
-        var catchableQObject = object.getQObject();
-        qObject.mayCatch(catchableQObject, command);
+        var catchableGObject = object.getGObject();
+        gObject.mayCatch(catchableGObject, command);
     };
     
     TEnvironment.internationalize(Character, true);

@@ -1,4 +1,4 @@
-define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite'], function($, TEnvironment, TGraphicalObject, Sprite) {
+define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'TUtils'], function($, TEnvironment, TGraphicalObject, Sprite, TUtils) {
     var Block = function(name) {
         Sprite.call(this,name);
     };
@@ -7,11 +7,11 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite'], f
     Block.prototype.constructor = Block;
     Block.prototype.className = "Block";
     
-    var qInstance = Block.prototype.qInstance;
+    var graphics = Block.prototype.graphics;
     
-    qInstance.TSprite.extend("TBlock", {
+    Block.prototype.gClass = graphics.addClass("TSprite","TBlock", {
         init: function(props,defaultProps) {
-            this._super(qInstance._extend({
+            this._super(TUtils.extend({
                 type:TGraphicalObject.TYPE_BLOCK,
                 collisionMask:TGraphicalObject.TYPE_SPRITE,
                 imageData:null,
@@ -122,8 +122,6 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite'], f
         }
     });
     
-    Block.prototype.qSprite = qInstance.TBlock;
-    
     Block.prototype.setDisplayedImage = function(name) {
         if (Sprite.prototype.setDisplayedImage.call(this, name)) {
             // compute transparency mask
@@ -142,8 +140,8 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite'], f
         var height = image.height;
         canvas.width = width;
         canvas.height = height;
-        this.qObject.p.transparencyMask = new Array();
-        var mask = this.qObject.p.transparencyMask;
+        this.gObject.p.transparencyMask = new Array();
+        var mask = this.gObject.p.transparencyMask;
         var row=-1, col=width;
         ctx.drawImage(image, 0, 0 );
         var imageData = ctx.getImageData(0, 0, width, height);

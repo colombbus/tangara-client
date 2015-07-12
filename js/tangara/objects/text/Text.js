@@ -4,18 +4,18 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
         if (TUtils.checkString(label)) {
             this._setText(label);
         }
-        this.qObject.initialized();
+        this.gObject.initialized();
     };
 
     Text.prototype = Object.create(TGraphicalObject.prototype);
     Text.prototype.constructor = Text;
     Text.prototype.className = "Text";
 
-    var qInstance = Text.prototype.qInstance;
+    var graphics = Text.prototype.graphics;
 
-    qInstance.TGraphicalObject.extend("TText", {
+    Text.prototype.gClass = graphics.addClass("TGraphicalObject", "TText", {
         init: function(props, defaultProps) {
-            this._super(qInstance._extend({
+            this._super(TUtils.extend({
                 textColor: "#000000",
                 w: 0,
                 h: 0,
@@ -27,13 +27,13 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
         updateSize: function() {
             var oldH = this.p.h;
             var oldW = this.p.w;
-            var context = qInstance.ctx;
+            var context = graphics.getContext();
             context.font = "normal " + this.p.textSize + "px Verdana,Sans-serif";
             this.p.h = this.p.textSize;
             this.p.w = context.measureText(this.p.label).width;
             this.p.x += this.p.w / 2 - oldW / 2;
             this.p.y += this.p.h / 2 - oldH / 2;
-            qInstance._generatePoints(this, true);
+            graphics.objectResized(this);
         },
         draw: function(context) {
             context.fillStyle = this.p.textColor;
@@ -43,26 +43,24 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
         }
     });
 
-    Text.prototype.qSprite = qInstance.TText;
-
     Text.prototype._setText = function(label) {
         label = TUtils.getString(label);
-        var qObject = this.qObject;
-        qObject.p.label = label;
-        qObject.updateSize();
+        var gObject = this.gObject;
+        gObject.p.label = label;
+        gObject.updateSize();
     };
 
     Text.prototype._setTextSize = function(size) {
         size = TUtils.getInteger(size);
-        var qObject = this.qObject;
-        qObject.p.textSize = size;
-        qObject.updateSize();
+        var gObject = this.gObject;
+        gObject.p.textSize = size;
+        gObject.updateSize();
     };
 
     Text.prototype._setColor = function(red, green, blue) {
         var color = TUtils.getColor(red, green, blue);
-        var qObject = this.qObject;
-        qObject.p.textColor = "rgb(" + color[0] + "," + color[1] + "," + color[2] + ")";        
+        var gObject = this.gObject;
+        gObject.p.textColor = "rgb(" + color[0] + "," + color[1] + "," + color[2] + ")";        
     };
 
     TEnvironment.internationalize(Text, true);

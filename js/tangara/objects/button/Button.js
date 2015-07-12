@@ -4,18 +4,18 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
         if (TUtils.checkString(label)) {
             this._setText(label);
         }
-        this.qObject.initialized();
+        this.gObject.initialized();
     };
 
     Button.prototype = Object.create(TGraphicalObject.prototype);
     Button.prototype.constructor = Button;
     Button.prototype.className = "Button";
 
-    var qInstance = Button.prototype.qInstance;
+    var graphics = Button.prototype.graphics;
 
-    qInstance.TGraphicalObject.extend("TButton", {
+    Button.prototype.gClass = graphics.addClass("TGraphicalObject", "TButton", {
         init: function(props, defaultProps) {
-            this._super(qInstance._extend({
+            this._super(TUtils.extend({
                 fillColor: "#4d8cc2",
                 strokeColor: "#0d4c82",
                 textColor: "#ffffff",
@@ -38,13 +38,13 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
         updateSize: function() {
             var oldH = this.p.h;
             var oldW = this.p.w;
-            var context = qInstance.ctx;
+            var context = graphics.getContext();
             context.font = "normal " + this.p.textSize + "px Verdana,Sans-serif";
             this.p.h = 2 * this.p.textSize;
             this.p.w = context.measureText(this.p.label).width + 2 * this.p.textSize;
             this.p.x += this.p.w / 2 - oldW / 2;
             this.p.y += this.p.h / 2 - oldH / 2;
-            qInstance._generatePoints(this, true);
+            graphics.objectResized(this);
         },
         draw: function(context) {
             // draw path
@@ -112,20 +112,18 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
         }
     });
 
-    Button.prototype.qSprite = qInstance.TButton;
-
     Button.prototype._setText = function(label) {
         label = TUtils.getString(label);
-        var qObject = this.qObject;
-        qObject.p.label = label;
-        qObject.updateSize();
+        var gObject = this.gObject;
+        gObject.p.label = label;
+        gObject.updateSize();
     };
 
     Button.prototype._setTextSize = function(size) {
         size = TUtils.getInteger(size);
-        var qObject = this.qObject;
-        qObject.p.textSize = size;
-        qObject.updateSize();
+        var gObject = this.gObject;
+        gObject.p.textSize = size;
+        gObject.updateSize();
     };
 
     Button.prototype._setColor = function(red, green, blue) {
@@ -137,26 +135,26 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
         ra = Math.max(r - 40, 0);
         ga = Math.max(g - 40, 0);
         ba = Math.max(b - 40, 0);
-        var qObject = this.qObject;
-        qObject.p.fillColor = "rgb(" + r + "," + g + "," + b + ")";
-        qObject.p.fillColorActive = "rgb(" + ra + "," + ga + "," + ba + ")";
-        qObject.p.strokeColor = "rgb(" + ra + "," + ga + "," + ba + ")";
-        qObject.p.strokeColorActive = "rgb(" + ra + "," + ga + "," + ba + ")";
+        var gObject = this.gObject;
+        gObject.p.fillColor = "rgb(" + r + "," + g + "," + b + ")";
+        gObject.p.fillColorActive = "rgb(" + ra + "," + ga + "," + ba + ")";
+        gObject.p.strokeColor = "rgb(" + ra + "," + ga + "," + ba + ")";
+        gObject.p.strokeColorActive = "rgb(" + ra + "," + ga + "," + ba + ")";
     };
 
     Button.prototype._setTextColor = function(red, green, blue) {
         var color = TUtils.getColor(red, green, blue);
-        var qObject = this.qObject;
-        qObject.p.textColor = "rgb(" + color[0] + "," + color[1] + "," + color[2] + ")";
+        var gObject = this.gObject;
+        gObject.p.textColor = "rgb(" + color[0] + "," + color[1] + "," + color[2] + ")";
     };
 
     Button.prototype._addCommand = function(command) {
         command = TUtils.getCommand(command);
-        this.qObject.addCommand(command);
+        this.gObject.addCommand(command);
     };
 
     Button.prototype._removeCommands = function() {
-        this.qObject.removeCommands();
+        this.gObject.removeCommands();
     };
 
     TEnvironment.internationalize(Button, true);

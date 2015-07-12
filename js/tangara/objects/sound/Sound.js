@@ -13,11 +13,7 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function (TObject, TUt
     Sound.prototype.constructor = Sound;
     Sound.prototype.className = "Sound";
 
-    var qInstance = TRuntime.getQuintusInstance();
-
-    Sound.prototype.qInstance = qInstance;
-
-    Sound.prototype.qAudio = qInstance.audio;
+    var graphics = TRuntime.getGraphics();
 
     Sound.prototype.addSound = function (name, set, project) {
         name = TUtils.getString(name);
@@ -43,9 +39,8 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function (TObject, TUt
                 }
                 this.soundSets[set].push(name);
                 var loadedAsset = asset;
-                var qI = this.qInstance;
-                this.qInstance.load(asset, function () {
-                    var sound = qI.asset(loadedAsset);
+                
+                graphics.load(asset, function () {
                 });
             }
             catch (e) {
@@ -69,11 +64,13 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function (TObject, TUt
     Sound.prototype._play = function (name) {
         var asset = this.sounds[name];
         // TODO: wait for loading
-        this.qAudio.play(asset, {loop: this.loop});
+        var audio = TRuntime.getGraphics().getAudio();
+        audio.play(asset, {loop: this.loop});
     };
     Sound.prototype._stop = function (name) {
         var asset = this.sounds[name];
-        this.qAudio.stop(asset);
+        var audio = TRuntime.getGraphics().getAudio();
+        audio.stop(asset);
     };
     TEnvironment.internationalize(Sound, true);
     return Sound;

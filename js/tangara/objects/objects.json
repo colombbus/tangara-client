@@ -7,8 +7,8 @@
             "en": "Character"
         }
     },
-    "Space3D": {
-        "path": "3d/space3d",
+ 	"Space3D": {
+       "path": "3d/space3d",
         "translations": {
             "fr": "Espace3D",
             "es": "Espacio3D",

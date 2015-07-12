@@ -31,6 +31,7 @@ require.config({
         "TInterpreter":"run/TInterpreter",
         "TParser":"run/Tparser",
         "TRuntime":"run/TRuntime",
+        "TGraphics":"run/TGraphics",
         "TUI":"ui/TUI",
         "CommandManager":"utils/CommandManager",
         "ResourceManager":"utils/ResourceManager",

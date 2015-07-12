@@ -1,6 +1,6 @@
 define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function (TObject, TUtils, TRuntime, TEnvironment) {
     function TGraphicalObject() {
-        this.qObject = new this.qSprite();
+        this.gObject = new this.gClass();
         this._setLocation(0, 0);
         TRuntime.addGraphicalObject(this);
     }
@@ -18,11 +18,13 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function (TObject, TUt
     TGraphicalObject.TYPE_INACTIVE = 0x4000;
     TGraphicalObject.TYPE_ITEM = 0x8000;
 
-    var qInstance = TRuntime.getQuintusInstance();
+	var graphics = TRuntime.getGraphics();
+	
+	TGraphicalObject.prototype.graphics = graphics;
 
-    qInstance.Sprite.extend("TGraphicalObject", {
+    TGraphicalObject.prototype.gClass = graphics.addClass("TGraphicalObject", {
         init: function (props, defaultProps) {
-            this._super(qInstance._extend({
+            this._super(TUtils.extend({
                 designMode: false,
                 initialized: false,
                 w: 0,
@@ -114,99 +116,96 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function (TObject, TUt
         }
     });
 
-    TGraphicalObject.prototype.qInstance = qInstance;
-    TGraphicalObject.prototype.qSprite = qInstance.TGraphicalObject;
-
     TGraphicalObject.prototype.messages = null;
 
-    TGraphicalObject.prototype.getSprite = function () {
-        return this.qObject;
+    TGraphicalObject.prototype.getGObject = function () {
+        return this.gObject;
     };
 
     TGraphicalObject.prototype.deleteObject = function () {
-        this.qObject.destroy();
+        this.gObject.destroy();
         TRuntime.removeGraphicalObject(this);
     };
 
-    TGraphicalObject.prototype.getQObject = function () {
-        return this.qObject;
-    };
-
     TGraphicalObject.prototype._zoomIn = function (factor) {
-        this.qObject.zoomIn(factor);
+        this.gObject.zoomIn(factor);
     };
+    
     TGraphicalObject.prototype._zoomOut = function (factor) {
-        this.qObject.zoomOut(factor);
+        this.gObject.zoomOut(factor);
     };
+    
     TGraphicalObject.prototype._scale = function (factor) {
         //TODO: parseFloat
-        this.qObject.scale(factor);
+        this.gObject.scale(factor);
     };
+    
     TGraphicalObject.prototype._setAngle = function (angle) {
-        this.qObject.setAngle(angle);
+        this.gObject.setAngle(angle);
     }
+    
     TGraphicalObject.prototype._rotate = function (angle) {
         //TODO: parseFloat
-        this.qObject.rotate(angle);
+        this.gObject.rotate(angle);
     };
 
     TGraphicalObject.prototype._setCenterLocation = function (x, y) {
         x = TUtils.getInteger(x);
         y = TUtils.getInteger(y);
-        this.qObject.setCenterLocation(x, y);
+        this.gObject.setCenterLocation(x, y);
     };
 
     TGraphicalObject.prototype._setLocation = function (x, y) {
         x = TUtils.getInteger(x);
         y = TUtils.getInteger(y);
-        this.qObject.setLocation(x, y);
+        this.gObject.setLocation(x, y);
     };
 
     TGraphicalObject.prototype._getXCenter = function () {
-        return this.qObject.getXCenter();
+        return this.gObject.getXCenter();
     };
 
     TGraphicalObject.prototype._getYCenter = function () {
-        return this.qObject.getYCenter();
+        return this.gObject.getYCenter();
     };
     TGraphicalObject.prototype._getX = function () {
-        return this.qObject.getX();
+        return this.gObject.getX();
     };
 
     TGraphicalObject.prototype._getY = function () {
-        return this.qObject.getY();
+        return this.gObject.getY();
     };
 
     TGraphicalObject.prototype.setDesignMode = function (value) {
-        var qObject = this.qObject;
+        var gObject = this.gObject;
         if (value) {
-            qObject.on("drag", qObject, "designDrag");
-            qObject.on("touchEnd", qObject, "designTouchEnd");
-            for (var i = 0; i < qObject.children.length; i++) {
-                qObject.children[i].on("drag", qObject, "designDrag");
-                qObject.children[i].on("touchEnd", qObject, "designTouchEnd");
+            gObject.on("drag", gObject, "designDrag");
+            gObject.on("touchEnd", gObject, "designTouchEnd");
+            for (var i = 0; i < gObject.children.length; i++) {
+                gObject.children[i].on("drag", gObject, "designDrag");
+                gObject.children[i].on("touchEnd", gObject, "designTouchEnd");
             }
             var self = this;
-            qObject.p.designCallback = function (x, y) {
+            gObject.p.designCallback = function (x, y) {
                 require(["TUI"], function (TUI) {
                     TUI.recordObjectLocation(self, {x: Math.round(x), y: Math.round(y)});
                 });
             };
-            qObject.p.designMode = true;
+            gObject.p.designMode = true;
         } else {
-            qObject.off("drag", qObject, "designDrag");
-            qObject.off("touchEnd", qObject, "designTouchEnd");
-            for (var i = 0; i < qObject.children.length; i++) {
-                qObject.children[i].off("drag", qObject, "designDrag");
-                qObject.children[i].off("touchEnd", qObject, "designTouchEnd");
+            gObject.off("drag", gObject, "designDrag");
+            gObject.off("touchEnd", gObject, "designTouchEnd");
+            for (var i = 0; i < gObject.children.length; i++) {
+                gObject.children[i].off("drag", gObject, "designDrag");
+                gObject.children[i].off("touchEnd", gObject, "designTouchEnd");
             }
-            qObject.p.designCallback = null;
-            qObject.p.designMode = false;
+            gObject.p.designCallback = null;
+            gObject.p.designMode = false;
         }
     };
 
     TGraphicalObject.prototype.freeze = function (value) {
-        this.qObject.freeze(value);
+        this.gObject.freeze(value);
     };
 
     TGraphicalObject.prototype.toString = function () {
@@ -214,25 +213,12 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function (TObject, TUt
     };
 
     TGraphicalObject.prototype._hide = function () {
-        this.qObject.p.hidden = true;
+        this.gObject.p.hidden = true;
     };
 
     TGraphicalObject.prototype._show = function () {
-        this.qObject.p.hidden = false;
+        this.gObject.p.hidden = false;
     };
 
     return TGraphicalObject;
 });
-
-
-/*
- tests pour getX, getY
- s=new Animation()
- tangara.écrire("x : " + s._getX()+"y: "+ s._getY())
- s.ajouterImage("Sans titre.png")
- s.afficherImage("Sans titre.png")
- tangara.écrire("x : " + s._getX()+"y: "+ s._getY())
- s.avancer(50)
- tangara.écrire("x : " + s._getX()+"y: "+ s._getY())
- s.descendre(50)
- */

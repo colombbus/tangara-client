@@ -3,8 +3,8 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManager
         Hero.call(this, "robot");
         this.step = 50;
         this.synchronousManager = new SynchronousManager();
-        this.qObject.synchronousManager = this.synchronousManager;
-        var qObject = this.qObject;
+        this.gObject.synchronousManager = this.synchronousManager;
+        var gObject = this.gObject;
     };
     
     
@@ -12,11 +12,11 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManager
     Robot.prototype.constructor = Robot;
     Robot.prototype.className = "Robot";
     
-    var qInstance = Robot.prototype.qInstance;
+    var graphics = Robot.prototype.graphics;
         
-    qInstance.THero.extend("TRobot", {
+    Robot.prototype.gClass = graphics.addClass("THero", "TRobot", {
         init: function(props,defaultProps) {
-            this._super(qInstance._extend({
+            this._super(TUtils.extend({
                 inMovement:false,
                 encountered:[],
                 carriedItems:[]
@@ -103,8 +103,6 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManager
         }
       });
     
-    Robot.prototype.qSprite = qInstance.TRobot;
-    
     // MOVEMENT MANAGEMENT
     
     Robot.prototype._moveForward = function(value) {
@@ -112,7 +110,7 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManager
             value = this.step;
         }
         value = TUtils.getInteger(value);
-        this.qObject.moveForward(value);
+        this.gObject.moveForward(value);
     };
     
     Robot.prototype._moveBackward = function(value) {
@@ -120,7 +118,7 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManager
             value = this.step;
         }
         value = TUtils.getInteger(value);
-        this.qObject.moveBackward(value);
+        this.gObject.moveBackward(value);
     };
 
     Robot.prototype._moveUpward = function(value) {
@@ -128,7 +126,7 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManager
             value = this.step;
         }
         value = TUtils.getInteger(value);
-        this.qObject.moveUpward(value);
+        this.gObject.moveUpward(value);
     };
 
     Robot.prototype._moveDownward = function(value) {
@@ -136,7 +134,7 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManager
             value = this.step;
         }
         value = TUtils.getInteger(value);
-        this.qObject.moveDownward(value);
+        this.gObject.moveDownward(value);
     };
     
     Robot.prototype._alwaysMoveDownward = function () {
@@ -157,20 +155,20 @@ define(['jquery','TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManager
     };
     
     Robot.prototype._countItems = function() {
-        //TODO: handle case where qObject not initialized yet
-        return this.qObject.countItems();
+        //TODO: handle case where gObject not initialized yet
+        return this.gObject.countItems();
     };
 
     Robot.prototype._pickupItem = function() {
-        this.qObject.pickupItem();
+        this.gObject.pickupItem();
     };
     
     Robot.prototype._dropItem = function() {
-        this.qObject.dropItem();
+        this.gObject.dropItem();
     };
 
     Robot.prototype._countCarriedItems = function() {
-        return this.qObject.countCarriedItems();
+        return this.gObject.countCarriedItems();
     };
 
     TEnvironment.internationalize(Robot, true);

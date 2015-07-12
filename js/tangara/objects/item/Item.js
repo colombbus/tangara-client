@@ -1,7 +1,6 @@
 define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'TUtils'], function($, TEnvironment, TGraphicalObject, Sprite, Block, TUtils) {
     var Item = function(name) {
         Sprite.call(this, name);
-        var qObject = this.qObject;
         this.addImage("ball.gif","", false);
         this.setDisplayedImage("ball.gif");
     };
@@ -10,16 +9,14 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'T
     Item.prototype.constructor = Item;
     Item.prototype.className = "Item";
 
-    var qInstance = Item.prototype.qInstance;
+    var graphics = Item.prototype.graphics;
     
-    qInstance.TSprite.extend("TItem", {
+    Item.prototype.gClass = graphics.addClass("TSprite", "TItem", {
         init: function(props,defaultProps) {
-            this._super(qInstance._extend({
+            this._super(TUtils.extend({
                 type:TGraphicalObject.TYPE_ITEM | TGraphicalObject.TYPE_SPRITE
             },props),defaultProps); }
     });
-    
-    Item.prototype.qSprite = qInstance.TItem;
     
     TEnvironment.internationalize(Item, true);
     

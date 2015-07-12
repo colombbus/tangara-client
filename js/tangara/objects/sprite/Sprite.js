@@ -8,13 +8,11 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
         this.displayedSet = "";
         this.displayedIndex = 0;
         this.resources = new ResourceManager();
-        this.qObject.setResources(this.resources);
+        this.gObject.setResources(this.resources);
         this.waitingForImage = "";
         if (typeof name === 'string') {
             this._setImage(name);
         }
-        
-        
     };
 
     Sprite.prototype = Object.create(TGraphicalObject.prototype);
@@ -27,11 +25,11 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
     Sprite.DIRECTION_UP = 0x04;
     Sprite.DIRECTION_DOWN = 0x08;
 
-    var qInstance = Sprite.prototype.qInstance;
+    var graphics = Sprite.prototype.graphics;
 
-    qInstance.TGraphicalObject.extend("TSprite", {
+    Sprite.prototype.gClass = graphics.addClass("TGraphicalObject", "TSprite", {
         init: function (props, defaultProps) {
-            this._super(qInstance._extend({
+            this._super(TUtils.extend({
                 destinationX: 0,
                 destinationY: 0,
                 velocity: 200,
@@ -63,8 +61,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
             }
             this.p.asset = name;
             if(resize) {
-                this.size(true);
-                qInstance._generatePoints(this,true);
+	            graphics.objectResized(this);
             }
         },
         removeAsset: function() {
@@ -292,7 +289,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
                 if (typeof this.spriteCollisionCommands === 'undefined') {
                     this.spriteCollisionCommands = new CommandManager();
                 }
-                this.spriteCollisionCommands.addCommand(command, param.getQObject().getId());
+                this.spriteCollisionCommands.addCommand(command, param.getgObject().getId());
             }
             if (!this.p.hasCollisionCommands) {
                 this.p.hasCollisionCommands = true;
@@ -322,8 +319,6 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
         }
     });
 
-    Sprite.prototype.qSprite = qInstance.TSprite;
-
     // MOVEMENT MANAGEMENT
 
     Sprite.prototype._moveForward = function (value) {
@@ -331,12 +326,12 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
             this._alwaysMoveForward();
         } else {
             value = TUtils.getInteger(value);
-            this.qObject.moveForward(value);
+            this.gObject.moveForward(value);
         }
     };
 
     Sprite.prototype._alwaysMoveForward = function () {
-        this.qObject.alwaysMoveForward();
+        this.gObject.alwaysMoveForward();
     };
 
     Sprite.prototype._moveBackward = function (value) {
@@ -344,12 +339,12 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
             this._alwaysMoveBackward();
         } else {
             value = TUtils.getInteger(value);
-            this.qObject.moveBackward(value);
+            this.gObject.moveBackward(value);
         }
     };
 
     Sprite.prototype._alwaysMoveBackward = function () {
-        this.qObject.alwaysMoveBackward();
+        this.gObject.alwaysMoveBackward();
     };
 
     Sprite.prototype._moveUpward = function (value) {
@@ -357,12 +352,12 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
             this._alwaysMoveUpward();
         } else {
             value = TUtils.getInteger(value);
-            this.qObject.moveUpward(value);
+            this.gObject.moveUpward(value);
         }
     };
 
     Sprite.prototype._alwaysMoveUpward = function () {
-        this.qObject.alwaysMoveUpward();
+        this.gObject.alwaysMoveUpward();
     };
 
     Sprite.prototype._moveDownward = function (value) {
@@ -370,21 +365,21 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
             this._alwaysMoveDownward();
         } else {
             value = TUtils.getInteger(value);
-            this.qObject.moveDownward(value);
+            this.gObject.moveDownward(value);
         }
     };
 
     Sprite.prototype._alwaysMoveDownward = function () {
-        this.qObject.alwaysMoveDownward();
+        this.gObject.alwaysMoveDownward();
     };
 
     Sprite.prototype._stop = function () {
-        this.qObject.stop();
+        this.gObject.stop();
     };
 
     Sprite.prototype._setVelocity = function (value) {
         value = TUtils.getInteger(value);
-        this.qObject.setVelocity(value);
+        this.gObject.setVelocity(value);
     };
 
     // IMAGES MANAGEMENT
@@ -460,7 +455,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
         // if removed image was current image, remove asset
         if (this.displayedImage === name) {
             // remove asset
-            this.qObject.removeAsset();
+            this.gObject.removeAsset();
             this.displayedImage = null;
             this.displayedIndex = 0;
         }
@@ -484,7 +479,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
         delete this.imageSets[name];
         if (this.displayedSet === name) {
             // set was the currently used: remove image from sprite
-            this.qObject.removeAsset();
+            this.gObject.removeAsset();
             this.displayedImage = null;
             this.displayedSet = "";
             this.displayedIndex = 0;
@@ -501,7 +496,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
             // if removed image was current image, remove image
             if (this.displayedImage === imageName) {
                 // remove asset
-                this.qObject.removeAsset();
+                this.gObject.removeAsset();
                 this.displayedImage = null;
                 this.displayedIndex = 0;
             }
@@ -514,10 +509,10 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
         this.displayedImage = name;
         if (this.resources.ready(name)) {
             // image ready
-            var qObject = this.qObject;
-            qObject.asset(name, true);
-            if (!qObject.p.initialized) {
-                qObject.initialized();
+            var gObject = this.gObject;
+            gObject.asset(name, true);
+            if (!gObject.p.initialized) {
+                gObject.initialized();
             }
             return true;
         } else {
@@ -588,12 +583,12 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
 
     Sprite.prototype._setCategory = function (name) {
         name = TUtils.getString(name);
-        this.qObject.setCategory(name);
+        this.gObject.setCategory(name);
     };
 
     Sprite.prototype._ifCollision = function (param1, param2) {
         param1 = TUtils.getCommand(param1);
-        this.qObject.addCollisionCommand(param1, param2);
+        this.gObject.addCollisionCommand(param1, param2);
     };
 
     Sprite.prototype._ifCollisionWith = function (who, command) {
@@ -601,7 +596,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
     };
 
     Sprite.prototype.toString = function () {
-        return this.qObject.toString();
+        return this.gObject.toString();
     };
     
     Sprite.prototype.setTransparent = function (red, green, blue, callbacks) {
@@ -611,7 +606,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
 
     Sprite.prototype._setTransparent = function (red, green, blue) {
         if (this.displayedImage) {
-            this.qObject.removeAsset();
+            this.gObject.removeAsset();
         }
         var parent = this;
         this.setTransparent(red, green, blue, function(name) {
@@ -627,26 +622,26 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
     Sprite.prototype._goTo = function (x, y) {
         x = TUtils.getInteger(x);
         y = TUtils.getInteger(y);
-        this.qObject.goTo(x, y);
+        this.gObject.goTo(x, y);
     };
 
     Sprite.prototype._centerGoTo = function (x, y) {
         x = TUtils.getInteger(x);
         y = TUtils.getInteger(y);
-        this.qObject.centerGoTo(x, y);
+        this.gObject.centerGoTo(x, y);
     };
 
     Sprite.prototype._watchCollisions = function (value) {
         value = TUtils.getBoolean(value);
-        this.qObject.watchCollisions(value);
+        this.gObject.watchCollisions(value);
     };
 
     Sprite.prototype.isReady = function (callback, arguments) {
-        if (this.qObject.p.initialized) {
+        if (this.gObject.p.initialized) {
             return true;
         } else {
             if (typeof callback !== 'undefined') {
-                this.qObject.perform(callback, arguments);
+                this.gObject.perform(callback, arguments);
             }
             return false;
         }

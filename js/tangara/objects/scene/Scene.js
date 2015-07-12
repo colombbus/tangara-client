@@ -13,11 +13,11 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
     Scene.prototype.constructor = Scene;
     Scene.prototype.className = "Scene";
     
-    var qInstance = Scene.prototype.qInstance;
+    var graphics = Scene.prototype.graphics;
     
-    qInstance.TBlock.extend("TScene", {
+    Scene.prototype.gClass = graphics.addClass("TBlock", "TScene", {
         init: function(props,defaultProps) {
-            this._super(qInstance._extend({
+            this._super(TUtils.extend({
                 assetBlock:null,
                 showBlock:false
             },props),defaultProps);
@@ -34,8 +34,7 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
             var oldH = this.p.h;
             this.p.asset = asset;
             // resize only for background
-            this.size(true);
-            qInstance._generatePoints(this,true);
+            graphics.objectResized(this);
             this.p.x += (this.p.w - oldW)/2;
             this.p.y += (this.p.h - oldH)/2;
             this.p.destinationX = this.p.x;
@@ -68,8 +67,6 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
         }
     });
     
-    Scene.prototype.qSprite = qInstance.TScene;
-    
     Scene.prototype._setScene = function(name) {
         name = TUtils.getString(name);
         name = this.getMessage(name);
@@ -86,7 +83,7 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
                 try {
                     parent._removeImageSet("elements");
                 } catch (e) {}
-                parent.qObject.reinit();
+                parent.gObject.reinit();
                 var backgroundName = name+"/"+backImage;
                 parent.backgroundName = backgroundName;
                 var blockName = name+"/"+blockImage;
@@ -94,14 +91,14 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
                 parent.addImage(backgroundName, "elements", false, function() {
                     // background may have changed during loading
                     if (parent.backgroundName === backgroundName) {
-                        parent.qObject.setBackground(backgroundName);
+                        parent.gObject.setBackground(backgroundName);
                     }
                 });
                 parent.addImage(blockName, "elements", false, function() {
                     // block may have changed during loading
                     if (parent.blockName === blockName) {
                         parent.computeTransparencyMask(blockName);
-                        parent.qObject.setBlock(blockName);
+                        parent.gObject.setBlock(blockName);
                     }
                 });
             }
@@ -111,11 +108,11 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
     };        
     
     Scene.prototype._showBlock = function() {
-        this.qObject.setBlockDisplayed(true);
+        this.gObject.setBlockDisplayed(true);
     };
 
     Scene.prototype._hideBlock = function() {
-        this.qObject.setBlockDisplayed(false);
+        this.gObject.setBlockDisplayed(false);
     };
 
     Scene.prototype._setBackground = function(name) {
@@ -125,11 +122,11 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
         } catch (e) {}
         this.backgroundName = name;
         var sceneObject = this;
-        var qObject = this.qObject;
-        qObject.removeBackground();
+        var gObject = this.gObject;
+        gObject.removeBackground();
         this.addImage(name, "elements", true, function() {
             if (name === sceneObject.backgroundName) {
-                qObject.setBackground(name);
+                gObject.setBackground(name);
             }
         });
     };
@@ -141,31 +138,31 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'o
         } catch (e) {}
         this.blockName = name;
         var sceneObject = this;
-        var qObject = this.qObject;
-        qObject.removeBlock();
+        var gObject = this.gObject;
+        gObject.removeBlock();
         this.addImage(name, "elements", true, function() {            
             if (name === sceneObject.blockName) {
                 sceneObject.computeTransparencyMask(name);
-                qObject.setBlock(name);
+                gObject.setBlock(name);
             }
         });
     };
     
     Scene.prototype._setTransparent = function(red, green, blue) { 
         if (this.resources.has(this.blockName)) {
-            this.qObject.removeBlock();
+            this.gObject.removeBlock();
         }
         if (this.resources.has(this.backgroundName)) {
-            this.qObject.removeBackground();
+            this.gObject.removeBackground();
         }
         var parent = this;
         Sprite.prototype.setTransparent.call(this, red, green, blue, function(name) {
             if (name === parent.blockName) {
                 parent.computeTransparencyMask(name);
-                parent.qObject.setBlock(name);
+                parent.gObject.setBlock(name);
             }
             if (name === parent.backgroundName) {
-                parent.qObject.setBackground(name);
+                parent.gObject.setBackground(name);
             }
         });
     };

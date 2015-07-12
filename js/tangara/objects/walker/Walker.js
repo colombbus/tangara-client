@@ -7,11 +7,11 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'T
     Walker.prototype.constructor = Walker;
     Walker.prototype.className = "Walker";
     
-    var qInstance = Walker.prototype.qInstance;
+    var graphics = Walker.prototype.graphics;
     
-    qInstance.TSprite.extend("TWalker", {
+    Walker.prototype.gClass = graphics.addClass("TSprite", "TWalker", {
         init: function(props,defaultProps) {
-            this._super(qInstance._extend({
+            this._super(TUtils.extend({
                 type:TGraphicalObject.TYPE_WALKER | TGraphicalObject.TYPE_SPRITE,
                 mayFall:false,
                 jumping:false,
@@ -79,7 +79,7 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'T
             }
         },
         addBlock: function(block) {
-            var objId = block.getQObject().getId();
+            var objId = block.getgObject().getId();
             if (this.blocks.indexOf(objId) === -1) {
                 this.blocks.push(objId);
             }
@@ -112,41 +112,39 @@ define(['jquery','TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'T
         }
     });
     
-    Walker.prototype.qSprite = qInstance.TWalker;
-
     Walker.prototype._addBlock = function(block) {
         block = TUtils.getObject(block);
-        this.qObject.addBlock(block);
+        this.gObject.addBlock(block);
         var self = this;
         if (!block.isReady(function () {
             self.blockReady();
         })) {
             // wait for block to be loaded
-            this.qObject.waitForBlock();
+            this.gObject.waitForBlock();
         }
     };
     
     Walker.prototype._mayFall = function(value) {
         value = TUtils.getBoolean(value);
-        this.qObject.mayFall(value);
+        this.gObject.mayFall(value);
     };
 
     Walker.prototype._setJumpSpeed = function(value) {
         value = TUtils.getInteger(value);
-        this.qObject.setJumpSpeed(value);
+        this.gObject.setJumpSpeed(value);
     };
 
     Walker.prototype._jump = function() {
-        this.qObject.jump();
+        this.gObject.jump();
     };
 
     Walker.prototype.blockReady = function() {
-        this.qObject.blockReady();
+        this.gObject.blockReady();
     };
 
     Walker.prototype._setGravity = function(value) {
         value = TUtils.getInteger(value);
-        this.qObject.setGravity(value);
+        this.gObject.setGravity(value);
     };
 
     TEnvironment.internationalize(Walker, true);

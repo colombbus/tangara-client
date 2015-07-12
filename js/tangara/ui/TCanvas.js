@@ -42,41 +42,16 @@ define(['jquery', 'TRuntime', 'ui/TComponent'], function ($, TRuntime, TComponen
             }
         };
 
-        this.addGraphicalObject = function (object) {
-	        if (typeof qStage !== 'undefined') {
-	            qStage.insert(object.getQObject());
-            }
-        };
-
-	    this.removeGraphicalObject = function (object) {
-	        qStage.remove(object.getQObject());
-	    };
-	
 	    this.displayed = function () {
-	        var qInstance = TRuntime.getQuintusInstance();
-	        qInstance.setup("tcanvas", {maximize: true}).touch(qInstance.SPRITE_ALL);
-	        qInstance.stageScene(null);
-	        qStage = qInstance.stage();
+		    var graphics = TRuntime.getGraphics();
+		    graphics.setCanvas("tcanvas");
 	        // resize canvas and its container when window is resized
 	        $(window).resize(function (e) {
 	            var width = $main.width();
 	            var height = $main.height();
-	            var Q = TRuntime.getQuintusInstance();
-	            Q.el.style.height = height + "px";
-	            Q.el.style.width = width + "px";
-	            Q.el.width = width;
-	            Q.el.height = height;
-	            Q.wrapper.style.width = width + "px";
-	            Q.wrapper.style.height = height + "px";
-	            Q.width = width;
-	            Q.height = height;
-	            Q.cssWidth = width;
-	            Q.cssHeight = height;
-	            qStage.defaults['w'] = width;
-	            qStage.defaults['h'] = height;
+	            graphics.resize(width, height);
 	        });
 	    };
-	
 	
 	    this.show = function () {
 	        $main.show();
