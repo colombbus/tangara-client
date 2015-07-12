@@ -214,6 +214,8 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TProgram', 'TError', 'ui/TViewe
             this.updatePrograms();
             $sidebarResources.removeClass("loading");
             this.updateResources();
+            viewer.init();
+            textEditor.init();
         };
 
         this.load = function() {

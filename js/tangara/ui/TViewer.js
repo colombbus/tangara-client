@@ -9,6 +9,9 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPain
         var $name, $width, $height;
         var image;
         var editorInitialized = false;
+        var imageDisplayed = false;
+        var imageEdited = false;
+        var imageCreation = false;
 
         TComponent.call(this, "TViewer.html", function(component) {
             $main = component;
@@ -247,11 +250,6 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPain
             }
         };
 
-        var appended = false;
-        var imageDisplayed = false;
-        var imageEdited = false;
-        var imageCreation = false;
-
         var hide = function() {
             if (imageEdited) {
                 // was in editing mode: get back to display mode
@@ -262,22 +260,18 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPain
                 // refreshImage
                 displayImage(currentName);
             } else {
-                if (appended) {
-                    $main.fadeOut(function() {
-                        $("body").remove($main);
-                    });
+                $main.fadeOut(function() {
+                    appended = false;                       
+                    if (imageDisplayed) {
+                        $imageContainer.hide();
+                        imageDisplayed = false;
+                    }
+                    if (imageCreation) {
+                        $creation.hide();
+                        imageCreation = false;
+                    }
                     $(window).off('keydown', keyHandler);
-                    appended = false;
-                }
-                if (imageDisplayed) {
-                    $imageContainer.hide();
-                    imageDisplayed = false;
-                }
-                if (imageCreation) {
-                    $creation.hide();
-                    imageCreation = false;
-                }
-
+                });
             }
         };
 
@@ -358,17 +352,13 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPain
             prevHandler = value;
         };
 
-        var append = function() {
-            if (!appended) {
-                $("body").append($main)
-                $(window).on('keydown', keyHandler);
-                appended = true;
-                $main.fadeIn();
-            }
+        this.init = function() {
+            $("body").append($main);
         };
 
         this.show = function(name) {
-            append();
+            $(window).on('keydown', keyHandler);
+            $main.fadeIn();
             if (imageCreation) {
                 $creation.hide();
                 imageCreation = false;

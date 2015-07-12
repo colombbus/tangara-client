@@ -18,8 +18,8 @@ define(['ui/TComponent', 'TEnvironment', 'TUI', 'jquery'], function(TComponent, 
             });
 
             var $buttonSave = component.find(".tviewer-creation-save");
-            $buttonCancel.append(TEnvironment.getMessage("viewer-creation-save"));
-            $buttonCancel.click(function(e) {
+            $buttonSave.append(TEnvironment.getMessage("viewer-creation-save"));
+            $buttonSave.click(function(e) {
                 save();
             });
 
@@ -40,24 +40,15 @@ define(['ui/TComponent', 'TEnvironment', 'TUI', 'jquery'], function(TComponent, 
             $.get(src, null, function(data) {
                 $textArea.val(data);
             }, "text");
-            append();
+            $main.fadeIn();
         };
 
-        var append = function() {
-            if (!appended) {
-                $("body").append($main);
-                $main.fadeIn();
-                appended = true;
-            }
+        this.init = function() {
+            $("body").append($main);
         };
 
         var hide = function() {
-            if (appended) {
-                $main.fadeOut(function() {
-                    $("body").remove($main);
-                    appended = false;
-                });
-            }
+            $main.fadeOut();
         };
 
         var save = function() {
