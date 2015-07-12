@@ -29,7 +29,8 @@ define(['TError', 'utils/TUtils'], function(TError, TUtils) {
         
         /* Lifecycle management */
         
-        clear = function() {
+        var clear = function() {
+	        window.console.debug("entering local clear");
             definedFunctions = {};
             localVariables = [];
             currentVariables = [];
@@ -41,9 +42,11 @@ define(['TError', 'utils/TUtils'], function(TError, TUtils) {
             stackPointer = [0];
             executionLevel = 0;
             callers = [];
+	        window.console.debug("exiting clear");
         };
         
         this.clear = function() {
+	        window.console.debug("entering clear");
             clear();
         };
 
@@ -62,7 +65,7 @@ define(['TError', 'utils/TUtils'], function(TError, TUtils) {
             stop();
         };
         
-        stop = function() {
+        var stop = function() {
             stack = [[]];            
         };
         
@@ -101,26 +104,28 @@ define(['TError', 'utils/TUtils'], function(TError, TUtils) {
             }
         };
 
-        insertStatement = function(statement, log) {
+        var insertStatement = function(statement, log) {
             statement.inserted = true;
             statement.log = log;
             stack[executionLevel].unshift(statement);
             stackPointer[executionLevel]++;
         };
 
-        insertStatements = function(statements, log) {
+        var insertStatements = function(statements, log) {
             for (var i=statements.length-1; i>=0; i--) {
                 insertStatement(statements[i], log);
             }
         };
         
-        logCommand = function(command) {
-            log.addCommand(command);
+        var logCommand = function(command) {
+	        if (typeof log !== 'undefined') {
+	            log.addCommand(command);
+	        }
         };
         
-        suspendedException = function(){};
+        var suspendedException = function(){};
         
-        run = function() {
+        var run = function() {
             try {
                 running = true;
                 while (!suspended && stack[executionLevel].length>0) {
@@ -153,13 +158,13 @@ define(['TError', 'utils/TUtils'], function(TError, TUtils) {
         
         /* Variable management */
         
-        getVariable = function(identifier) {
+        var getVariable = function(identifier) {
             if (typeof (runtimeFrame[identifier]) !== 'undefined') {
                 return runtimeFrame[identifier];
             }
         };
         
-        saveVariable = function(identifier) {
+        var saveVariable = function(identifier) {
             if (typeof (runtimeFrame[identifier]) !== 'undefined') {
                 if (typeof localVariables[blockLevel] === 'undefined') {
                     localVariables[blockLevel] = {};
@@ -168,7 +173,7 @@ define(['TError', 'utils/TUtils'], function(TError, TUtils) {
             }
         };
         
-        restoreVariable = function(identifier) {
+        var restoreVariable = function(identifier) {
             if (typeof localVariables[blockLevel+1] !=='undefined') {
                 if (typeof localVariables[blockLevel+1][identifier] !== 'undefined') {
                     runtimeFrame[identifier] = localVariables[blockLevel+1][identifier];
@@ -183,12 +188,12 @@ define(['TError', 'utils/TUtils'], function(TError, TUtils) {
         
         /* Block management */
         
-        enterBlock = function() {
+        var enterBlock = function() {
             blockLevel++;
             currentVariables = [];
         };
         
-        leaveBlock = function() {
+        var leaveBlock = function() {
             // local variable management: erase any locally created variables
             blockLevel--;                       
             for (var j=0; j<currentVariables.length; j++) {
@@ -199,7 +204,7 @@ define(['TError', 'utils/TUtils'], function(TError, TUtils) {
         
         /* Execution level management */
 
-        raiseExecutionLevel = function(caller) {
+        var raiseExecutionLevel = function(caller) {
             if (typeof caller !== 'undefined') {
                 callers.push(caller);
             }
@@ -208,7 +213,7 @@ define(['TError', 'utils/TUtils'], function(TError, TUtils) {
             cached[executionLevel] = [];
         };
         
-        lowerExecutionLevel = function(value) {
+        var lowerExecutionLevel = function(value) {
             if (executionLevel > 0) {
                 stack[executionLevel] = [];
                 cached[executionLevel] = [];
@@ -223,30 +228,30 @@ define(['TError', 'utils/TUtils'], function(TError, TUtils) {
         
         /* Main Eval function */
         
-        defaultEval = function(literal) {
+        var defaultEval = function(literal) {
             return runtimeFrame.eval(literal);
         };
         
         /* Statements management */
         
-        defaultEvalStatement = function(statement) {
+        var defaultEvalStatement = function(statement) {
             defaultEval(statement.raw);
             return true;
         };
         
-        evalBlockStatement = function(statement) {
+        var evalBlockStatement = function(statement) {
             enterBlock();
             insertStatement({type:"ControlOperation", operation:"leaveBlock"});
             insertStatements(statement.body);
             return true;
         };
 
-        evalExpressionStatement = function(statement) {
+        var evalExpressionStatement = function(statement) {
             evalExpression(statement.expression, true);
             return true;
         };
         
-        evalIfStatement = function(statement) {
+        var evalIfStatement = function(statement) {
             var result = evalExpression(statement.test, true);
             if (result) {
                 insertStatement(statement.consequent);
@@ -256,23 +261,23 @@ define(['TError', 'utils/TUtils'], function(TError, TUtils) {
             return true;
         };
 
-        evalLabeledStatement = function(statement) {
+        var evalLabeledStatement = function(statement) {
             throw "LabeledStatement Not Implemented yet";
         };
 
-        evalBreakStatement = function(statement) {
+        var evalBreakStatement = function(statement) {
             throw "BreakStatement Not Implemented yet";            
         };
 
-        evalContinueStatement = function(statement) {
+        var evalContinueStatement = function(statement) {
             throw "ContinueStatement Not Implemented yet";            
         };
         
-        evalWithStatement = function(statement) {
+        var evalWithStatement = function(statement) {
             throw "With statement is not supported";            
         };
         
-        evalSwitchStatement = function(statement) {
+        var evalSwitchStatement = function(statement) {
             if (typeof statement.controls === 'undefined') {
                 statement.controls = {index:0, discriminant:evalExpression(statement.discriminant, true)};
             }
@@ -295,7 +300,7 @@ define(['TError', 'utils/TUtils'], function(TError, TUtils) {
             }
         };
 
-        evalReturnStatement = function(statement) {
+        var evalReturnStatement = function(statement) {
             if (executionLevel > 0) {
                 var value = evalExpression(statement.argument);
                 if (typeof value === "string") {
@@ -310,15 +315,15 @@ define(['TError', 'utils/TUtils'], function(TError, TUtils) {
             }
         };
 
-        evalThrowStatement = function(statement) {
+        var evalThrowStatement = function(statement) {
             throw "ThrowStatement Not Implemented yet";
         };
         
-        evalTryStatement = function(statement) {
+        var evalTryStatement = function(statement) {
             throw "TryStatement Not Implemented yet";
         };
 
-        evalWhileStatement = function(statement) {
+        var evalWhileStatement = function(statement) {
             var result = evalExpression(statement.test, true);
             if (result) {
                 insertStatement(statement.body);
@@ -330,7 +335,7 @@ define(['TError', 'utils/TUtils'], function(TError, TUtils) {
             }
         };
 
-        evalDoWhileStatement = function(statement) {
+        var evalDoWhileStatement = function(statement) {
             if (typeof statement.controls === 'undefined') {
                 statement.controls = {init:false};
             }
@@ -352,7 +357,7 @@ define(['TError', 'utils/TUtils'], function(TError, TUtils) {
             }
         };
 
-        evalForStatement = function(statement) {
+        var evalForStatement = function(statement) {
             if (typeof statement.controls === 'undefined') {
                 statement.controls = {init:false};
             }
@@ -379,15 +384,15 @@ define(['TError', 'utils/TUtils'], function(TError, TUtils) {
             }
         };
 
-        evalForInStatement = function(statement) {
+        var evalForInStatement = function(statement) {
             throw "For In Not Implemented yet";
         };
 
-        evalDebuggerStatement = function(statement) {
+        var evalDebuggerStatement = function(statement) {
             defaultEvalStatement(statement);
         };
         
-        evalRepeatStatement = function(statement) {
+        var evalRepeatStatement = function(statement) {
             if (typeof statement.controls === 'undefined') {
                 var count=evalExpression(statement.count, true);
                 if (isNaN(count)) {
@@ -405,7 +410,7 @@ define(['TError', 'utils/TUtils'], function(TError, TUtils) {
             }
         };
 
-        evalVariableDeclaration = function(declaration) {
+        var evalVariableDeclaration = function(declaration) {
             for (var i = 0; i<declaration.declarations.length; i++) {
                 var declarator = declaration.declarations[i];
                 var identifier = evalExpression(declarator.id);
@@ -418,7 +423,7 @@ define(['TError', 'utils/TUtils'], function(TError, TUtils) {
             return true;
         };
 
-        evalFunctionDeclaration = function(declaration) {
+        var evalFunctionDeclaration = function(declaration) {
             var identifier = evalExpression(declaration.id);
             definedFunctions[identifier] = {'body':declaration.body, 'params':declaration.params};
             // still declare function, so that it can be recognized later on
@@ -438,7 +443,7 @@ define(['TError', 'utils/TUtils'], function(TError, TUtils) {
             return true;
         };
         
-        evalStatement = function(statement) {
+        var evalStatement = function(statement) {
             try {
                 var result;
                 var currentLevel = executionLevel;
@@ -544,11 +549,11 @@ define(['TError', 'utils/TUtils'], function(TError, TUtils) {
         
         /* Expressions management */
 
-        defaultEvalExpression = function(expression) {
+        var defaultEvalExpression = function(expression) {
             return expression.raw;
         };
         
-        callFunction = function(block, params, args, expression) {
+        var callFunction = function(block, params, args, expression) {
             var values = [];
             for (var i=0; i<args.length; i++) {
                 if (i< params.length) {
@@ -571,11 +576,11 @@ define(['TError', 'utils/TUtils'], function(TError, TUtils) {
             return null;
         };
         
-        evalFunctionExpression = function(expression, callback) {
+        var evalFunctionExpression = function(expression, callback) {
             throw "Function Expression Not Implemented yet";
         };
         
-        evalSequenceExpression = function(expression) {
+        var evalSequenceExpression = function(expression) {
             var sequence = "";
             for (var i=0; i<expression.expressions.length; i++) {
                 sequence += evalExpression(expression.expressions[i]);
@@ -583,7 +588,7 @@ define(['TError', 'utils/TUtils'], function(TError, TUtils) {
             return sequence;
         };
         
-        evalUnaryExpression = function(expression) {
+        var evalUnaryExpression = function(expression) {
             if (expression.prefix) {
                 return expression.operator+evalExpression(expression.argument);
             } else {
@@ -591,15 +596,15 @@ define(['TError', 'utils/TUtils'], function(TError, TUtils) {
             }
         };
 
-        evalBinaryExpression = function(expression) {
+        var evalBinaryExpression = function(expression) {
             return evalExpression(expression.left)+expression.operator+evalExpression(expression.right);
         };
 
-        evalAssignementExpression = function(expression) {
+        var evalAssignementExpression = function(expression) {
             return evalExpression(expression.left)+expression.operator+evalExpression(expression.right);
         };
 
-        evalUpdateExpression = function(expression) {
+        var evalUpdateExpression = function(expression) {
             if (expression.prefix) {
                 return expression.operator+evalExpression(expression.argument);
             } else {
@@ -607,11 +612,11 @@ define(['TError', 'utils/TUtils'], function(TError, TUtils) {
             }
         };
 
-        evalLogicalExpression = function(expression) {
+        var evalLogicalExpression = function(expression) {
             return evalExpression(expression.left)+expression.operator+evalExpression(expression.right);
         };
 
-        evalConditionalExpression = function(expression) {
+        var evalConditionalExpression = function(expression) {
             var value = evalExpression(expression.test);
             if (value) {
                 return evalExpression(expression.consequent);
@@ -620,7 +625,7 @@ define(['TError', 'utils/TUtils'], function(TError, TUtils) {
             }
         };
 
-        evalCallExpression = function(expression) {
+        var evalCallExpression = function(expression) {
             var callLiteral = evalExpression(expression.callee);
             if (expression.callee.type === 'Identifier' && typeof definedFunctions[callLiteral] !== 'undefined') {
                 // we need to call the function with given parameters
@@ -639,7 +644,7 @@ define(['TError', 'utils/TUtils'], function(TError, TUtils) {
             }
         };
 
-        evalNewExpression = function(expression) {
+        var evalNewExpression = function(expression) {
             var className = evalExpression(expression.callee);
             var argsString = "(";
             for (var i=0; i<expression.arguments.length; i++) {
@@ -652,17 +657,17 @@ define(['TError', 'utils/TUtils'], function(TError, TUtils) {
             return "new "+className+argsString;
         };
 
-        evalMemberExpression = function(expression) {
+        var evalMemberExpression = function(expression) {
             var objectName = evalExpression(expression.object);
             var propertyName = evalExpression(expression.property);
             return objectName+"."+propertyName;
         };
 
-        evalIdentifier = function(expression) {
+        var evalIdentifier = function(expression) {
             return expression.name;
         };
 
-        evalLiteral = function(expression) {
+        var evalLiteral = function(expression) {
             var value;
             if (typeof expression.value === "string") {
                 value = "\""+TUtils.addslashes(expression.value)+"\"";
@@ -672,7 +677,7 @@ define(['TError', 'utils/TUtils'], function(TError, TUtils) {
             return value;
         };
 
-        evalExpression = function(expression, eval) {
+        var evalExpression = function(expression, eval) {
             if (suspended) {
                 // execution has been suspended during statement : we stop
                 throw new suspendedException;
