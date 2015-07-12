@@ -116,7 +116,7 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPain
         // Set save handler
         $.extend($.fn.wPaint.defaults, {
             saveImg: function() {
-                var imageData = $domEditorImage.wPaint("image");
+                var imageData = $editorImage.wPaint("image");
                 try {
                     currentName = TUI.setResourceContent(currentName, imageData);
                     message(TEnvironment.getMessage('image-editor-saved', currentName));
@@ -282,7 +282,7 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPain
 
         var displayImage = function(name) {
             if (imageDisplayed) {
-                $imageCreation.hide();
+                $imageContainer.hide();
                 //domMain.removeChild(domImage);
                 imageDisplayed = false;
             }
@@ -294,7 +294,7 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPain
             var src = TEnvironment.getProjectResource(name);
             if (image.src === src) {
                 // image was the previous one: just call image.onload
-                image.onload();
+                $image.load();
             } else {
                 $title.text("");
                 image.src = src;
