@@ -125,7 +125,7 @@ define(['ui/TComponent', 'jquery', 'ace/ace', 'ace/edit_session', 'ace/range', '
                 aceEditor.setReadOnly(false);
                 aceEditor.renderer.setShowGutter(true);
                 $editor.removeClass('editor-disabled');
-                $editor.remove($disabledMessage);
+                $disabledMessage.remove();
                 disabled = false;
                 TUI.setEditionEnabled(true);
             }
