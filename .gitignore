@@ -16,3 +16,4 @@ bin-release/
 /js/libs-bower/*
 /nbproject/
 /node_modules/
+/resources/config.json
