@@ -173,9 +173,7 @@ define(['jquery'], function($) {
                 initialClass.prototype.translatedMethods = translated;
                 var className = initialClass.prototype.className;
                 translatedClasses.push(className);
-                window.console.log("%% CHECKING FOR "+className);
                 if (typeof waiting[className] !== 'undefined') {
-                    window.console.log("awaiking for class: "+ className);
                     for (var i=0;i<waiting[className].length;i++) {
                         var f = waiting[className][i];
                         f.call(this);
@@ -183,7 +181,6 @@ define(['jquery'], function($) {
                     delete waiting[className];
                 }
                 if (typeof callback !== 'undefined') {
-                    window.console.log("%% CALL CALLBACK FOR "+initialClass.prototype.className);
                     callback.call(self);
                 }
             });
