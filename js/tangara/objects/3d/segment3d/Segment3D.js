@@ -29,8 +29,5 @@ define(['jquery', 'babylon', 'TEnvironment', 'TObject3D'], function($, babylon, 
     Segment3D.prototype._setVertices = function(p1, p2) {
     };
 
-    TEnvironment.internationalize(Segment3D, true);
-
     return Segment3D;
 });
-

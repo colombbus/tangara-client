@@ -190,8 +190,6 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TObject', 'TRunti
         this.commands.logCommands(value);
     };
 
-    TEnvironment.internationalize(KeyStroke, true);
-
     return KeyStroke;
 });
 

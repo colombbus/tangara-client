@@ -26,8 +26,6 @@ define(['jquery', 'babylon', 'TEnvironment', 'TObject3D'], function($, babylon, 
     Cube3D.prototype._setDimension = function(size) {
     };
 
-    TEnvironment.internationalize(Cube3D, true);
-
     return Cube3D;
 });
 

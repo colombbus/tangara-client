@@ -10,7 +10,6 @@ define(['jquery', 'babylon', 'TEnvironment', 'TObject3D'], function($, babylon, 
         this.object3d = this.getMesh().CreateTorus("torus1", 6, 1, 36, this.scene, true);
         this.object3d.position.y = 1;
     };
-    TEnvironment.internationalize(Torus3D, true);
 
     return Torus3D;
 });

@@ -21,8 +21,6 @@ define(['jquery', 'babylon', 'TEnvironment', 'TObject3D'], function($, babylon, 
     Sphere3D.prototype._setRadius = function(radius) {
     };
 
-    TEnvironment.internationalize(Sphere3D, true);
-
     return Sphere3D;
 });
 

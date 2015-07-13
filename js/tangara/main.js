@@ -27,6 +27,7 @@ require.config({
         "TLearnProject": "data/TLearnProject",
         "TEnvironment": "env/TEnvironment",
         "TLink": "env/TLink",
+        "TI18n": "env/TI18n",
         "TInterpreter": "run/TInterpreter",
         "TParser": "run/Tparser",
         "TRuntime": "run/TRuntime",
@@ -77,12 +78,14 @@ function load() {
         window.console.log("*******************");
         window.console.log("* Loading Environment *");
         window.console.log("*******************");
-        TEnvironment.load();
+        TEnvironment.load(function() {
+            window.console.log("*******************");
+            window.console.log("* Loading Runtime *");
+            window.console.log("*******************");
+            TRuntime.load();
+            
+        });
 
-        window.console.log("*******************");
-        window.console.log("* Loading Runtime *");
-        window.console.log("*******************");
-        TRuntime.load(TEnvironment.getLanguage(), TEnvironment.getObjectListUrl());
 
         window.console.log("***************************");
         window.console.log("* Building User Interface *");

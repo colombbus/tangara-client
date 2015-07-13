@@ -8,7 +8,7 @@ define(['jquery', 'TEnvironment', 'TObject3D'], function($, TEnvironment, TObjec
     };
 
     Box3D.prototype = Object.create(TObject3D.prototype);
-    Box3D.prototype.constructor = TObject3D;
+    Box3D.prototype.constructor = Box3D;
     Box3D.prototype.className = "Box3D";
 
     Box3D.prototype._setSpace = function(scene3d) {
@@ -74,8 +74,6 @@ addObject(top);
     };
     Box3D.prototype._setTopTexture = function(texture, repeatX, repeatY) {
     };
-
-    TEnvironment.internationalize(Box3D, true);
 
     return Box3D;
 });

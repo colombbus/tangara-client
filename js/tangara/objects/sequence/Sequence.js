@@ -139,8 +139,6 @@ define(['jquery', 'TEnvironment', 'TObject', 'TUtils', 'TRuntime', 'TParser'], f
         this.logCommands = value;
     };
 
-    TEnvironment.internationalize(Sequence, true);
-
     return Sequence;
 });
 

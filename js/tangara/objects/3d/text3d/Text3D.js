@@ -27,8 +27,6 @@ define(['jquery', 'babylon', 'TEnvironment', 'TObject3D'], function($, babylon, 
     Text3D.prototype._setTexture = function(texture) {
     };
 
-    TEnvironment.internationalize(Text3D, true);
-
     return Text3D;
 });
 

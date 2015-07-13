@@ -31,8 +31,6 @@ define(['jquery', 'babylon', 'TEnvironment', 'TObject3D'], function($, babylon, 
     Rider3D.prototype._setPath = function(p) {
     };
 
-    TEnvironment.internationalize(Rider3D, true);
-
     return Rider3D;
 });
 

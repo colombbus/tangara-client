@@ -31,8 +31,6 @@ define(['jquery', 'babylon', 'TEnvironment', 'TObject3D'], function($, babylon, 
     Path3D.prototype._transparentColor = function(color) {
     };
 
-    TEnvironment.internationalize(Path3D, true);
-
     return Path3D;
 });
 

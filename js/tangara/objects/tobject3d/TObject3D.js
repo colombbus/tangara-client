@@ -16,6 +16,7 @@ define(['jquery', 'babylon', 'TEnvironment', 'TObject'], function($, babylon, TE
     TObject3D.prototype = Object.create(TObject.prototype);
     TObject3D.prototype.constructor = TObject3D;
     TObject3D.prototype.className = "TObject3D";
+    TObject3D.prototype.objectPath = "tobject3d";
     TObject3D.prototype.mesh = BABYLON.Mesh;
     /** Unique id for each TObject3D instancied */
     TObject3D.id = 0;

@@ -457,7 +457,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager'
         gObject.mayCatch(catchableGObject, command);
     };
 
-    TEnvironment.internationalize(Character, true);
+    //TEnvironment.internationalize(Character, true);
 
     return Character;
 });

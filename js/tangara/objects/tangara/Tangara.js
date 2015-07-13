@@ -61,8 +61,6 @@ define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink
             return answer;
     };
 
-    TEnvironment.internationalize(Tangara);
-
     var tangaraInstance = new Tangara();
 
     return tangaraInstance;

@@ -97,6 +97,6 @@ define(['jquery', 'TObject', 'TUtils', 'TRuntime', 'TEnvironment', 'ui/TCanvas']
         var asset = this.video[name];
         this.qAudio.stop(asset);
     };
-    TEnvironment.internationalize(Video, true);
+
     return Video;
 });

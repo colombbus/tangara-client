@@ -63,8 +63,6 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
         gObject.p.textColor = "rgb(" + color[0] + "," + color[1] + "," + color[2] + ")";
     };
 
-    TEnvironment.internationalize(Text, true);
-
     return Text;
 });
 

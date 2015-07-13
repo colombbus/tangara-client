@@ -106,8 +106,6 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
         console.debug(value);
     };
 
-    TEnvironment.internationalize(Teacher);
-
     var teacherInstance = new Teacher();
 
     return teacherInstance;

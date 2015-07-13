@@ -43,8 +43,6 @@ define(['jquery', 'babylon', 'TEnvironment', 'TObject3D'], function($, babylon, 
     Walker3D.prototype._stopFollowing = function() {
     };
 
-    TEnvironment.internationalize(Walker3D, true);
-
     return Walker3D;
 });
 

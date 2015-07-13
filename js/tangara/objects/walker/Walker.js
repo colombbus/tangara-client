@@ -79,7 +79,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
             }
         },
         addBlock: function(block) {
-            var objId = block.getgObject().getId();
+            var objId = block.getGObject().getId();
             if (this.blocks.indexOf(objId) === -1) {
                 this.blocks.push(objId);
             }
@@ -146,8 +146,6 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
         value = TUtils.getInteger(value);
         this.gObject.setGravity(value);
     };
-
-    TEnvironment.internationalize(Walker, true);
 
     return Walker;
 });

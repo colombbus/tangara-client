@@ -19,8 +19,6 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
         }
     });
 
-    TEnvironment.internationalize(Item, true);
-
     return Item;
 });
 

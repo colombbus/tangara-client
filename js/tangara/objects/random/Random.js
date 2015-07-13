@@ -11,7 +11,5 @@ define(['TEnvironment', 'TObject', 'TUtils', 'TRuntime'], function(TEnvironment,
         return Math.floor((Math.random() * max) + 1);
     };
 
-    TEnvironment.internationalize(Random, true);
-
     return Random;
 });

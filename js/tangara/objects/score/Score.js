@@ -105,8 +105,6 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'objects/text/Te
         return string;
     };
 
-    TEnvironment.internationalize(Score, true);
-
     return Score;
 });
 

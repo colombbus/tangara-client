@@ -5,16 +5,18 @@
             "fr": "Personnage",
             "es": "Personaje",
             "en": "Character"
-        }
+        },
+        "parents": true
     },
- 	"Space3D": {
+    "Space3D": {
        "path": "3d/space3d",
         "translations": {
             "fr": "Espace3D",
             "es": "Espacio3D",
             "en": "Space3D"
         },
-        "conditions": ["3d"]
+        "conditions": ["3d"],
+        "parents": true
     },
     "Sphere3D": {
         "path": "3d/sphere3d",
@@ -23,7 +25,8 @@
             "es": "Esfera3D",
             "en": "Sphere3D"
         },
-        "conditions": ["3d"]
+        "conditions": ["3d"],
+        "parents": true
     },
     "Quadrilateral3D": {
         "path": "3d/quadrilateral3d",
@@ -32,7 +35,8 @@
             "es": "Cuadrilatero3D",
             "en": "Quadrilateral3D"
         },
-        "conditions": ["3d"]
+        "conditions": ["3d"],
+        "parents": true
     },
     "Box3D": {
         "path": "3d/box3d",
@@ -41,7 +45,8 @@
             "es": "Caja3D",
             "en": "Box3D"
         },
-        "conditions": ["3d"]
+        "conditions": ["3d"],
+        "parents": true
     },
     "Cylinder3D": {
         "path": "3d/cylinder3d",
@@ -50,7 +55,8 @@
             "es": "Cilindro3D",
             "en": "Cylinder3D"
         },
-        "conditions": ["3d"]
+        "conditions": ["3d"],
+        "parents": true
     },
     "Torus3D": {
         "path": "3d/torus3d",
@@ -59,7 +65,8 @@
             "es": "Toro3D",
             "en": "Torus3D"
         },
-        "conditions": ["3d"]
+        "conditions": ["3d"],
+        "parents": true
     },
     "Text3D": {
         "path": "3d/text3d",
@@ -68,7 +75,8 @@
             "es": "Texto3D",
             "en": "Text3D"
         },
-        "conditions": ["3d"]
+        "conditions": ["3d"],
+        "parents": true
     },
     "Triangle3D": {
         "path": "3d/triangle3d",
@@ -77,7 +85,8 @@
             "es": "Triangulo3D",
             "en": "Triangle3D"
         },
-        "conditions": ["3d"]
+        "conditions": ["3d"],
+        "parents": true
     },
     "Cube3D": {
         "path": "3d/cube3d",
@@ -86,7 +95,8 @@
             "es": "Cubo3D",
             "en": "Cube3D"
         },
-        "conditions": ["3d"]
+        "conditions": ["3d"],
+        "parents": true
     },
     "Light3D": {
         "path": "3d/light3d",
@@ -95,7 +105,8 @@
             "es": "Luz3D",
             "en": "Light3D"
         },
-        "conditions": ["3d"]
+        "conditions": ["3d"],
+        "parents": true
     },
     "Point3D": {
         "path": "3d/point3d",
@@ -104,7 +115,8 @@
             "es": "Punto3D",
             "en": "Point3D"
         },
-        "conditions": ["3d"]
+        "conditions": ["3d"],
+        "parents": true
     },
     "Rider3D": {
         "path": "3d/rider3d",
@@ -113,7 +125,8 @@
             "es": "Seguidor3D",
             "en": "Rider3D"
         },
-        "conditions": ["3d"]
+        "conditions": ["3d"],
+        "parents": true
     },
     "Segment3D": {
         "path": "3d/segment3d",
@@ -122,7 +135,8 @@
             "es": "Segmento3D",
             "en": "Segment3D"
         },
-        "conditions": ["3d"]
+        "conditions": ["3d"],
+        "parents": true
     },
     "Vector3D": {
         "path": "3d/vector3d",
@@ -131,7 +145,8 @@
             "es": "Vector3D",
             "en": "Vector3D"
         },
-        "conditions": ["3d"]
+        "conditions": ["3d"],
+        "parents": true
     },
     "Walker3D": {
         "path": "3d/walker3d",
@@ -140,7 +155,8 @@
             "es": "Paseante3D",
             "en": "Walker3D"
         },
-        "conditions": ["3d"]
+        "conditions": ["3d"],
+        "parents": true
     },
     "Path3D": {
         "path": "3d/path3d",
@@ -149,7 +165,8 @@
             "es": "Camino3D",
             "en": "Path3D"
         },
-        "conditions": ["3d"]
+        "conditions": ["3d"],
+        "parents": true
     },
     "Sound": {
         "path": "sound",
@@ -157,7 +174,8 @@
             "fr": "Son",
             "es": "Sonido",
             "en": "Sound"
-        }
+        },
+        "parents": true
     },
     "Sprite": {
         "path": "sprite",
@@ -165,7 +183,8 @@
             "fr": "Animation",
             "es": "Animacion",
             "en": "Sprite"
-        }
+        },
+        "parents": true
     },
     "Button": {
         "path": "button",
@@ -173,7 +192,8 @@
             "fr": "Bouton",
             "es": "Boton",
             "en": "Button"
-        }
+        },
+        "parents": true
     },
     "KeyStroke": {
         "path": "keystroke",
@@ -181,7 +201,8 @@
             "fr": "CommandesClavier",
             "es": "TBT",
             "en": "KeyStroke"
-        }
+        },
+        "parents": true
     },
     "Tangara": {
         "path": "tangara",
@@ -189,7 +210,9 @@
             "fr": "tangara",
             "es": "tangara",
             "en": "tangara"
-        }
+        },
+        "parents": false,
+        "instance": true
     },
     "Walker": {
         "path": "walker",
@@ -197,7 +220,8 @@
             "fr": "Promeneur",
             "es": "Paseante",
             "en": "Walker"
-        }
+        },
+        "parents": true
     },
     "Block": {
         "path": "block",
@@ -205,7 +229,8 @@
             "fr": "Bloc",
             "es": "Bloque",
             "en": "Block"
-        }
+        },
+        "parents": true
     },
     "Sequence": {
         "path": "sequence",
@@ -213,7 +238,8 @@
             "fr": "Séquence",
             "es": "Secuencia",
             "en": "Sequence"
-        }
+        },
+        "parents": true
     },
     "Clock": {
         "path": "clock",
@@ -221,7 +247,8 @@
             "fr": "Minuteur",
             "es": "Minutero",
             "en": "Clock"
-        }
+        },
+        "parents": true
     },
     "Text": {
         "path": "text",
@@ -229,7 +256,8 @@
             "fr": "Texte",
             "es": "Texto",
             "en": "Text"
-        }
+        },
+        "parents": true
     },
     "Random": {
         "path": "random",
@@ -237,7 +265,8 @@
             "fr": "Hasard",
             "es": "Casualidad",
             "en": "Random"
-        }
+        },
+        "parents": true
     },
     "Hero": {
         "path": "hero",
@@ -245,7 +274,8 @@
             "fr": "Héros",
             "es": "Héroe",
             "en": "Hero"
-        }
+        },
+        "parents": true
     },
     "Scene": {
         "path": "scene",
@@ -253,7 +283,8 @@
             "fr": "Décor",
             "es": "Decoración",
             "en": "Scene"
-        }
+        },
+        "parents": true
     },
     "Item": {
         "path": "item",
@@ -261,7 +292,8 @@
             "fr": "Item",
             "es": "Artículo",
             "en": "Item"
-        }
+        },
+        "parents": true
     },
     "Robot": {
         "path": "robot",
@@ -269,7 +301,8 @@
             "fr": "Robot",
             "es": "TBD",
             "en": "Robot"
-        }
+        },
+        "parents": true
     },
     "Teacher": {
         "path": "teacher",
@@ -277,6 +310,8 @@
             "fr": "teacher",
             "es": "teacher",
             "en": "teacher"
-        }
+        },
+        "parents": true,
+        "instance": true
     }
 }

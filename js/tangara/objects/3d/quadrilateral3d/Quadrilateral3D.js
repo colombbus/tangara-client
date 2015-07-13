@@ -25,8 +25,6 @@ define(['jquery', 'babylon', 'TEnvironment', 'TObject3D'], function($, babylon, 
     Quadrilateral3D.prototype._setVertices = function(p1, p2, p3, p4) {
     };
 
-    TEnvironment.internationalize(Quadrilateral3D, true);
-
     return Quadrilateral3D;
 });
 

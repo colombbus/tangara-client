@@ -130,8 +130,6 @@ define(['jquery', 'babylon', 'TEnvironment', 'TUtils', 'TObject', 'CommandManage
         }
     };
 
-    TEnvironment.internationalize(Space3D, true);
-
     return Space3D;
 });
 

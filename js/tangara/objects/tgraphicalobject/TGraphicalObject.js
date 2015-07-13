@@ -7,8 +7,10 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function(TObject, TUti
 
     TGraphicalObject.prototype = Object.create(TObject.prototype);
     TGraphicalObject.prototype.constructor = TGraphicalObject;
-
     TGraphicalObject.prototype.className = "TGraphicalObject";
+    TGraphicalObject.prototype.objectPath = "tgraphicalobject";
+    
+
     TGraphicalObject.TYPE_CHARACTER = 0x0100;
     TGraphicalObject.TYPE_CATCHABLE = 0x0200;
     TGraphicalObject.TYPE_SPRITE = 0x0400;

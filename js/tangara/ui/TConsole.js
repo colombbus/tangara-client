@@ -219,8 +219,9 @@ define(['TUI', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jque
                     return false;
                 }
 
-                var className = TRuntime.getTObjectClassName(name);
-                var methods = TEnvironment.getClassMethods(className);
+                /* var className = TRuntime.getTObjectClassName(name);
+                var methods = TEnvironment.getClassMethods(className);*/
+                var methods = TRuntime.getTObjectTranslatedMethods(name);
                 var methodNames = Object.keys(methods);
                 methodNames = TUtils.sortArray(methodNames);
 

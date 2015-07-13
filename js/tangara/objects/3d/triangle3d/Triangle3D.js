@@ -29,8 +29,6 @@ define(['jquery', 'babylon', 'TEnvironment', 'TObject3D'], function($, babylon, 
     Triangle3D.prototype._setVertices = function(p1, p2, p3) {
     };
 
-    TEnvironment.internationalize(Triangle3D, true);
-
     return Triangle3D;
 });
 

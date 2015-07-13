@@ -101,8 +101,6 @@ define(['jquery', 'TEnvironment', 'TObject', 'TUtils', 'CommandManager'], functi
         this.commands.logCommands(value);
     };
 
-    TEnvironment.internationalize(Clock, true);
-
     return Clock;
 });
 

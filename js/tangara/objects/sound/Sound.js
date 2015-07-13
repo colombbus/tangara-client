@@ -72,6 +72,6 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function(TObject, TUti
         var audio = TRuntime.getGraphics().getAudio();
         audio.stop(asset);
     };
-    TEnvironment.internationalize(Sound, true);
+
     return Sound;
 });

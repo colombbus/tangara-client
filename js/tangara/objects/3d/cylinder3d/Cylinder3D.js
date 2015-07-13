@@ -26,8 +26,6 @@ define(['jquery', 'babylon', 'TEnvironment', 'TObject3D'], function($, babylon, 
     Cylinder3D.prototype._setRadius = function(radius) {
     };
 
-    TEnvironment.internationalize(Cylinder3D, true);
-
     return Cylinder3D;
 });
 

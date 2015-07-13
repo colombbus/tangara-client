@@ -289,7 +289,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
                 if (typeof this.spriteCollisionCommands === 'undefined') {
                     this.spriteCollisionCommands = new CommandManager();
                 }
-                this.spriteCollisionCommands.addCommand(command, param.getgObject().getId());
+                this.spriteCollisionCommands.addCommand(command, param.getGObject().getId());
             }
             if (!this.p.hasCollisionCommands) {
                 this.p.hasCollisionCommands = true;
@@ -646,8 +646,6 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
             return false;
         }
     };
-
-    TEnvironment.internationalize(Sprite, true);
 
     return Sprite;
 });

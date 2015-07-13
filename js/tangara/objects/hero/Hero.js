@@ -534,7 +534,5 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
         this.gObject.addCollisionCommand(command, object);
     };
 
-    TEnvironment.internationalize(Hero, true);
-
     return Hero;
 });

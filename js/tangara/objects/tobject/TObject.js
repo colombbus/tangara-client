@@ -5,19 +5,14 @@ define(['jquery', 'TRuntime', 'TEnvironment'], function($, TRuntime, TEnvironmen
 
     TObject.prototype.objectName;
     TObject.prototype.className = "TObject";
+    TObject.prototype.objectPath = "tobject";
 
     TObject.prototype.deleteObject = function() {
         TRuntime.removeObject(this);
     };
 
     TObject.prototype.getResource = function(location) {
-        var objectPath = TEnvironment.getObjectPath(this.className);
-        var path = this.className.toLowerCase();
-
-        if (typeof objectPath !== 'undefined') {
-            path = objectPath;
-        }
-        return TEnvironment.getObjectsUrl() + "/" + path + "/resources/" + location;
+        return TEnvironment.getObjectsUrl() + "/" + this.objectPath + "/resources/" + location;
     };
 
     TObject.prototype.getMessage = function(code) {

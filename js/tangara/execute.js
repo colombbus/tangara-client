@@ -13,6 +13,7 @@ require.config({
         "TLearnProject": "data/TLearnProject",
         "TEnvironment": "env/TEnvironment",
         "TLink": "env/TLink",
+        "TI18n": "env/TI18n",
         "TInterpreter": "run/TInterpreter",
         "TParser": "run/Tparser",
         "TRuntime": "run/TRuntime",

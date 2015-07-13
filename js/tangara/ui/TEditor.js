@@ -1,4 +1,4 @@
-define(['ui/TComponent', 'jquery', 'ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 'ace/autocomplete', 'TProgram', 'TEnvironment', 'TLink', 'TUI', 'TUtils'], function(TComponent, $, ace, ace_edit_session, ace_range, ace_undo_manager, ace_autocomplete, TProgram, TEnvironment, TLink, TUI, TUtils) {
+define(['ui/TComponent', 'jquery', 'ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 'ace/autocomplete', 'TEnvironment', 'TUI', 'TUtils', 'TRuntime'], function(TComponent, $, ace, ace_edit_session, ace_range, ace_undo_manager, ace_autocomplete, TEnvironment, TUI, TUtils, TRuntime) {
 
     function TEditor(callback) {
         var $editor;
@@ -305,7 +305,7 @@ define(['ui/TComponent', 'jquery', 'ace/ace', 'ace/edit_session', 'ace/range', '
                 }
                 if (result !== null && result.length > 0) {
                     var className = result[1];
-                    var methods = TEnvironment.getTranslatedClassMethods(className);
+                    var methods = TRuntime.getClassTranslatedMethods(className);
                     var methodNames = Object.keys(methods);
                     methodNames = TUtils.sortArray(methodNames);
                     for (var j = 0; j < methodNames.length; j++) {

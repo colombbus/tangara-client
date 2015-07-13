@@ -171,8 +171,6 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
         return this.gObject.countCarriedItems();
     };
 
-    TEnvironment.internationalize(Robot, true);
-
     return Robot;
 });
 

@@ -216,8 +216,6 @@ define(['jquery', 'TEnvironment', 'TObject3D'], function ($, TEnvironment, TObje
         return "Point3D";
     };
 
-    TEnvironment.internationalize(Point3D, true);
-
     return Point3D;
 });
 
