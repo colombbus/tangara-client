@@ -2,10 +2,6 @@ define(['jquery'], function($) {
     var TEnvironment = function() {
         var project;
         var projectAvailable = false;
-        var ready_frame = false;
-        var ready_runtime = false;
-        var ready_environment = false;
-        var ready_callback = null;
         var support3D = null;
 
         this.messages = {};
