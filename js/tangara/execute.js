@@ -28,42 +28,39 @@ require.config({
 });
 
 function load() {
-    require(['jquery', 'TEnvironment', 'TRuntime', 'ui/TCanvas', 'TProject', 'TLink', 'ui/TExecutionLog'], function($, TEnvironment, TRuntime, TCanvas, TProject, TLink, TExecutionLog) {
+    require(['jquery', 'TEnvironment', 'TRuntime', 'ui/TCanvas', 'TProject', 'TLink'], function($, TEnvironment, TRuntime, TCanvas, TProject, TLink) {
         window.console.log("*******************");
         window.console.log("* Loading Environment *");
         window.console.log("*******************");
-        TEnvironment.load();
+        TEnvironment.load(function() {
+            window.console.log("*******************");
+            window.console.log("* Loading Runtime *");
+            window.console.log("*******************");
+            TRuntime.load(function() {
+                var canvas = new TCanvas(function(component) {
+                    $("body").append(component);
+                    $(document).ready(function() {
+                        canvas.displayed();
+                        // trigger resize in order for canvas to update its size (and remove the 5px bottom margin)
+                        $(window).resize();
+                        canvas.showLoading();
+                        var currentProject = new TProject();                        
+                        TLink.setProjectId(init_projectId);
+                        currentProject.init();
+                        TEnvironment.setProject(currentProject);
+                        var statements = TLink.getProgramStatements(init_programName);
+                        TRuntime.setCurrentProgramName(init_programName);
 
-        window.console.log("*******************");
-        window.console.log("* Loading Runtime *");
-        window.console.log("*******************");
-        TRuntime.load(TEnvironment.getLanguage(), TEnvironment.getObjectListUrl());
-
-        var canvas = new TCanvas();
-        var domCanvas = canvas.getElement();
-        $("body").append(domCanvas);
-        TRuntime.setCanvas(canvas);
-        $(document).ready(function() {
-            canvas.displayed();
-            // trigger resize in order for canvas to update its size (and remove the 5px bottom margin)
-            $(window).resize();
-            canvas.showLoading();
-            TEnvironment.frameReady(function() {
-                TLink.setProjectId(init_projectId);
-                currentProject.init();
-                TEnvironment.setProject(currentProject);
-                var statements = TLink.getProgramStatements(init_programName);
-                TRuntime.setCurrentProgramName(init_programName);
-
-                TRuntime.preloadResources(currentProject, function() {
-                    canvas.removeLoading();
-                    TRuntime.executeStatements(statements);
-                }, {progressCallback: function(count, total) {
-                        canvas.setLoadingValue(count, total);
-                    }});
+                        TRuntime.preloadResources(currentProject, function() {
+                            canvas.removeLoading();
+                            TRuntime.executeStatements(statements);
+                        }, {progressCallback: function(count, total) {
+                                canvas.setLoadingValue(count, total);
+                            }});
+                    });
+                });
             });
         });
-        var currentProject = new TProject();
     });
 }
 
