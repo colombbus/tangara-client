@@ -1,4 +1,4 @@
-define(['TEnvironment'], function(TEnvironment) {
+define(['TEnvironment', 'jquery'], function(TEnvironment, $) {
     var TUtils = function() {
         var QUOTE_DELIMITER = '#';
         var defaultDiacriticsRemovalap = [
@@ -552,13 +552,8 @@ define(['TEnvironment'], function(TEnvironment) {
         };
 
         this.extend = function(dest, source) {
-            if (!source) {
-                return dest;
-            }
-            for (var prop in source) {
-                dest[prop] = source[prop];
-            }
-            return dest;
+            // just use jQuery extend
+            return $.extend(dest, source);
         };
 
     };
