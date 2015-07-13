@@ -82,24 +82,22 @@ function load() {
             window.console.log("*******************");
             window.console.log("* Loading Runtime *");
             window.console.log("*******************");
-            TRuntime.load();
-            
-        });
-
-
-        window.console.log("***************************");
-        window.console.log("* Building User Interface *");
-        window.console.log("***************************");
-        frame = new TFrame(function(component) {
-            $("body").append(component);
-            window.console.log("*******************");
-            window.console.log("* Initiating link *");
-            window.console.log("*******************");
-            var currentProject = new TProject();
-            currentProject.init();
-            TEnvironment.setProject(currentProject);
-            $(document).ready(function() {
-                frame.displayed();
+            TRuntime.load(function() {
+                window.console.log("***************************");
+                window.console.log("* Building User Interface *");
+                window.console.log("***************************");
+                frame = new TFrame(function(component) {
+                    $("body").append(component);
+                    window.console.log("*******************");
+                    window.console.log("* Initiating link *");
+                    window.console.log("*******************");
+                    var currentProject = new TProject();
+                    currentProject.init();
+                    TEnvironment.setProject(currentProject);
+                    $(document).ready(function() {
+                        frame.displayed();
+                    });
+                });
             });
         });
     });

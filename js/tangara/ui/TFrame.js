@@ -14,7 +14,7 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui
                 if (i > -1) {
                     waiting.splice(i, 1);
                 }
-                if (waiting.length == 0) {
+                if (waiting.length === 0) {
                     // Set UI
                     TUI.setFrame(frame);
                     TUI.setCanvas(canvas);
@@ -28,7 +28,7 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui
                     TRuntime.setLog(log);
 
                     if (typeof callback !== 'undefined') {
-                        callback.call(this, component)
+                        callback.call(this, component);
                     }
                 }
             };
@@ -73,14 +73,8 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui
             log.displayed();
             $('.split-pane').splitPane();
             initialized = true;
-            this.ready();
-        };
-
-        this.ready = function() {
-            TEnvironment.frameReady(function() {
-                $loading.fadeOut(1000, function() {
-                    $(this).remove();
-                });
+            $loading.fadeOut(1000, function() {
+                $(this).remove();
             });
         };
 

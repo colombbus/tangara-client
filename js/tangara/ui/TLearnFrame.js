@@ -53,13 +53,12 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
                 component.find("#TLearnCanvas").replaceWith(c);
                 editor = new TLearnEditor(function(d) {
                     component.find("#TLearnEditor").replaceWith(d);
-                    // Plug Runtime with Canvas and Teacher with frame
-                    TRuntime.setCanvas(canvas);
+                    // Plug Teacher with frame
                     Teacher.setFrame(frame);
                     if (typeof callback !== 'undefined') {
                         callback.call(self, component);
                     }
-                })
+                });
             });
 
         });
@@ -181,11 +180,8 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
                 hideMessage();
             }
             console.log("loading step #" + number);
-            window.console.log("clearing TRuntime");
             TRuntime.clear();
-            window.console.log("clearing Editor");
             editor.clear();
-            window.console.log("ok");
 
             startStatements = false;
             checkStatements = false;
@@ -213,11 +209,11 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
                         startStatements = TParser.parse(data);
                         TRuntime.executeStatements(startStatements);
                     } catch (e) {
-                        console.log("Error parsing start script\n" + e);
+                        console.error("Error parsing start script\n" + e);
                     }
                 },
                 error: function(data, status, error) {
-                    window.console.log("Error loading start script for step #" + number);
+                    window.console.error("Error loading start script for step #" + number);
                 }
             });
 
@@ -231,7 +227,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
                     try {
                         checkStatements = TParser.parse(data);
                     } catch (e) {
-                        console.log("Error parsing check script\n" + e);
+                        console.error("Error parsing check script\n" + e);
                     }
                 },
                 error: function(data, status, error) {
@@ -255,7 +251,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
                     lessonHTML = data;
                 },
                 error: function(data, status, error) {
-                    window.console.log("Error loading lesson HTML for step #" + number);
+                    window.console.error("Error loading lesson HTML for step #" + number);
                     lessonHTML = "";
                 }
             });

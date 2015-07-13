@@ -45,7 +45,6 @@ define(['jquery'], function($) {
                             } else {
                                 window.console.log("found no messages for language: " + language);
                             }
-                            self.ready();
                             if (typeof callback !== 'undefined') {
                                 callback.call(self);
                             }
@@ -124,28 +123,6 @@ define(['jquery'], function($) {
 
         this.isProjectAvailable = function() {
             return projectAvailable;
-        };
-
-        this.frameReady = function(callback) {
-            ready_frame = true;
-            ready_callback = callback;
-            this.checkReady();
-        };
-
-        this.runtimeReady = function() {
-            ready_runtime = true;
-            this.checkReady();
-        };
-
-        this.ready = function() {
-            ready_environment = true;
-            this.checkReady();
-        };
-
-        this.checkReady = function() {
-            if (ready_frame && ready_runtime && ready_environment) {
-                ready_callback();
-            }
         };
 
         this.getConfig = function(value) {

@@ -45,34 +45,28 @@ function load() {
         window.console.log("*******************");
         window.console.log("* Loading Environment *");
         window.console.log("*******************");
-        TEnvironment.load();
-
-        window.console.log("*******************");
-        window.console.log("* Loading Runtime *");
-        window.console.log("*******************");
-        TRuntime.load(TEnvironment.getLanguage(), TEnvironment.getObjectListUrl());
-
-        window.console.log("***************************");
-        window.console.log("* Building User Interface *");
-        window.console.log("***************************");
-        frame = new TLearnFrame(function(component) {
-            $("body").append(component);
+        TEnvironment.load(function() {
             window.console.log("*******************");
-            window.console.log("* Initiating link *");
+            window.console.log("* Loading Runtime *");
             window.console.log("*******************");
-            var currentProject = new TProject();
-            TEnvironment.setProject(currentProject);
-            $(document).ready(function() {
-                frame.displayed();
-                // trigger resize in order for canvas to update its size (and remove the 5px bottom margin)
-                $(window).resize();
-                TEnvironment.frameReady(function() {
-                    try {
+            TRuntime.load(function() {
+                window.console.log("***************************");
+                window.console.log("* Building User Interface *");
+                window.console.log("***************************");
+                frame = new TLearnFrame(function(component) {
+                    $("body").append(component);
+                    window.console.log("*******************");
+                    window.console.log("* Initiating link *");
+                    window.console.log("*******************");
+                    var currentProject = new TProject();
+                    TEnvironment.setProject(currentProject);
+                    $(document).ready(function() {
+                        frame.displayed();
+                        // trigger resize in order for canvas to update its size (and remove the 5px bottom margin)
+                        $(window).resize();
                         frame.init();
-                    } catch (e)
-                    {
-                    }
-                    frame.loadStep(1);
+                        frame.loadStep(1);
+                    });
                 });
             });
         });

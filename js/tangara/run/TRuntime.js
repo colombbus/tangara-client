@@ -15,7 +15,7 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
         var baseClasses = ["TObject", "TGraphicalObject"];
         var baseClasses3D = ["TObject3D"];
 
-        this.load = function() {
+        this.load = function(callback) {
             // create runtime frame
             initRuntimeFrame();
             // link interpreter to runtimeFrame
@@ -40,7 +40,9 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
                             // Ask parser to protect translated names
                             TParser.protectIdentifiers(translatedNames.concat(baseNames));
                             window.console.log("**** TRUNTIME INITIALIZED ****");
-                            self.ready();
+                            if (typeof callback !== "undefined") {
+                                callback.call(self);
+                            }
                         });
                     }
                 });
@@ -144,11 +146,6 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             });
         };
         
-
-        this.ready = function() {
-            TEnvironment.runtimeReady();
-        };
-
         this.getRuntimeFrame = function() {
             return runtimeFrame;
         };
