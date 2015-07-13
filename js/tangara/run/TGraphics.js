@@ -233,16 +233,8 @@ define(['jquery', 'quintus'], function($, Quintus) {
             }
         };
 
-        this.preloadResources = function(project, callback, options) {
-            var resources = project.getResourcesNames();
-            if (resources.length > 0) {
-                for (var i = 0; i < resources.length; i++) {
-                    Q.preload(project.getResourceLocation(resources[i]));
-                }
-                Q.preload(callback, options);
-            } else {
-                callback.apply(this);
-            }
+        this.preload = function(resources, progress, callback) {
+            Q.load(resources, callback, {progressCallback: progress});
         };
 
         this.load = function(resources, callback) {

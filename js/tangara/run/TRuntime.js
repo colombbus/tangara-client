@@ -392,11 +392,6 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             return currentProgramName;
         };
 
-        // TODO: find the right place for this function
-        this.preloadResources = function(project, callback, options) {
-            graphics.preloadResources(project, callback, options);
-        };
-
         this.getGraphics = function() {
             return graphics;
         };

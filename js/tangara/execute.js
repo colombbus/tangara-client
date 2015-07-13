@@ -51,12 +51,12 @@ function load() {
                         var statements = TLink.getProgramStatements(init_programName);
                         TRuntime.setCurrentProgramName(init_programName);
 
-                        TRuntime.preloadResources(currentProject, function() {
+                        currentProject.preloadResources(function(count, total) {
+                                canvas.setLoadingValue(count, total);
+                            }, function() {
                             canvas.removeLoading();
                             TRuntime.executeStatements(statements);
-                        }, {progressCallback: function(count, total) {
-                                canvas.setLoadingValue(count, total);
-                            }});
+                        });
                     });
                 });
             });

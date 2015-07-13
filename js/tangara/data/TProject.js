@@ -1,4 +1,4 @@
-define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError'], function(TLink, TProgram, TEnvironment, TUtils, TError) {
+define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], function(TLink, TProgram, TEnvironment, TUtils, TError, TRuntime) {
     function TProject() {
 
         var name;
@@ -394,14 +394,31 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError'], function(TLink
             return newName;
         };
 
-        function updateEditedPrograms() {
+        var updateEditedPrograms = function() {
             editedProgramsNames = Object.keys(editedPrograms);
             editedProgramsNames = TUtils.sortArray(editedProgramsNames);
             editedProgramsArray = [];
             for (var i = 0; i < editedProgramsNames.length; i++) {
                 editedProgramsArray.push(editedPrograms[editedProgramsNames[i]]);
             }
-        }
+        };
+        
+        this.preloadResources = function(progress, callback) {
+            // TODO: handle preload of other resource types
+            var graphicalResources = [];
+            for (var name in resources) {
+                var resource = resources[name];
+                if (resource.type === "image") {
+                    graphicalResources.push(this.getResourceLocation(name));
+                }
+            }
+            var g = TRuntime.getGraphics();
+            if (graphicalResources.length>0) {
+                g.preload(graphicalResources, progress, callback);
+            } else {
+                callback.call(this);
+            }
+        };
 
     }
 
