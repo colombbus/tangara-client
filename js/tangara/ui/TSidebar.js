@@ -79,7 +79,7 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TProgram', 'TError', 'ui/TViewe
                     if (typeof callback !== 'undefined') {
                         callback.call(self, component);
                     }
-                })
+                });
             });
         });
 
