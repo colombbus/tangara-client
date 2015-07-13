@@ -1,7 +1,6 @@
 define(['ui/TComponent', 'TEnvironment', 'TUI', 'jquery'], function(TComponent, TEnvironment, TUI, $) {
     function TTextEditor(callback) {
         var $name, $textArea, $main;
-        var appended = false;
         var resourceName = '';
 
         TComponent.call(this, "TTextEditor.html", function(component) {
@@ -26,6 +25,7 @@ define(['ui/TComponent', 'TEnvironment', 'TUI', 'jquery'], function(TComponent, 
             $main = component;
             $textArea = component.find("#ttexteditor-text");
             $name = component.find(".tviewer-text-name");
+            $main.hide();
 
             if (typeof callback !== 'undefined') {
                 callback.call(this, component);
