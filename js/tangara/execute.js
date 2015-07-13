@@ -42,8 +42,6 @@ function load() {
         var domCanvas = canvas.getElement();
         $("body").append(domCanvas);
         TRuntime.setCanvas(canvas);
-        var log = new TExecutionLog();
-        TRuntime.setLog(log);
         $(document).ready(function() {
             canvas.displayed();
             // trigger resize in order for canvas to update its size (and remove the 5px bottom margin)
