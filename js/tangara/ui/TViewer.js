@@ -371,7 +371,8 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPain
         };
 
         this.create = function() {
-            append();
+            $(window).on('keydown', keyHandler);
+            $main.fadeIn();
             $name.val("");
             $width.val("");
             $height.val("");
