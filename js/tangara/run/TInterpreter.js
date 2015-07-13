@@ -30,7 +30,6 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
         /* Lifecycle management */
 
         var clear = function() {
-            window.console.debug("entering local clear");
             definedFunctions = {};
             localVariables = [];
             currentVariables = [];
@@ -42,11 +41,9 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
             stackPointer = [0];
             executionLevel = 0;
             callers = [];
-            window.console.debug("exiting clear");
         };
 
         this.clear = function() {
-            window.console.debug("entering clear");
             clear();
         };
 
