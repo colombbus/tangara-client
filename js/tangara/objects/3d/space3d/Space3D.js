@@ -1,5 +1,25 @@
 define(['jquery', 'babylon', 'TEnvironment', 'TUtils', 'TObject', 'CommandManager'], function($, babylon, TEnvironment, TUtils, TObject, CommandManager) {
     var Space3D = function() {
+        if (!initialized) {
+            canvas2d = document.getElementById("tcanvas");
+            canvas = document.getElementById("tcanvas3d");
+            $canvas = $(canvas);
+            engine = new BABYLON.Engine(canvas, true);
+            engine.runRenderLoop(function() {
+                for (var i = 0; i < scenes.length; i++) {
+                    scenes[i].render();
+                }
+            });
+
+            window.addEventListener("resize", function() {
+                engine.resize();
+            });
+
+            // hide canvas at the beginning
+            $canvas.hide();
+            
+            initialized = true;
+        }
         this.scene = new BABYLON.Scene(engine);
         this.camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -10), this.scene);
         this.camera.setTarget(BABYLON.Vector3.Zero());
@@ -20,12 +40,9 @@ define(['jquery', 'babylon', 'TEnvironment', 'TUtils', 'TObject', 'CommandManage
         canvas2d.addEventListener(eventPrefix + "move", canvasToCanvas3DTransferHandler);
     };
 
-    var canvas2d = document.getElementById("tcanvas");
-    var $domcanvas2d = $(canvas2d);
+    var initialized = false;
 
-    var canvas = document.getElementById("tcanvas3d");
-    var $canvas = $(canvas);
-    var engine = new BABYLON.Engine(canvas, true);
+    var canvas2d, canvas, $canvas, engine;
     var scenes = [];
 
     /*
@@ -89,18 +106,6 @@ define(['jquery', 'babylon', 'TEnvironment', 'TUtils', 'TObject', 'CommandManage
         var e = simulate(canvas, event.type, {pointerX: event.clientX, pointerY: event.clientY});
     };
 
-    engine.runRenderLoop(function() {
-        for (var i = 0; i < scenes.length; i++) {
-            scenes[i].render();
-        }
-    });
-
-    window.addEventListener("resize", function() {
-        engine.resize();
-    });
-
-    // hide canvas at the beginning
-    $canvas.hide();
 
     Space3D.prototype = Object.create(TObject.prototype);
     Space3D.prototype.constructor = Space3D;
