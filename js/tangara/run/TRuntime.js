@@ -313,8 +313,10 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             }
         };
 
-        this.addGraphicalObject = function(object) {
-            graphics.insertObject(object.getGObject());
+        this.addGraphicalObject = function(object, actually) {
+        	if (typeof actually ==='undefined' || actually) {
+        		graphics.insertObject(object.getGObject());
+        	}
             tGraphicalObjects.push(object);
             // initialize object with current state
             object.freeze(frozen);
