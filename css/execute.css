@@ -53,3 +53,13 @@ body {
     text-align:center;
     color:#A7A7A7;
 }
+
+#tcanvas3d {
+    background-color:transparent;
+    width:100%;
+    height:100%;
+    position:absolute;
+    overflow:hidden;
+    top:0px;
+    left:0px;
+}
