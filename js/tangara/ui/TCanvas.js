@@ -19,7 +19,6 @@ define(['jquery', 'TRuntime', 'ui/TComponent'], function($, TRuntime, TComponent
             }
         });
 
-        var qStage;
         var designMouseHandler = function(event) {
             var x = event.clientX + $main.scrollLeft();
             var y = event.clientY + $main.scrollTop();
