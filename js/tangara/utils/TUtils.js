@@ -272,7 +272,7 @@ define(['TEnvironment', 'jquery'], function(TEnvironment, $) {
             return value;
         };
         this.checkArray = function(value) {
-            return (value instanceof Array);
+            return (Array.isArray(value));
         };
         this.getArray = function(value) {
             if (!this.checkArray(value)) {
