@@ -25,6 +25,9 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TProgram', 'TError', 'ui/TViewe
             });
             var $sidebarUploadButton = component.find("#tsidebar-upload-button");
             $sidebarUploadButton.append(TEnvironment.getMessage("resource_upload_files"));
+            $sidebarUploadButton.click(function(e) {
+                $("#tsidebar-upload-input").click();
+            });
             var emptyMediaP = component.find("#tsidebar-resources-empty p");
             emptyMediaP.append(TEnvironment.getMessage("empty-media-library"));
 
