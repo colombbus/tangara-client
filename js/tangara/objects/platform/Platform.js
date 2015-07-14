@@ -167,7 +167,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
         },
         drawableTile: function(tileNum) {
         	if (!this.p.drawBaseTile) {
-        		return tileNum > lowerTile;
+        		return tileNum > 0;
         	}
         	return true;
         },
