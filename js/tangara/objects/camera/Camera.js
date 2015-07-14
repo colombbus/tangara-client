@@ -23,9 +23,10 @@ define(['jquery', 'TUtils', 'TRuntime', 'TObject'], function($, TUtils, TRuntime
     };
     
     Camera.prototype.follow = function() {
-    	this.activate();
-    	var s = getStage();
-    	s.follow(this.followedObject.getGObject(), {x:this.followX, y:this.followY});
+    	if (this.activated) {
+	    	var s = getStage();
+	    	s.follow(this.followedObject.getGObject(), {x:this.followX, y:this.followY});
+    	}
     };
     
     Camera.prototype.stopFollow = function() {
@@ -38,6 +39,7 @@ define(['jquery', 'TUtils', 'TRuntime', 'TObject'], function($, TUtils, TRuntime
     Camera.prototype._follow = function(object) {
     	object = TUtils.getObject(object);
     	this.followedObject = object;
+    	this.activate();
     	this.follow();
     };
 
@@ -60,6 +62,7 @@ define(['jquery', 'TUtils', 'TRuntime', 'TObject'], function($, TUtils, TRuntime
     Camera.prototype._moveTo = function(x,y) {
     	x = TUtils.getInteger(x);
     	y = TUtils.getInteger(y);
+    	this.activate();
     	var s = getStage();
     	this.stopFollow();
     	s.moveTo(x,y);
@@ -68,6 +71,7 @@ define(['jquery', 'TUtils', 'TRuntime', 'TObject'], function($, TUtils, TRuntime
     Camera.prototype._centerOn = function(x,y) {
     	x = TUtils.getInteger(x);
     	y = TUtils.getInteger(y);
+    	this.activate();
     	var s = getStage();
     	this.stopFollow();
     	s.centerOn(x,y);
