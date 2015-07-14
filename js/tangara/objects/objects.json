@@ -311,7 +311,7 @@
             "es": "teacher",
             "en": "teacher"
         },
-        "parents": true,
+        "parents": false,
         "instance": true
     },
     "Platform": {
@@ -322,5 +322,15 @@
     		"en": "TBD"
     	},
     	"parents": true
+    },
+    "Camera": {
+        "path": "camera",
+        "translations": {
+            "fr": "caméra",
+            "es": "TBD",
+            "en": "camera"
+        },
+        "parents": false,
+        "instance": true
     }
 }
