@@ -60,10 +60,18 @@ define(['jquery', 'quintus'], function($, Quintus) {
                 this.regrid(obj, obj.stage !== this);
             }
 
-            var grid = obj.grid, gridCell, col;
             if (typeof skip === 'undefined') {
                 skip = 0;
             }
+
+            col = this._collideCollisionLayer(obj,collisionMask);
+            if (col) {
+            	skip--;
+            	if (skip<0) {
+            		return col;
+            	}
+            }
+            var grid = obj.grid, gridCell, col;
 
             for (var y = grid.Y1; y <= grid.Y2; y++) {
                 if (this.grid[y]) {
@@ -79,6 +87,14 @@ define(['jquery', 'quintus'], function($, Quintus) {
                 }
             }
             return false;
+        };
+        
+        // Tweak Quintus to be able to remove a collisionlayer
+        Q.Stage.prototype.removeCollisionLayer = function(layer) {
+        	var index = this._collisionLayers.indexOf(layer); 
+        	if (index !== -1) {
+        		this._collisionLayers.splice(index, 1);
+        	}
         };
 
         // Tweak Quintus to be able to look for sprite with highest id
@@ -225,7 +241,7 @@ define(['jquery', 'quintus'], function($, Quintus) {
             if (Q.loop) {
                 Q.pauseGame();
             }
-        }
+        };
 
         this.unpause = function() {
             if (!Q.loop) {
