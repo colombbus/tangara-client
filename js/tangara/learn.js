@@ -19,7 +19,7 @@ require.config({
         "TLink": "env/TLink",
         "TI18n": "env/TI18n",
         "TInterpreter": "run/TInterpreter",
-        "TParser": "run/Tparser",
+        "TParser": "run/TParser",
         "TRuntime": "run/TRuntime",
         "TGraphics": "run/TGraphics",
         "TUI": "ui/TUI",
