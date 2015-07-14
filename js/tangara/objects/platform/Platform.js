@@ -215,7 +215,10 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
 	    	var asset = TEnvironment.getProjectResource(imageName);
 	    	var self = this;
 	    	this.resources.add(imageName, asset, function() {
-	        	self.buildSheet();
+	    		if (self.built) {
+	    			// build sheet only if object already built
+	    			self.buildSheet();
+	    		}
 	    	});
         } catch (e) {
             throw new Error(this.getMessage("file not found", name));
@@ -229,8 +232,11 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
 	    	var asset = TEnvironment.getProjectResource(imageName);
 	    	var self = this;
 	    	this.resources.add(imageName, asset, function() {
-	        	self.buildSheet();
 	        	self.gObject.drawBaseTile(true);
+	    		if (self.built) {
+	    			// build sheet only if object already built
+		        	self.buildSheet();
+	    		}
 	    	});
         } catch (e) {
             throw new Error(this.getMessage("file not found", name));
@@ -321,6 +327,8 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
     
     Platform.prototype._build = function() {
     	this.gObject.build();
+    	this.buildSheet();
+    	this.built = true;
     };
     
     Platform.prototype.buildSheet = function() {
@@ -359,16 +367,12 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
         newImage.onload = function() {
         	//self.sheet = newImage;
         	self.gObject.sheet(newImage, {'tileW':tileW, 'tileH':tileH});
-            if (!self.gObject.p.initialized) {
-                self.gObject.initialized();
-            }
         };
         // start loading
         newImage.src = canvas.toDataURL();
     };
 
     Platform.prototype.buildStructure = function() {
-    	window.console.debug(this.rows);
     	this.gObject.setStructure(this.rows);
     };
     
