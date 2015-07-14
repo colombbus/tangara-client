@@ -112,7 +112,20 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
         },
         blockReady: function() {
             this.p.waitingForBlocks--;
-        }
+        },
+        setLocation: function(x, y) {
+            this._super(x, y);
+            this.perform(function() {
+            	this.p.vy=0;
+            }, {});
+        },
+        setCenterLocation: function(x, y) {
+            this._super(x, y);
+            this.perform(function() {
+            	this.p.vy=0;
+            }, {});
+        },
+        
     });
 
     Walker.prototype._addBlock = function(block) {
