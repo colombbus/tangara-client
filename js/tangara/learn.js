@@ -12,7 +12,7 @@ require.config({
         "TObject3D": 'objects/tobject3d/TObject3D',
         "TGraphicalObject": 'objects/tgraphicalobject/TGraphicalObject',
         "jquery-ui": '../libs/jquery.ui-1.11.2',
-        "TProject": "data/Tproject",
+        "TProject": "data/TProject",
         "TProgram": "data/TProgram",
         "TLearnProject": "data/TLearnProject",
         "TEnvironment": "env/TEnvironment",

@@ -8,7 +8,7 @@ require.config({
         "TObject3D": 'objects/tobject3d/TObject3D',
         "TGraphicalObject": 'objects/tgraphicalobject/TGraphicalObject',
         "babylon": '../libs/babylonjs/babylon.1.14',
-        "TProject": "data/Tproject",
+        "TProject": "data/TProject",
         "TProgram": "data/TProgram",
         "TLearnProject": "data/TLearnProject",
         "TEnvironment": "env/TEnvironment",
