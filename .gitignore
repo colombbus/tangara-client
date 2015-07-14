@@ -17,3 +17,4 @@ bin-release/
 /nbproject/
 /node_modules/
 /resources/config.json
+.project
