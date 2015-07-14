@@ -20,7 +20,7 @@ define(['TParser', 'TLink', 'TEnvironment', 'TUtils'], function(TParser, TLink, 
             do {
                 index++;
                 name = TEnvironment.getMessage('program-new', index);
-            } while (used.indexOf(name) > -1)
+            } while (used.indexOf(name) > -1);
             window.console.log("New name : " + name);
             newProgram = true;
         }
