@@ -23,7 +23,7 @@ define(['TRuntime'], function(TRuntime) {
         if (typeof update === 'undefined') {
             update = false;
         }
-        return {state: state, resource: resource, update: update, delete: false};
+        return {'state': state, 'resource': resource, 'update': update, 'delete': false};
     };
 
     colorMatch = function(color, red, green, blue) {
