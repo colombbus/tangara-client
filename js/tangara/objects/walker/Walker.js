@@ -30,7 +30,6 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
                     // cannot move upward or downward when walker may fall
                     this.p.direction = Sprite.DIRECTION_NONE;
                 }
-                this._super(dt);
                 if (this.p.mayFall) {
                     if (this.p.jumpAvailable > 0)
                         this.p.jumpAvailable--;
@@ -43,9 +42,13 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
                     } else {
                         this.p.vy += this.p.gravity * dt;
                     }
-                    this.p.y += this.p.vy * dt;
-                    // no destinationY other than y can be set
-                    this.p.destinationY = this.p.y;
+                    // TODO: optimize this
+                    this.p.destinationY = this.p.y + this.p.vy * dt;
+                }
+                this._super(dt);
+                if (this.p.mayFall) {
+                    // actually set location to destination in order to fall
+                	this.p.y = this.p.destinationY;
                 }
                 // Look for blocks or platforms
                 var skip = 0;
