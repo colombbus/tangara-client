@@ -47,22 +47,22 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
                     // no destinationY other than y can be set
                     this.p.destinationY = this.p.y;
                 }
-                // Look for blocks
+                // Look for blocks or platforms
                 var skip = 0;
-                var collided = this.stage.TsearchSkip(this, TGraphicalObject.TYPE_BLOCK, skip);
+                var collided = this.stage.TsearchSkip(this, TGraphicalObject.TYPE_BLOCK|TGraphicalObject.TYPE_PLATFORM, skip);
                 // Max 2 overlapping blocks are searched
                 while (collided !== false && skip < 2) {
                     this.checkBlocks(collided);
                     skip++;
-                    collided = this.stage.TsearchSkip(this, TGraphicalObject.TYPE_BLOCK, skip);
+                    collided = this.stage.TsearchSkip(this, TGraphicalObject.TYPE_BLOCK|TGraphicalObject.TYPE_PLATFORM, skip);
                 }
             }
         },
         checkBlocks: function(col) {
             var object = col.obj;
             var id = object.getId();
-            if (object.p.type === TGraphicalObject.TYPE_BLOCK && this.blocks.indexOf(id) > -1 && !object.checkTransparency(this, col)) {
-                // block encountered
+            if ((object.p.type === TGraphicalObject.TYPE_PLATFORM && this.blocks.indexOf(id) > -1) || (object.p.type === TGraphicalObject.TYPE_BLOCK && this.blocks.indexOf(id) > -1 && !object.checkTransparency(this, col))) {
+            	// block encountered
                 this.p.x -= col.separate[0];
                 this.p.y -= col.separate[1];
                 if (this.p.mayFall) {
@@ -114,14 +114,21 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
 
     Walker.prototype._addBlock = function(block) {
         block = TUtils.getObject(block);
-        this.gObject.addBlock(block);
         var self = this;
         if (!block.isReady(function() {
+            self.gObject.addBlock(block);
             self.blockReady();
         })) {
             // wait for block to be loaded
             this.gObject.waitForBlock();
+        } else {
+        	// block is ready: add it
+            self.gObject.addBlock(block);
         }
+    };
+
+    Walker.prototype._addPlatform = function(platform) {
+    	this._addBlock(platform);
     };
 
     Walker.prototype._mayFall = function(value) {

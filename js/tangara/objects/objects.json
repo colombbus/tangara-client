@@ -313,5 +313,14 @@
         },
         "parents": true,
         "instance": true
+    },
+    "Platform": {
+    	"path": "platform",
+    	"translations": {
+    		"fr": "Plateforme",
+    		"es": "TBD",
+    		"en": "TBD"
+    	},
+    	"parents": true
     }
 }

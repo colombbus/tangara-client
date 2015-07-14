@@ -19,6 +19,7 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function(TObject, TUti
     TGraphicalObject.TYPE_INPUT = 0x2000;
     TGraphicalObject.TYPE_INACTIVE = 0x4000;
     TGraphicalObject.TYPE_ITEM = 0x8000;
+    TGraphicalObject.TYPE_PLATFORM = 0x0001;
 
     var graphics = TRuntime.getGraphics();
 
@@ -144,7 +145,7 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function(TObject, TUti
 
     TGraphicalObject.prototype._setAngle = function(angle) {
         this.gObject.setAngle(angle);
-    }
+    };
 
     TGraphicalObject.prototype._rotate = function(angle) {
         //TODO: parseFloat
