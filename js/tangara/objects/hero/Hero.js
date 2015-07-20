@@ -1,4 +1,11 @@
 define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'objects/walker/Walker', 'TUtils'], function($, TEnvironment, TGraphicalObject, Sprite, Walker, TUtils) {
+    /**
+     * Defines Hero, inhetired from Walker. Gets its name in parameter.
+     * It has predefined appearances, is animated when it moves,
+     * can walk in a Scene and catch objects.
+     * @param {String} name
+     * @returns {Hero}
+     */
     var Hero = function(name) {
         Walker.call(this);
         if (typeof (name) === 'undefined') {
@@ -320,6 +327,11 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
 
     });
 
+    /**
+     * Creates a new hero, named by parameter.
+     * Add it in resource.
+     * @param {String} name
+     */
     Hero.prototype._setCharacter = function(name) {
         name = TUtils.getString(name);
         name = this.getMessage(name);
@@ -386,6 +398,13 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
 
     };
 
+    /**
+     * Checks if set is in predefined strings. Returns a corresponding string
+     * if found, else returns "default".
+     * Is used to find correct image to add / remove.
+     * @param {String} set
+     * @returns {String}
+     */
     Hero.prototype.checkSet = function(set) {
         var specialSet = false;
         if (typeof set !== 'undefined') {
@@ -405,6 +424,11 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
         return specialSet;
     };
 
+    /**
+     * Add a customized image for the Hero. Removes defaut asset if existing.
+     * @param {String} name
+     * @param {String} set
+     */
     Hero.prototype._addImage = function(name, set) {
         var specialSet = this.checkSet(set);
         var currentLocation = false;
@@ -464,6 +488,11 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
         this.gObject.startAutoAsset();
     };
 
+    /**
+     * Removes a customized image.
+     * @param {String} name
+     * @param {String} set
+     */
     Hero.prototype._removeImage = function(name, set) {
         var specialSet = this.checkSet(set);
         var asset = this.removeImage(name, set);
@@ -486,6 +515,10 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
         }
     };
 
+    /**
+     * Removes a complete set of images.
+     * @param {String} name
+     */
     Hero.prototype._removeImageSet = function(name) {
         var specialSet = this.checkSet(name);
         Sprite.prototype._removeImageSet.call(this, name);
@@ -507,26 +540,47 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
             this.gObject.computeDts();
         }
     };
-
+    
+    /**
+     * Set the Movement Duration to the value entered in parameter
+     * @param {Number} value
+     */
     Hero.prototype._setMovementDuration = function(value) {
         value = TUtils.getInteger(value);
         this.gObject.setMovementDuration(value / 1000);
     };
 
+    /**
+     * Set the Pause Duration to the value entered in parameter
+     * @param {Number} value
+     */
     Hero.prototype._setPauseDuration = function(value) {
         value = TUtils.getInteger(value);
         this.gObject.setPauseDuration(value / 1000);
     };
 
+    /**
+     * Associate a Scene to the Hero
+     * @param {Scene} object
+     */
     Hero.prototype._addScene = function(object) {
         this._addBlock(object);
     };
 
+    /**
+     * Let the Hero catch the object entered in parameter
+     * @param {Object} object
+     */
     Hero.prototype._mayCatch = function(object) {
         object = TUtils.getObject(object);
         this.gObject.mayCatch(object);
     };
 
+    /**
+     * Execute command if Hero catch the object
+     * @param {Object} object
+     * @param {String} command
+     */
     Hero.prototype._ifCatch = function(object, command) {
         object = TUtils.getObject(object);
         command = TUtils.getString(command);
