@@ -1,4 +1,10 @@
 define(['jquery'], function($) {
+     /**
+     * TEnvironment defines the environment variables (language, project,
+     * and project's availability), 
+     * @class
+     * @returns {TEnvironment}
+     */
     var TEnvironment = function() {
         var project;
         var projectAvailable = false;
@@ -13,6 +19,10 @@ define(['jquery'], function($) {
         this.config = {"debug": false, "backend-path": "/tangara-ui/web/app.php/"};
         this.debug;
 
+        /**
+         * Loads environment (config, messages), and calls callback if existing
+         * @param {Function} callback
+         */
         this.load = function(callback) {
             window.console.log("*** Loading Tangara Environment ***");
             window.console.log("* Loading config");
@@ -51,18 +61,35 @@ define(['jquery'], function($) {
             });
         };
 
+        /**
+         * Get the base URL
+         * @returns {String}
+         */
         this.getBaseUrl = function() {
             return window.location.protocol + "//" + window.location.host + window.location.pathname.split("/").slice(0, -1).join("/");
         };
 
+        /**
+         * Get the URL of objects
+         * @returns {String}
+         */
         this.getObjectsUrl = function() {
             return this.getBaseUrl() + "/js/tangara/objects";
         };
 
+        /**
+         * Get the URL of the list of objects
+         * @returns {String}
+         */
         this.getObjectListUrl = function() {
             return this.getObjectsUrl() + "/objects.json";
         };
 
+        /**
+         * Get the URL of the module entered in parameter
+         * @param {String} module
+         * @returns {String}
+         */
         this.getBackendUrl = function(module) {
             var url = window.location.protocol + "//" + window.location.host + window.location.pathname.split("/").slice(0, -2).join("/");
             url += this.config['backend-path'] + "assets/";
@@ -72,22 +99,49 @@ define(['jquery'], function($) {
             return url;
         };
 
+        /**
+         * Get language
+         * @returns {String}
+         */
         this.getLanguage = function() {
             return this.language;
         };
 
+        /**
+         * Set language to the one entered in parameter
+         * @param {String} language
+         */
         this.setLanguage = function(language) {
             this.language = language;
         };
 
+        /**
+         * Get URL of the resource entered in parameter
+         * @param {String} name
+         * @returns {String}
+         */
         this.getResource = function(name) {
             return this.getBaseUrl() + "/resources/" + name;
         };
 
+        /**
+         * Get resource entered in parameter of var project
+         * @param {String} name
+         * @returns {unresolved}
+         */
         this.getProjectResource = function(name) {
             return project.getResourceLocation(name);
         };
 
+        /**
+         * Get a message. There are two possibilities :
+         * - A message is associated in the array of messages. If there's more
+         *   than one variable entered in parameters, other variables
+         *   are replaced in the associated message. This message is returned.
+         * - The paramater isn't associated to any message. It is returned.
+         * @param {type} code
+         * @returns {String}
+         */
         this.getMessage = function(code) {
             if (typeof this.messages[code] !== 'undefined') {
                 var message = this.messages[code];
@@ -105,26 +159,51 @@ define(['jquery'], function($) {
             }
         };
 
+        /**
+         * Set the project to the one entered in parameter
+         * @param {String} value
+         */
         this.setProject = function(value) {
             project = value;
         };
 
+        /**
+         * Get the current project
+         * @returns {String}
+         */
         this.getProject = function() {
             return project;
         };
 
+        /**
+         * Set the avaibility of the project
+         * @param {Boolean} value
+         */
         this.setProjectAvailable = function(value) {
             projectAvailable = value;
         };
 
+        /**
+         * Get the avaibility of the project
+         * @returns {Boolean} 
+         */
         this.isProjectAvailable = function() {
             return projectAvailable;
         };
 
+        /**
+         * Get the configuration of the value entered in parameter
+         * @param {String} value
+         * @returns {object}
+         */
         this.getConfig = function(value) {
             return this.config[value];
         };
 
+        /**
+         * Checks the suppport of 3D and write a message in log
+         * @returns {Boolean}
+         */
         this.is3DSupported = function() {
             var canvas, gl;
             if (support3D !== null)
@@ -152,8 +231,6 @@ define(['jquery'], function($) {
             }
             return support3D;
         };
-
-
     };
 
     var environmentInstance = new TEnvironment();
