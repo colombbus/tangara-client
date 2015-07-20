@@ -1,12 +1,12 @@
 define(['jquery', 'TEnvironment', 'TObject3D'], function ($, TEnvironment, TObject3D) {
     /**
-     *  A Point3D is a basic 3D element but a complex object can:</br>
-     *  -set a name</br>
-     *  -be displayed in Space3D as 3 Segment3D </br>
-     *  </br>
-     *  Another Point3D can defined a Point3D
-     *
-     * @return Point3D
+     *  A Point3D is a simple 3D element but a complex object which can:
+     *  - have a name
+     *  - be displayed in Space3D as a 3 Segment3D crossed
+     *  
+     *  Another Point3D can define a Point3D
+     * @class
+     * @returns {Point3D}
      */
     var Point3D = function (x, y, z) {
         this._setCoordinates(x, y, z);
@@ -29,8 +29,7 @@ define(['jquery', 'TEnvironment', 'TObject3D'], function ($, TEnvironment, TObje
 
     /**
      * Get the Point3D's name
-     *
-     * @returns String Name of the Point3D
+     * @returns {String} Name of the Point3D
      */
     Point3D.prototype._getName = function () {
         return this.name;
@@ -38,8 +37,7 @@ define(['jquery', 'TEnvironment', 'TObject3D'], function ($, TEnvironment, TObje
 
     /**
      * Set the Point3D's name
-     * 
-     * @param String Point3D's name
+     * @param {String} Point3D's name
      */
     Point3D.prototype._setName = function (n) {
         this.name = n;
@@ -48,8 +46,7 @@ define(['jquery', 'TEnvironment', 'TObject3D'], function ($, TEnvironment, TObje
 
     /**
      * Get x coordinate of a Point3D
-     * 
-     * @returns Number X coordinate
+     * @returns {Number} X coordinate
      */
     Point3D.prototype._getX = function () {
         return this.pointX;
@@ -57,7 +54,7 @@ define(['jquery', 'TEnvironment', 'TObject3D'], function ($, TEnvironment, TObje
 
     /**
      * Get y coordinate of a Point3D
-     * @returns Number Y coordinate
+     * @returns {Number} Y coordinate
      */
     Point3D.prototype._getY = function () {
         return this.pointY;
@@ -65,7 +62,7 @@ define(['jquery', 'TEnvironment', 'TObject3D'], function ($, TEnvironment, TObje
 
     /**
      * Get z coordinate of a Point3D
-     * @returns Number Z coordinate
+     * @returns {Number} Z coordinate
      */
     Point3D.prototype._getZ = function () {
         return this.pointZ;
@@ -73,8 +70,7 @@ define(['jquery', 'TEnvironment', 'TObject3D'], function ($, TEnvironment, TObje
 
     /**
      * Set X coordinate of a Point3D
-     * @param Number x
-     * @returns undefined
+     * @param {Number} x
      */
     Point3D.prototype._setX = function (x) {
         if (typeof x === 'undefined')
@@ -86,8 +82,7 @@ define(['jquery', 'TEnvironment', 'TObject3D'], function ($, TEnvironment, TObje
 
     /**
      * Set Y coordinate of a Point3D
-     * @param Number y
-     * @returns undefined
+     * @param {Number} y
      */
     Point3D.prototype._setY = function (y) {
         if (typeof y === 'undefined')
@@ -99,8 +94,7 @@ define(['jquery', 'TEnvironment', 'TObject3D'], function ($, TEnvironment, TObje
 
     /**
      * Set Z coordinate of a Point3D
-     * @param Number z coordinate
-     * @returns undefined
+     * @param {Number} z coordinate
      */
     Point3D.prototype._setZ = function (z) {
         if (typeof z === 'undefined')
@@ -112,10 +106,9 @@ define(['jquery', 'TEnvironment', 'TObject3D'], function ($, TEnvironment, TObje
 
     /**
      * Set X, Y, Z coordinates of a Point3D
-     *
-     * @param Number x coordinate
-     * @param Number y coordinate
-     * @param Number z coordinate
+     * @param {Number} x coordinate
+     * @param {Number} y coordinate
+     * @param {Number} z coordinate
      */
     Point3D.prototype._setCoordinates = function (x, y, z) {
         if (typeof x === 'object' || x instanceof Point3D) {
@@ -146,6 +139,7 @@ define(['jquery', 'TEnvironment', 'TObject3D'], function ($, TEnvironment, TObje
             this.zlines.visibility = true;
         }
     };
+    
     /**
      * Hide a Point3D
      */
@@ -161,8 +155,7 @@ define(['jquery', 'TEnvironment', 'TObject3D'], function ($, TEnvironment, TObje
 
     /**
      * Set a Space3D to display a Point3D
-     * @param Space3D scene3d
-     * @returns {undefined}
+     * @param {Space3D} scene3d
      */
     Point3D.prototype._setSpace = function (scene3d) {
         if (typeof scene3d !== 'undefined') {
