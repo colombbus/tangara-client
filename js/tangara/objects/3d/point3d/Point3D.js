@@ -29,7 +29,6 @@ define(['jquery', 'TEnvironment', 'TObject3D'], function ($, TEnvironment, TObje
 
     /**
      * Get the Point3D's name
-     * TODO: display it in Space3D
      *
      * @returns String Name of the Point3D
      */
@@ -39,8 +38,8 @@ define(['jquery', 'TEnvironment', 'TObject3D'], function ($, TEnvironment, TObje
 
     /**
      * Set the Point3D's name
-     * @param String n
-     *
+     * 
+     * @param String Point3D's name
      */
     Point3D.prototype._setName = function (n) {
         this.name = n;
@@ -49,6 +48,7 @@ define(['jquery', 'TEnvironment', 'TObject3D'], function ($, TEnvironment, TObje
 
     /**
      * Get x coordinate of a Point3D
+     * 
      * @returns Number X coordinate
      */
     Point3D.prototype._getX = function () {
