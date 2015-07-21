@@ -1,4 +1,10 @@
 define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'TUtils'], function($, TEnvironment, TGraphicalObject, Sprite, TUtils) {
+    /**
+     * Defines Walker, inhetired from Sprite. Gets its name in parameter.
+     * It can have a gravity, jump and be linked to a Block.
+     * @param {String} name
+     * @returns {Walker}
+     */
     var Walker = function(name) {
         Sprite.call(this, name);
     };
@@ -128,6 +134,11 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
         
     });
 
+    /**
+     * Link a Block given in parameter to the Walker.
+     * Walker can't walk in non-transparent areas of the Block.
+     * @param {String} block
+     */
     Walker.prototype._addBlock = function(block) {
         block = TUtils.getObject(block);
         var self = this;
@@ -143,28 +154,51 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
         }
     };
 
+    /**
+     * Link a platform to the Walker. Walker will not pass through.
+     * @param {String} platform
+     */
     Walker.prototype._addPlatform = function(platform) {
     	this._addBlock(platform);
     };
 
+    /**
+     * Defines if the Walker can fall or not.
+     * @param {Boolean} value
+     */
     Walker.prototype._mayFall = function(value) {
         value = TUtils.getBoolean(value);
         this.gObject.mayFall(value);
     };
 
+    /**
+     * Set the Jump Speed of the Walker.
+     * Walker can jump only if it has gravity and it is on a Block.
+     * @param {Number} value
+     */
     Walker.prototype._setJumpSpeed = function(value) {
         value = TUtils.getInteger(value);
         this.gObject.setJumpSpeed(value);
     };
 
+    /**
+     * Walker will jump, depending of JumpSpeed.
+     */
     Walker.prototype._jump = function() {
         this.gObject.jump();
     };
 
+    /**
+     * Says that a Block is ready to be added. Remove it from the waiting list.
+     */
     Walker.prototype.blockReady = function() {
         this.gObject.blockReady();
     };
 
+    /**
+     * Set the gravity. The higher the number, the faster Walker will fall.
+     * @param {Number} value
+     */
     Walker.prototype._setGravity = function(value) {
         value = TUtils.getInteger(value);
         this.gObject.setGravity(value);
