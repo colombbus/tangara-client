@@ -1,4 +1,11 @@
 define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'], function($, TEnvironment, TUtils, CommandManager, TGraphicalObject) {
+    /**
+     * Defines Text, inhetired from TGraphicalObject.
+     * Creates a text given in parameter to be drawn.
+     * @class
+     * @param {String} label
+     * @returns {Text}
+     */
     var Text = function(label) {
         TGraphicalObject.call(this);
         if (TUtils.checkString(label)) {
@@ -43,6 +50,10 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
         }
     });
 
+    /**
+     * Set a new Text. Don't draw it.
+     * @param {String} label
+     */
     Text.prototype._setText = function(label) {
         label = TUtils.getString(label);
         var gObject = this.gObject;
@@ -50,6 +61,10 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
         gObject.updateSize();
     };
 
+    /**
+     * Set Text Size to "size"
+     * @param {Number} size
+     */
     Text.prototype._setTextSize = function(size) {
         size = TUtils.getInteger(size);
         var gObject = this.gObject;
@@ -57,6 +72,12 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
         gObject.updateSize();
     };
 
+    /**
+     * Set Text Color.
+     * @param {Number} red
+     * @param {Number} green
+     * @param {Number} blue
+     */
     Text.prototype._setColor = function(red, green, blue) {
         var color = TUtils.getColor(red, green, blue);
         var gObject = this.gObject;
