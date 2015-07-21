@@ -1,5 +1,11 @@
 define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'TUtils'], function($, TEnvironment, TGraphicalObject, Sprite, Block, TUtils) {
-    var Item = function(name) {
+    /**
+     * Defines Item, inhetired from Sprite.
+     * Item is a Sprite which can be picked up.
+     * @class
+     * @returns {KeyStroke}
+     */
+     var Item = function(name) {
         Sprite.call(this, name);
         this.addImage("ball.gif", "", false);
         this.setDisplayedImage("ball.gif");
