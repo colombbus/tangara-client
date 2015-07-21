@@ -10,7 +10,7 @@ bin-release/
 # should NOT be excluded as they contain compiler settings and other important
 # information for Eclipse / Flash Builder.
 /nbproject/private/
-/js/tangara/resources/config.json
+/resources/config.json
 
 /bower_components/*
 /js/libs-bower/*
