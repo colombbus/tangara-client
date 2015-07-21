@@ -1,4 +1,12 @@
 define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'], function($, TEnvironment, TUtils, CommandManager, TGraphicalObject) {
+    /**
+     * Defines Button, inhetired from TGraphicalObject.
+     * Can have a label in parameter, or get one after.
+     * User can click on button and trigger an associated command.
+     * @class
+     * @param {String} label
+     * @returns {Button}
+     */
     var Button = function(label) {
         TGraphicalObject.call(this);
         if (TUtils.checkString(label)) {
@@ -112,6 +120,10 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
         }
     });
 
+    /**
+     * Set a label for Button
+     * @param {String} label
+     */
     Button.prototype._setText = function(label) {
         label = TUtils.getString(label);
         var gObject = this.gObject;
@@ -119,6 +131,10 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
         gObject.updateSize();
     };
 
+    /**
+     * Set a Label Size.
+     * @param {Number} size
+     */
     Button.prototype._setTextSize = function(size) {
         size = TUtils.getInteger(size);
         var gObject = this.gObject;
@@ -126,6 +142,12 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
         gObject.updateSize();
     };
 
+    /**
+     * Fill Button with a color given in parameter.
+     * @param {Number} red
+     * @param {Number} green
+     * @param {Number} blue
+     */
     Button.prototype._setColor = function(red, green, blue) {
         var color = TUtils.getColor(red, green, blue);
         var r, g, b, ra, ga, ba;
@@ -142,17 +164,30 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
         gObject.p.strokeColorActive = "rgb(" + ra + "," + ga + "," + ba + ")";
     };
 
+    /**
+     * Set the Label Color
+     * @param {Number} red
+     * @param {Number} green
+     * @param {Number} blue
+     */
     Button.prototype._setTextColor = function(red, green, blue) {
         var color = TUtils.getColor(red, green, blue);
         var gObject = this.gObject;
         gObject.p.textColor = "rgb(" + color[0] + "," + color[1] + "," + color[2] + ")";
     };
 
+    /**
+     * Associate a command to Button.
+     * @param {String} command
+     */
     Button.prototype._addCommand = function(command) {
         command = TUtils.getCommand(command);
         this.gObject.addCommand(command);
     };
 
+    /**
+     * Remove all commands associated to button.
+     */
     Button.prototype._removeCommands = function() {
         this.gObject.removeCommands();
     };

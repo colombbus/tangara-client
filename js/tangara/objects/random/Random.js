@@ -1,4 +1,9 @@
 define(['TEnvironment', 'TObject', 'TUtils', 'TRuntime'], function(TEnvironment, TObject, TUtils) {
+    /**
+     * Defines Random, inhetired from TObject.
+     * @Class
+     * @returns {Random}
+     */
     var Random = function() {
         TObject.call(this);
     };
@@ -7,6 +12,11 @@ define(['TEnvironment', 'TObject', 'TUtils', 'TRuntime'], function(TEnvironment,
     Random.prototype.constructor = Random;
     Random.prototype.className = "Random";
 
+    /**
+     * Return a random number between 1 and max.
+     * @param {Number} max
+     * @returns {Number}
+     */
     Random.prototype._throwDice = function(max) {
         return Math.floor((Math.random() * max) + 1);
     };

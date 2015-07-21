@@ -1,4 +1,10 @@
 define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TObject', 'TRuntime'], function($, TEnvironment, TUtils, CommandManager, TObject, TRuntime) {
+    /**
+     * Defines KeyStroke, inhetired from TObject.
+     * Allows the association of commands with keyboard.
+     * @class
+     * @returns {KeyStroke}
+     */
     var KeyStroke = function() {
         TObject.call(this);
         this.commands = new CommandManager();
@@ -23,12 +29,21 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TObject', 'TRunti
     KeyStroke.prototype.constructor = KeyStroke;
     KeyStroke.prototype.className = "KeyStroke";
 
+    /**
+     * Returns the Keycode of a key.
+     * @param {String} key
+     * @returns {Number}
+     */
     KeyStroke.prototype.getKeyCode = function(key) {
         key = TUtils.removeAccents(key);
         key = this.getMessage(key);
         return TUtils.getkeyCode(key);
     };
 
+    /**
+     * Enable the possibility to use keyboard.
+     * @returns {Boolean}   Returns false if already enabled.
+     */
     KeyStroke.prototype.enableKeyboard = function() {
         if (this.keyboardEnabled) {
             return false;
@@ -46,6 +61,10 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TObject', 'TRunti
         this.keyboardEnabled = true;
     };
 
+    /**
+     * Disable the possibility to use keyboard.
+     * @returns {Boolean}   Returns false if already disabled.
+     */
     KeyStroke.prototype.disableKeyboard = function() {
         if (!this.keyboardEnabled) {
             return false;
@@ -58,6 +77,11 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TObject', 'TRunti
         this.keyboardEnabled = false;
     };
 
+    /**
+     * Associate a command to key
+     * @param {String} key
+     * @param {String} command
+     */
     KeyStroke.prototype._addCommand = function(key, command) {
         key = TUtils.getString(key);
         command = TUtils.getCommand(command);
@@ -68,6 +92,10 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TObject', 'TRunti
         }
     };
 
+    /**
+     * Remove all commands associated to key
+     * @param {String} key
+     */
     KeyStroke.prototype._removeCommands = function(key) {
         key = TUtils.getString(key);
         var keycode = this.getKeyCode(key);
@@ -79,6 +107,14 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TObject', 'TRunti
         }
     };
 
+    /**
+     * Add a command when one, or all keys are released.
+     * Have two purposes, depending on the number of parameters :
+     * - 1 : "param1" will be executed if all keys are released.
+     * - 2 : "param2" will be executed if the key "param1" is released.
+     * @param {String} param1
+     * @param {String} param2
+     */
     KeyStroke.prototype._addCommandRelease = function(param1, param2) {
         var key, command;
         if (typeof param2 !== 'undefined') {
@@ -102,6 +138,12 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TObject', 'TRunti
         }
     };
 
+    /**
+     * Have two purposes, depending on the number of parameters :
+     * - 0 : Remove all commands associated with the release of all keys.
+     * - 1 : Remove all commands associated with the release of key.
+     * @param {String} key
+     */
     KeyStroke.prototype._removeCommandRelease = function(key) {
         if (TUtils.checkString(key)) {
             // remove commands to be launched when a given key is released
@@ -119,10 +161,16 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TObject', 'TRunti
         }
     };
 
+    /**
+     * Enable the management of keys.
+     */
     KeyStroke.prototype._activate = function() {
         this.active = true;
     };
 
+    /**
+     * Disable the management of keys.
+     */
     KeyStroke.prototype._deactivate = function() {
         if (this.active) {
             this.active = false;
@@ -132,6 +180,9 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TObject', 'TRunti
         }
     };
 
+    /**
+     * Delete all commands associated to KeyStroke, and delete it.
+     */
     KeyStroke.prototype.deleteObject = function() {
         // remove listeners
         this.disableKeyboard();
@@ -151,6 +202,10 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TObject', 'TRunti
         TObject.prototype.deleteObject.call(this);
     };
 
+    /**
+     * Checks which keys are down and execute associated commands
+     * @param {type} e
+     */
     KeyStroke.prototype.processKeyDown = function(e) {
         if (this.active) {
             var keycode = e.keyCode;
@@ -158,7 +213,11 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TObject', 'TRunti
             this.keys[keycode] = true;
         }
     };
-
+    
+    /**
+     * Checks which keys are up and execute associated commands
+     * @param {type} e
+     */
     KeyStroke.prototype.processKeyUp = function(e) {
         if (this.active) {
             var keycode = e.keyCode;
@@ -176,6 +235,10 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TObject', 'TRunti
         }
     };
 
+    /**
+     * Enable or disable keyboard depending on value, and freeze it.
+     * @param {Boolean} value
+     */
     KeyStroke.prototype.freeze = function(value) {
         if (value) {
             this.disableKeyboard();
@@ -185,6 +248,10 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TObject', 'TRunti
         TObject.prototype.freeze.call(this, value);
     };
 
+    /**
+     * Enable or disable the display of commands.
+     * @param {Boolean} value
+     */
     KeyStroke.prototype._displayCommands = function(value) {
         value = TUtils.getBoolean(value);
         this.commands.logCommands(value);

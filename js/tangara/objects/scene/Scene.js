@@ -1,4 +1,12 @@
 define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'objects/block/Block', 'TUtils'], function($, TEnvironment, TGraphicalObject, Sprite, Block, TUtils) {
+    /**
+     * Defines Scene, inhetired from Block. Gets its name in parameter.
+     * It has a background image and a Block image.
+     * Scene can be link to a Hero.
+     * @class
+     * @param {String} name
+     * @returns {Scene}
+     */
     var Scene = function(name) {
         Block.call(this);
         if (typeof (name) === 'undefined') {
@@ -67,6 +75,12 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
         }
     });
 
+    /**
+     * Creates Scene.
+     * Loads background and set it.
+     * Loads Block image, execute a transparency mask on it and set the result.
+     * @param {String} name
+     */
     Scene.prototype._setScene = function(name) {
         name = TUtils.getString(name);
         name = this.getMessage(name);
@@ -108,14 +122,24 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
         });
     };
 
+    /**
+     * Display the Block image.
+     */
     Scene.prototype._showBlock = function() {
         this.gObject.setBlockDisplayed(true);
     };
 
+    /**
+     * Hide the block image.
+     */
     Scene.prototype._hideBlock = function() {
         this.gObject.setBlockDisplayed(false);
     };
 
+    /**
+     * Remove the current background if existing and set a new one.
+     * @param {String} name
+     */
     Scene.prototype._setBackground = function(name) {
         name = TUtils.getString(name);
         try {
@@ -133,6 +157,10 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
         });
     };
 
+    /**
+     * Remove the current Block image if existing and set a new one.
+     * @param {String} name
+     */
     Scene.prototype._setBlock = function(name) {
         name = TUtils.getString(name);
         try {
@@ -151,6 +179,13 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
         });
     };
 
+    /**
+     * Execute a Transparency Mask on Block image and Background,
+     * and set the created images as news Block image and Background.
+     * @param {Number} red
+     * @param {Number} green
+     * @param {Number} blue
+     */
     Scene.prototype._setTransparent = function(red, green, blue) {
         if (this.resources.has(this.blockName)) {
             this.gObject.removeBlock();

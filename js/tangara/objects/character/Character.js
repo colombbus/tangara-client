@@ -1,4 +1,13 @@
 define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager'], function($, TEnvironment, TUtils, TGraphicalObject, CommandManager) {
+    /**
+     * Defines Character, inhetired from TGraphicalObject.
+     * Gets its name in parameter.
+     * A Character have several appearances, can move, raise its arms,
+     * and catch Sprite objects.
+     * @class
+     * @param {String} characterName
+     * @returns {Character}
+     */
     var Character = function(characterName) {
         TGraphicalObject.call(this);
         if (typeof (characterName) === 'undefined') {
@@ -297,30 +306,56 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager'
         }
     });
 
+    /**
+     * Move Character of "value" pixels forward (to the right)
+     * @param {Number} value
+     */
     Character.prototype._moveForward = function(value) {
         value = TUtils.getInteger(value);
         this.gObject.moveForward(value);
     };
-
+    
+    /**
+     * Move Character of "value" pixels backward (to the left)
+     * @param {Number} value
+     */
     Character.prototype._moveBackward = function(value) {
         value = TUtils.getInteger(value);
         this.gObject.moveBackward(value);
     };
-
+    
+    /**
+     * Move Character of "value" pixels upward
+     * @param {Number} value
+     */
     Character.prototype._moveUpward = function(value) {
         value = TUtils.getInteger(value);
         this.gObject.moveUpward(value);
     };
-
+    
+    /**
+     * Move Character of "value" pixels downward
+     * @param {Number} value
+     */
     Character.prototype._moveDownward = function(value) {
         value = TUtils.getInteger(value);
         this.gObject.moveDownward(value);
     };
 
+    /**
+     * Stops Character
+     */
     Character.prototype._stop = function() {
         this.gObject.stop();
     };
 
+    /**
+     * Build the new appearance of Character with
+     * the datas loaded by _loadSkeleton.
+     * @param {String} baseUrl
+     * @param {String} elements     
+     * @param {String} assets
+     */
     Character.prototype.build = function(baseUrl, elements, assets) {
         var gObject = this.gObject;
         // destroy previous elements
@@ -394,6 +429,11 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager'
         });
     };
 
+    /**
+     * Called by _change. Loads the skeleton of the new appearance
+     * of Character, then call build to create it.
+     * @param {String} name
+     */
     Character.prototype._loadSkeleton = function(name) {
         name = TUtils.getString(name);
         window.console.log("loading skeleton");
@@ -420,32 +460,58 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager'
         });
     };
 
+    /**
+     * Change the appearance of Character
+     * @param {String} name
+     */
     Character.prototype._change = function(name) {
         name = TUtils.getString(name);
         var simplifiedName = TUtils.removeAccents(name);
         this._loadSkeleton(this.getMessage(simplifiedName));
     };
 
+    /**
+     * Raise the Left Arm of "value" degrees.
+     * @param {Number} value
+     */
     Character.prototype._raiseLeftArm = function(value) {
         value = TUtils.getInteger(value);
         this.gObject.raiseLeftArm(value);
     };
-
+    
+    /**
+     * Raise the Right Arm of "value" degrees.
+     * @param {Number} value
+     */
     Character.prototype._raiseRightArm = function(value) {
         value = TUtils.getInteger(value);
         this.gObject.raiseRightArm(value);
     };
 
+    /**
+     * Lower the Left Arm of "value" degrees.
+     * @param {Number} value
+     */
     Character.prototype._lowerLeftArm = function(value) {
         value = TUtils.getInteger(value);
         this.gObject.lowerLeftArm(value);
     };
 
+    /**
+     * Lower the Right Arm of "value" degrees.
+     * @param {Number} value
+     */
     Character.prototype._lowerRightArm = function(value) {
         value = TUtils.getInteger(value);
         this.gObject.lowerRightArm(value);
     };
 
+    /**
+     * Let Character catch the object entered in first parameter.
+     * Do the command entered in second parameter if object is catch.
+     * @param {String} object
+     * @param {String} command
+     */
     Character.prototype._mayCatch = function(object, command) {
         object = TUtils.getObject(object);
         command = TUtils.getCommand(command);
@@ -461,6 +527,3 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager'
 
     return Character;
 });
-
-
-
