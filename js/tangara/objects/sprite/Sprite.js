@@ -1,4 +1,12 @@
 define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager', 'TGraphicalObject'], function($, TEnvironment, TUtils, CommandManager, ResourceManager, TGraphicalObject) {
+    /**
+     * Defines Sprite, inhetired from TGraphicalObject.
+     * Gets its name in parameter.
+     * It's a very complete graphical objects : it can have several appearances,
+     * move, or have collisions.
+     * @param {String} name
+     * @returns {Sprite}
+     */
     var Sprite = function(name) {
         TGraphicalObject.call(this);
         this.images = new Array();
@@ -321,6 +329,11 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
 
     // MOVEMENT MANAGEMENT
 
+    /**
+     * Move Sprite of "value" pixels forward (to the right)
+     * if "value" is undefined, always move forward.
+     * @param {Number} value
+     */
     Sprite.prototype._moveForward = function(value) {
         if (typeof value === 'undefined') {
             this._alwaysMoveForward();
@@ -330,10 +343,18 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
         }
     };
 
+    /**
+     * Move Sprite forward while nothing stops it.
+     */
     Sprite.prototype._alwaysMoveForward = function() {
         this.gObject.alwaysMoveForward();
     };
 
+    /**
+     * Move Sprite of "value" pixels backward (to the left)
+     * if "value" is undefined, always move backward.
+     * @param {Number} value
+     */
     Sprite.prototype._moveBackward = function(value) {
         if (typeof value === 'undefined') {
             this._alwaysMoveBackward();
@@ -343,10 +364,17 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
         }
     };
 
+    /**
+     * Move Sprite backward while nothing stops it.
+     */
     Sprite.prototype._alwaysMoveBackward = function() {
         this.gObject.alwaysMoveBackward();
     };
-
+    /**
+     * Move Sprite of "value" pixels upward.
+     * if "value" is undefined, always move upward.
+     * @param {Number} value
+     */
     Sprite.prototype._moveUpward = function(value) {
         if (typeof value === 'undefined') {
             this._alwaysMoveUpward();
@@ -355,11 +383,19 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
             this.gObject.moveUpward(value);
         }
     };
-
+    
+    /**
+     * Move Sprite upward while nothing stops it.
+     */
     Sprite.prototype._alwaysMoveUpward = function() {
         this.gObject.alwaysMoveUpward();
     };
-
+    
+    /**
+     * Move Sprite of "value" pixels downward.
+     * if "value" is undefined, always move downward.
+     * @param {Number} value
+     */
     Sprite.prototype._moveDownward = function(value) {
         if (typeof value === 'undefined') {
             this._alwaysMoveDownward();
@@ -369,14 +405,25 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
         }
     };
 
+    /**
+     * Move Sprite downward while nothing stops it.
+     */
     Sprite.prototype._alwaysMoveDownward = function() {
         this.gObject.alwaysMoveDownward();
     };
 
+    /*
+     * Stops any movement of Sprite
+     */
     Sprite.prototype._stop = function() {
         this.gObject.stop();
     };
 
+    /**
+     * Set Sprite velocity.
+     * The higher "value" will be, the faster Sprite will move.
+     * @param {Number} value
+     */
     Sprite.prototype._setVelocity = function(value) {
         value = TUtils.getInteger(value);
         this.gObject.setVelocity(value);
@@ -386,10 +433,25 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
 
     Sprite.waitingForImage = new Array();
 
+    /**
+     * Call addImage with project as true and without callback.
+     * @param {String} name
+     * @param {String} set
+     */
     Sprite.prototype._addImage = function(name, set) {
         this.addImage(name, set, true);
     };
 
+    /**
+     * Add a new Image to Sprite.
+     * If project is set as ture, load the asset from project,
+     * else load from object itself.
+     * At the end of the function, call callback if defined.
+     * @param {String} name
+     * @param {String} set
+     * @param {Boolean} project
+     * @param {Function} callback
+     */
     Sprite.prototype.addImage = function(name, set, project, callback) {
         name = TUtils.getString(name);
         var asset;
@@ -429,6 +491,11 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
         this.removeImage(name, set);
     };
 
+    /**
+     * Remove an image for Sprite.
+     * @param {String} name
+     * @param {String} set
+     */
     Sprite.prototype.removeImage = function(name, set) {
         if (typeof set === 'undefined') {
             set = "";
@@ -460,10 +527,14 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
             this.displayedIndex = 0;
         }
 
-        // TODO: remove from  images ONLY IF image not used in other set
+        // TODO: remove from images ONLY IF image not used in other set
         this.resources.remove(name);
     };
 
+    /**
+     * Remove a whole set of images.
+     * @param {Sprite} name
+     */
     Sprite.prototype._removeImageSet = function(name) {
         if (typeof name === 'undefined') {
             name = "";
@@ -486,6 +557,10 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
         }
     };
 
+    /**
+     * Called by _removeImageSet. Removes the images from the Set.
+     * @param {type} name
+     */
     Sprite.prototype.emptyImageSet = function(name) {
         for (var i = 0; i < this.imageSets[name].length; i++) {
             var imageName = this.imageSets[name][i];
@@ -505,6 +580,13 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
         }
     };
 
+    /**
+     * Set the image to be display.
+     * If the image is ready, set it and return true.
+     * Else, return false.
+     * @param {String} name
+     * @returns {Boolean}
+     */
     Sprite.prototype.setDisplayedImage = function(name) {
         this.displayedImage = name;
         if (this.resources.ready(name)) {
@@ -522,6 +604,10 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
         }
     };
 
+    /**
+     * Display the current image.
+     * @param {String} name
+     */
     Sprite.prototype._displayImage = function(name) {
         name = TUtils.getString(name);
         if (!this.resources.has(name)) {
@@ -532,6 +618,10 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
         }
     };
 
+    /**
+     * Display the next image of the set given in parameter
+     * @param {String} set
+     */
     Sprite.prototype._displayNextImage = function(set) {
         if (typeof set === 'undefined') {
             set = "";
@@ -553,6 +643,10 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
         }
     };
 
+    /**
+     * Display the previous image of the set given in parameter
+     * @param {String} set
+     */
     Sprite.prototype._displayPreviousImage = function(set) {
         if (typeof set === 'undefined') {
             set = "";
@@ -574,6 +668,10 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
         }
     };
 
+    /**
+     * Add a new image to Sprite and display it.
+     * @param {String} name
+     */
     Sprite.prototype._setImage = function(name) {
         this._addImage(name);
         this._displayImage(name);
@@ -581,11 +679,20 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
 
     // COLLISION MANAGEMENT
 
+    /**
+     * Set a category for Sprite.
+     * @param {String} name
+     */
     Sprite.prototype._setCategory = function(name) {
         name = TUtils.getString(name);
         this.gObject.setCategory(name);
     };
 
+    /**
+     * Add a new collision for Sprite.
+     * @param {String} param1   Command to execute if collision
+     * @param {String} param2   Object or Category linked to collision
+     */
     Sprite.prototype._ifCollision = function(param1, param2) {
         param1 = TUtils.getCommand(param1);
         this.gObject.addCollisionCommand(param1, param2);
@@ -599,11 +706,24 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
         return this.gObject.toString();
     };
 
+    /**
+     * Set a tranparent color for Sprite
+     * @param {Number} red
+     * @param {Number} green
+     * @param {Number} blue
+     * @param {Function} callbacks
+     */
     Sprite.prototype.setTransparent = function(red, green, blue, callbacks) {
         var color = TUtils.getColor(red, green, blue);
         this.resources.addTransparentColor(color, callbacks);
     };
 
+    /**
+     * Set a transparent color for Sprite and define new displayed image.
+     * @param {Number} red
+     * @param {Number} green
+     * @param {Number} blue
+     */
     Sprite.prototype._setTransparent = function(red, green, blue) {
         if (this.displayedImage) {
             this.gObject.removeAsset();
@@ -619,23 +739,45 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
     Sprite.prototype.couleurTransparente = function(red, green, blue) {
         this._setTransparent(red, green, blue);
     };
+    
+    /**
+     * Move Sprite's top-left pixel to coordinates {x,y}
+     * @param {Number} x
+     * @param {Number} y
+     */
     Sprite.prototype._goTo = function(x, y) {
         x = TUtils.getInteger(x);
         y = TUtils.getInteger(y);
         this.gObject.goTo(x, y);
     };
-
+    
+    /**
+     * Move Sprite's center pixel to coordinates {x,y}
+     * @param {Number} x
+     * @param {Number} y
+     */
     Sprite.prototype._centerGoTo = function(x, y) {
         x = TUtils.getInteger(x);
         y = TUtils.getInteger(y);
         this.gObject.centerGoTo(x, y);
     };
 
+    /**
+     * Checks if Sprite have collisions triggered.
+     * @param {Boolean} value
+     */
     Sprite.prototype._watchCollisions = function(value) {
         value = TUtils.getBoolean(value);
         this.gObject.watchCollisions(value);
     };
 
+    /**
+     * Checks if Sprite is ready.
+     * If not, call callback.
+     * @param {Function} callback
+     * @param {type} arguments
+     * @returns {Boolean}
+     */
     Sprite.prototype.isReady = function(callback, arguments) {
         if (this.gObject.p.initialized) {
             return true;
@@ -649,6 +791,3 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
 
     return Sprite;
 });
-
-
-
