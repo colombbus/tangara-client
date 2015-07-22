@@ -1,4 +1,9 @@
 define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment', 'TRuntime'], function($, TGraphicalObject, TUtils, ResourceManager, TEnvironment, TRuntime) {
+    /**
+     * Defines Platform, inherited from TGraphicalObject.
+     * Create a whole Block from a 2D matrix.
+     * @returns {Platform}
+     */
     var Platform = function() {
         this.gObject = new this.gClass();
         this._setLocation(0, 0);
@@ -208,6 +213,12 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
 	    },          
     });
     
+    /**
+     * Set a new tile image. There can be many tiles.
+     * Its value in the structure will depend of the moment where it is added :
+     * The first time added will have the value "1", the second "2", etc...
+     * @param {String} imageName
+     */
     Platform.prototype._addTile = function(imageName) {
         imageName = TUtils.getString(imageName);
         try {
@@ -225,6 +236,11 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
         }
     };
     
+    /**
+     * Set the background image. There is only one base tile.
+     * Its value in the structure is 0.
+     * @param {String} imageName
+     */
     Platform.prototype._setBaseTile = function(imageName) {
         imageName = TUtils.getString(imageName);
         try {
@@ -243,6 +259,12 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
         }
     };
     
+    /**
+     * Add a new row, at the end of the structure.
+     * If the row is too short, it is filled with 0
+     * If the row is too long, it is truncated.
+     * @param {Number[]} row
+     */
     Platform.prototype._addRow = function(row) {
     	row = TUtils.getArray(row);
     	if (this.nbCols === 0 && this.nbRows === 0) {
@@ -262,6 +284,12 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
     	this.buildStructure();
     };
     
+    /**
+     * Add a new column, at the end of the structure.
+     * If the column is too short, it is filled with 0
+     * If the column is too long, it is truncated.
+     * @param {Number[]} row
+     */
     Platform.prototype._addColumn = function(col) {
     	col = TUtils.getArray(col);
     	if (this.nbCols === 0 && this.nbRows === 0) {
@@ -277,7 +305,12 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
     	this.nbCols++;
     	this.buildStructure();
     };
-
+    
+    /**
+     * Create a new structure from a 2D matrix.
+     * Each empty tile will be filled with a 0.
+     * @param {Number[][]} structure
+     */
     Platform.prototype._loadStructure = function(structure) {
     	var newRows = [];
     	//window.console.debug(structure[0]);
@@ -308,6 +341,12 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
     	}
     };
     
+    /**
+     * Change the value of the tile [x,y] in structure to the value "number"
+     * @param {Number} x
+     * @param {Number} y
+     * @param {Number} number
+     */
     Platform.prototype._setTile = function(x,y,number) {
     	x = TUtils.getInteger(x);
     	y = TUtils.getInteger(y);
@@ -325,6 +364,9 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
     	this.gObject.setTile(x,y,number);
     };
     
+    /**
+     * Build Platform
+     */
     Platform.prototype._build = function() {
     	this.gObject.build();
     	this.buildSheet();
@@ -376,6 +418,13 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
     	this.gObject.setStructure(this.rows);
     };
     
+    /**
+     * Returns if Platform is ready or not.
+     * If Platform isn't ready, call callback if defined.
+     * @param {function} callback
+     * @param {type} arguments
+     * @returns {Boolean}
+     */
     Platform.prototype.isReady = function(callback, arguments) {
         if (this.gObject.p.initialized) {
             return true;
@@ -387,6 +436,9 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
         }
     };
     
+    /**
+     * Delete Platform
+     */
     Platform.prototype.deleteObject = function() {
         var g = TRuntime.getGraphics().getInstance();
         g.stage().removeCollisionLayer(this.gObject);

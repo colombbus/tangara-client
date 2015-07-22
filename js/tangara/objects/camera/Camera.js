@@ -1,4 +1,11 @@
 define(['jquery', 'TUtils', 'TRuntime', 'TObject'], function($, TUtils, TRuntime, TObject) {
+    /**
+     * Defines Camera, inhetired from TObject.
+     * Its position will define what will be drawn on screen.
+     * It can be fixed, on can follow an Object.
+     * @class
+     * @returns {Camera}
+     */
     var Camera = function() {
     	this.activated = false;
     	this.followedObject = null;
@@ -14,6 +21,9 @@ define(['jquery', 'TUtils', 'TRuntime', 'TObject'], function($, TUtils, TRuntime
     	return TRuntime.getGraphics().getInstance().stage();
     };
     
+    /**
+     * Activate Camera
+     */
     Camera.prototype.activate = function() {
     	if (!this.activated) {
     		var s = getStage();
@@ -22,6 +32,9 @@ define(['jquery', 'TUtils', 'TRuntime', 'TObject'], function($, TUtils, TRuntime
     	}
     };
     
+    /**
+     * Follow Object in this.followedObject
+     */
     Camera.prototype.follow = function() {
     	if (this.activated) {
 	    	var s = getStage();
@@ -29,6 +42,9 @@ define(['jquery', 'TUtils', 'TRuntime', 'TObject'], function($, TUtils, TRuntime
     	}
     };
     
+    /**
+     * Unfollow any Object.
+     */
     Camera.prototype.stopFollow = function() {
     	if (this.activated) {
         	var s = getStage();
@@ -36,6 +52,10 @@ define(['jquery', 'TUtils', 'TRuntime', 'TObject'], function($, TUtils, TRuntime
     	}
     };
 
+    /**
+     * Activate Camera and follow Object given in parameter
+     * @param {String} object
+     */
     Camera.prototype._follow = function(object) {
     	object = TUtils.getObject(object);
     	this.followedObject = object;
@@ -43,22 +63,39 @@ define(['jquery', 'TUtils', 'TRuntime', 'TObject'], function($, TUtils, TRuntime
     	this.follow();
     };
 
+    /**
+     * Unfollow any Object.
+     */
     Camera.prototype._unfollow = function() {
     	this.stopFollow();
     };
     
+    /**
+     * Enable or disable Object tracking on X Coordinate.
+     * @param {Boolean} value
+     */
     Camera.prototype._followX = function(value) {
     	value = TUtils.getBoolean(value);
     	this.followX = value;
     	this.follow();
     };
     
+    /**
+     * Enable or disable Object tracking on Y Coordinate.
+     * @param {Boolean} value
+     */
     Camera.prototype._followY = function(value) {
     	value = TUtils.getBoolean(value);
     	this.followY = value;
     	this.follow();
     };
     
+    /**
+     * Move the Camera's top-left pixel to coordinates {x,y}
+     * If it follow an Object, unfollow it.
+     * @param {Number} x
+     * @param {Number} y
+     */
     Camera.prototype._moveTo = function(x,y) {
     	x = TUtils.getInteger(x);
     	y = TUtils.getInteger(y);
@@ -68,6 +105,12 @@ define(['jquery', 'TUtils', 'TRuntime', 'TObject'], function($, TUtils, TRuntime
     	s.moveTo(x,y);
     };
 
+    /**
+     * Move the Camera's center pixel to coordinates {x,y}
+     * If it follow an Object, unfollow it.
+     * @param {Number} x
+     * @param {Number} y
+     */
     Camera.prototype._centerOn = function(x,y) {
     	x = TUtils.getInteger(x);
     	y = TUtils.getInteger(y);

@@ -1,4 +1,10 @@
 define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function(TObject, TUtils, TRuntime, TEnvironment) {
+    /**
+     * Defines TGraphicalObject, inhetired from TObject.
+     * It's an object which can be drawn on stage.
+     * @class
+     * @returns {TGraphicalObject}
+     */
     function TGraphicalObject() {
         this.gObject = new this.gClass();
         this._setLocation(0, 0);
@@ -124,61 +130,119 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function(TObject, TUti
     TGraphicalObject.prototype.getGObject = function() {
         return this.gObject;
     };
-
+    
+    /**
+     * Remove TGraphicalObject
+     */
     TGraphicalObject.prototype.deleteObject = function() {
         this.gObject.destroy();
         TRuntime.removeGraphicalObject(this);
     };
 
+    /**
+     * Enlarge TGraphicalobject on screen.
+     * The enlargement will be proportionnal to the parameter given.
+     * @param {Number} factor
+     */
     TGraphicalObject.prototype._zoomIn = function(factor) {
         this.gObject.zoomIn(factor);
     };
-
+    
+    /**
+     * Narrow TGraphicalobject on screen.
+     * The narrowing will be proportionnal to the parameter given.
+     * @param {Number} factor
+     */
     TGraphicalObject.prototype._zoomOut = function(factor) {
         this.gObject.zoomOut(factor);
     };
 
+    /**
+     * Change the size of TGraphicalObject, regardless on its previous size.
+     * The higher "factor" will be, the larger TGraphicalObject will be.
+     * @param {Number} factor
+     */
     TGraphicalObject.prototype._scale = function(factor) {
         //TODO: parseFloat
         this.gObject.scale(factor);
     };
 
+    /**
+     * Set an angle of rotation for TGraphicalObject, regarless of its previous
+     * @param {Number} angle
+     */
     TGraphicalObject.prototype._setAngle = function(angle) {
         this.gObject.setAngle(angle);
     };
 
+    /**
+     * Rotate TGraphicalObject. Add the parameter to its current angle.
+     * @param {Number} angle
+     */
     TGraphicalObject.prototype._rotate = function(angle) {
         //TODO: parseFloat
         this.gObject.rotate(angle);
     };
 
+    /**
+     * Set the coordinates of TGraphicalObject's center pixel
+     * @param {Number} x
+     * @param {Number} y
+     */
     TGraphicalObject.prototype._setCenterLocation = function(x, y) {
         x = TUtils.getInteger(x);
         y = TUtils.getInteger(y);
         this.gObject.setCenterLocation(x, y);
     };
-
+    
+    /**
+     * Set the coordinates of TGraphicalObject's top-left pixel
+     * @param {Number} x
+     * @param {Number} y
+     */
     TGraphicalObject.prototype._setLocation = function(x, y) {
         x = TUtils.getInteger(x);
         y = TUtils.getInteger(y);
         this.gObject.setLocation(x, y);
     };
 
+    /**
+     * Get the X coordinate of TGraphicalObject's center pixel.
+     * @returns {Number}
+     */
     TGraphicalObject.prototype._getXCenter = function() {
         return this.gObject.getXCenter();
     };
-
+    
+    /**
+     * Get the Y coordinate of TGraphicalObject's center pixel.
+     * @returns {Number}
+     */
     TGraphicalObject.prototype._getYCenter = function() {
         return this.gObject.getYCenter();
     };
+
+    /**
+     * Get the X coordinate of TGraphicalObject's top-left pixel.
+     * @returns {Number}
+     */
     TGraphicalObject.prototype._getX = function() {
         return this.gObject.getX();
     };
-
+    
+    /**
+     * Get the Y coordinate of TGraphicalObject's top-left pixel.
+     * @returns {Number}
+     */
     TGraphicalObject.prototype._getY = function() {
         return this.gObject.getY();
     };
 
+    /**
+     * Enable or disable Design Mode.
+     * In Design Mode, user can handle objects with the mouse and move them.
+     * @param {Boolean} value
+     */
     TGraphicalObject.prototype.setDesignMode = function(value) {
         var gObject = this.gObject;
         if (value) {

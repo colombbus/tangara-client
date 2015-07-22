@@ -1,4 +1,12 @@
 define(['jquery', 'TEnvironment', 'TObject', 'TUtils', 'TRuntime', 'TParser'], function($, TEnvironment, TObject, TUtils, TRuntime, TParser) {
+    /**
+     * Defines Sequence, inherited from TObject.
+     * A sequence can save commands, with or without a delay between,
+     * then execute them one after another.
+     * It can execute commands endlessly or only one time.
+     * @class
+     * @returns {Sequence}
+     */
     var Sequence = function() {
         TObject.call(this);
         this.actions = new Array();
@@ -19,6 +27,10 @@ define(['jquery', 'TEnvironment', 'TObject', 'TUtils', 'TRuntime', 'TParser'], f
     Sequence.TYPE_DELAY = 0x02;
     Sequence.MINIMUM_LOOP = 100;
 
+    /**
+     * Add a command to Sequence
+     * @param {String} command
+     */
     Sequence.prototype._addCommand = function(command) {
         command = TUtils.getCommand(command);
         if (TUtils.checkString(command)) {
@@ -31,11 +43,18 @@ define(['jquery', 'TEnvironment', 'TObject', 'TUtils', 'TRuntime', 'TParser'], f
         this.actions.push({type: Sequence.TYPE_COMMAND, value: command});
     };
 
+    /**
+     * Add a delay between commands
+     * @param {Number} delay    (ms)
+     */
     Sequence.prototype._addDelay = function(delay) {
         delay = TUtils.getInteger(delay);
         this.actions.push({type: Sequence.TYPE_DELAY, value: delay});
     };
 
+    /**
+     * Execute the next command of Sequence (after waiting if there's a delay)
+     */
     Sequence.prototype.nextAction = function() {
         this.timeout = null;
         this.index++;
@@ -63,6 +82,10 @@ define(['jquery', 'TEnvironment', 'TObject', 'TUtils', 'TRuntime', 'TParser'], f
         }
     };
 
+    /**
+     * Start the execution of Sequence.
+     * If Sequence is already running, restart it.
+     */
     Sequence.prototype._start = function() {
         if (this.running) {
             // Sequence is already running: restart it
@@ -73,6 +96,9 @@ define(['jquery', 'TEnvironment', 'TObject', 'TUtils', 'TRuntime', 'TParser'], f
         this.nextAction();
     };
 
+    /**
+     * Stop the execution of Sequence.
+     */
     Sequence.prototype._stop = function() {
         this.running = false;
         this.index = -1;
@@ -82,6 +108,9 @@ define(['jquery', 'TEnvironment', 'TObject', 'TUtils', 'TRuntime', 'TParser'], f
         }
     };
 
+    /**
+     * Pause the execution of Sequence. It can resume after.
+     */
     Sequence.prototype._pause = function() {
         this.running = false;
         if (this.timeout !== null) {
@@ -90,16 +119,30 @@ define(['jquery', 'TEnvironment', 'TObject', 'TUtils', 'TRuntime', 'TParser'], f
         }
     };
 
+
+    /**
+     * Resume the execution of Sequence.
+     */
     Sequence.prototype._unpause = function() {
         this.running = true;
         this.nextAction();
     };
 
+    /**
+     * Delete Sequence.
+     */
     Sequence.prototype.deleteObject = function() {
         this._stop();
         TObject.prototype.deleteObject.call(this);
     };
 
+    /**
+     * Enable or disable loops for the execution of Sequence.
+     * If it enable it, check the total delay of a loop.
+     * If it's under the delay of MINIMUM_LOOP, throw a freeze warning.
+     * Default value : false
+     * @param {Boolean} value
+     */
     Sequence.prototype._loop = function(value) {
         value = TUtils.getBoolean(value);
         if (value) {
@@ -118,6 +161,10 @@ define(['jquery', 'TEnvironment', 'TObject', 'TUtils', 'TRuntime', 'TParser'], f
         this.loop = value;
     };
 
+    /**
+     * Freeze or unfreeze Sequence
+     * @param {Boolean} value
+     */
     Sequence.prototype.freeze = function(value) {
         TObject.prototype.freeze.call(value);
         if (value !== this.frozen) {
@@ -133,7 +180,12 @@ define(['jquery', 'TEnvironment', 'TObject', 'TUtils', 'TRuntime', 'TParser'], f
             }
         }
     };
-
+    
+    /**
+     * Enable or disable the display of commands.
+     * Default value : true
+     * @param {type} value
+     */
     Sequence.prototype._displayCommands = function(value) {
         value = TUtils.getBoolean(value);
         this.logCommands = value;

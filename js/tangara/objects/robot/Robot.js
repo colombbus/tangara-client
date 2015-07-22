@@ -1,4 +1,10 @@
 define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManager', 'objects/hero/Hero'], function($, TEnvironment, TUtils, CommandManager, SynchronousManager, Hero) {
+    /**
+     * Defines Robot, inherited from Hero.
+     * The main difference with Hero is that it executes commands one by one.
+     * @class
+     * @returns {Robot}
+     */
     var Robot = function() {
         Hero.call(this, "robot");
         this.step = 50;
@@ -104,7 +110,12 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
     });
 
     // MOVEMENT MANAGEMENT
-
+    
+    /**
+     * Move Sprite of "value" pixels forward (to the right)
+     * if "value" is undefined, always move forward.
+     * @param {Number} value
+     */
     Robot.prototype._moveForward = function(value) {
         if (typeof value === 'undefined') {
             value = this.step;
@@ -112,7 +123,12 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
         value = TUtils.getInteger(value);
         this.gObject.moveForward(value);
     };
-
+    
+    /**
+     * Move Sprite of "value" pixels backward (to the left)
+     * if "value" is undefined, always move backward.
+     * @param {Number} value
+     */
     Robot.prototype._moveBackward = function(value) {
         if (typeof value === 'undefined') {
             value = this.step;
@@ -120,7 +136,12 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
         value = TUtils.getInteger(value);
         this.gObject.moveBackward(value);
     };
-
+    
+    /**
+     * Move Sprite of "value" pixels upward.
+     * if "value" is undefined, always move upward.
+     * @param {Number} value
+     */
     Robot.prototype._moveUpward = function(value) {
         if (typeof value === 'undefined') {
             value = this.step;
@@ -128,7 +149,12 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
         value = TUtils.getInteger(value);
         this.gObject.moveUpward(value);
     };
-
+    
+    /**
+     * Move Sprite of "value" pixels downward.
+     * if "value" is undefined, always move downward.
+     * @param {Number} value
+     */
     Robot.prototype._moveDownward = function(value) {
         if (typeof value === 'undefined') {
             value = this.step;
@@ -136,37 +162,68 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
         value = TUtils.getInteger(value);
         this.gObject.moveDownward(value);
     };
-
+    
+    /**
+     * Move Sprite downward while nothing stops it.
+     */
     Robot.prototype._alwaysMoveDownward = function() {
     };
 
+    /**
+     * Move Sprite upward while nothing stops it.
+     */
     Robot.prototype._alwaysMoveUpward = function() {
     };
 
+    /**
+     * Move Sprite backward while nothing stops it.
+     */
     Robot.prototype._alwaysMoveBackward = function() {
     };
-
+    
+    /**
+     * Move Sprite forward while nothing stops it.
+     */
     Robot.prototype._alwaysMoveForward = function() {
     };
 
+    /**
+     * Set the base value of movements.
+     * It's the value used if no parameter are entered to movement actions.
+     * @param {Number} value
+     */
     Robot.prototype._setStep = function(value) {
         value = TUtils.getInteger(value);
         this.step = value;
     };
 
+    /**
+     * Count the number of items in Stage
+     * @returns {Number}
+     */
     Robot.prototype._countItems = function() {
         //TODO: handle case where gObject not initialized yet
         return this.gObject.countItems();
     };
 
+    /**
+     * Pick up an Item
+     */
     Robot.prototype._pickupItem = function() {
         this.gObject.pickupItem();
     };
 
+    /**
+     * Drop an Item
+     */
     Robot.prototype._dropItem = function() {
         this.gObject.dropItem();
     };
 
+    /**
+     * Count the number of items carried by Robot
+     * @returns {Number}
+     */
     Robot.prototype._countCarriedItems = function() {
         return this.gObject.countCarriedItems();
     };

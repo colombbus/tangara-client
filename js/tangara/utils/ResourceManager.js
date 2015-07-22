@@ -27,9 +27,7 @@ define(['TRuntime'], function(TRuntime) {
     };
 
     colorMatch = function(color, red, green, blue) {
-        if (Math.abs(color[0] + color[1] + color[2] - red - green - blue) < 30)
-            return true;
-        return false;
+        return Math.abs(color[0] - red) + Math.abs(color[1] - green) - Math.abs(color[2] - blue) < 30;
     };
 
     ResourceManager.prototype.add = function(name, asset, callback) {
