@@ -1,11 +1,14 @@
 define(['jquery', 'TEnvironment', 'TObject3D'], function ($, TEnvironment, TObject3D) {
     /**
+     * Defines Point3D, inherited from TObject3D.
      *  A Point3D is a simple 3D element but a complex object which can:
      *  - have a name
-     *  - be displayed in Space3D as a 3 Segment3D crossed
-     *  
+     *  - be displayed in Space3D as 3 Segment3D crossed  
      *  Another Point3D can define a Point3D
      * @class
+     * @param {Number} x
+     * @param {Number} y
+     * @param {Number} z
      * @returns {Point3D}
      */
     var Point3D = function (x, y, z) {
@@ -45,7 +48,7 @@ define(['jquery', 'TEnvironment', 'TObject3D'], function ($, TEnvironment, TObje
     };
 
     /**
-     * Get x coordinate of a Point3D
+     * Get X coordinate of a Point3D
      * @returns {Number} X coordinate
      */
     Point3D.prototype._getX = function () {
@@ -53,7 +56,7 @@ define(['jquery', 'TEnvironment', 'TObject3D'], function ($, TEnvironment, TObje
     };
 
     /**
-     * Get y coordinate of a Point3D
+     * Get Y coordinate of a Point3D
      * @returns {Number} Y coordinate
      */
     Point3D.prototype._getY = function () {
@@ -61,7 +64,7 @@ define(['jquery', 'TEnvironment', 'TObject3D'], function ($, TEnvironment, TObje
     };
 
     /**
-     * Get z coordinate of a Point3D
+     * Get Z coordinate of a Point3D
      * @returns {Number} Z coordinate
      */
     Point3D.prototype._getZ = function () {
@@ -94,7 +97,7 @@ define(['jquery', 'TEnvironment', 'TObject3D'], function ($, TEnvironment, TObje
 
     /**
      * Set Z coordinate of a Point3D
-     * @param {Number} z coordinate
+     * @param {Number} z
      */
     Point3D.prototype._setZ = function (z) {
         if (typeof z === 'undefined')
@@ -165,8 +168,7 @@ define(['jquery', 'TEnvironment', 'TObject3D'], function ($, TEnvironment, TObje
     };
 
     /**
-     * Draw or redraw a 3 segments to show a Point3D
-     * in a Space3D
+     * Draw or redraw a 3 segments to show a Point3D in a Space3D
      */
     Point3D.prototype.redraw = function () {
         if ((typeof this._getX() === 'undefined') ||
