@@ -1,4 +1,11 @@
 define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink'], function($, TUI, TEnvironment, TRuntime, TUtils, TObject, TLink) {
+    /**
+     * Defines Tangara, inherited from TObject.
+     * Tangara is an object created automatically with the launch of Declick.
+     * It allows several interactions.
+     * @class
+     * @returns {Tangara}
+     */
     var Tangara = function() {
         // Do not call parent constructor, as we don't want this object to be erased when clearing the
         // Runtime
@@ -8,6 +15,10 @@ define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink
     Tangara.prototype.constructor = Tangara;
     Tangara.prototype.className = "Tangara";
 
+    /**
+     * Write "value" in logs
+     * @param {String} value$
+     */
     Tangara.prototype._write = function(value) {
         if (TUtils.checkInteger(value)) {
             value = value.toString();
@@ -19,6 +30,10 @@ define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink
         TUI.addLogMessage(value);
     };
 
+    /**
+     * Write "value" in a pop-up window
+     * @param {String} value
+     */
     Tangara.prototype._alert = function(value) {
         if (TUtils.checkInteger(value)) {
             value = value.toString();
@@ -29,6 +44,10 @@ define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink
         window.alert(value);
     };
 
+    /**
+     * Load a script given in parameter
+     * @param {String} name
+     */
     Tangara.prototype._loadScript = function(name) {
         name = TUtils.getString(name);
         var statements = TLink.getProgramStatements(name);
@@ -36,23 +55,39 @@ define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink
         TRuntime.executeStatements(statements);
     };
 
+    /**
+     * Clear screen, commands history and console
+     */
     Tangara.prototype._init = function() {
         TRuntime.clear();
     };
 
+    /**
+     * Clear screen
+     */
     Tangara.prototype._clearScreen = function() {
         TRuntime.clearGraphics();
     };
 
+    /**
+     * Pause Declick. Freeze every object.
+     */
     Tangara.prototype._pause = function() {
         TRuntime.stop();
     };
 
-
+    /**
+     * Resume Declick
+     */
     Tangara.prototype._unpause = function() {
         TRuntime.start();
     };
 
+    /**
+     * Ask a question and get the answer
+     * @param {String} text
+     * @returns {String}
+     */
     Tangara.prototype._ask = function(text) {
         var answer = window.prompt(text);
         if (answer === null || answer.length === 0)
@@ -65,6 +100,3 @@ define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink
 
     return tangaraInstance;
 });
-
-
-
