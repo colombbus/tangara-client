@@ -1,4 +1,9 @@
 define(['jquery', 'TRuntime', 'TEnvironment'], function($, TRuntime, TEnvironment) {
+    /**
+     * Defines TObject.
+     * This is the main class, all classes inherit from it.
+     * @returns {TObject}
+     */
     function TObject() {
         TRuntime.addObject(this);
     }
@@ -32,14 +37,25 @@ define(['jquery', 'TRuntime', 'TEnvironment'], function($, TRuntime, TEnvironmen
         }
     };
 
+    /**
+     * Delete TObject
+     */
     TObject.prototype._delete = function() {
         this.deleteObject();
     };
 
+    /**
+     * To be defined in sub-objects, so they can have actions to freeze
+     * @param {type} value
+     */
     TObject.prototype.freeze = function(value) {
         // every object may add actions to take to freeze
     };
 
+    /**
+     * Get a String containing "TObject " and the class of the object
+     * @returns {String}
+     */
     TObject.prototype.toString = function() {
         return "TObject " + this.className;
     };
