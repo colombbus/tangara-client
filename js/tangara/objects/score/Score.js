@@ -1,4 +1,10 @@
 define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'objects/text/Text'], function($, TEnvironment, TUtils, TGraphicalObject, Text) {
+    /**
+     * Defines Score, inherited from Text.
+     * Can manage a graphical score.
+     * @param {String} string
+     * @returns {Score}
+     */
     var Score = function(string) {
         if (typeof string === 'undefined') {
             string = "Score : ";
@@ -15,7 +21,6 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'objects/text/Te
 
     /**
      * Erase ScoreNumber to 0
-     * 
      */
     Score.prototype._eraseScoreNumber = function() {
         this.score = 0;
@@ -25,8 +30,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'objects/text/Te
     /**
      * Increase ScoreNumber with step defined
      * Default step is 1
-     * 
-     * @param step number (default: 1)
+     * @param {Number} step (default: 1)
      */
     Score.prototype._increaseScore = function(step) {
         if (typeof step === 'undefined') {
@@ -39,8 +43,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'objects/text/Te
     /**
      * Decrease ScoreNumber with integer step defined
      * Default step is 1
-     * 
-     * @param step number (default: 1)
+     * @param {Number} step (default: 1)
      */
     Score.prototype._decreaseScore = function(step) {
         if (typeof step === 'undefined') {
@@ -53,8 +56,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'objects/text/Te
     /**
      * Defines a string label displayed before score number
      * Default string is "Score : "
-     * 
-     * @param label string the first part of the score (default: "Score : ")
+     * @param {String} label the first part of the score (default: "Score : ")
      */
     Score.prototype._setLabel = function(label) {
         if (typeof label === 'undefined') {
@@ -68,8 +70,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'objects/text/Te
     /**
      * Defines ScoreNumber with integer given
      * Default is 0
-     * 
-     * @param number string the first part of the score (default: "Score : ")
+     * @param {String} number the first part of the score (default: "Score : ")
      */
     Score.prototype._setScoreNumber = function(number) {
         this.score = TUtils.getInteger(number);
@@ -78,8 +79,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'objects/text/Te
 
     /**
      * Get Label
-     * 
-     * @returns string Contains the Label
+     * @returns {String} Contains the Label
      */
     Score.prototype._getLabel = function() {
         var string = this.label;
@@ -88,7 +88,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'objects/text/Te
 
     /**
      * Get Score Number
-     * @returns string Contains the ScoreNumber
+     * @returns {String} Contains the ScoreNumber
      */
     Score.prototype._getScoreNumber = function() {
         var string = this.score + ""; // "" to convert in string
@@ -96,8 +96,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'objects/text/Te
     };
     /**
      * Get Score 
-     * 
-     * @returns string Contains the label and the score number defined in
+     * @returns {String} Contains the label and the score number defined in
      * Score
      */
     Score.prototype._getScore = function() {
