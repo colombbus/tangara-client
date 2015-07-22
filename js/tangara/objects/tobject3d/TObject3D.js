@@ -1,9 +1,9 @@
 define(['jquery', 'babylon', 'TEnvironment', 'TObject'], function($, babylon, TEnvironment, TObject) {
     /**
+     * Defines TObject3D, inherited from TObject.
      * This object is the 3D parent
-     *
-     * @return <code>true</code> if this Object3D is followed by the camera,
-     * else <code>false</code>.
+     * @class
+     * @returns {TObject3D}
      */
     var TObject3D = function() {
         TObject.call(this);
@@ -24,8 +24,7 @@ define(['jquery', 'babylon', 'TEnvironment', 'TObject'], function($, babylon, TE
     /**
      * getMesh() is used to get in each herited object the mesh
      * defined in TObject3D
-     *
-     * @returns Mesh the mesh created with BABYLONJS in TObject3D
+     * @returns {Mesh} the mesh created with BABYLONJS in TObject3D
      */
     TObject3D.prototype.getMesh = function() {
         return this.mesh;
@@ -33,7 +32,7 @@ define(['jquery', 'babylon', 'TEnvironment', 'TObject'], function($, babylon, TE
 
     /**
      * Freeze() aimed to stop all animated objects in the Space3D
-     * @param Boolean value
+     * @param {Boolean} value
      */
     TObject3D.prototype.freeze = function(value) {
         // every object may add actions to take to freeze
@@ -42,9 +41,7 @@ define(['jquery', 'babylon', 'TEnvironment', 'TObject'], function($, babylon, TE
     /**
      * CreateName used with BabylonJS to create 3D object; ie:
      * BABYLON.Mesh.Cylinder("Cylinder9", 1, etc.)
-     *
-     *
-     * @returns String Name of the TObject3D (the class and a unique id; ie:
+     * @returns {String} Name of the TObject3D (the class and a unique id; ie:
      * Cylinder3D9
      */
     TObject3D.prototype.createName = function() {
@@ -54,8 +51,7 @@ define(['jquery', 'babylon', 'TEnvironment', 'TObject'], function($, babylon, TE
 
     /**
      * Get the unique name of each TObject3D or herited object created
-     *
-     * @returns String Name of the TObject3D created (className and unique id)
+     * @returns {String} Name of the TObject3D created (className and unique id)
      */
     TObject3D.prototype.getName = function() {
         return this.name;
@@ -63,7 +59,7 @@ define(['jquery', 'babylon', 'TEnvironment', 'TObject'], function($, babylon, TE
 
     /**
      * _setSpace() is used to define the scene of the Space3D
-     * @param Space3D scene3d
+     * @param {Space3D} scene3d
      */
     TObject3D.prototype._setSpace = function(scene3d) {
         this.scene = scene3d;
@@ -190,9 +186,7 @@ define(['jquery', 'babylon', 'TEnvironment', 'TObject'], function($, babylon, TE
     };
     /**
      * _setRotationAxis() defines the rotation axis ("X", "Y" or "Z")
-     *
      * @param {type} ax
-     * @returns {undefined}
      */
     TObject3D.prototype._setRotationAxis = function(ax) {
         if (typeof ax === "string") {
