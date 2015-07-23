@@ -1,4 +1,4 @@
-define(['ui/TComponent', 'TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPaint', 'wPaint/plugins/main', 'wPaint/plugins/text', 'wPaint/plugins/shapes', 'wPaint/plugins/flip', 'wPaint/plugins/file'], function(TComponent, TUI, TEnvironment, $) {
+define(['ui/TComponent', 'TUI', 'TEnvironment', 'TError', 'jquery', 'wColorPicker', 'wPaint', 'wPaint/plugins/main', 'wPaint/plugins/text', 'wPaint/plugins/shapes', 'wPaint/plugins/flip', 'wPaint/plugins/file'], function(TComponent, TUI, TEnvironment, TError, $) {
     function TViewer(callback) {
         var currentName = '';
         var currentWidth = 0;
@@ -43,11 +43,11 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPain
             var $duplicate = component.find(".tviewer-button-duplicate");
             $duplicate.prop("title", TEnvironment.getMessage("viewer-duplicate"));
             $duplicate.click(function(e) {
-                try {
-                    TUI.duplicateResource(currentName);
-                } catch (error) {
-                    message(error.getMessage());
-                }
+                TUI.duplicateResource(currentName, function(newName) {
+                    if (typeof newName === TError){
+                        message(newName.getMessage());
+                    }
+                });
             });
             var $closes = component.find(".tviewer-button-close");
             $closes.prop("title", TEnvironment.getMessage("viewer-close"));
@@ -89,11 +89,11 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPain
             $buttonCreate = component.find(".tviewer-creation-create");
             $buttonCreate.click(function(e) {
                 if (checkCreation()) {
-                    try {
-                        TUI.createResource($name.val(), $width.val(), $height.val());
-                    } catch (error) {
-                        message(error.getMessage());
-                    }
+                    TUI.createResource($name.val(), $width.val(), $height.val(), function(newName) {
+                        if (typeof newName === TError) {
+                            message(newName.getMessage());
+                        }
+                    });
                 }
             });
             $buttonCreate.append(TEnvironment.getMessage("viewer-creation-create"));
@@ -121,12 +121,13 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'jquery', 'wColorPicker', 'wPain
         $.extend($.fn.wPaint.defaults, {
             saveImg: function() {
                 var imageData = $editorImage.wPaint("image");
-                try {
-                    currentName = TUI.setResourceContent(currentName, imageData);
-                    message(TEnvironment.getMessage('image-editor-saved', currentName));
-                } catch (error) {
-                    message(error.getMessage());
-                }
+                TUI.setResourceContent(currentName, imageData, function(currentName) {
+                    if (typeof currentName === TError) {
+                        message(currentName.getMessage());
+                    } else {
+                        message(TEnvironment.getMessage('image-editor-saved', currentName));
+                    }
+                });
             }
         });
 

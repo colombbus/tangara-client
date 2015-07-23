@@ -1,4 +1,4 @@
-define(['TParser', 'TLink', 'TEnvironment', 'TUtils'], function(TParser, TLink, TEnvironment, TUtils) {
+define(['TParser', 'TLink', 'TEnvironment', 'TUtils', 'TError'], function(TParser, TLink, TEnvironment, TUtils, TError) {
 
     function TProgram(value) {
         var statements = new Array();
@@ -21,34 +21,73 @@ define(['TParser', 'TLink', 'TEnvironment', 'TUtils'], function(TParser, TLink, 
                 index++;
                 name = TEnvironment.getMessage('program-new', index);
             } while (used.indexOf(name) > -1);
-            window.console.log("New name : " + name);
             newProgram = true;
         }
 
-        this.save = function() {
+        this.save = function(callback) {
             if (newProgram) {
                 // First create program
-                TLink.createProgram(name);
-                newProgram = false;
-            }
-            if (codeChanged) {
-                // Try to parse program
-                try {
-                    parse();
-                    codeChanged = false;
-                } catch (e) {
-                    statements = [];
-                    window.console.log("Error parsing program '" + name + "'");
+                TLink.createProgram(name, function(error) {
+                    if (typeof error !== 'undefined') {
+                        // error: just forward it
+                        callback.call(this, error);
+                    } else {
+                        newProgram = false;
+                        if (codeChanged) {
+                            // Try to parse program
+                            try {
+                                parse();
+                                codeChanged = false;
+                            } catch (e) {
+                                statements = [];
+                                window.console.error("Error parsing program '" + name + "'");
+                            }
+                        }
+                        TLink.saveProgram(name, code, statements, function(error) {
+                            if (typeof error !== 'undefined') {
+                                // error: forward it
+                                callback.call(this, error);
+                            } else {
+                                modified = false;
+                                callback.call(this);
+                            }
+                        });
+                    }
+                });
+            } else {
+                if (codeChanged) {
+                    // Try to parse program
+                    try {
+                        parse();
+                        codeChanged = false;
+                    } catch (e) {
+                        statements = [];
+                        window.console.error("Error parsing program '" + name + "'");
+                    }
                 }
+                TLink.saveProgram(name, code, statements, function(error) {
+                    if (typeof error !== 'undefined') {
+                        // error: forward it
+                        callback.call(this, error);
+                    } else {
+                        modified = false;
+                        callback.call(this);
+                    }
+                });
             }
-            TLink.saveProgram(name, code, statements);
-            modified = false;
         };
 
-        this.load = function() {
-            code = TLink.getProgramCode(name);
-            codeChanged = true;
-            loaded = true;
+        this.load = function(callback) {
+            TLink.getProgramCode(name, function(codeData) {
+                if (codeData instanceof TError) {
+                    callback.call(this, codeData);
+                } else {
+                    code = codeData;
+                    codeChanged = true;
+                    loaded = true;
+                    callback.call(this);
+                }
+            });
         };
 
         function parse() {
@@ -95,15 +134,29 @@ define(['TParser', 'TLink', 'TEnvironment', 'TUtils'], function(TParser, TLink, 
             name = value;
         };
 
-        this.rename = function(value) {
+        this.rename = function(value, callback) {
             if (!newProgram) {
-                TLink.renameProgram(name, value);
-                name = value;
+                TLink.renameProgram(name, value, function(error) {
+                    if (typeof error !== 'undefined') {
+                        window.console.log("error detected");
+                        window.console.debug(error);
+                        callback.call(this, error);
+                    } else {
+                        name = value;
+                        callback.call(this);
+                    }
+                });
             } else {
                 // New Program: we try to create the program
-                TLink.createProgram(value);
-                name = value;
-                newProgram = false;
+                TLink.createProgram(value, function(error) {
+                    if (typeof error !== 'undefined') {
+                        callback.call(this, error);
+                    } else {
+                        name = value;
+                        newProgram = false;
+                        callback.call(this);
+                    }
+                });
             }
         };
 
@@ -123,9 +176,17 @@ define(['TParser', 'TLink', 'TEnvironment', 'TUtils'], function(TParser, TLink, 
             return newProgram;
         };
 
-        this.delete = function() {
+        this.delete = function(callback) {
             if (!newProgram) {
-                TLink.deleteProgram(name);
+                TLink.deleteProgram(name, function(error) {
+                    if (typeof error !== 'undefined') {
+                        callback.call(this, error);
+                    } else {
+                        callback.call(this);
+                    }
+                });
+            } else {
+                callback.call(this);
             }
         };
     }

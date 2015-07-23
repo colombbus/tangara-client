@@ -92,10 +92,11 @@ function load() {
                     window.console.log("* Initiating link *");
                     window.console.log("*******************");
                     var currentProject = new TProject();
-                    currentProject.init();
-                    TEnvironment.setProject(currentProject);
-                    $(document).ready(function() {
-                        frame.displayed();
+                    currentProject.init(function() {
+                        TEnvironment.setProject(currentProject);
+                        $(document).ready(function() {
+                            frame.displayed();
+                        });
                     });
                 });
             });

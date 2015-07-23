@@ -52,8 +52,9 @@ define(['ui/TComponent', 'TEnvironment', 'TUI', 'jquery'], function(TComponent, 
         };
 
         var save = function() {
-            TUI.setResourceContent(resourceName, $textArea.val());
-            hide();
+            TUI.setResourceContent(resourceName, $textArea.val(), function(newName) {
+                hide();
+            });
         };
     }
 

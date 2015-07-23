@@ -257,17 +257,17 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
             editor.updateProgram();
             var program = editor.getProgram();
             sidebar.showLoading(program.getName());
-            try
-            {
-                project.saveProgram(program, editor.getSession());
-                this.addLogMessage(TEnvironment.getMessage('program-saved', program.getName()));
-                this.updateProgramInfo(program);
-                editor.reset();
-            }
-            catch (error) {
-                this.addLogError(error);
-            }
-            sidebar.removeLoading(program.getName());
+            var self = this;
+            project.saveProgram(program, function(error) {
+                if (typeof error !== 'undefined') {
+                    self.addLogError(error);
+                } else {
+                    self.addLogMessage(TEnvironment.getMessage('program-saved', program.getName()));
+                    self.updateProgramInfo(program);
+                    editor.reset();
+                }
+                sidebar.removeLoading(program.getName());
+            }, editor.getSession());
         };
 
         this.newProgram = function() {
@@ -282,31 +282,37 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
         };
 
         this.editProgram = function(name) {
-            try {
-                var project = TEnvironment.getProject();
-                // save previous session if any
-                var previousProgram = editor.getProgram();
-                if (typeof previousProgram !== 'undefined') {
-                    project.updateSession(previousProgram, editor.getSession());
-                }
-                var newProgram;
-                if (!project.isProgramEdited(name)) {
-                    // Program has to be loaded
-                    sidebar.showLoading(name);
-                    project.editProgram(name);
-                    newProgram = project.getEditedProgram(name);
-                    project.setSession(newProgram, editor.createSession(newProgram));
-                } else {
-                    newProgram = project.getEditedProgram(name);
-                }
+            var project = TEnvironment.getProject();
+            // save previous session if any
+            var previousProgram = editor.getProgram();
+            if (typeof previousProgram !== 'undefined') {
+                project.updateSession(previousProgram, editor.getSession());
+            }
+            if (!project.isProgramEdited(name)) {
+                // Program has to be loaded
+                sidebar.showLoading(name);
+                var self = this;
+                project.editProgram(name, function(error) {
+                    if (typeof error !== 'undefined') {
+                        self.addLogError(error);
+                    } else {
+                        var newProgram = project.getEditedProgram(name);
+                        project.setSession(newProgram, editor.createSession(newProgram));
+                        editor.setProgram(newProgram);
+                        editor.setSession(project.getSession(newProgram));
+                        //update sidebar
+                        self.updateSidebarPrograms();
+                        editor.giveFocus();
+                    }
+                });
+            } else {
+                var newProgram = project.getEditedProgram(name);
                 editor.setProgram(newProgram);
                 editor.setSession(project.getSession(newProgram));
-            } catch (error) {
-                this.addLogError(error);
+                //update sidebar
+                this.updateSidebarPrograms();
+                editor.giveFocus();
             }
-            //update sidebar
-            this.updateSidebarPrograms();
-            editor.giveFocus();
         };
 
         function nextProgram(name) {
@@ -341,14 +347,15 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
         this.renameProgram = function(oldName, newName) {
             if (newName !== oldName) {
                 var project = TEnvironment.getProject();
-                try {
-                    sidebar.showRenamingProgram(oldName);
-                    project.renameProgram(oldName, newName);
-                } catch (error) {
-                    this.addLogError(error);
-                }
+                sidebar.showRenamingProgram(oldName);
+                var self = this;
+                project.renameProgram(oldName, newName, function(error) {
+                    if (typeof error !== 'undefined') {
+                        self.addLogError(error);
+                    }
+                    self.updateSidebarPrograms();
+                });
             }
-            this.updateSidebarPrograms();
         };
 
         this.renameResource = function(name, newBaseName) {
@@ -356,15 +363,18 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
             var oldBaseName = project.getResourceBaseName(name);
             var newName = name;
             if (newBaseName !== oldBaseName) {
-                try {
-                    sidebar.showRenamingResource(name);
-                    newName = project.renameResource(name, newBaseName);
-                } catch (error) {
-                    this.addLogError(error);
-                }
+                sidebar.showRenamingResource(name);
+                var self = this;
+                project.renameResource(name, newBaseName, function(name) {
+                    if (name instanceof TError) {
+                        self.addLogError(name);
+                    } else {
+                        newName = name;
+                    }
+                    self.updateSidebarResources();
+                    sidebar.selectResource(newName);
+                });
             }
-            this.updateSidebarResources();
-            sidebar.selectResource(newName);
         };
 
         this.setEditionEnabled = function(value) {
@@ -413,30 +423,35 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 var name = editor.getProgramName();
                 var goOn = window.confirm(TEnvironment.getMessage('delete-program-confirm', name));
                 if (goOn) {
-                    try {
-                        project.deleteProgram(name);
-                        nextProgram(name);
-                    } catch (error) {
-                        this.addLogError(error);
-                    }
+                    var self = this;
+                    project.deleteProgram(name, function(error) {
+                        if (typeof error !== 'undefined') {
+                            self.addLogError(error);
+                        } else {
+                            nextProgram(name);
+                        }
+                        //update sidebar
+                        self.updateSidebarPrograms();
+                        editor.giveFocus();
+                    });
                 }
-                //update sidebar
-                this.updateSidebarPrograms();
                 editor.giveFocus();
             } else {
                 // Resource deletion
                 var name = sidebar.getCurrentResourceName();
                 var goOn = window.confirm(TEnvironment.getMessage('delete-resource-confirm', name));
                 if (goOn) {
-                    try {
-                        project.deleteResource(name);
-                        nextProgram(name);
-                    } catch (error) {
-                        this.addLogError(error);
-                    }
+                    var self = this;
+                    project.deleteResource(name, function(error) {
+                        if (typeof error !== 'undefined') {
+                            self.addLogError(error);
+                        } else {
+                            nextProgram(name);
+                        }
+                        //update sidebar
+                        self.updateSidebarResources();
+                    });
                 }
-                //update sidebar
-                this.updateSidebarResources();
             }
         };
 
@@ -465,39 +480,54 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
             }
         };
 
-        this.setResourceContent = function(name, data) {
-            var newName = TEnvironment.getProject().setResourceContent(name, data);
-            if (newName !== name) {
-                // name has changed: update sidebar
-                this.updateSidebarResources();
-                sidebar.selectResource(newName);
-            }
-            return newName;
+        this.setResourceContent = function(name, data, callback) {
+            var self = this;
+            TEnvironment.getProject().setResourceContent(name, data, function(newName) {
+                if (!(newName instanceof TError)) {
+                    if (newName !== name) {
+                        // name has changed: update sidebar
+                        self.updateSidebarResources();
+                        sidebar.selectResource(newName);
+                    }
+                    callback.call(this, newName);
+                }
+            });
         };
 
-        this.duplicateResource = function(name) {
-            var newName = TEnvironment.getProject().duplicateResource(name);
-            this.updateSidebarResources();
-            sidebar.selectResource(newName);
-            sidebar.viewResource(newName);
+        this.duplicateResource = function(name, callback) {
+            var self = this;
+            TEnvironment.getProject().duplicateResource(name, function(newName) {
+                if (!(newName instanceof TError)) {
+                    self.updateSidebarResources();
+                    sidebar.selectResource(newName);
+                    sidebar.viewResource(newName);
+                }
+                callback.call(this, newName);
+            });
         };
 
         this.newResource = function() {
             sidebar.createResource();
         };
 
-        this.createResource = function(name, width, height) {
-            var newName = TEnvironment.getProject().createResource(name, width, height);
-            this.updateSidebarResources();
-            sidebar.selectResource(newName);
-            sidebar.viewResource(newName);
+        this.createResource = function(name, width, height, callback) {
+            var self = this;
+            TEnvironment.getProject().createResource(name, width, height, function(newName) {
+                if (!(newName instanceof TError)) {
+                    self.updateSidebarResources();
+                    sidebar.selectResource(newName);
+                    sidebar.viewResource(newName);
+                }
+                callback.call(this, newName);
+            });
         };
 
         this.init = function() {
             editor.disable();
             sidebar.load();
-            TEnvironment.getProject().init();
-            sidebar.init();
+            TEnvironment.getProject().init(function() {
+                sidebar.init();
+            });
         };
 
     };

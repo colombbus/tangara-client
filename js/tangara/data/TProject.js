@@ -27,28 +27,33 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
             return id;
         };
 
-        this.renameProgram = function(oldName, newName) {
+        this.renameProgram = function(oldName, newName, callback) {
             if (typeof editedPrograms[oldName] !== 'undefined') {
                 var program = editedPrograms[oldName];
-                program.rename(newName);
+                program.rename(newName, function(error) {
+                    if (typeof error !== 'undefined') {
+                        callback.call(this, error);
+                    } else {
+                        // add newname records
+                        programs.push(newName);
+                        sessions[newName] = sessions[oldName];
+                        editedPrograms[newName] = editedPrograms[oldName];
 
-                // add newname records
-                programs.push(newName);
-                sessions[newName] = sessions[oldName];
-                editedPrograms[newName] = editedPrograms[oldName];
+                        // remove oldname records
+                        var i = programs.indexOf(oldName);
+                        if (i > -1) {
+                            // Should always be the case
+                            programs.splice(i, 1);
+                        }
+                        delete sessions[oldName];
+                        delete editedPrograms[oldName];
 
-                // remove oldname records
-                var i = programs.indexOf(oldName);
-                if (i > -1) {
-                    // Should always be the case
-                    programs.splice(i, 1);
-                }
-                delete sessions[oldName];
-                delete editedPrograms[oldName];
-
-                // update programs lists
-                programs = TUtils.sortArray(programs);
-                updateEditedPrograms();
+                        // update programs lists
+                        programs = TUtils.sortArray(programs);
+                        updateEditedPrograms();
+                        callback.call(this);
+                    }
+                });
             }
         };
 
@@ -67,11 +72,11 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
             program.setCode(session.getValue());
         };
 
-        this.saveProgram = function(program, session) {
-            if (typeof (session) !== 'undefined') {
+        this.saveProgram = function(program, callback, session) {
+            if (typeof session !== 'undefined') {
                 this.updateSession(program, session);
             }
-            program.save();
+            program.save(callback);
         };
 
         this.getEditedProgram = function(name) {
@@ -81,12 +86,19 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
             return false;
         };
 
-        this.editProgram = function(name, session) {
+        this.editProgram = function(name, callback, session) {
             if (typeof editedPrograms[name] === 'undefined') {
                 var program = new TProgram(name);
-                editedPrograms[name] = program;
-                // sort editing programs alphabetically
-                updateEditedPrograms();
+                program.load(function(error) {
+                    if (typeof error !== 'undefined') {
+                        callback.call(this, error);
+                    } else {
+                        editedPrograms[name] = program;
+                        // sort editing programs alphabetically
+                        updateEditedPrograms();
+                        callback.call(this);
+                    }
+                });
             }
         };
 
@@ -158,7 +170,7 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
             return editedProgramsArray;
         };
 
-        this.init = function() {
+        this.init = function(callback) {
             programs = [];
             editedPrograms = {};
             resources = {};
@@ -166,19 +178,33 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
             sessions = {};
             editedProgramsNames = [];
             editedProgramsArray = [];
-            try {
-                programs = TLink.getProgramList();
-                resources = TLink.getResources();
-                resourcesNames = Object.keys(resources);
-                // sort programs and resources alphabetically
-                programs = TUtils.sortArray(programs);
-                resourcesNames = TUtils.sortArray(resourcesNames);
-                TEnvironment.setProjectAvailable(true);
-                this.preloadImages();
-            }
-            catch (error) {
-                TEnvironment.setProjectAvailable(false);
-            }
+            // get program list
+            var self = this;
+            TLink.getProgramList(function(arg) {
+                if (arg instanceof TError) {
+                    // error sent: stop there
+                    TEnvironment.setProjectAvailable(false);
+                    callback.call(this);                    
+                } else {
+                    programs = arg;
+                    // sort programs and resources alphabetically
+                    programs = TUtils.sortArray(programs);
+                    // get resource list
+                    TLink.getResources(function(arg) {
+                        if (arg instanceof TError) {
+                            // error sent: stop there
+                            TEnvironment.setProjectAvailable(false);
+                        } else {
+                            resources = arg;
+                            resourcesNames = Object.keys(resources);
+                            resourcesNames = TUtils.sortArray(resourcesNames);
+                            TEnvironment.setProjectAvailable(true);
+                            self.preloadImages();
+                        }
+                        callback.call(this);
+                    });
+                }
+            });
         };
 
         this.getResourcesNames = function() {
@@ -216,7 +242,7 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
         };
 
         this.uploadingResource = function(name) {
-            if (typeof (resources[name]) !== 'undefined') {
+            if (typeof resources[name] !== 'undefined') {
                 var e = new TError(TEnvironment.getMessage("resource-already-exists", name));
                 throw e;
             }
@@ -236,7 +262,7 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
         };
 
         this.removeUploadingResource = function(name) {
-            if (typeof (resources[name] !== 'undefined')) {
+            if (typeof resources[name] !== 'undefined') {
                 resources[name] = undefined;
             }
             var i = resourcesNames.indexOf(name);
@@ -245,9 +271,8 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
             }
         };
 
-        this.renameResource = function(name, newBaseName) {
+        this.renameResource = function(name, newBaseName, callback) {
             var i = resourcesNames.indexOf(name);
-            newName = name;
             if (i > -1) {
                 // resource exists
                 var resource = resources[name];
@@ -256,45 +281,59 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
                 if (type === 'uploading') {
                     throw new TError(TEnvironment.getMessage('resource-not-uploaded'));
                 }
-                var newName = TLink.renameResource(name, newBaseName);
-                // remove old name
-                resourcesNames.splice(i, 1);
-                // add new name
-                resourcesNames.push(newName);
-                resources[newName] = resources[name];
-                resources[newName]['base-name'] = newBaseName;
-                delete resources[name];
+                var self = this;
+                TLink.renameResource(name, newBaseName, function(newName) {
+                    if (newName instanceof TError) {
+                        // error: just forward it
+                        callback.call(this, newName);
+                    } else {
+                        // remove old name
+                        resourcesNames.splice(i, 1);
+                        // add new name
+                        resourcesNames.push(newName);
+                        resources[newName] = resources[name];
+                        resources[newName]['base-name'] = newBaseName;
+                        delete resources[name];
 
-                // update programs lists
-                resourcesNames = TUtils.sortArray(resourcesNames);
+                        // update programs lists
+                        resourcesNames = TUtils.sortArray(resourcesNames);
 
-                // preload image if required with new name
-                if (type === 'image') {
-                    this.preloadImage(newName);
-                }
+                        // preload image if required with new name
+                        if (type === 'image') {
+                            self.preloadImage(newName);
+                        }
+                        callback.call(this, newName);
+                    }
+                });
             }
-            return newName;
         };
 
-        this.setResourceContent = function(name, data) {
-            var newData = TLink.setResourceContent(name, data);
-            var newName = newData['name'];
-            if (newName !== name) {
-                // name has changed
-                // remove old name
-                var i = resourcesNames.indexOf(name);
-                resourcesNames.splice(i, 1);
-                // add new name
-                resourcesNames.push(newName);
-                delete resources[name];
-                // update programs lists
-                resourcesNames = TUtils.sortArray(resourcesNames);
-                name = newName;
-            }
-            resources[name] = newData['data'];
-            // preload image
-            this.preloadImage(name);
-            return name;
+        this.setResourceContent = function(name, data, callback) {
+            var self = this;
+            TLink.setResourceContent(name, data, function(newData) {
+                if (newData instanceof TError) {
+                    // error: just forward it
+                    callback.call(this, newData);
+                } else {
+                    var newName = newData['name'];
+                    if (newName !== name) {
+                        // name has changed
+                        // remove old name
+                        var i = resourcesNames.indexOf(name);
+                        resourcesNames.splice(i, 1);
+                        // add new name
+                        resourcesNames.push(newName);
+                        delete resources[name];
+                        // update programs lists
+                        resourcesNames = TUtils.sortArray(resourcesNames);
+                        name = newName;
+                    }
+                    resources[name] = newData['data'];
+                    // preload image
+                    self.preloadImage(name);
+                    callback.call(this, name);
+                }
+            });
         };
 
         this.getResourceLocation = function(name) {
@@ -329,26 +368,31 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
             return false;
         };
 
-        this.deleteProgram = function(name) {
+        this.deleteProgram = function(name, callback) {
             if (typeof editedPrograms[name] !== 'undefined') {
                 var program = editedPrograms[name];
-                program.delete();
+                program.delete(function(error) {
+                    if (typeof error !== 'undefined') {
+                        callback.call(this, error);
+                    } else {
+                        // delete corresponding records
+                        var i = programs.indexOf(name);
+                        if (i > -1) {
+                            // Should always be the case
+                            programs.splice(i, 1);
+                        }
+                        delete sessions[name];
+                        delete editedPrograms[name];
 
-                // delete corresponding records
-                var i = programs.indexOf(name);
-                if (i > -1) {
-                    // Should always be the case
-                    programs.splice(i, 1);
-                }
-                delete sessions[name];
-                delete editedPrograms[name];
-
-                // update programs lists
-                updateEditedPrograms();
+                        // update programs lists
+                        updateEditedPrograms();
+                        callback.call(this);
+                    }
+                });
             }
         };
 
-        this.deleteResource = function(name) {
+        this.deleteResource = function(name, callback) {
             var i = resourcesNames.indexOf(name);
             if (i > -1) {
                 // resource exists
@@ -357,41 +401,61 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
                 var type = resource.type;
                 if (type === 'uploading') {
                     //TODO: find a way to cancel upload?
-                    throw new TError(TEnvironment.getMessage('resource-not-uploaded'));
+                    callback.call(this, new TError(TEnvironment.getMessage('resource-not-uploaded')));
                 }
-                TLink.deleteResource(name);
-                // remove name
-                resourcesNames.splice(i, 1);
-                delete resources[name];
+                TLink.deleteResource(name, function(error) {
+                    if (typeof error !== 'undefined') {
+                        // error: just forward it
+                        callback.call(this, error);
+                    } else {
+                        // remove name
+                        resourcesNames.splice(i, 1);
+                        delete resources[name];
+                        callback.call(this);
+                    }
+                });
             }
         };
 
-        this.duplicateResource = function(name) {
-            var newData = TLink.duplicateResource(name);
-            var newName = newData['name'];
-            resourcesNames.push(newName);
-            resourcesNames = TUtils.sortArray(resourcesNames);
-            resources[newName] = newData['data'];
-            // preload image
-            this.preloadImage(newName);
-            return newName;
+        this.duplicateResource = function(name, callback) {
+            var self = this;
+            TLink.duplicateResource(name, function(newData) {
+                if (newData instanceof TError) {
+                    // error: just forward it
+                    callback.call(this, newData);
+                } else {
+                    var newName = newData['name'];
+                    resourcesNames.push(newName);
+                    resourcesNames = TUtils.sortArray(resourcesNames);
+                    resources[newName] = newData['data'];
+                    // preload image
+                    self.preloadImage(newName);
+                    callback.call(this, newName);
+                }
+            });
         };
 
-        this.createResource = function(name, width, height) {
+        this.createResource = function(name, width, height, callback) {
             // create image
             var canvas = document.createElement("canvas");
             canvas.width = width;
             canvas.height = height;
             var imageData = canvas.toDataURL();
-
-            var newData = TLink.createResource(name, imageData);
-            var newName = newData['name'];
-            resourcesNames.push(newName);
-            resourcesNames = TUtils.sortArray(resourcesNames);
-            resources[newName] = newData['data'];
-            // preload image
-            this.preloadImage(newName);
-            return newName;
+            var self = this;
+            TLink.createResource(name, imageData, function(newData) {
+                if (newData instanceof TError) {
+                    // error: just forward it
+                    callback.call(this, newData);
+                } else {
+                    var newName = newData['name'];
+                    resourcesNames.push(newName);
+                    resourcesNames = TUtils.sortArray(resourcesNames);
+                    resources[newName] = newData['data'];
+                    // preload image
+                    self.preloadImage(newName);
+                    callback.call(this, newName);
+                }
+            });
         };
 
         var updateEditedPrograms = function() {
