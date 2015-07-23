@@ -1,4 +1,11 @@
 define(['jquery'], function($) {
+    /**
+     * Internationalization of Declick.
+     * Allows the program to be adapted to various languages.
+     * TI18n
+     * @class
+     * @returns {TI18n}
+     */
     var TI18n = function() {
         var processedFiles = {};
         var hiddenMethods = {};
@@ -6,6 +13,12 @@ define(['jquery'], function($) {
         var translatedClasses = [];
         var self;
         
+        /**
+         * Translate a method
+         * @param {String} aClass
+         * @param {String} name
+         * @param {String} translated
+         */
         var addTranslatedMethod = function(aClass, name, translated) {
             aClass.prototype[translated] = aClass.prototype[name];
             //TODO: find a working way to prevent classes from being modified 
@@ -16,13 +29,28 @@ define(['jquery'], function($) {
                 writable: false}); // DOES NOT WORK
         };
 
+        /**
+         * Hide the translation of a method
+         * @param {String} aClass
+         * @param {String} translated
+         */
         var hideTranslatedMethod = function(aClass, translated) {
-            // redefine method to hide the orignal one
+            // redefine method to hide the original one
             aClass.prototype[translated] = function() {
                 throw new Error("unknown function");
             };
         };
 
+        /**
+         * If the function is called for the first time for "aClass", load
+         * tranlation file.
+         * Translate each method which isn't into "hideMethods".
+         * @param {String} aClass
+         * @param {String} file
+         * @param {String} language
+         * @param {String[]} hideMethods
+         * @param {Function} callback
+         */
         var addTranslatedMethods = function(aClass, file, language, hideMethods, callback) {
             var translatedMethods = {};
             if (typeof processedFiles[file] !== "undefined") {
@@ -82,6 +110,15 @@ define(['jquery'], function($) {
             }
         };
 
+        /**
+         * If the function is called for the first time for "aClass", load
+         * message file.
+         * Translate each messages.
+         * @param {String} aClass
+         * @param {String} file
+         * @param {String} language
+         * @param {Function} callback
+         */
         var addTranslatedMessages = function(aClass, file, language, callback) {
             if (typeof aClass.messages === "undefined") {
                 aClass.messages = {};
@@ -131,6 +168,17 @@ define(['jquery'], function($) {
             }
         };
 
+        /**
+         * Tranlates Methods, then Messages of "aClass", and recall himself
+         * with ParentPrototype af any
+         * @param {String} aClass
+         * @param {String} prototype
+         * @param {Boolean} parents
+         * @param {String} language
+         * @param {String[]} translated
+         * @param {String[]} hidden
+         * @param {Function} callback
+         */
         var i18nClass = function(aClass, prototype, parents, language, translated, hidden, callback) {
             var translationFile = prototype.getResource("i18n.json");
             var messageFile = prototype.getResource("messages.json");
@@ -166,6 +214,13 @@ define(['jquery'], function($) {
             });
         };
 
+        /**
+         * Internationalize both Methods and Message of "initialClass"
+         * @param {String} initialClass
+         * @param {Boolean} parents
+         * @param {String} language
+         * @param {Function} callback
+         */
         this.internationalize = function(initialClass, parents, language, callback) {
             self = this;
             i18nClass(initialClass, initialClass.prototype, parents, language, {}, [], function(translated) {
