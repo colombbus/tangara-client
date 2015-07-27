@@ -1,9 +1,18 @@
 define(['TRuntime', 'TUtils', 'TParser'], function(TRuntime, TUtils, TParser) {
+    /**
+     * 
+     * @exports CommandManager
+     */
     var CommandManager = function() {
         this.commands = new Array();
         this.logging = true;
     };
 
+    /**
+     * Add a new command.
+     * @param {String} command  Command to be added
+     * @param {String} field  Field associated to the command ; can be empty
+     */
     CommandManager.prototype.addCommand = function(command, field) {
         if (TUtils.checkString(command)) {
             // command is a string: we parse it
@@ -29,6 +38,11 @@ define(['TRuntime', 'TUtils', 'TParser'], function(TRuntime, TUtils, TParser) {
         }
     };
 
+    /**
+     * Removes all commands of field,
+     * or all simples commands if field is undefined.
+     * @param {String} field
+     */
     CommandManager.prototype.removeCommands = function(field) {
         if (typeof field === 'undefined') {
             this.commands.length = 0;
@@ -37,6 +51,10 @@ define(['TRuntime', 'TUtils', 'TParser'], function(TRuntime, TUtils, TParser) {
         }
     };
 
+    /**
+     * Execute commands, depending of parameters. 
+     * @param {String[]} parameters
+     */
     CommandManager.prototype.executeCommands = function(parameters) {
         // TODO: handle parameters
         var i, parameter, field;
@@ -55,6 +73,13 @@ define(['TRuntime', 'TUtils', 'TParser'], function(TRuntime, TUtils, TParser) {
         }
     };
 
+    /**
+     * Check if field has associated commands.
+     * If field is empty, check if there is simple commands.
+     * @param {type} field
+     * @returns {Boolean}   Returns true if at least one command is found,
+     * else false.
+     */
     CommandManager.prototype.hasCommands = function(field) {
         if (typeof field === 'undefined') {
             return this.commands.length > 0;
@@ -63,6 +88,11 @@ define(['TRuntime', 'TUtils', 'TParser'], function(TRuntime, TUtils, TParser) {
         }
     };
 
+    /**
+     * Enable or disable the log of commands.
+     * Default value : true.
+     * @param {Boolean} value
+     */
     CommandManager.prototype.logCommands = function(value) {
         this.logging = value;
     };
