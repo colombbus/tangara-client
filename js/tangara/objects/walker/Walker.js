@@ -1,9 +1,9 @@
 define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'TUtils'], function($, TEnvironment, TGraphicalObject, Sprite, TUtils) {
     /**
-     * Defines Walker, inhetired from Sprite. Gets its name in parameter.
+     * Defines Walker, inhetired from Sprite.
      * It can have a gravity, jump and be linked to a Block.
-     * @param {String} name
-     * @returns {Walker}
+     * @param {String} name Walker's name
+     * @exports Walker
      */
     var Walker = function(name) {
         Sprite.call(this, name);

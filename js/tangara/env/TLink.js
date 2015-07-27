@@ -1,11 +1,24 @@
 define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TUtils, TEnvironment, TError, TParser) {
+    /**
+     * TLink is the bridge between client and server.
+     * It loads projects.
+     * @exports TLink
+     */
     var TLink = function() {
         var projectId = false;
 
+        /**
+         * Set the ID project to value.
+         * @param {String} value
+         */
         this.setProjectId = function(value) {
             projectId = value;
         };
-
+        
+        /**
+         * Get the list of programs.
+         * @param {Function} callback
+         */
         this.getProgramList = function(callback) {
             if (TEnvironment.debug)
                 callback.call(this, ["bob.tgr", "pomme.tgr", "cubeQuest.tgr"]);
@@ -37,6 +50,11 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
             }
         };
 
+        /**
+         * Get the code of the current program.
+         * @param {String} name
+         * @param {Function} callback
+         */
         this.getProgramCode = function(name, callback) {
             var url;
             name = TUtils.getString(name);
@@ -88,6 +106,11 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
             }
         };
 
+        /**
+         * Get statements of the current program.
+         * @param {String} name
+         * @param {Function} callback
+         */
         this.getProgramStatements = function(name, callback) {
             if (TEnvironment.debug) {
                 try {
@@ -130,6 +153,13 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
             }
         };
 
+        /**
+         * Save the current program. Does not save the whole project.
+         * @param {String} name
+         * @param {String} code
+         * @param {String[]} statements
+         * @param {Function} callback
+         */
         this.saveProgram = function(name, code, statements, callback) {
             if (!TEnvironment.debug) {
                 var url = TEnvironment.getBackendUrl('setprogramcontent');
@@ -159,6 +189,11 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
             }
         };
 
+        /**
+         * Create a new program.
+         * @param {String} name Program's name
+         * @param {Function} callback
+         */
         this.createProgram = function(name, callback) {
             if (!TEnvironment.debug) {
                 var url = TEnvironment.getBackendUrl('createprogram');
@@ -188,6 +223,12 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
             }
         };
 
+        /**
+         * Rename the current program.
+         * @param {String} name Actual name
+         * @param {type} newName    New name
+         * @param {type} callback
+         */
         this.renameProgram = function(name, newName, callback) {
             if (!TEnvironment.debug) {
                 var url = TEnvironment.getBackendUrl('renameprogram');
@@ -217,6 +258,10 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
             }
         };
 
+        /**
+         * Get resources of the project.
+         * @param {Function} Callback
+         */
         this.getResources = function(callback) {
             if (TEnvironment.debug) {
                 callback.call(this, {"arbre.gif": {"type": "image"}, "arrivee.png": {"type": "image"}, "bat1.png": {"type": "image"}, "bat2.png": {"type": "image"}, "bob.png": {"type": "image"}, "bob_droite_1.png": {"type": "image"}, "bob_droite_2.png": {"type": "image"}, "bob_droite_3.png": {"type": "image"}, "bob_droite_4.png": {"type": "image"}, "bob_droite_5.png": {"type": "image"}, "bob_droite_6.png": {"type": "image"}, "bob_face.png": {"type": "image"}, "bob_gauche_1.png": {"type": "image"}, "bob_gauche_2.png": {"type": "image"}, "bob_gauche_3.png": {"type": "image"}, "bob_gauche_4.png": {"type": "image"}, "bob_gauche_5.png": {"type": "image"}, "bob_gauche_6.png": {"type": "image"}, "boum.png": {"type": "image"}, "cle.png": {"type": "image"}, "ennemi.png": {"type": "image"}, "ennemi2.png": {"type": "image"}, "ennemi3.png": {"type": "image"}, "fini.png": {"type": "image"}, "fond.png": {"type": "image"}, "game over.png": {"type": "image"}, "gameover.png": {"type": "image"}, "maison.gif": {"type": "image"}, "mechant1.png": {"type": "image"}, "mechant2.png": {"type": "image"}, "menujeu.png": {"type": "image"}, "niveau1.png": {"type": "image"}, "niveau2.png": {"type": "image"}, "niveau3.png": {"type": "image"}, "niveau4.png": {"type": "image"}, "niveau5.png": {"type": "image"}, "niveau6.png": {"type": "image"}, "niveau7.png": {"type": "image"}, "niveau8.png": {"type": "image"}, "nok1.png": {"type": "image"}, "nok2.png": {"type": "image"}, "nok3.png": {"type": "image"}, "ok.png": {"type": "image"}, "perso.png": {"type": "image"}, "pomme.gif": {"type": "image"}, "porte.png": {"type": "image"}, "porte_ouverte.png": {"type": "image"}, "sol.gif": {"type": "image"}});
@@ -249,7 +294,13 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
                 });
             }
         };
-
+        
+        /**
+         * Get Resource's URL.
+         * @param {type} name
+         * @param {type} version
+         * @returns {String}
+         */
         this.getResourceLocation = function(name, version) {
             if (TEnvironment.debug) {
                 return TEnvironment.getBaseUrl() + "/tests/" + name;
@@ -262,6 +313,12 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
             }
         };
 
+        /**
+         * Rename a resource.
+         * @param {String} name Actual name
+         * @param {type} newName    New name
+         * @param {type} callback
+         */
         this.renameResource = function(name, newBaseName, callback) {
             if (!TEnvironment.debug) {
                 var url = TEnvironment.getBackendUrl('renameresource');
@@ -291,6 +348,11 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
             }
         };
 
+        /**
+         * Delete the current program.
+         * @param {String}  name
+         * @param {Function}    callback
+         */
         this.deleteProgram = function(name, callback) {
             if (!TEnvironment.debug) {
                 var url = TEnvironment.getBackendUrl('removeprogram');
@@ -320,6 +382,11 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
             }
         };
 
+        /**
+         * Delete the current resource.
+         * @param {String}  name
+         * @param {Function}    callback
+         */
         this.deleteResource = function(name, callback) {
             if (!TEnvironment.debug) {
                 var url = TEnvironment.getBackendUrl('removeresource');
@@ -349,6 +416,12 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
             }
         };
 
+        /**
+         * Set a content for the resource "name".
+         * @param {String} name
+         * @param {String} data
+         * @param {Function} callback
+         */
         this.setResourceContent = function(name, data, callback) {
             if (!TEnvironment.debug) {
                 var url = TEnvironment.getBackendUrl('setresource');
@@ -378,6 +451,11 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
             }
         };
 
+        /**
+         * Duplicate resource "name".
+         * @param {String} name
+         * @param {Function} callback
+         */
         this.duplicateResource = function(name, callback) {
             if (!TEnvironment.debug) {
                 var url = TEnvironment.getBackendUrl('duplicateresource');
@@ -407,6 +485,12 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
             }
         };
 
+        /**
+         * Create a new resource.
+         * @param {String} name
+         * @param {String} data
+         * @param {Function} callback
+         */
         this.createResource = function(name, data, callback) {
             if (!TEnvironment.debug) {
                 var url = TEnvironment.getBackendUrl('createresource');
@@ -436,7 +520,11 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
             }
         };
 
-
+        /**
+         * Checks if there is an error in data.
+         * @param {type} data
+         * @returns {TError|Boolean}    Returns error if existing, else false.
+         */
         function checkError(data) {
             if (typeof data !== 'undefined' && typeof data['error'] !== 'undefined') {
                 var e = new TError(TEnvironment.getMessage("backend-error-" + data['error']));

@@ -1,9 +1,9 @@
 define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'TUtils'], function($, TEnvironment, TGraphicalObject, Sprite, Block, TUtils) {
     /**
-     * Defines Item, inhetired from Sprite.
+     * Defines Item, inherited from Sprite.
      * Item is a Sprite which can be picked up.
-     * @class
-     * @returns {KeyStroke}
+     * @param {String} name Item's name
+     * @exports Item
      */
      var Item = function(name) {
         Sprite.call(this, name);

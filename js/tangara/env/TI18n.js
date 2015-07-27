@@ -2,9 +2,7 @@ define(['jquery'], function($) {
     /**
      * Internationalization of Declick.
      * Allows the program to be adapted to various languages.
-     * TI18n
-     * @class
-     * @returns {TI18n}
+     * @exports TI18n
      */
     var TI18n = function() {
         var processedFiles = {};
@@ -14,7 +12,7 @@ define(['jquery'], function($) {
         var self;
         
         /**
-         * Translate a method
+         * Translate a method.
          * @param {String} aClass
          * @param {String} name
          * @param {String} translated
@@ -30,7 +28,7 @@ define(['jquery'], function($) {
         };
 
         /**
-         * Hide the translation of a method
+         * Hide the translation of a method.
          * @param {String} aClass
          * @param {String} translated
          */
@@ -170,7 +168,7 @@ define(['jquery'], function($) {
 
         /**
          * Tranlates Methods, then Messages of "aClass", and recall himself
-         * with ParentPrototype af any
+         * with ParentPrototype.
          * @param {String} aClass
          * @param {String} prototype
          * @param {Boolean} parents
@@ -215,7 +213,7 @@ define(['jquery'], function($) {
         };
 
         /**
-         * Internationalize both Methods and Message of "initialClass"
+         * Internationalize both Methods and Message of "initialClass".
          * @param {String} initialClass
          * @param {Boolean} parents
          * @param {String} language

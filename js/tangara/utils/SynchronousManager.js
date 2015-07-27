@@ -1,15 +1,14 @@
 define(['TRuntime'], function(TRuntime) {
     /**
-     * SynchronousManager runs the synchronicity between objects in TRunTime
-     * @class
-     * @returns {SynchronousManager}
+     * SynchronousManager runs the synchronicity between objects in TRuntime.
+     * @exports SynchronousManager  
      */
     var SynchronousManager = function() {
         this.running = false;
     };
 
     /**
-     * Suspend the execution of the interpreter and set running to true
+     * Suspend the execution of the interpreter and set running to true.
      */
     SynchronousManager.prototype.begin = function() {
         TRuntime.suspend();
@@ -17,7 +16,7 @@ define(['TRuntime'], function(TRuntime) {
     };
 
     /**
-     * Resume the execution of the interpreter and set running to false
+     * Resume the execution of the interpreter and set running to false.
      */
     SynchronousManager.prototype.end = function() {
         TRuntime.resume();

@@ -1,12 +1,10 @@
 define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager'], function($, TEnvironment, TUtils, TGraphicalObject, CommandManager) {
     /**
-     * Defines Character, inhetired from TGraphicalObject.
-     * Gets its name in parameter.
+     * Defines Character, inherited from TGraphicalObject.
      * A Character have several appearances, can move, raise its arms,
      * and catch Sprite objects.
-     * @class
-     * @param {String} characterName
-     * @returns {Character}
+     * @param {String} characterName Character's name
+     * @exports Character
      */
     var Character = function(characterName) {
         TGraphicalObject.call(this);
@@ -307,7 +305,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager'
     });
 
     /**
-     * Move Character of "value" pixels forward (to the right)
+     * Move Character of "value" pixels forward (to the right)?
      * @param {Number} value
      */
     Character.prototype._moveForward = function(value) {
@@ -316,7 +314,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager'
     };
     
     /**
-     * Move Character of "value" pixels backward (to the left)
+     * Move Character of "value" pixels backward (to the left)?
      * @param {Number} value
      */
     Character.prototype._moveBackward = function(value) {
@@ -325,7 +323,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager'
     };
     
     /**
-     * Move Character of "value" pixels upward
+     * Move Character of "value" pixels upward.
      * @param {Number} value
      */
     Character.prototype._moveUpward = function(value) {
@@ -334,7 +332,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager'
     };
     
     /**
-     * Move Character of "value" pixels downward
+     * Move Character of "value" pixels downward.
      * @param {Number} value
      */
     Character.prototype._moveDownward = function(value) {
@@ -343,7 +341,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager'
     };
 
     /**
-     * Stops Character
+     * Stops Character.
      */
     Character.prototype._stop = function() {
         this.gObject.stop();
@@ -461,7 +459,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager'
     };
 
     /**
-     * Change the appearance of Character
+     * Change the appearance of Character.
      * @param {String} name
      */
     Character.prototype._change = function(name) {
@@ -507,10 +505,9 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager'
     };
 
     /**
-     * Let Character catch the object entered in first parameter.
-     * Do the command entered in second parameter if object is catch.
-     * @param {String} object
-     * @param {String} command
+     * Let Character catch an object, and trigger an associated command.
+     * @param {String} object   Object that Character will be able to catch
+     * @param {String} command  Command triggered if Character catch object
      */
     Character.prototype._mayCatch = function(object, command) {
         object = TUtils.getObject(object);

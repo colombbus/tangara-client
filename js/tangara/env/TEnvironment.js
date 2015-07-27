@@ -1,9 +1,9 @@
 define(['jquery'], function($) {
      /**
      * TEnvironment defines the environment variables (language, project,
-     * and project's availability), 
-     * @class
-     * @returns {TEnvironment}
+     * and project's availability), get several URLs, and have several other
+     * interactions with the environment.
+     * @exports TEnvironment
      */
     var TEnvironment = function() {
         var project;
@@ -62,7 +62,7 @@ define(['jquery'], function($) {
         };
 
         /**
-         * Get the base URL
+         * Get the base URL.
          * @returns {String}
          */
         this.getBaseUrl = function() {
@@ -70,7 +70,7 @@ define(['jquery'], function($) {
         };
 
         /**
-         * Get the URL of objects
+         * Get the URL of objects.
          * @returns {String}
          */
         this.getObjectsUrl = function() {
@@ -78,7 +78,7 @@ define(['jquery'], function($) {
         };
 
         /**
-         * Get the URL of the list of objects
+         * Get the URL of the list of objects.
          * @returns {String}
          */
         this.getObjectListUrl = function() {
@@ -86,9 +86,9 @@ define(['jquery'], function($) {
         };
 
         /**
-         * Get the URL of the module entered in parameter
+         * Get the URL of the module entered in parameter.
          * @param {String} module
-         * @returns {String}
+         * @returns {String} Returns the URL of module.
          */
         this.getBackendUrl = function(module) {
             var url = window.location.protocol + "//" + window.location.host + window.location.pathname.split("/").slice(0, -2).join("/");
@@ -100,7 +100,7 @@ define(['jquery'], function($) {
         };
 
         /**
-         * Get language
+         * Get language.
          * @returns {String}
          */
         this.getLanguage = function() {
@@ -108,7 +108,7 @@ define(['jquery'], function($) {
         };
 
         /**
-         * Set language to the one entered in parameter
+         * Set language to the one entered in parameter.
          * @param {String} language
          */
         this.setLanguage = function(language) {
@@ -116,18 +116,18 @@ define(['jquery'], function($) {
         };
 
         /**
-         * Get URL of the resource entered in parameter
+         * Get URL of the resource entered in parameter.
          * @param {String} name
-         * @returns {String}
+         * @returns {String} Returns the URL of the resource.
          */
         this.getResource = function(name) {
             return this.getBaseUrl() + "/resources/" + name;
         };
 
         /**
-         * Get resource entered in parameter of var project
+         * Get resource entered in parameter of var project.
          * @param {String} name
-         * @returns {unresolved}
+         * @returns {Resource}
          */
         this.getProjectResource = function(name) {
             return project.getResourceLocation(name);
@@ -160,7 +160,7 @@ define(['jquery'], function($) {
         };
 
         /**
-         * Set the project to the one entered in parameter
+         * Set the project to the one entered in parameter.
          * @param {String} value
          */
         this.setProject = function(value) {
@@ -168,7 +168,7 @@ define(['jquery'], function($) {
         };
 
         /**
-         * Get the current project
+         * Get the current project.
          * @returns {String}
          */
         this.getProject = function() {
@@ -176,7 +176,7 @@ define(['jquery'], function($) {
         };
 
         /**
-         * Set the avaibility of the project
+         * Set the avaibility of the project.
          * @param {Boolean} value
          */
         this.setProjectAvailable = function(value) {
@@ -184,7 +184,7 @@ define(['jquery'], function($) {
         };
 
         /**
-         * Get the avaibility of the project
+         * Get the avaibility of the project.
          * @returns {Boolean} 
          */
         this.isProjectAvailable = function() {
@@ -192,17 +192,17 @@ define(['jquery'], function($) {
         };
 
         /**
-         * Get the configuration of the value entered in parameter
+         * Get the configuration of the value entered in parameter.
          * @param {String} value
-         * @returns {object}
+         * @returns {Object}
          */
         this.getConfig = function(value) {
             return this.config[value];
         };
 
         /**
-         * Checks the suppport of 3D and write a message in log
-         * @returns {Boolean}
+         * Checks the suppport of 3D and write a message in log.
+         * @returns {Boolean}   Returns true if 3D is supported, else false.
          */
         this.is3DSupported = function() {
             var canvas, gl;

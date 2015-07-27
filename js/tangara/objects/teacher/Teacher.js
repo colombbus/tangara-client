@@ -1,9 +1,9 @@
 define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'TObject', 'TLink'], function($, TEnvironment, TRuntime, TUtils, SynchronousManager, TObject, TLink) {
     /**
-     * Defines Teacher, inhetired from TObject.
+     * Defines Teacher, inherited from TObject.
      * Teacher is an object used to validate routes.
      * It compare values with statements, and can (un)validate steps.
-     * @returns {Teacher}
+     * @exports Teacher
      */
     var Teacher = function() {
         // Do not call parent constructor, as we don't want this object to be erased when clearing the
@@ -29,7 +29,7 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
     var values = {};
 
     /**
-     * Set the array of statements
+     * Set the array of statements.
      * @param {String[]} value
      */
     Teacher.prototype.setStatements = function(value) {
@@ -37,7 +37,7 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
     };
 
     /**
-     * Print Statements
+     * Print Statements in debug.
      * @param {String} value
      */
     Teacher.prototype.dumpStatements = function(value) {
@@ -45,6 +45,7 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
     };
 
     /**
+     * Set frame to "value".
      * @param {Boolean} value
      */
     Teacher.prototype.setFrame = function(value) {
@@ -52,10 +53,10 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
     };
 
     /**
-     * Compare the contents of "statement" and "value"
+     * Compare the contents of "statement" and "value".
      * @param {String[]} statement
      * @param {String[]} value
-     * @returns {Boolean}
+     * @returns {Boolean}   Returns true if contents are equals, else false.
      */
     function check(statement, value) {
         for (var key in value) {
@@ -80,9 +81,9 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
     }
 
     /**
-     * Check if "value" is in the array "statement"
+     * Check if "value" is in the array "statement".
      * @param {String} value
-     * @returns {Boolean}
+     * @returns {Boolean} Returns true if value is in statement, else false.
      */
     Teacher.prototype.hasStatement = function(value) {
         for (var i = 0; i < statements.length; i++) {
@@ -95,7 +96,7 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
     };
 
     /**
-     * Validate the current step if "frame" is true
+     * Validate the current step if "frame" is true.
      */
     Teacher.prototype.validateStep = function() {
         if (frame) {
@@ -122,7 +123,7 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
     };
 
     /**
-     * Set value at values[name]
+     * Set value at values[name].
      * @param {String} name
      * @param {String} value
      */
@@ -131,9 +132,9 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
     };
 
     /**
-     * Get the value of values[name]. Return false if undefined.
+     * Get the value of values[name].
      * @param {String} name
-     * @returns {String|Boolean}
+     * @returns {String|Boolean}    Returns values[name], or false if undefined.
      */
     Teacher.prototype.get = function(name) {
         if (typeof values[name] !== 'undefined') {
@@ -143,10 +144,18 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
         }
     };
 
+    /**
+     * Print value in log.
+     * @param {String} value
+     */
     Teacher.prototype.log = function(value) {
         console.log(value);
     };
 
+    /**
+     * Print value in debug.
+     * @param {String} value
+     */
     Teacher.prototype.debug = function(value) {
         console.debug(value);
     };

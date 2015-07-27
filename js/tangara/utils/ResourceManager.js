@@ -2,7 +2,7 @@ define(['TRuntime'], function(TRuntime) {
     /**
      * ResourceManager defines several functions to manage resources :
      * it allows to create one, get its datas, make transparency, delete it...
-     * @returns {ResourceManager}
+     * @exports ResourceManager
      */
     var ResourceManager = function() {
         this.resources = {};
@@ -19,11 +19,12 @@ define(['TRuntime'], function(TRuntime) {
     ResourceManager.waitingForImage = {};
 
     /**
-     * Create a new resource
+     * Create a new resource.
      * @param {Number} state
      * @param {Asset} resource
      * @param {Boolean} update
-     * @returns {Object.<Number, Asset, Boolean, Boolean>}
+     * @returns {Object.<Number, Asset, Boolean, Boolean>}  Returns the
+     * created resource.
      */
     getNewResource = function(state, resource, update) {
         if (typeof state === "undefined") {
@@ -39,17 +40,24 @@ define(['TRuntime'], function(TRuntime) {
     };
 
     /**
-     * Check if two colors are akin
+     * Check if two colors are akin.
      * @param {Number[]} color
      * @param {Number} red
      * @param {Number} green
      * @param {Number} blue
-     * @returns {Boolean}
+     * @returns {Boolean} Returns true if colors are akin, else false.
      */
     colorMatch = function(color, red, green, blue) {
         return Math.abs(color[0] - red) + Math.abs(color[1] - green) + Math.abs(color[2] - blue) < 30;
     };
 
+    /**
+     * Add a new resource.
+     * @param {String} name
+     * @param {String} asset
+     * @param {String} callback
+     * @returns {Boolean}   Returns true.
+     */
     ResourceManager.prototype.add = function(name, asset, callback) {
         if (typeof this.resources[name] !== 'undefined') {
             // resource already added: call callback right now
@@ -122,7 +130,7 @@ define(['TRuntime'], function(TRuntime) {
     };
 
     /**
-     * Make transparency on image "name"
+     * Make transparency on image "name".
      * @param {String} name
      * @param {Function} callback
      */
@@ -177,9 +185,8 @@ define(['TRuntime'], function(TRuntime) {
 
     /**
      * Get the state of "name".
-     * If "name" is undefined, return false.
      * @param {String} name
-     * @returns {Number|Boolean}
+     * @returns {Number|Boolean}    Returns the state, or false if undefined.
      */
     ResourceManager.prototype.getState = function(name) {
         if (typeof this.resources[name] === 'undefined') {
@@ -202,9 +209,9 @@ define(['TRuntime'], function(TRuntime) {
 
     /**
      * Get the resource of "name".
-     * Return false if "name" is undefined or isn't ready.
      * @param {String} name
-     * @returns {Resource|Boolean}
+     * @returns {Resource|Boolean}  Returns the resource, or false if name is
+     * undefined or not ready.
      */
     ResourceManager.prototype.get = function(name) {
         if (typeof this.resources[name] === 'undefined') {
@@ -217,9 +224,9 @@ define(['TRuntime'], function(TRuntime) {
     };
 
     /**
-     * SAME THAT THE PREVIOUS ONE
+     * Same than get.
      * @param {type} name
-     * @returns {ResourceManager_L1.ResourceManager.prototype@arr;resources@pro;resource|Boolean}
+     * @returns {Resource|Boolean}
      */
     ResourceManager.prototype.getUnchecked = function(name) {
         if (typeof this.resources[name] === 'undefined') {
@@ -233,9 +240,8 @@ define(['TRuntime'], function(TRuntime) {
 
     /**
      * Set the 'delete' field of "name" to true.
-     * Return false if "name" is undefined.
      * @param {String} name
-     * @returns {Boolean}
+     * @returns {Boolean}   Return false in name is undefined.
      */
     ResourceManager.prototype.remove = function(name) {
         if (typeof this.resources[name] === 'undefined') {
@@ -250,9 +256,8 @@ define(['TRuntime'], function(TRuntime) {
 
     /**
      * Delete "name" if its 'delete' field is at true.
-     * Return true if the resource is deleted, else false.
      * @param {String} name
-     * @returns {Boolean}
+     * @returns {Boolean}   Return true if the resource is deleted, else false.
      */
     ResourceManager.prototype.gc = function(name) {
         if (this.resources[name]['delete']) {
