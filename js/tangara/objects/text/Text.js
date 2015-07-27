@@ -1,10 +1,9 @@
 define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'], function($, TEnvironment, TUtils, CommandManager, TGraphicalObject) {
     /**
-     * Defines Text, inhetired from TGraphicalObject.
+     * Defines Text, inherited from TGraphicalObject.
      * Creates a text given in parameter to be drawn.
-     * @class
      * @param {String} label
-     * @returns {Text}
+     * @exports Text
      */
     var Text = function(label) {
         TGraphicalObject.call(this);
@@ -62,7 +61,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
     };
 
     /**
-     * Set Text Size to "size"
+     * Set Text Size to "size".
      * @param {Number} size
      */
     Text.prototype._setTextSize = function(size) {

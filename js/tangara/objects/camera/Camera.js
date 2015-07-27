@@ -1,10 +1,9 @@
 define(['jquery', 'TUtils', 'TRuntime', 'TObject'], function($, TUtils, TRuntime, TObject) {
     /**
-     * Defines Camera, inhetired from TObject.
+     * Defines Camera, inherited from TObject.
      * Its position will define what will be drawn on screen.
-     * It can be fixed, on can follow an Object.
-     * @class
-     * @returns {Camera}
+     * It can be fixed, or can follow an Object.
+     * @exports Camera
      */
     var Camera = function() {
     	this.activated = false;
@@ -22,7 +21,7 @@ define(['jquery', 'TUtils', 'TRuntime', 'TObject'], function($, TUtils, TRuntime
     };
     
     /**
-     * Activate Camera
+     * Activate Camera.
      */
     Camera.prototype.activate = function() {
     	if (!this.activated) {
@@ -33,7 +32,7 @@ define(['jquery', 'TUtils', 'TRuntime', 'TObject'], function($, TUtils, TRuntime
     };
     
     /**
-     * Follow Object in this.followedObject
+     * Follow Object in this.followedObject.
      */
     Camera.prototype.follow = function() {
     	if (this.activated) {
@@ -53,7 +52,7 @@ define(['jquery', 'TUtils', 'TRuntime', 'TObject'], function($, TUtils, TRuntime
     };
 
     /**
-     * Activate Camera and follow Object given in parameter
+     * Activate Camera and follow an object given in parameter.
      * @param {String} object
      */
     Camera.prototype._follow = function(object) {
@@ -91,7 +90,7 @@ define(['jquery', 'TUtils', 'TRuntime', 'TObject'], function($, TUtils, TRuntime
     };
     
     /**
-     * Move the Camera's top-left pixel to coordinates {x,y}
+     * Move the Camera's top-left pixel to coordinates {x,y}.
      * If it follow an Object, unfollow it.
      * @param {Number} x
      * @param {Number} y
@@ -106,7 +105,7 @@ define(['jquery', 'TUtils', 'TRuntime', 'TObject'], function($, TUtils, TRuntime
     };
 
     /**
-     * Move the Camera's center pixel to coordinates {x,y}
+     * Move the Camera's center pixel to coordinates {x,y}.
      * If it follow an Object, unfollow it.
      * @param {Number} x
      * @param {Number} y

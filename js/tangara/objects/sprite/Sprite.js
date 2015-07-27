@@ -1,11 +1,10 @@
 define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager', 'TGraphicalObject'], function($, TEnvironment, TUtils, CommandManager, ResourceManager, TGraphicalObject) {
     /**
-     * Defines Sprite, inhetired from TGraphicalObject.
-     * Gets its name in parameter.
+     * Defines Sprite, inherited from TGraphicalObject.
      * It's a very complete graphical objects : it can have several appearances,
      * move, or have collisions.
-     * @param {String} name
-     * @returns {Sprite}
+     * @param {String} name Sprite's name
+     * @exports Sprite
      */
     var Sprite = function(name) {
         TGraphicalObject.call(this);
@@ -330,7 +329,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
     // MOVEMENT MANAGEMENT
 
     /**
-     * Move Sprite of "value" pixels forward (to the right)
+     * Move Sprite of "value" pixels forward (to the right).
      * if "value" is undefined, always move forward.
      * @param {Number} value
      */
@@ -351,7 +350,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
     };
 
     /**
-     * Move Sprite of "value" pixels backward (to the left)
+     * Move Sprite of "value" pixels backward (to the left).
      * if "value" is undefined, always move backward.
      * @param {Number} value
      */
@@ -413,7 +412,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
     };
 
     /*
-     * Stops any movement of Sprite
+     * Stops any movement of Sprite.
      */
     Sprite.prototype._stop = function() {
         this.gObject.stop();
@@ -444,7 +443,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
 
     /**
      * Add a new Image to Sprite.
-     * If project is set as ture, load the asset from project,
+     * If project is set as true, load the asset from project,
      * else load from object itself.
      * At the end of the function, call callback if defined.
      * @param {String} name
@@ -582,10 +581,9 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
 
     /**
      * Set the image to be display.
-     * If the image is ready, set it and return true.
-     * Else, return false.
+     * If the image is ready, set it
      * @param {String} name
-     * @returns {Boolean}
+     * @returns {Boolean}   Returns true if image is ready, else false.
      */
     Sprite.prototype.setDisplayedImage = function(name) {
         this.displayedImage = name;
@@ -619,7 +617,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
     };
 
     /**
-     * Display the next image of the set given in parameter
+     * Display the next image of the set given in parameter.
      * @param {String} set
      */
     Sprite.prototype._displayNextImage = function(set) {
@@ -644,7 +642,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
     };
 
     /**
-     * Display the previous image of the set given in parameter
+     * Display the previous image of the set given in parameter.
      * @param {String} set
      */
     Sprite.prototype._displayPreviousImage = function(set) {
@@ -707,7 +705,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
     };
 
     /**
-     * Set a tranparent color for Sprite
+     * Set a tranparent color for Sprite.
      * @param {Number} red
      * @param {Number} green
      * @param {Number} blue
@@ -741,7 +739,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
     };
     
     /**
-     * Move Sprite's top-left pixel to coordinates {x,y}
+     * Move Sprite's top-left pixel to coordinates {x,y}.
      * @param {Number} x
      * @param {Number} y
      */
@@ -752,7 +750,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
     };
     
     /**
-     * Move Sprite's center pixel to coordinates {x,y}
+     * Move Sprite's center pixel to coordinates {x,y}.
      * @param {Number} x
      * @param {Number} y
      */
@@ -776,7 +774,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
      * If not, call callback.
      * @param {Function} callback
      * @param {type} arguments
-     * @returns {Boolean}
+     * @returns {Boolean} Returns true if Sprite is ready, else false.
      */
     Sprite.prototype.isReady = function(callback, arguments) {
         if (this.gObject.p.initialized) {

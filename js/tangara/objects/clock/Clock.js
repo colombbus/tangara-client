@@ -3,8 +3,7 @@ define(['jquery', 'TEnvironment', 'TObject', 'TUtils', 'CommandManager'], functi
      * Defines Clock, inherited from TObject.
      * A clock can execute commands after waiting a delay.
      * It can execute this commands endlessly or only one time.
-     * @class
-     * @returns {Clock}
+     * @exports Clock
      */
     var Clock = function() {
         TObject.call(this);
@@ -23,7 +22,7 @@ define(['jquery', 'TEnvironment', 'TObject', 'TUtils', 'CommandManager'], functi
     Clock.prototype.className = "Clock";
 
     /**
-     * Add a command to Clock
+     * Add a command to Clock.
      * @param {String} command
      */
     Clock.prototype._addCommand = function(command) {
@@ -32,7 +31,7 @@ define(['jquery', 'TEnvironment', 'TObject', 'TUtils', 'CommandManager'], functi
     };
 
     /**
-     * Remove all command to Clock
+     * Remove all commands to Clock.
      */
     Clock.prototype._removeCommands = function() {
         this.commands.removeCommands();
@@ -41,7 +40,7 @@ define(['jquery', 'TEnvironment', 'TObject', 'TUtils', 'CommandManager'], functi
     /**
      * Set a Delay between the execution of two commands.
      * If no initial delay is defined, set it to the same value.
-     * Default value : 1000 ms
+     * Default value : 1000 ms.
      * @param {Number} delay    (ms)
      */
     Clock.prototype._setDelay = function(delay) {
@@ -63,7 +62,7 @@ define(['jquery', 'TEnvironment', 'TObject', 'TUtils', 'CommandManager'], functi
     };
 
     /**
-     * Start the execution of Clock
+     * Start the execution of Clock.
      */
     Clock.prototype._start = function() {
         if (!this.running) {
@@ -76,7 +75,7 @@ define(['jquery', 'TEnvironment', 'TObject', 'TUtils', 'CommandManager'], functi
     };
 
     /**
-     * Stop the execution of Clock
+     * Stop the execution of Clock.
      */
     Clock.prototype._stop = function() {
         this.running = false;
@@ -87,7 +86,7 @@ define(['jquery', 'TEnvironment', 'TObject', 'TUtils', 'CommandManager'], functi
     };
 
     /**
-     * Execute actions linked to Clock
+     * Execute actions linked to Clock.
      */
     Clock.prototype.executeActions = function() {
         this.timeout = null;
@@ -105,7 +104,7 @@ define(['jquery', 'TEnvironment', 'TObject', 'TUtils', 'CommandManager'], functi
     };
 
     /**
-     * Delete Clock
+     * Delete Clock.
      */
     Clock.prototype.deleteObject = function() {
         this._stop();
@@ -113,8 +112,8 @@ define(['jquery', 'TEnvironment', 'TObject', 'TUtils', 'CommandManager'], functi
     };
 
     /**
-     * Enable or disable loops for the execution of Clock
-     * Default value : true
+     * Enable or disable loops for the execution of Clock.
+     * Default value : true.
      * @param {Boolean} value
      */
     Clock.prototype._loop = function(value) {
@@ -123,7 +122,7 @@ define(['jquery', 'TEnvironment', 'TObject', 'TUtils', 'CommandManager'], functi
     };
 
     /**
-     * Freeze of unfreeze Clock
+     * Freeze of unfreeze Clock.
      * @param {Boolean} value
      */
     Clock.prototype.freeze = function(value) {
@@ -144,7 +143,7 @@ define(['jquery', 'TEnvironment', 'TObject', 'TUtils', 'CommandManager'], functi
 
     /**
      * Enable or disable the display of commands.
-     * Default value : true
+     * Default value : true.
      * @param {type} value
      */
     Clock.prototype._displayCommands = function(value) {

@@ -2,8 +2,7 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function(TObject, TUti
     /**
      * Defines TGraphicalObject, inhetired from TObject.
      * It's an object which can be drawn on stage.
-     * @class
-     * @returns {TGraphicalObject}
+     * @exports TGraphicalObject
      */
     function TGraphicalObject() {
         this.gObject = new this.gClass();
@@ -132,7 +131,7 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function(TObject, TUti
     };
     
     /**
-     * Remove TGraphicalObject
+     * Remove TGraphicalObject.
      */
     TGraphicalObject.prototype.deleteObject = function() {
         this.gObject.destroy();
@@ -168,7 +167,7 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function(TObject, TUti
     };
 
     /**
-     * Set an angle of rotation for TGraphicalObject, regarless of its previous
+     * Set an angle of rotation for TGraphicalObject, regarless of its previous.
      * @param {Number} angle
      */
     TGraphicalObject.prototype._setAngle = function(angle) {
@@ -185,7 +184,7 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function(TObject, TUti
     };
 
     /**
-     * Set the coordinates of TGraphicalObject's center pixel
+     * Set the coordinates of TGraphicalObject's center pixel.
      * @param {Number} x
      * @param {Number} y
      */
@@ -196,7 +195,7 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function(TObject, TUti
     };
     
     /**
-     * Set the coordinates of TGraphicalObject's top-left pixel
+     * Set the coordinates of TGraphicalObject's top-left pixel.
      * @param {Number} x
      * @param {Number} y
      */
@@ -271,18 +270,32 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function(TObject, TUti
         }
     };
 
+    /**
+     * Freeze or unfreeze TGraphicalObject.
+     * @param {Boolean} value
+     */
     TGraphicalObject.prototype.freeze = function(value) {
         this.gObject.freeze(value);
     };
 
+    /**
+     * Get a String containing "TGraphicalObject " and the class of the object.
+     * @returns {String}
+     */
     TGraphicalObject.prototype.toString = function() {
         return "TGraphicalObject " + this.className;
     };
 
+    /**
+     * Hide TGraphicalObject.
+     */
     TGraphicalObject.prototype._hide = function() {
         this.gObject.p.hidden = true;
     };
 
+    /**
+     * Show TGraphicalObject.
+     */
     TGraphicalObject.prototype._show = function() {
         this.gObject.p.hidden = false;
     };

@@ -1,8 +1,8 @@
 define(['TEnvironment', 'TObject', 'TUtils', 'TRuntime'], function(TEnvironment, TObject, TUtils) {
     /**
-     * Defines Random, inhetired from TObject.
-     * @Class
-     * @returns {Random}
+     * Defines Random, inherited from TObject.
+     * Its purpose is to send random numbers in a limited interval.
+     * @exports Random
      */
     var Random = function() {
         TObject.call(this);

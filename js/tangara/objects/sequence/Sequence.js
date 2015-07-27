@@ -4,8 +4,7 @@ define(['jquery', 'TEnvironment', 'TObject', 'TUtils', 'TRuntime', 'TParser'], f
      * A sequence can save commands, with or without a delay between,
      * then execute them one after another.
      * It can execute commands endlessly or only one time.
-     * @class
-     * @returns {Sequence}
+     * @exports Sequence
      */
     var Sequence = function() {
         TObject.call(this);
@@ -28,7 +27,7 @@ define(['jquery', 'TEnvironment', 'TObject', 'TUtils', 'TRuntime', 'TParser'], f
     Sequence.MINIMUM_LOOP = 100;
 
     /**
-     * Add a command to Sequence
+     * Add a command to Sequence.
      * @param {String} command
      */
     Sequence.prototype._addCommand = function(command) {
@@ -44,7 +43,7 @@ define(['jquery', 'TEnvironment', 'TObject', 'TUtils', 'TRuntime', 'TParser'], f
     };
 
     /**
-     * Add a delay between commands
+     * Add a delay between commands.
      * @param {Number} delay    (ms)
      */
     Sequence.prototype._addDelay = function(delay) {
@@ -53,7 +52,7 @@ define(['jquery', 'TEnvironment', 'TObject', 'TUtils', 'TRuntime', 'TParser'], f
     };
 
     /**
-     * Execute the next command of Sequence (after waiting if there's a delay)
+     * Execute the next command of Sequence (after waiting if there's a delay).
      */
     Sequence.prototype.nextAction = function() {
         this.timeout = null;
@@ -140,7 +139,7 @@ define(['jquery', 'TEnvironment', 'TObject', 'TUtils', 'TRuntime', 'TParser'], f
      * Enable or disable loops for the execution of Sequence.
      * If it enable it, check the total delay of a loop.
      * If it's under the delay of MINIMUM_LOOP, throw a freeze warning.
-     * Default value : false
+     * Default value : false.
      * @param {Boolean} value
      */
     Sequence.prototype._loop = function(value) {
@@ -162,7 +161,7 @@ define(['jquery', 'TEnvironment', 'TObject', 'TUtils', 'TRuntime', 'TParser'], f
     };
 
     /**
-     * Freeze or unfreeze Sequence
+     * Freeze or unfreeze Sequence.
      * @param {Boolean} value
      */
     Sequence.prototype.freeze = function(value) {
@@ -183,7 +182,7 @@ define(['jquery', 'TEnvironment', 'TObject', 'TUtils', 'TRuntime', 'TParser'], f
     
     /**
      * Enable or disable the display of commands.
-     * Default value : true
+     * Default value : true.
      * @param {type} value
      */
     Sequence.prototype._displayCommands = function(value) {

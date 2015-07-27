@@ -2,8 +2,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
     /**
      * Defines Robot, inherited from Hero.
      * The main difference with Hero is that it executes commands one by one.
-     * @class
-     * @returns {Robot}
+     * @exports Robot
      */
     var Robot = function() {
         Hero.call(this, "robot");
@@ -112,7 +111,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
     // MOVEMENT MANAGEMENT
     
     /**
-     * Move Sprite of "value" pixels forward (to the right)
+     * Move Sprite of "value" pixels forward (to the right).
      * if "value" is undefined, always move forward.
      * @param {Number} value
      */
@@ -125,7 +124,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
     };
     
     /**
-     * Move Sprite of "value" pixels backward (to the left)
+     * Move Sprite of "value" pixels backward (to the left).
      * if "value" is undefined, always move backward.
      * @param {Number} value
      */
@@ -198,7 +197,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
     };
 
     /**
-     * Count the number of items in Stage
+     * Count the number of items in Stage.
      * @returns {Number}
      */
     Robot.prototype._countItems = function() {
@@ -207,22 +206,22 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
     };
 
     /**
-     * Pick up an Item
+     * Pick up an Item.
      */
     Robot.prototype._pickupItem = function() {
         this.gObject.pickupItem();
     };
 
     /**
-     * Drop an Item
+     * Drop an Item.
      */
     Robot.prototype._dropItem = function() {
         this.gObject.dropItem();
     };
 
     /**
-     * Count the number of items carried by Robot
-     * @returns {Number}
+     * Count the number of items carried by Robot.
+     * @returns {Number}    Number of items carried.
      */
     Robot.prototype._countCarriedItems = function() {
         return this.gObject.countCarriedItems();
