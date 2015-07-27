@@ -2,7 +2,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
     /**
      * Defines Platform, inherited from TGraphicalObject.
      * Create a whole Block from a 2D matrix.
-     * @returns {Platform}
+     * @exports Platform
      */
     var Platform = function() {
         this.gObject = new this.gClass();
@@ -217,7 +217,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
      * Set a new tile image. There can be many tiles.
      * Its value in the structure will depend of the moment where it is added :
      * The first time added will have the value "1", the second "2", etc...
-     * @param {String} imageName
+     * @param {String} imageName    Image's name used for tiles
      */
     Platform.prototype._addTile = function(imageName) {
         imageName = TUtils.getString(imageName);
@@ -239,7 +239,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
     /**
      * Set the background image. There is only one base tile.
      * Its value in the structure is 0.
-     * @param {String} imageName
+     * @param {String} imageName    Image's name used for background
      */
     Platform.prototype._setBaseTile = function(imageName) {
         imageName = TUtils.getString(imageName);
@@ -261,7 +261,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
     
     /**
      * Add a new row, at the end of the structure.
-     * If the row is too short, it is filled with 0
+     * If the row is too short, it is filled with 0.
      * If the row is too long, it is truncated.
      * @param {Number[]} row
      */
@@ -286,7 +286,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
     
     /**
      * Add a new column, at the end of the structure.
-     * If the column is too short, it is filled with 0
+     * If the column is too short, it is filled with 0.
      * If the column is too long, it is truncated.
      * @param {Number[]} row
      */
@@ -342,7 +342,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
     };
     
     /**
-     * Change the value of the tile [x,y] in structure to the value "number"
+     * Change the value of the tile [x,y] in structure to the value "number".
      * @param {Number} x
      * @param {Number} y
      * @param {Number} number
@@ -365,7 +365,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
     };
     
     /**
-     * Build Platform
+     * Build Platform.
      */
     Platform.prototype._build = function() {
     	this.gObject.build();
@@ -373,6 +373,9 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
     	this.built = true;
     };
     
+    /**
+     * Loads resources and draws Platform.
+     */
     Platform.prototype.buildSheet = function() {
     	if (this.tiles.length===0) {
     		return;
@@ -414,12 +417,15 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
         newImage.src = canvas.toDataURL();
     };
 
+    /**
+     * Build structure.
+     */
     Platform.prototype.buildStructure = function() {
     	this.gObject.setStructure(this.rows);
     };
     
     /**
-     * Returns if Platform is ready or not.
+     * Returns Platform is ready or not.
      * If Platform isn't ready, call callback if defined.
      * @param {function} callback
      * @param {type} arguments
@@ -437,7 +443,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
     };
     
     /**
-     * Delete Platform
+     * Delete Platform.
      */
     Platform.prototype.deleteObject = function() {
         var g = TRuntime.getGraphics().getInstance();

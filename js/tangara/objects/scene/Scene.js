@@ -1,11 +1,10 @@
 define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'objects/block/Block', 'TUtils'], function($, TEnvironment, TGraphicalObject, Sprite, Block, TUtils) {
     /**
-     * Defines Scene, inhetired from Block. Gets its name in parameter.
+     * Defines Scene, inherited from Block.
      * It has a background image and a Block image.
-     * Scene can be link to a Hero.
-     * @class
-     * @param {String} name
-     * @returns {Scene}
+     * Scene can be linked to Hero.
+     * @param {String} name Scene's name
+     * @exports Scene
      */
     var Scene = function(name) {
         Block.call(this);
@@ -79,7 +78,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
      * Creates Scene.
      * Loads background and set it.
      * Loads Block image, execute a transparency mask on it and set the result.
-     * @param {String} name
+     * @param {String} name Scene's name
      */
     Scene.prototype._setScene = function(name) {
         name = TUtils.getString(name);

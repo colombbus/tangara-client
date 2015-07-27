@@ -3,8 +3,7 @@ define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink
      * Defines Tangara, inherited from TObject.
      * Tangara is an object created automatically with the launch of Declick.
      * It allows several interactions.
-     * @class
-     * @returns {Tangara}
+     * @exports Tangara
      */
     var Tangara = function() {
         // Do not call parent constructor, as we don't want this object to be erased when clearing the
@@ -16,8 +15,8 @@ define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink
     Tangara.prototype.className = "Tangara";
 
     /**
-     * Write "value" in logs
-     * @param {String} value$
+     * Write "value" in logs.
+     * @param {String} value
      */
     Tangara.prototype._write = function(value) {
         if (TUtils.checkInteger(value)) {
@@ -31,7 +30,7 @@ define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink
     };
 
     /**
-     * Write "value" in a pop-up window
+     * Write "value" in a pop-up window.
      * @param {String} value
      */
     Tangara.prototype._alert = function(value) {
@@ -45,7 +44,7 @@ define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink
     };
 
     /**
-     * Load a script given in parameter
+     * Load a script given in parameter.
      * @param {String} name
      */
     Tangara.prototype._loadScript = function(name) {
@@ -56,14 +55,14 @@ define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink
     };
 
     /**
-     * Clear screen, commands history and console
+     * Clear screen, commands history and console.
      */
     Tangara.prototype._init = function() {
         TRuntime.clear();
     };
 
     /**
-     * Clear screen
+     * Clear screen.
      */
     Tangara.prototype._clearScreen = function() {
         TRuntime.clearGraphics();
@@ -77,16 +76,16 @@ define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink
     };
 
     /**
-     * Resume Declick
+     * Resume Declick.
      */
     Tangara.prototype._unpause = function() {
         TRuntime.start();
     };
 
     /**
-     * Ask a question and get the answer
+     * Ask a question and get the answer.
      * @param {String} text
-     * @returns {String}
+     * @returns {String}    Returns the user's answer.
      */
     Tangara.prototype._ask = function(text) {
         var answer = window.prompt(text);

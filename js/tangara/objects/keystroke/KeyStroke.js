@@ -1,9 +1,8 @@
 define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TObject', 'TRuntime'], function($, TEnvironment, TUtils, CommandManager, TObject, TRuntime) {
     /**
-     * Defines KeyStroke, inhetired from TObject.
+     * Defines KeyStroke, inherited from TObject.
      * Allows the association of commands with keyboard.
-     * @class
-     * @returns {KeyStroke}
+     * @exports KeyStroke
      */
     var KeyStroke = function() {
         TObject.call(this);
@@ -32,7 +31,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TObject', 'TRunti
     /**
      * Returns the Keycode of a key.
      * @param {String} key
-     * @returns {Number}
+     * @returns {Number}    Keycode corresponding to key.
      */
     KeyStroke.prototype.getKeyCode = function(key) {
         key = TUtils.removeAccents(key);
@@ -78,9 +77,9 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TObject', 'TRunti
     };
 
     /**
-     * Associate a command to key
+     * Associate a command to key.
      * @param {String} key
-     * @param {String} command
+     * @param {String} command  Command triggered if key is pressed
      */
     KeyStroke.prototype._addCommand = function(key, command) {
         key = TUtils.getString(key);
@@ -93,7 +92,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TObject', 'TRunti
     };
 
     /**
-     * Remove all commands associated to key
+     * Remove all commands associated to key.
      * @param {String} key
      */
     KeyStroke.prototype._removeCommands = function(key) {
@@ -203,7 +202,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TObject', 'TRunti
     };
 
     /**
-     * Checks which keys are down and execute associated commands
+     * Checks which keys are down and execute associated commands.
      * @param {type} e
      */
     KeyStroke.prototype.processKeyDown = function(e) {
@@ -215,7 +214,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TObject', 'TRunti
     };
     
     /**
-     * Checks which keys are up and execute associated commands
+     * Checks which keys are up and execute associated commands.
      * @param {type} e
      */
     KeyStroke.prototype.processKeyUp = function(e) {

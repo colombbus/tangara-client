@@ -1,11 +1,10 @@
 define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'TUtils'], function($, TEnvironment, TGraphicalObject, Sprite, TUtils) {
     /**
-     * Defines Block, inhetired from Sprite. Gets its name in parameter.
+     * Defines Block, inherited from Sprite.
      * Its utility is to be an obstacle for Walker.
      * Walker will be stop by any non-transparent area of Block.
-     * @class
-     * @param {String} name
-     * @returns {Block}
+     * @param {String} name Block's name
+     * @exports Block
      */
     var Block = function(name) {
         Sprite.call(this, name);
@@ -131,12 +130,10 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
     });
 
     /**
-     * Set the image to be display.
+     * Set the image to be displayed.
      * If the image is ready, set it and compute Transparency Mask on it.
-     * Return true.
-     * Else, return false.
      * @param {String} name
-     * @returns {Boolean}
+     * @returns {Boolean}   Return true is the image is ready, else false.
      */
     Block.prototype.setDisplayedImage = function(name) {
         if (Sprite.prototype.setDisplayedImage.call(this, name)) {
@@ -151,7 +148,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
     /**
      * Execute a Transparency Mask on the image.
      * Walker will be able to move on transparent areas.
-     * @param {String} name
+     * @param {String} name Image's name
      */
     Block.prototype.computeTransparencyMask = function(name) {
         var image = this.resources.get(name);

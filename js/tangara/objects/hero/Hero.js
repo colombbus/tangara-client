@@ -1,10 +1,10 @@
 define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'objects/walker/Walker', 'TUtils'], function($, TEnvironment, TGraphicalObject, Sprite, Walker, TUtils) {
     /**
-     * Defines Hero, inhetired from Walker. Gets its name in parameter.
+     * Defines Hero, inherited from Walker.
      * It has predefined appearances, is animated when it moves,
      * can walk in a Scene and catch objects.
-     * @param {String} name
-     * @returns {Hero}
+     * @param {String} name Hero's name
+     * @exports Hero
      */
     var Hero = function(name) {
         Walker.call(this);
@@ -328,9 +328,8 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
     });
 
     /**
-     * Creates a new hero, named by parameter.
-     * Add it in resource.
-     * @param {String} name
+     * Creates a new hero, and add it in resource.
+     * @param {String} name Hero's name
      */
     Hero.prototype._setCharacter = function(name) {
         name = TUtils.getString(name);
@@ -399,11 +398,11 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
     };
 
     /**
-     * Checks if set is in predefined strings. Returns a corresponding string
-     * if found, else returns "default".
+     * Checks if 'set' is in predefined strings. 
      * Is used to find correct image to add / remove.
-     * @param {String} set
-     * @returns {String}
+     * @param {String} set  String which can be predefined
+     * @returns {String}    Returns a corresponding string if found,
+     * else returns "default".
      */
     Hero.prototype.checkSet = function(set) {
         var specialSet = false;
@@ -425,7 +424,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
     };
 
     /**
-     * Add a customized image for the Hero. Removes defaut asset if existing.
+     * Add a customized image for the Hero. Removes default asset if existing.
      * @param {String} name
      * @param {String} set
      */
@@ -480,10 +479,16 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
         }
     };
 
+    /**
+     * Set AutoAsset to false.
+     */
     Hero.prototype._stopAutoAsset = function() {
         this.gObject.stopAutoAsset();
     };
 
+    /**
+     * Set AutoAsset to true.
+     */
     Hero.prototype._startAutoAsset = function() {
         this.gObject.startAutoAsset();
     };
@@ -542,7 +547,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
     };
     
     /**
-     * Set the Movement Duration to the value entered in parameter
+     * Set the Movement Duration to "value".
      * @param {Number} value
      */
     Hero.prototype._setMovementDuration = function(value) {
@@ -551,7 +556,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
     };
 
     /**
-     * Set the Pause Duration to the value entered in parameter
+     * Set the Pause Duration to the "value".
      * @param {Number} value
      */
     Hero.prototype._setPauseDuration = function(value) {
@@ -560,7 +565,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
     };
 
     /**
-     * Associate a Scene to the Hero
+     * Associate a Scene to Hero.
      * @param {Scene} object
      */
     Hero.prototype._addScene = function(object) {
@@ -568,7 +573,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
     };
 
     /**
-     * Let the Hero catch the object entered in parameter
+     * Let Hero catch the object entered in parameter.
      * @param {Object} object
      */
     Hero.prototype._mayCatch = function(object) {
@@ -577,9 +582,9 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
     };
 
     /**
-     * Execute command if Hero catch the object
+     * Execute command if Hero catch the object.
      * @param {Object} object
-     * @param {String} command
+     * @param {String} command  Command triggered if Hero catch object
      */
     Hero.prototype._ifCatch = function(object, command) {
         object = TUtils.getObject(object);

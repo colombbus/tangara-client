@@ -1,11 +1,9 @@
 define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'], function($, TEnvironment, TUtils, CommandManager, TGraphicalObject) {
     /**
-     * Defines Button, inhetired from TGraphicalObject.
-     * Can have a label in parameter, or get one after.
+     * Defines Button, inherited from TGraphicalObject.
      * User can click on button and trigger an associated command.
-     * @class
-     * @param {String} label
-     * @returns {Button}
+     * @param {String} label    Text displayed on the button
+     * @exports Button
      */
     var Button = function(label) {
         TGraphicalObject.call(this);
@@ -121,8 +119,8 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
     });
 
     /**
-     * Set a label for Button
-     * @param {String} label
+     * Set a label for Button.
+     * @param {String} label    Label to be displayed
      */
     Button.prototype._setText = function(label) {
         label = TUtils.getString(label);
@@ -165,7 +163,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
     };
 
     /**
-     * Set the Label Color
+     * Set the Label Color.
      * @param {Number} red
      * @param {Number} green
      * @param {Number} blue
