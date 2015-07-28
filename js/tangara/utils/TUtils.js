@@ -262,7 +262,7 @@ define(['TEnvironment', 'jquery'], function(TEnvironment, $) {
          * @param {Number} value
          * @returns {Boolean}
          */
-        checkInteger = function(value) {
+        this.checkInteger = function(value) {
             return (typeof value !== 'undefined' && !isNaN(value));
         };
         
