@@ -16,7 +16,7 @@ module.exports = function (grunt) {
             dist : {
                 src: ['js/tangara/**/*.js'],
                 options: {
-                    destination: 'doc/jsdoc'
+                    destination: 'doc/api'
                 }
             }
         }
