@@ -1,4 +1,8 @@
 define(['acorn'], function(acorn) {
+    /**
+     * TParser parses the code into statements, using the parser acorn.
+     * @exports TParser
+     */
     function TParser() {
         var options = {locations: true, forbidReserved: "everywhere"};
 
@@ -6,10 +10,19 @@ define(['acorn'], function(acorn) {
 
         acorn.addReservedWords(globalReserved);
 
+        /**
+         * Add reserved identifiers.
+         * @param {String[]} names
+         */
         this.protectIdentifiers = function(names) {
             acorn.addReservedIdentifiers(names);
         };
 
+        /**
+         * Parse code to statements.
+         * @param {String} code
+         * @returns {String[]}
+         */
         this.parse = function(input) {
             var result = acorn.parse(input, options);
             // return statements
