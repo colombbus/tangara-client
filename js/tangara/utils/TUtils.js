@@ -1,4 +1,8 @@
 define(['TEnvironment', 'jquery'], function(TEnvironment, $) {
+    /**
+     * Many constants and functions for several purposes.
+     * @exports TUtils
+     */
     var TUtils = function() {
         var QUOTE_DELIMITER = '#';
         var defaultDiacriticsRemovalap = [
@@ -203,6 +207,12 @@ define(['TEnvironment', 'jquery'], function(TEnvironment, $) {
             purple: [128, 0, 128],
             blueviolet: [138, 43, 226]
         };
+        
+        /**
+         * Remove all accents in str.
+         * @param {type} str
+         * @returns {String}    Returns the modified string.
+         */
         this.removeAccents = function(str) {
             var letters = str.split("");
             var newStr = "";
@@ -211,75 +221,173 @@ define(['TEnvironment', 'jquery'], function(TEnvironment, $) {
             }
             return newStr;
         };
+        
+        /**
+         * Replace all {Number} in text by corresponding string in argument.
+         * Ex :</br>
+         * format("{0} {1}", "Hello", "World") will return "Hello World".
+         * @param {String} text
+         * @returns {String}    Returns the modified string.
+         */
         this.format = function(text) {
-            var args = Array.prototype.slice.call(arguments, 1);
+            var args = Array.prototype.slice.call(arguments, 1); // Get an array of arguments w/o the first
             return text.replace(/{(\d+)}/g, function(match, number) {
                 return typeof args[number] !== 'undefined' ? args[number] : match;
             });
         };
+        
+        /**
+         * Check if value is a Boolean.
+         * @param {Boolean} value
+         * @returns {Boolean}
+         */
         this.checkBoolean = function(value) {
             return (typeof value !== 'undefined' && typeof value === 'boolean');
         };
+        
+        /**
+         * Get value. If it's not a Boolean, throw an error.
+         * @param {Boolean} value
+         * @returns {Boolean}   Returns value.
+         */
         this.getBoolean = function(value) {
             if (!this.checkBoolean(value)) {
                 throw new Error(TEnvironment.getMessage("wrong boolean", value));
             }
             return value;
         };
+        
+        /**
+         * Check if value is a Number.
+         * @param {Number} value
+         * @returns {Boolean}
+         */
         this.checkInteger = function(value) {
             return (typeof value !== 'undefined' && !isNaN(value));
         };
+        
+        /**
+         * Get value. If it's not a Number, throw an error.
+         * @param {Number} value
+         * @returns {Number}   Returns value.
+         */
         this.getInteger = function(value) {
             if (!this.checkInteger(value)) {
                 throw new Error(TEnvironment.getMessage("wrong integer", value));
             }
             return value;
         };
+        
+        /**
+         * Check if value is a String.
+         * @param {String} value
+         * @returns {Boolean}
+         */
         this.checkString = function(value) {
             return (typeof value !== 'undefined' && (typeof value === 'string' || value instanceof String));
         };
+        
+        /**
+         * Get value. If it's not a String, throw an error.
+         * @param {String} value
+         * @returns {String}   Returns value.
+         */
         this.getString = function(value) {
             if (!this.checkString(value)) {
                 throw new Error(TEnvironment.getMessage("wrong string", value));
             }
             return value;
         };
+        
+        /**
+         * Check if value is a Function.
+         * @param {Function} value
+         * @returns {Boolean}
+         */
         this.checkFunction = function(value) {
             return (typeof value !== 'undefined' && (typeof value === 'function' || value instanceof Function));
         };
+        
+        /**
+         * Get value. If it's not a Function, throw an error.
+         * @param {Function} value
+         * @returns {Function}   Returns value.
+         */
         this.getFunction = function(value) {
             if (!this.checkFunction(value)) {
                 throw new Error(TEnvironment.getMessage("wrong function", value));
             }
             return value;
         };
+        
+        /**
+         * Check if value is an Object.
+         * @param {Object} value
+         * @returns {Boolean}
+         */
         this.checkObject = function(value) {
             return (typeof value === 'object' || this.checkFunction(value));
         };
+        
+        /**
+         * Get value. If it's not an Object, throw an error.
+         * @param {Object} value
+         * @returns {Object}   Returns value.
+         */
         this.getObject = function(value) {
             if (!this.checkObject(value)) {
                 throw new Error(TEnvironment.getMessage("wrong object", value));
             }
             return value;
         };
+        
+        /**
+         * Check if value is a Command.
+         * @param {Command} value
+         * @returns {Boolean}
+         */
         this.checkCommand = function(value) {
             return this.checkString(value) || this.checkFunction(value);
         };
+        
+        /**
+         * Get value. If it's not a Command, throw an error.
+         * @param {Command} value
+         * @returns {Command}   Returns value.
+         */
         this.getCommand = function(value) {
             if (!this.checkCommand(value)) {
                 throw new Error(TEnvironment.getMessage("wrong command", value));
             }
             return value;
         };
+        
+        /**
+         * Check if value is an Array.
+         * @param {Array} value
+         * @returns {Boolean}
+         */
         this.checkArray = function(value) {
             return (Array.isArray(value));
         };
+        
+        /**
+         * Get value. If it's not an Array, throw an error.
+         * @param {Array} value
+         * @returns {Array}   Returns value.
+         */
         this.getArray = function(value) {
             if (!this.checkArray(value)) {
                 throw new Error(TEnvironment.getMessage("wrong array", value));
             }
             return value;
         };
+        
+        /**
+         * Get the keyCode of value.
+         * @param {String} value
+         * @returns {keyCode|Boolean}   Returns keyCode if existing, else false.
+         */
         this.getkeyCode = function(value) {
             if (this.checkString(value)) {
                 if (typeof keyCodes[value] !== 'undefined') {
@@ -288,6 +396,16 @@ define(['TEnvironment', 'jquery'], function(TEnvironment, $) {
             }
             return false;
         };
+        
+        /**
+         * Get a color from a string or from 3 integers.
+         * Throw an error if parameters are false.</br>
+         * If one of the three integers is greater than 255, lowers it to 255.
+         * @param {String|Number} red
+         * @param {Number} green
+         * @param {Number} blue
+         * @returns {Number[]}  Returns the color.
+         */
         this.getColor = function(red, green, blue) {
             if (this.checkString(red)) {
                 var translated = TEnvironment.getMessage("color-" + red);
@@ -304,11 +422,23 @@ define(['TEnvironment', 'jquery'], function(TEnvironment, $) {
             }
             throw new Error(TEnvironment.getMessage("wrong color"));
         };
+        
+        /**
+         * Sort an array by ASCII. Consideres an upper case as a lower case.
+         * @param {String[]} value
+         * @returns {String[]}  Returns the sorted array.
+         */
         this.sortArray = function(value) {
             return value.sort(function(a, b) {
                 return a.toLowerCase().localeCompare(b.toLowerCase());
             });
         };
+        
+        /**
+         * Convert a string to Unicode.
+         * @param {String} text
+         * @returns {String}    Returns the converted String.
+         */
         this.toUnicode = function(text) {
             var result = "";
             for (var i = 0; i < text.length; i++) {
@@ -316,8 +446,13 @@ define(['TEnvironment', 'jquery'], function(TEnvironment, $) {
             }
             return result;
         };
+        
         /**
          * Creates a String of delimiters of a given number.
+         * @param {type} level  Number of delimiters to have in the string
+         * @param {type} value  Delimiter to add. If value is undefined,
+         * '#' will be used.
+         * @returns {String}    Returns the created string.
          */
         this.someDelimiters = function(level, value)
         {
@@ -328,15 +463,15 @@ define(['TEnvironment', 'jquery'], function(TEnvironment, $) {
                 result += value;
             return result;
         };
+        
         /**
-         * This method replaces quote delimiters (#) by a quotation mark (")
-         * It allows to call a string in an another string (this happens quite often in Tangara).
-         * Ex:  in Tangara:  object.method("object2.methode2(#"...#")) <br>
-         * 		in Java:     object.method("object2.methode(\"...\"))
-         * @param string
-         * 		the string to change
-         * @return
-         * 		the new string
+         * This method replaces quote delimiters (#) by a quotation mark (").
+         * It allows to call a string in an another string
+         * (this happens quite often in Tangara). Ex:</br>
+         * In Tangara:  object.method("object2.methode(#"...#"))</br>
+         * In Java:     object.method("object2.methode(\"...\"))</br>
+         * @param {String} string   The String to change
+         * @returns {String}    Returns the modified string.
          */
         this.parseQuotes = function(string) {
             var result = "";
@@ -396,6 +531,11 @@ define(['TEnvironment', 'jquery'], function(TEnvironment, $) {
             return result;
         };
 
+        /**
+         * Convert Unicode to ASCII.
+         * @param {String} text Text to convert
+         * @returns {String}    Returns the converted text.
+         */
         this.convertUnicode = function(text) {
             var result = text.replace(/\\u([0-9a-fA-F]{4})/g,
                     function(whole, group1) {
@@ -406,55 +546,60 @@ define(['TEnvironment', 'jquery'], function(TEnvironment, $) {
         };
 
         /**
-         * Add its quote delimiters to a String. Indeed, each
-         * quotation mark (") must be preceded by a certain number of slashes (\).
-         * Each quotation mark that is already preceded by a slash receives no
-         * delimiter. It symbolizes the character '\"', and not a quote extremity.
-         * There are three possible cases:
-         *
-         * Now we have to to add some sharp symbols.
-         * There are five possible cases:
-         * 1.    #"     There is already a sharp before the quotation mark. In this
-         *              case, no more sharps should be added.
-         * 2.    \"     This indicates an isolated quotation mark. The level should
-         *              not change.
-         * 3.    .CommandWord("
-         *              the level increases
-         *       NotCommandWord("
-         *              the level decreases
-         * 4.    ," or +"
-         *              the level increases
-         * 5.    ") or ", or +"
-         *              the level decreases
-         *
-         *              @param text String the string to add quote delimiters
+         * Check if text ends with a '#' or a '\'
+         * @param {String} text
+         * @returns {Boolean}
          */
-
         this.isDelimiterEnded = function(text) {
             var regex = new RegExp(".*[#\\\\]$", "m");
             return regex.test(text);
         };
 
+        /**
+         * Check if text is a command.
+         * @param {String} text
+         * @returns {Boolean}
+         */
         this.isACommand = function(text) {
             var regex = new RegExp(".*[A-Za-z0-9]+\\s*.\\s*[A-Za-z0-9]+\\s*\\(\\s*$", "m");
             return regex.test(text);
         };
 
+        /**
+         * Check if text is a new instance.
+         * @param {String} text
+         * @returns {Boolean}
+         */
         this.isNewInstanceStringed = function(text) {
             var regex = new RegExp(".*[A-Za-z\\d]+\\s*=\\s*new\\s*[A-Za-z\\d]*\\s*\\(\\s*[\"\']$", "m");
             return regex.test(text);
         };
 
+        /**
+         * Check if text is a comparison.
+         * @param {String} text
+         * @returns {Boolean}
+         */
         this.isComparison = function(text) {
             var regex = new RegExp(".*[\\=!]?\\=\\s*$", "m");
             return regex.test(text);
         };
 
+        /**
+         * Check if text is a String. 
+         * @param {type} text
+         * @returns {Boolean}
+         */
         this.isStringElement = function(text) {
             var regex = new RegExp(".*[\\+\\,]\\s*$", "m");
             return regex.test(text);
         };
 
+        /**
+         * Check if a command contains an "else".
+         * @param {type} text
+         * @returns {Boolean}
+         */
         this.isElsePresent = function(text) {
             //var regex = new RegExp("^.*else*$", "m");
             var regex = new RegExp("^.*[^[[:alpha:]]]*else[^[[:alpha:]]]*.*$", "m");
@@ -465,6 +610,13 @@ define(['TEnvironment', 'jquery'], function(TEnvironment, $) {
             return regex.test(text);
         };
 
+        /**
+         * Add quote delimiter to quotes.</br>
+         * If a quotation mark already have a '#' or '\', do nothing,
+         * else add a '#' before.
+         * @param {String} text
+         * @returns {String}    Returns the modified string.
+         */
         this.addQuoteDelimiters = function(text) {
             try {
                 var leftPart = "";
@@ -487,7 +639,7 @@ define(['TEnvironment', 'jquery'], function(TEnvironment, $) {
                     leftPart += newPart;
                     /* Now we have to to add some sharp symbols.
                      * There are three possible cases:
-                     * 1.    #" or \"     There is already a sharp before the quotation mark. In this case, no more sharps should be added.
+                     * 1.    #" or \"     There is already a delimiter before the quotation mark. In this case, no more delimiters should be added.
                      * 2.   The level increases when encountering the following patterns:
                      * 		object.method("
                      * 		object = new Class("
@@ -532,7 +684,11 @@ define(['TEnvironment', 'jquery'], function(TEnvironment, $) {
             }
         };
 
-
+        /**
+         * Add escaping slashes.
+         * @param {String} string
+         * @returns {String}    Returns the modified string.
+         */
         this.addslashes = function(string) {
             return string.replace(/\\/g, '\\\\').
                     replace(/\u0008/g, '\\b').
@@ -544,6 +700,11 @@ define(['TEnvironment', 'jquery'], function(TEnvironment, $) {
                     replace(/"/g, '\\"');
         };
 
+        /**
+         * Get function name.
+         * @param {String} object
+         * @returns {String}
+         */
         this.getFunctionName = function(object) {
             var string = object.toString();
             string = string.substr('function '.length);
@@ -551,12 +712,19 @@ define(['TEnvironment', 'jquery'], function(TEnvironment, $) {
             return string;
         };
 
+        /**
+         * Merge contents of two objects into the first object.
+         * @param {Object} dest
+         * @param {Object} source
+         * @returns {Object}
+         */
         this.extend = function(dest, source) {
             // just use jQuery extend
             return $.extend(dest, source);
         };
 
     };
+    
     var utilInstance = new TUtils();
     return utilInstance;
 });

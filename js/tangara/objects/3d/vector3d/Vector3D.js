@@ -1,7 +1,6 @@
 define(['jquery', 'babylon', 'TEnvironment', 'TObject'], function($, babylon, TEnvironment, TObject) {
     /**
      * 
-     * @return 
      */
     var Vector3D = function() {
         TObject.call(this);

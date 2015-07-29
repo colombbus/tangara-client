@@ -10,6 +10,15 @@ module.exports = function (grunt) {
 
         jshint: {
             all: ['Gruntfile.js', 'js/tangara/**/*.js']
+        },
+        
+        jsdoc : {
+            dist : {
+                src: ['js/tangara/**/*.js'],
+                options: {
+                    destination: 'doc/api'
+                }
+            }
         }
 //        ,
 //        build: {
@@ -21,7 +30,8 @@ module.exports = function (grunt) {
     // Load the plugin that provides the "uglify" task.
 //    grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-jshint');
-
+    grunt.loadNpmTasks('grunt-jsdoc');
+    
     // Default task(s).
 //    grunt.registerTask('default', ['uglify']);
     grunt.registerTask('default', ['jshint']);
