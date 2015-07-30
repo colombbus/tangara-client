@@ -450,6 +450,18 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
                 });
             }
         };
+        
+        /**
+         * Get content of resource "name".
+         * @param {String} name
+         * @param {Function} callback
+         */
+        this.getResourceContent = function(name, version, callback) {
+            var url = this.getResourceLocation(name, version);
+            $.get(url, null, function(data) {
+                callback.call(this, data);
+            }, "text");
+        };
 
         /**
          * Duplicate resource "name".
