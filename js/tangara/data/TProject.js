@@ -127,6 +127,25 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
                 callback.call(this, program.getStatements());
             }
         };
+        
+        this.getProgramCode = function(name, callback) {
+            if (typeof editedPrograms[name] === 'undefined') {
+                var program = new TProgram(name);
+                program.load(function(error) {
+                    if (typeof error !== 'undefined') {
+                        callback.call(this, error);
+                    } else {
+                        editedPrograms[name] = program;
+                        // sort editing programs alphabetically
+                        updateEditedPrograms();
+                        callback.call(this, program.getCode());
+                    }
+                });
+            } else {
+                var program = editedPrograms[name];
+                callback.call(this, program.getCode());
+            }
+        };
 
         this.isProgramEdited = function(name) {
             return (typeof editedPrograms[name] !== 'undefined');
@@ -482,6 +501,10 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
                     callback.call(this, newName);
                 }
             });
+        };
+        
+        this.getResourceContent = function(name, callback) {
+            return TLink.getResourceContent(name, resources[name].version, callback);
         };
 
         var updateEditedPrograms = function() {
