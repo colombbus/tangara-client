@@ -27,13 +27,24 @@ require.config({
         "ResourceManager": "utils/ResourceManager",
         "SynchronousManager": "utils/SynchronousManager",
         "TError": "utils/TError",
-        "TUtils": "utils/TUtils"
+        "TUtils": "utils/TUtils",
+        "platform-pr": "../libs/pem-task/platform-pr",
+        "json": "../libs/pem-task/json2.min",
+        "Task": "env/Task",
+        "Grader": "env/Grader",
+        "TExercise": "data/TExercise"
     },
     map: {
         "fileupload": {
             "jquery.ui.widget": 'jquery-ui/widget'
         }
-    }
+    },
+    shim: {
+        'platform-pr': {
+            deps: ['jquery'],
+            exports: '$'
+        }
+    }    
 });
 
 //window.location.protocol + "//" + window.location.host+ window.location.pathname.split("/").slice(0, -1).join("/")+"/js/tangara",
@@ -41,7 +52,7 @@ require.config({
 // Start the main app logic.
 
 function load() {
-    require(['jquery', 'TEnvironment', 'TRuntime', 'ui/TLearnFrame', 'TLearnProject'], function($, TEnvironment, TRuntime, TLearnFrame, TProject) {
+    require(['jquery', 'TEnvironment', 'TRuntime', 'ui/TLearnFrame', 'TLearnProject', 'Task', 'Grader'], function($, TEnvironment, TRuntime, TLearnFrame, TProject, Task, Grader) {
         window.console.log("*******************");
         window.console.log("* Loading Environment *");
         window.console.log("*******************");
@@ -58,14 +69,33 @@ function load() {
                     window.console.log("*******************");
                     window.console.log("* Initiating link *");
                     window.console.log("*******************");
-                    var currentProject = new TProject();
-                    TEnvironment.setProject(currentProject);
+                    // Create task and grader
+                    window.task = new Task(frame);
+                    window.grader = new Grader();
+                    // get exercise id
+                    var exerciseId;
+                    if (typeof init_exerciseId !== 'undefined') {
+                        // get id from server
+                        exerciseId = init_exerciseId;
+                    } else {
+                        // get id from hash
+                        var hash = document.location.hash;
+                        exerciseId = parseInt(hash.substring(1));
+                    }
+                    window.console.log("********************");
+                    window.console.log("* Loading exercise *");
+                    window.console.log("********************");
+                    
                     $(document).ready(function() {
                         frame.displayed();
                         // trigger resize in order for canvas to update its size (and remove the 5px bottom margin)
                         $(window).resize();
                         frame.init();
-                        frame.loadStep(1);
+                        if (isNaN(exerciseId)) {
+                            window.console.error("Could not find exercise id");
+                        } else {
+                            frame.loadExercise(exerciseId);
+                        }
                     });
                 });
             });
