@@ -21,6 +21,7 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
 
         this.setId = function(value) {
             id = value;
+            TLink.setProjectId(value);
         };
 
         this.getId = function() {
@@ -99,6 +100,31 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
                         callback.call(this);
                     }
                 });
+            }
+        };
+
+        this.getProgramStatements = function(name, callback) {
+            if (typeof editedPrograms[name] === 'undefined') {
+                var program = new TProgram(name);
+                program.load(function(error) {
+                    if (typeof error !== 'undefined') {
+                        callback.call(this, error);
+                    } else {
+                        editedPrograms[name] = program;
+                        // sort editing programs alphabetically
+                        updateEditedPrograms();
+                        var result;
+                        try {
+                            result = program.getStatements();
+                        } catch(e) {
+                            result = new TError(e);
+                        }
+                        callback.call(this, result);
+                    }
+                });
+            } else {
+                var program = editedPrograms[name];
+                callback.call(this, program.getStatements());
             }
         };
 
