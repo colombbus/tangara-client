@@ -35,11 +35,11 @@ define(['ui/TComponent', 'TEnvironment', 'TUI', 'jquery'], function(TComponent, 
         this.loadText = function(name) {
             resourceName = name;
             $name.text(name);
-            var src = TEnvironment.getProjectResource(name);
+            var project = TEnvironment.getProject();
             $textArea.val('');
-            $.get(src, null, function(data) {
+            project.getResourceContent(name, function(data) {
                 $textArea.val(data);
-            }, "text");
+            });
             $main.fadeIn();
         };
 
