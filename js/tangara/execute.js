@@ -28,7 +28,7 @@ require.config({
 });
 
 function load() {
-    require(['jquery', 'TEnvironment', 'TRuntime', 'ui/TCanvas', 'TProject', 'TLink'], function($, TEnvironment, TRuntime, TCanvas, TProject, TLink) {
+    require(['jquery', 'TEnvironment', 'TRuntime', 'ui/TCanvas', 'TProject', 'TError'], function($, TEnvironment, TRuntime, TCanvas, TProject, TError) {
         window.console.log("*******************");
         window.console.log("* Loading Environment *");
         window.console.log("*******************");
@@ -44,18 +44,22 @@ function load() {
                         // trigger resize in order for canvas to update its size (and remove the 5px bottom margin)
                         $(window).resize();
                         canvas.showLoading();
-                        var currentProject = new TProject();                        
-                        TLink.setProjectId(init_projectId);
-                        currentProject.init();
-                        TEnvironment.setProject(currentProject);
-                        var statements = TLink.getProgramStatements(init_programName);
-                        TRuntime.setCurrentProgramName(init_programName);
-
-                        currentProject.preloadResources(function(count, total) {
-                                canvas.setLoadingValue(count, total);
-                            }, function() {
-                            canvas.removeLoading();
-                            TRuntime.executeStatements(statements);
+                        var currentProject = new TProject();
+                        currentProject.setId(init_projectId);
+                        currentProject.init(function() {
+                            TEnvironment.setProject(currentProject);
+                            currentProject.getProgramStatements(init_programName, function(statements) {
+                                if (statements instanceof TError) {
+                                    window.console.error(statements.getMessage());
+                                }
+                                TRuntime.setCurrentProgramName(init_programName);
+                                currentProject.preloadResources(function(count, total) {
+                                        canvas.setLoadingValue(count, total);
+                                    }, function() {
+                                    canvas.removeLoading();
+                                    TRuntime.executeStatements(statements);
+                                });
+                            });
                         });
                     });
                 });
