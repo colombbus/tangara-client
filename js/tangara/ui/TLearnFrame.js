@@ -64,6 +64,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
 
         var execute = function() {
             hideMessage();
+            clear();
             try {
                 var statements = editor.getStatements();
                 TRuntime.executeStatements(statements);
