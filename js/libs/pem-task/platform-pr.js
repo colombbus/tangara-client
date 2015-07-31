@@ -480,7 +480,9 @@ if (!isCrossDomain()) {
     $(function () {
         //alert("load");
         // Get the parent page URL as it was passed in, for browsers that don't support window.postMessage
-        var parent_url = decodeURIComponent(document.location.hash.replace(/^#/, ''));
+        var hashString = document.location.hash;
+        var lastHash = hashString.lastIndexOf("#");
+        var parent_url = decodeURIComponent(hashString.substring(lastHash+1));
         sPlatform = decodeURIComponent((new RegExp('[?|&]sPlatform=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [, ""])[1].replace(/\+/g, '%20')) || null;
         sToken = decodeURIComponent((new RegExp('[?|&]sToken=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [, ""])[1].replace(/\+/g, '%20')) || null;
         if (parent_url) {
