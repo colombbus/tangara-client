@@ -422,7 +422,28 @@ define(['TEnvironment', 'jquery'], function(TEnvironment, $) {
             }
             throw new Error(TEnvironment.getMessage("wrong color"));
         };
-        
+
+        /**
+         * Convert a RGB component color to Hexadecimal component color.
+         * @param {type} color
+         * @returns {String}    Component in Hexadecimal
+         */
+        this.componentToHex = function (color) {
+            var hex = color.toString(16);
+            return hex.length === 1 ? "0" + hex : hex;
+        };
+
+        /**
+         * Convert RGB color in Hexadecimal color.
+         * @param {type} r
+         * @param {type} g
+         * @param {type} b
+         * @returns {String}    Color in Hexadecimal
+         */
+        this.rgbToHex = function (r, g, b) {
+            return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+        };
+
         /**
          * Sort an array by ASCII. Consideres an upper case as a lower case.
          * @param {String[]} value
