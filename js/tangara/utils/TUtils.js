@@ -425,7 +425,7 @@ define(['TEnvironment', 'jquery'], function(TEnvironment, $) {
 
         /**
          * Convert a RGB component color to Hexadecimal component color.
-         * @param {type} color
+         * @param {Number} color
          * @returns {String}    Component in Hexadecimal
          */
         this.componentToHex = function (color) {
@@ -435,13 +435,11 @@ define(['TEnvironment', 'jquery'], function(TEnvironment, $) {
 
         /**
          * Convert RGB color in Hexadecimal color.
-         * @param {type} r
-         * @param {type} g
-         * @param {type} b
+         * @param {Number[]} color
          * @returns {String}    Color in Hexadecimal
          */
-        this.rgbToHex = function (r, g, b) {
-            return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+        this.rgbToHex = function (color) {
+            return "#" + this.componentToHex(color[0]) + this.componentToHex(color[1]) + this.componentToHex(color[2]);
         };
 
         /**
