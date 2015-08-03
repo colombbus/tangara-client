@@ -122,8 +122,8 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
                 ctx.drawImage(this.resources.getUnchecked(p.asset), -p.cx, -p.cy);
             }
         },
-        colorPath: function(color) {
-           this.p.strokeColor = color;
+        colorPath: function(red, green, blue) {
+           this.p.strokeColor = TUtils.rgbToHex(TUtils.getColor(red, green, blue));
         },
         trackPath: function(value) {
             this.perform(function(value) {
@@ -160,13 +160,14 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
     };
 
     /**
-     * Change the color of the path.
-     * @param {String} value
+     * Change the color of the path.</br>
+     * Default value : red | [255, 0, 0]
+     * @param {String|Number} red
+     * @param {Number} green
+     * @param {Number} blue
      */
-    Turtle.prototype._colorPath = function(value) {
-        if (typeof value !== 'undefined') {
-            this.gObject.colorPath(value);
-        }
+    Turtle.prototype._colorPath = function(red, green, blue) {
+        this.gObject.colorPath(red, green, blue);
     };
     
     /**
@@ -187,6 +188,11 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
         this.gObject.trackPath(true);
     };
     
+    /**
+     * Set the width of the path.
+     * Default value : 1.
+     * @param {Number} value
+     */
     Turtle.prototype._pathWidth = function(value) {
         if (typeof value !== 'undefined') {
             value = TUtils.getInteger(value);
