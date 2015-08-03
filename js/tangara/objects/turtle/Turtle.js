@@ -31,6 +31,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
                 stroke: true,
                 strokeColor: "#FF0000",
                 trackPath: true,
+                pathWidth: 1,
                 coordinates: [],
                 velocityX: 200,
                 velocityY: 200
@@ -111,6 +112,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
                 }
                 ctx.closePath();
                 ctx.strokeStyle = p.coordinates[i][2];
+                ctx.lineWidth = p.pathWidth;
                 ctx.stroke();
             }
             
@@ -126,6 +128,11 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
         trackPath: function(value) {
             this.perform(function(value) {
                 this.p.trackPath = value;
+            }, [value]);
+        },
+        pathWidth: function(value) {
+            this.perform(function(value) {
+                this.p.pathWidth = value;
             }, [value]);
         }
     });
@@ -178,6 +185,13 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
      */
     Turtle.prototype._trackPath = function() {
         this.gObject.trackPath(true);
+    };
+    
+    Turtle.prototype._pathWidth = function(value) {
+        if (typeof value !== 'undefined') {
+            value = TUtils.getInteger(value);
+            this.gObject.pathWidth(value);
+        }
     };
     
     return Turtle;
