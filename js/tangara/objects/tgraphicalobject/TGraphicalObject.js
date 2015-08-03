@@ -25,6 +25,7 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function(TObject, TUti
     TGraphicalObject.TYPE_INACTIVE = 0x4000;
     TGraphicalObject.TYPE_ITEM = 0x8000;
     TGraphicalObject.TYPE_PLATFORM = 0x0001;
+    TGraphicalObject.TYPE_TURTLE = 0x0002;
 
     var graphics = TRuntime.getGraphics();
 
@@ -74,11 +75,17 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function(TObject, TUti
         },
         zoomIn: function(scale) {
             this.perform(function(scale) {
+                if (typeof this.p.scale === 'undefined') {
+                    this.p.scale = 1;
+                }
                 this.p.scale = scale + this.p.scale;
             }, [scale]);
         },
         zoomOut: function(scale) {
             this.perform(function(scale) {
+                if (typeof this.p.scale === 'undefined') {
+                    this.p.scale = 1;
+                }
                 this.p.scale = -scale + this.p.scale;
             }, [scale]);
         },
