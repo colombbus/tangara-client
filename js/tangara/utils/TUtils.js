@@ -189,23 +189,30 @@ define(['TEnvironment', 'jquery'], function(TEnvironment, $) {
             black: [0, 0, 0],
             white: [255, 255, 255],
             red: [255, 0, 0],
-            green: [0, 128, 0],
+            lime: [0, 255, 0],
             blue: [0, 0, 255],
-            beige: [245, 245, 220],
             yellow: [255, 255, 0],
-            pink: [255, 192, 203],
-            orange: [255, 165, 0],
-            maroon: [128, 0, 0],
             cyan: [0, 255, 255],
-            darkgreen: [0, 100, 0],
-            darkgray: [169, 169, 169],
             fuchsia: [255, 0, 255],
+            silver: [192, 192, 192],
             gray: [128, 128, 128],
-            lightgreen: [144, 238, 144],
+            maroon: [128, 0, 0],
             olive: [128, 128, 0],
-            navy: [0, 0, 128],
+            green: [0, 128, 0],
             purple: [128, 0, 128],
-            blueviolet: [138, 43, 226]
+            teal: [0, 128, 128],
+            navy: [0, 0, 128],
+            
+            beige: [245, 245, 220],
+            blueviolet: [138, 43, 226],
+            darkgreen: [0, 100, 0],
+            electricviolet: [143, 0, 255],
+            indigo: [75, 0, 130],
+            lightgreen: [144, 238, 144],
+            orange: [255, 165, 0],
+            pink: [255, 192, 203],
+            skyblue: [0, 191, 255],
+            wheelorange: [255, 127, 0]
         };
         
         /**
@@ -422,7 +429,26 @@ define(['TEnvironment', 'jquery'], function(TEnvironment, $) {
             }
             throw new Error(TEnvironment.getMessage("wrong color"));
         };
-        
+
+        /**
+         * Convert a RGB component color to Hexadecimal component color.
+         * @param {Number} color
+         * @returns {String}    Component in Hexadecimal
+         */
+        this.componentToHex = function (color) {
+            var hex = color.toString(16);
+            return hex.length === 1 ? "0" + hex : hex;
+        };
+
+        /**
+         * Convert RGB color in Hexadecimal color.
+         * @param {Number[]} color
+         * @returns {String}    Color in Hexadecimal
+         */
+        this.rgbToHex = function (color) {
+            return "#" + this.componentToHex(color[0]) + this.componentToHex(color[1]) + this.componentToHex(color[2]);
+        };
+
         /**
          * Sort an array by ASCII. Consideres an upper case as a lower case.
          * @param {String[]} value

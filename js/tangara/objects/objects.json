@@ -332,5 +332,14 @@
         },
         "parents": false,
         "instance": true
+    },
+    "Turtle": {
+        "path": "turtle",
+        "translations": {
+            "fr": "Tortue",
+            "es": "TBD",
+            "en": "Turtle"
+        },
+        "parents": true
     }
 }

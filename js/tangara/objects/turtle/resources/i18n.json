@@ -1,0 +1,12 @@
+{
+    "fr": {
+        "methods":[
+            {"name":"_moveForward","translated":"avancer","displayed":"avancer(50)"},
+            {"name":"_moveBackward","translated":"reculer","displayed":"reculer(50)"},
+            {"name":"_colorPath","translated":"couleurChemin","displayed":"couleurChemin(\"rouge\")"},
+            {"name":"_trackPath","translated":"trace","displayed":"trace()"},
+            {"name":"_untrackPath","translated":"tracePas","displayed":"tracePas()"},
+            {"name":"_pathWidth","translated":"épaisseur","displayed":"épaisseur(1)"}
+        ]
+    }
+}
