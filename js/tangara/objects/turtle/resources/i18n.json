@@ -1,0 +1,11 @@
+{
+    "fr": {
+        "methods":[
+            {"name":"_moveForward","translated":"avancer","displayed":"avancer(50)"},
+            {"name":"_moveBackward","translated":"reculer","displayed":"reculer(50)"},
+            {"name":"_colorPath","translated":"couleurChemin","displayed":"couleurChemin(\"#000000\")"},
+            {"name":"_trackPath","translated":"tracer","displayed":"trace()"},
+            {"name":"_untrackPath","translated":"nePasTracer","displayed":"tracePas()"}
+        ]
+    }
+}
