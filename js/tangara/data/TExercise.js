@@ -73,7 +73,7 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/teacher/Teach
         };
         
         var loadStart = function(callback) {
-            project.getProgramStatements("start.tgr", function(result) {
+            project.getProgramStatements("start", function(result) {
                 if (!(result instanceof TError)) {
                     startStatements = result;
                 }
@@ -82,7 +82,7 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/teacher/Teach
         };
         
         var loadCheck = function(callback) {
-            project.getProgramStatements("check.tgr", function(result) {
+            project.getProgramStatements("check", function(result) {
                 if (!(result instanceof TError)) {
                     checkStatements = result;
                 }
@@ -91,7 +91,7 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/teacher/Teach
         };
 
         var loadSolution = function(callback) {
-            project.getProgramCode("solution.tgr", function(result) {
+            project.getProgramCode("solution", function(result) {
                 if (!(result instanceof TError)) {
                     solutionCode = result;
                 }
@@ -114,17 +114,17 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/teacher/Teach
                 var solutionPresent = false;
                 var toLoad = 0;
                 
-                if (programs.indexOf("start.tgr") > -1) {
+                if (programs.indexOf("start") > -1) {
                     toLoad++;
                     startPresent = true;
                 }
 
-                if (programs.indexOf("check.tgr") > -1) {
+                if (programs.indexOf("check") > -1) {
                     toLoad++;
                     checkPresent = true;
                 }
 
-                if (programs.indexOf("solution.tgr") > -1) {
+                if (programs.indexOf("solution") > -1) {
                     toLoad++;
                     solutionPresent = true;
                 }
