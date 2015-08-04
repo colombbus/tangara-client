@@ -1,4 +1,4 @@
-define(['jquery', 'TEnvironment', 'TObject', 'TUtils', 'TRuntime', 'TParser'], function($, TEnvironment, TObject, TUtils, TRuntime, TParser) {
+define(['TObject', 'TUtils', 'CommandManager'], function(TObject, TUtils, CommandManager) {
     /**
      * Defines Sequence, inherited from TObject.
      * A sequence can save commands, with or without a delay between,
@@ -32,14 +32,14 @@ define(['jquery', 'TEnvironment', 'TObject', 'TUtils', 'TRuntime', 'TParser'], f
      */
     Sequence.prototype._addCommand = function(command) {
         command = TUtils.getCommand(command);
-        if (TUtils.checkString(command)) {
-            // command is a string: we parse it
-            command = TParser.parse(command);
-        } else if (TUtils.checkFunction(command)) {
-            var functionName = TUtils.getFunctionName(command);
-            command = [{type: "ExpressionStatement", expression: {type: "CallExpression", callee: {type: "Identifier", name: functionName}, arguments: []}}];
+        if (this.actions.length>0 && this.actions[this.actions.length-1].type === Sequence.TYPE_COMMAND) {
+            var cm = this.actions[this.actions.length-1].value;
+            cm.addCommand(command);
+        } else {
+            var cm = new CommandManager();
+            cm.addCommand(command);
+            this.actions.push({type: Sequence.TYPE_COMMAND, value: cm});
         }
-        this.actions.push({type: Sequence.TYPE_COMMAND, value: command});
     };
 
     /**
@@ -69,8 +69,10 @@ define(['jquery', 'TEnvironment', 'TObject', 'TUtils', 'TRuntime', 'TParser'], f
             }
             var action = this.actions[this.index];
             if (action.type === Sequence.TYPE_COMMAND) {
-                // execute command
-                TRuntime.executeNow(action.value, null, this.logCommands);
+                // execute commands
+                var cm = action.value;
+                cm.logCommands(this.logCommands)
+                cm.executeCommands();
                 this.nextAction();
             } else if (action.type === Sequence.TYPE_DELAY) {
                 var self = this;
