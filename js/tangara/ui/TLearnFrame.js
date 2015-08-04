@@ -66,8 +66,13 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             hideMessage();
             clear();
             try {
-                var statements = editor.getStatements();
-                TRuntime.executeStatements(statements);
+                if(exercise.isParserMode()) {
+                    var statements = editor.getValue();
+                }
+                else {
+                    var statements = editor.getStatements();
+                    TRuntime.executeStatements(statements);
+                }
                 //TODO: only if no error
                 exercise.check(statements);
             } catch (error) {

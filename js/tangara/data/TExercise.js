@@ -65,6 +65,10 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/teacher/Teach
             }
         };
         
+        this.isParserMode = function() {
+            return Teacher.get("parser");
+        };
+        
         this.check = function(statements) {
             Teacher.setStatements(statements);
             if (checkStatements !== false) {
