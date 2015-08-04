@@ -26,6 +26,7 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function(TObject, TUti
     TGraphicalObject.TYPE_ITEM = 0x8000;
     TGraphicalObject.TYPE_PLATFORM = 0x0001;
     TGraphicalObject.TYPE_TURTLE = 0x0002;
+    TGraphicalObject.TYPE_SHAPE = 0x0004;
 
     var graphics = TRuntime.getGraphics();
 

@@ -341,5 +341,41 @@
             "en": "Turtle"
         },
         "parents": true
+    },
+    "Shape": {
+        "path": "shapes/shape",
+        "translations": {
+            "fr": "Figure",
+            "es": "TBD",
+            "en": "Shape"
+        },
+        "parents": true
+    },
+    "Polygon": {
+        "path": "shapes/polygon",
+        "translations": {
+            "fr": "Polygone",
+            "es": "TBD",
+            "en": "Polygon"
+        },
+        "parents": true
+    },
+    "Triangle": {
+        "path": "shapes/triangle",
+        "translations": {
+            "fr": "Triangle",
+            "es": "TBD",
+            "en": "Triangle"
+        },
+        "parents": true
+    },
+    "Point": {
+        "path": "shapes/point",
+        "translations": {
+            "fr": "Point",
+            "es": "TBD",
+            "en": "Point"
+        },
+        "parents": true
     }
 }
