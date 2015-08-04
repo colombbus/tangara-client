@@ -38,6 +38,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
             }, props), defaultProps);
         },
         move: function(value) {
+            this.synchronousManager.begin();
             this.perform(function(value) {
                 var x = Math.cos((this.p.tangle - 90) / 180 * Math.PI) * value;
                 var y = Math.sin((this.p.tangle - 90) / 180 * Math.PI) * value;
@@ -52,7 +53,6 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
                     this.p.velocityY = this.p.velocity;
                 }
                 this.p.inMovement = true;
-                this.synchronousManager.begin();
                 this.p.destinationX += x;
                 this.p.destinationY += y;
                 if (this.p.trackPath) {
