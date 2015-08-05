@@ -19,6 +19,9 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'TUtils', 'objects/shapes/
                 vertices: [],
                 initVertices: false,
                 fill: false,
+                tangle: 0,
+                tx: 50,
+                ty: 50,
             }, props), defaultProps);
         },
         setVertices: function (value) {
@@ -28,13 +31,42 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'TUtils', 'objects/shapes/
             }
             this.p.initVertices = true;
         },
+        step: function(dt) {
+            var p = this.p;
+            p.moving = false;
+            if (!p.dragging && !p.frozen) {
+                var step = p.velocity * dt;
+                if (p.tx < p.destinationX) {
+                    p.tx = Math.min(p.tx + step, p.destinationX);
+                    p.moving = true;
+                } else if (p.tx > p.destinationX) {
+                    p.tx = Math.max(p.tx - step, p.destinationX);
+                    p.moving = true;
+                }
+                if (p.ty < p.destinationY) {
+                    p.ty = Math.min(p.ty + step, p.destinationY);
+                    p.moving = true;
+                } else if (p.ty > p.destinationY) {
+                    p.ty = Math.max(p.ty - step, p.destinationY);
+                    p.moving = true;
+                }
+            }
+            this.checkCollisions();
+        },
+        rotate: function(angle) {
+            this.perform(function(angle) {
+                this.p.tangle = this.p.tangle + angle;
+            }, [angle]);
+        },
         draw: function (ctx) {
             var p = this.p;
             if (p.initVertices) {
                 ctx.beginPath();
-                ctx.moveTo(p.vertices[0].gObject.p.x, p.vertices[0].gObject.p.y);
+                ctx.translate(p.tx + p.vertices[0].gObject.p.x, p.ty + p.vertices[0].gObject.p.y);
+                ctx.rotate(this.p.tangle / 180 * Math.PI);
+                ctx.moveTo(0, 0);
                 for (var i = 1; i < p.vertices.length; i++) {
-                    ctx.lineTo(p.vertices[i].gObject.p.x, p.vertices[i].gObject.p.y );
+                    ctx.lineTo(p.vertices[i].gObject.p.x - p.vertices[0].gObject.p.x, p.vertices[i].gObject.p.y - p.vertices[0].gObject.p.y);
                 }
                 ctx.closePath();
                 ctx.strokeStyle = p.color;
