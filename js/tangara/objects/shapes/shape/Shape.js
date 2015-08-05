@@ -1,19 +1,19 @@
-define(['jquery', 'TEnvironment', 'TGraphicalObject', 'TUtils'], function($, TEnvironment, TGraphicalObject, TUtils) {
+define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', 'TUtils'], function($, TEnvironment, TGraphicalObject, Sprite, TUtils) {
     /**
-     * Defines Shape, inherited from TGraphicalObject.
+     * Defines Shape, inherited from Sprite.
      * @exports Shape
      */
     var Shape = function() {
-        TGraphicalObject.call(this);
+        Sprite.call(this);
     };
     
-    Shape.prototype = Object.create(TGraphicalObject.prototype);
+    Shape.prototype = Object.create(Sprite.prototype);
     Shape.prototype.constructor = Shape;
     Shape.prototype.className = "Shape";
 
     var graphics = Shape.prototype.graphics;
 
-    Shape.prototype.gClass = graphics.addClass("TGraphicalObject", "TShape", {
+    Shape.prototype.gClass = graphics.addClass("TSprite", "TShape", {
         init: function(props, defaultProps) {
             this._super(TUtils.extend({
                 color: "#FF0000",
@@ -21,20 +21,8 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'TUtils'], function($, TEn
                 fill: false,
                 fillColor: "#800000",
                 type: TGraphicalObject.TYPE_SHAPE,
-                x: 0,
-                y: 0,
-                initialized: true,
+                initialized: true
             }, props), defaultProps);
-        },
-        moveX: function(value) {
-            this.perform(function(value) {
-                this.p.x += value;
-            }, [value]);
-        },
-        moveY: function(value) {
-            this.perform(function(value) {
-                this.p.y += value;
-            }, [value]);
         },
         color: function(red, green, blue) {
            this.p.color = TUtils.rgbToHex(TUtils.getColor(red, green, blue));
@@ -49,49 +37,6 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'TUtils'], function($, TEn
            this.p.fillColor = TUtils.rgbToHex(TUtils.getColor(red, green, blue));
         }
     });
-    
-    /**
-     * Move Shape of "value" pixels forward (to the right).
-     * @param {Number} value
-     */
-    Shape.prototype._moveForward = function(value) {
-        if (typeof value !== 'undefined') {
-            value = TUtils.getInteger(value);
-            this.gObject.moveX(value);
-        }
-    };
-    
-    /**
-     * Move Shape of "value" pixels backward (to the left).
-     * @param {Number} value
-     */
-    Shape.prototype._moveBackward = function(value) {
-        if (typeof value !== 'undefined') {
-            value = TUtils.getInteger(value);
-            this.gObject.moveX(-value);
-        }
-    };
-    /**
-     * Move Shape of "value" pixels upward.
-     * @param {Number} value
-     */
-    Shape.prototype._moveUpward = function(value) {
-        if (typeof value !== 'undefined') {
-            value = TUtils.getInteger(value);
-            this.gObject.moveY(value);
-        }
-    };
-    
-    /**
-     * Move Shape of "value" pixels downward.
-     * @param {Number} value
-     */
-    Shape.prototype._moveDownward = function(value) {
-        if (typeof value !== 'undefined') {
-            value = TUtils.getInteger(value);
-            this.gObject.moveY(-value);
-        }
-    };
     
     /**
      * Change the color of the shape.</br>
