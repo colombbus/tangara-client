@@ -377,5 +377,50 @@
             "en": "Point"
         },
         "parents": true
+    },
+    "Quadrilateral": {
+        "path": "shapes/quadrilateral",
+        "translations": {
+            "fr": "Quadrilatère",
+            "es": "TBD",
+            "en": "Quadrilateral"
+        },
+        "parents": true
+    },
+    "Parallelogram": {
+        "path": "shapes/parallelogram",
+        "translations": {
+            "fr": "Parallélogramme",
+            "es": "TBD",
+            "en": "Parallelogram"
+        },
+        "parents": true
+    },
+    "Rectangle": {
+        "path": "shapes/rectangle",
+        "translations": {
+            "fr": "Rectangle",
+            "es": "TBD",
+            "en": "Rectangle"
+        },
+        "parents": true
+    },
+    "Arc": {
+        "path": "shapes/arc",
+        "translations": {
+            "fr": "Arc",
+            "es": "TBD",
+            "en": "Arc"
+        },
+        "parents": true
+    },
+    "Circle": {
+        "path": "shapes/circle",
+        "translations": {
+            "fr": "Cercle",
+            "es": "TBD",
+            "en": "Circle"
+        },
+        "parents": true
     }
 }
