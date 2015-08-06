@@ -1,4 +1,4 @@
-define(['jquery', 'TEnvironment', 'TGraphicalObject', 'TUtils', 'objects/shapes/parallelogram/Parallelogram', 'objects/shapes/Point/Point'], function ($, TEnvironment, TGraphicalObject, TUtils, Parallelogram, Point) {
+define(['jquery', 'TEnvironment', 'TGraphicalObject', 'TUtils', 'objects/shapes/parallelogram/Parallelogram', 'objects/shapes/point/Point'], function ($, TEnvironment, TGraphicalObject, TUtils, Parallelogram, Point) {
     /**
      * Defines Rectangle, inherited from Parallelogram.
      * @exports Rectangle

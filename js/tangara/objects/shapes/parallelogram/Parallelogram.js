@@ -1,4 +1,4 @@
-define(['jquery', 'TEnvironment', 'TGraphicalObject', 'TUtils', 'objects/shapes/quadrilateral/Quadrilateral', 'objects/shapes/Point/Point'], function ($, TEnvironment, TGraphicalObject, TUtils, Quadrilateral, Point) {
+define(['jquery', 'TEnvironment', 'TGraphicalObject', 'TUtils', 'objects/shapes/quadrilateral/Quadrilateral', 'objects/shapes/point/Point'], function ($, TEnvironment, TGraphicalObject, TUtils, Quadrilateral, Point) {
     /**
      * Defines Parallelogram, inherited from Quadrilateral.
      * @exports Parallelogram
