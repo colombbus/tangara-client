@@ -17,6 +17,10 @@ define(['acorn'], function(acorn) {
         this.protectIdentifiers = function(names) {
             acorn.addReservedIdentifiers(names);
         };
+        
+        this.setRepeatKeyword = function(name) {
+            acorn.setRepeatKeyword(name);
+        };        
 
         /**
          * Parse code to statements.

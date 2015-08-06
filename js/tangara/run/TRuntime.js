@@ -32,6 +32,8 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             
             self = this;
             window.console.log("loading base classes");
+            // set repeat keyword
+            TParser.setRepeatKeyword(TEnvironment.getMessage("repeat-keyword"));
             loadBaseClasses(TEnvironment.getLanguage(), function(baseNames) {
                 window.console.log("accessing objects list from: " + classesUrl);
                 $.ajax({
