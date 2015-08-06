@@ -442,8 +442,12 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
                 // local variables management: save preceeding value if any
                 saveVariable(identifier);
                 currentVariables.push(identifier);
-                var value = evalExpression(declarator.init);
-                defaultEval(identifier + "=" + value);
+                if (declarator.init !== null) {
+                    var value = evalExpression(declarator.init);
+                    defaultEval("var " + identifier + "=" + value);
+                } else {
+                    defaultEval("var " + identifier);
+                }
             }
             return true;
         };
