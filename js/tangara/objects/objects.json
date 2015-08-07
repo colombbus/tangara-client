@@ -422,5 +422,14 @@
             "en": "Circle"
         },
         "parents": true
+    },
+    "Segment": {
+        "path": "shapes/segment",
+        "translations": {
+            "fr": "Segment",
+            "es": "TBD",
+            "en": "Segment"
+        },
+        "parents": true
     }
 }
