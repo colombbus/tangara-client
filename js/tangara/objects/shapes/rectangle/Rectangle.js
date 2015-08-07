@@ -3,8 +3,8 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'TUtils', 'objects/shapes/
      * Defines Rectangle, inherited from Parallelogram.
      * @exports Rectangle
      */
-    var Rectangle = function () {
-        Parallelogram.call(this);
+    var Rectangle = function (p1, p2) {
+        Parallelogram.call(this, p1, p2, false);
     };
 
     Rectangle.prototype = Object.create(Parallelogram.prototype);
@@ -20,12 +20,11 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'TUtils', 'objects/shapes/
         },
         setVertices: function (value) {
             this.p.vertices = [];
-            if (value.length === 2) {
-                for (var i = 0; i < value.length; i++) {
-                    this.p.vertices.push(value[i]);
-                }
-                this.addPointRectangle(value);
-                this.addPointParallelogram(value);
+            if (value.length === 2 || (value.length === 4 && value[2] === false)) {
+                this.p.vertices.push(value[0]);
+                this.p.vertices.push(this.addPointRectangle(value));
+                this.p.vertices.push(value[1]);
+                this.p.vertices.push(this.addPointParallelogram(this.p.vertices));
                 this.p.initVertices = true;
             } else {
                 throw new Error(this.getMessage("Bad vertices"));
@@ -35,7 +34,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'TUtils', 'objects/shapes/
             var point = new Point();
             point._hide();
             point._setLocation(value[0].gObject.p.x, value[1].gObject.p.y);
-            this.p.vertices.push(point);
+            return point;
         }
     });
 

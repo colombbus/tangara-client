@@ -3,8 +3,8 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'TUtils', 'objects/shapes/
      * Defines Triangle, inherited from Polygon.
      * @exports Triangle
      */
-    var Triangle = function () {
-        Polygon.call(this);
+    var Triangle = function (p1, p2, p3) {
+        Polygon.call(this, p1, p2, p3);
     };
 
     Triangle.prototype = Object.create(Polygon.prototype);

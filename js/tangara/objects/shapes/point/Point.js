@@ -3,8 +3,11 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'TUtils', 'objects/shapes/
      * Defines Point, inherited from Shape.
      * @exports Point
      */
-    var Point = function () {
+    var Point = function (x, y) {
         Shape.call(this);
+        if (arguments.length === 2) {
+            this._setLocation(x, y);
+        }
     };
 
     Point.prototype = Object.create(Shape.prototype);
@@ -16,7 +19,6 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'TUtils', 'objects/shapes/
     Point.prototype.gClass = graphics.addClass("TShape", "TPoint", {
         init: function (props, defaultProps) {
             this._super(TUtils.extend({
-                coordinates: [],
             }, props), defaultProps);
         },
         draw: function (ctx) {

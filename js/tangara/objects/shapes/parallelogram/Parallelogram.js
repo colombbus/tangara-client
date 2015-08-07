@@ -3,8 +3,8 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'TUtils', 'objects/shapes/
      * Defines Parallelogram, inherited from Quadrilateral.
      * @exports Parallelogram
      */
-    var Parallelogram = function () {
-        Quadrilateral.call(this);
+    var Parallelogram = function (p1, p2, p3) {
+        Quadrilateral.call(this, p1, p2, p3, false);
     };
 
     Parallelogram.prototype = Object.create(Quadrilateral.prototype);
@@ -20,11 +20,11 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'TUtils', 'objects/shapes/
         },
         setVertices: function (value) {
             this.p.vertices = [];
-            if (value.length === 3) {
-                for (var i = 0; i < value.length; i++) {
+            if (value.length === 3 || (value.length === 4 && value[3] === false)) {
+                for (var i = 0; i < 3; i++) {
                     this.p.vertices.push(value[i]);
                 }
-                this.addPointParallelogram(value);
+                this.p.vertices.push(this.addPointParallelogram(value));
                 this.p.initVertices = true;
             } else {
                 throw new Error(this.getMessage("Bad vertices"));
@@ -35,7 +35,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'TUtils', 'objects/shapes/
             point._hide();
             point._setLocation(value[0].gObject.p.x - value[1].gObject.p.x + value[2].gObject.p.x,
                                value[0].gObject.p.y - value[1].gObject.p.y + value[2].gObject.p.y);
-            this.p.vertices.push(point);
+            return point;
         }
     });
 

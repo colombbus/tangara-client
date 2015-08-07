@@ -25,7 +25,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
             this._super(TUtils.extend({
                 inMovement: false,
                 type: TGraphicalObject.TYPE_TURTLE,
-                tangle: 0,
+                tangle: 90,
                 tx: 50,
                 ty: 50,
                 stroke: true,
@@ -116,7 +116,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
                 ctx.stroke();
             }
             
-            ctx.translate(p.tx - 50, p.ty - 50);
+            ctx.translate(p.tx, p.ty);
             ctx.rotate(this.p.tangle / 180 * Math.PI);
             if (p.asset) {
                 ctx.drawImage(this.resources.getUnchecked(p.asset), -p.cx, -p.cy);

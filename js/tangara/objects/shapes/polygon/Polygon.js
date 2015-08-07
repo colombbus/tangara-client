@@ -5,6 +5,9 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'TUtils', 'objects/shapes/
      */
     var Polygon = function () {
         Shape.call(this);
+        if (arguments[0]) {
+            this.gObject.setVertices(arguments);
+        }
     };
 
     Polygon.prototype = Object.create(Shape.prototype);
