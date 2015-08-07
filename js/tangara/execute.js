@@ -52,12 +52,11 @@ function load() {
                                 if (statements instanceof TError) {
                                     window.console.error(statements.getMessage());
                                 }
-                                TRuntime.setCurrentProgramName(init_programName);
                                 currentProject.preloadResources(function(count, total) {
                                         canvas.setLoadingValue(count, total);
                                     }, function() {
                                     canvas.removeLoading();
-                                    TRuntime.executeStatements(statements);
+                                    TRuntime.executeStatements(statements, init_programName);
                                 });
                             });
                         });

@@ -224,7 +224,6 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
             }
             if (!editorEnabled) {
                 // execution from console
-                TRuntime.setCurrentProgramName(null);
                 TRuntime.executeFrom(console);
                 console.clear();
             } else if (editorEnabled) {
@@ -232,8 +231,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 this.clear(false);
                 this.disableEditor();
                 console.clear();
-                TRuntime.setCurrentProgramName(editor.getProgramName());
-                TRuntime.executeFrom(editor);
+                TRuntime.executeFrom(editor,editor.getProgramName());
             }
         };
 

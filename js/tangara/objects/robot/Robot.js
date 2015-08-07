@@ -46,30 +46,30 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
             }
         },
         moveForward: function(value) {
+            this.synchronousManager.begin();
             this.perform(function(value) {
                 this.p.inMovement = true;
-                this.synchronousManager.begin();
                 this.p.destinationX += value;
             }, [value]);
         },
         moveBackward: function(value) {
+            this.synchronousManager.begin();
             this.perform(function(value) {
                 this.p.inMovement = true;
-                this.synchronousManager.begin();
                 this.p.destinationX -= value;
             }, [value]);
         },
         moveUpward: function(value) {
+            this.synchronousManager.begin();
             this.perform(function(value) {
                 this.p.inMovement = true;
-                this.synchronousManager.begin();
                 this.p.destinationY -= value;
             }, [value]);
         },
         moveDownward: function(value) {
+            this.synchronousManager.begin();
             this.perform(function(value) {
                 this.p.inMovement = true;
-                this.synchronousManager.begin();
                 this.p.destinationY += value;
             }, [value]);
         },

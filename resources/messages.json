@@ -114,6 +114,7 @@
         "backend-error-resource_already_exists":"Il existe déjà un média avec ce nom",
         "button-help":"Aide",
         "button-previous":"Précédent",
-        "button-next":"Suivant"        
+        "button-next":"Suivant",
+        "repeat-keyword":"répéter"
     }
 }

@@ -94,7 +94,17 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
         }
         return false;
     };
-
+    
+    /**
+     * Check if the code matches with the regexp
+     * @param {String} value
+     * @returns {Boolean} Returns true if the code matches with the regexp, else false.
+     */
+    Teacher.prototype.verifyRegexp = function(value) {
+        var re = new RegExp(value);
+        return re.test(statements);
+    };
+    
     /**
      * Validate the current step if "frame" is true.
      */

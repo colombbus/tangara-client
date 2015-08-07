@@ -1,6 +1,7 @@
 define(['TError', 'TUtils'], function(TError, TUtils) {
     function TInterpreter() {
         var runtimeFrame;
+        var errorHandler;
         var definedFunctions = {};
         var running = false;
         var suspended = false;
@@ -26,6 +27,9 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
             log = element;
         };
 
+        this.setErrorHandler = function(handler) {
+            errorHandler = handler;
+        };
 
         /* Lifecycle management */
 
@@ -78,15 +82,23 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
             }
         };
 
-        this.addStatement = function(statement) {
+        this.addStatement = function(statement, programName) {
+            if (typeof programName === 'undefined') {
+                programName = null;
+            }
+            statement.programName = programName;
             stack[0].push(statement);
             if (!running) {
                 this.start();
             }
         };
 
-        this.addStatements = function(statements) {
+        this.addStatements = function(statements, programName) {
+            if (typeof programName === 'undefined') {
+                programName = null;
+            }
             for (var i = 0; i < statements.length; i++) {
+                statements[i].programName = programName;
                 stack[0].push(statements[i]);
             }
             if (!running) {
@@ -124,12 +136,13 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
         };
 
         var run = function() {
+            var statement;
             try {
                 running = true;
                 while (!suspended && stack[executionLevel].length > 0) {
                     var currentLevel = executionLevel;
                     stackPointer[executionLevel] = 0;
-                    var statement = stack[executionLevel][0];
+                    statement = stack[executionLevel][0];
                     var consume = evalStatement(statement);
                     if (currentLevel === executionLevel) {
                         // We haven't changed execution level
@@ -150,7 +163,21 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
                 running = false;
             } catch (err) {
                 clear();
-                throw err;
+                if (err instanceof TError) {
+                    err.setCode(statement.raw);
+                    if (typeof statement.programName === 'undefined' || statement.programName === null) {
+                        // no program associated: remove lines if any
+                        err.setLines([]);
+                    } else {
+                        // set program name
+                        err.setProgramName(statement.programName);
+                    }
+                }
+                if (typeof errorHandler !== 'undefined') {
+                    errorHandler(err);
+                } else {
+                    throw err;
+                }
             }
         };
 
@@ -415,8 +442,12 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
                 // local variables management: save preceeding value if any
                 saveVariable(identifier);
                 currentVariables.push(identifier);
-                var value = evalExpression(declarator.init);
-                defaultEval(identifier + "=" + value);
+                if (declarator.init !== null) {
+                    var value = evalExpression(declarator.init);
+                    defaultEval("var " + identifier + "=" + value);
+                } else {
+                    defaultEval("var " + identifier);
+                }
             }
             return true;
         };
