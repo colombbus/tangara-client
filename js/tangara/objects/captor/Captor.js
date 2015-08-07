@@ -1,48 +1,37 @@
 define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager', 'TGraphicalObject'], function($, TEnvironment, TUtils, CommandManager, ResourceManager, TGraphicalObject) {
     /**Spri
-     * Defines Sprite, inherited from TGraphicalObject.
-     * It's a very complete graphical objects : it can have several appearances,
-     * move, or have collisions.
-     * @param {String} name Sprite's name
-     * @exports Sprite
+     * Defines Captor, inherited from TGraphicalObject.
+     * @exports Captor
      */
-    var Sprite = function(name) {
+    var Captor = function() {
         TGraphicalObject.call(this);
-        this.images = new Array();
-        this.imageSets = new Array();
-        this.transparentColors = new Array();
-        this.displayedImage = null;
-        this.displayedSet = "";
-        this.displayedIndex = 0;
-        this.resources = new ResourceManager();
-        this.gObject.setResources(this.resources);
-        this.waitingForImage = "";
-        if (typeof name === 'string') {
-            this._setImage(name);
-        }
     };
 
-    Sprite.prototype = Object.create(TGraphicalObject.prototype);
-    Sprite.prototype.constructor = Sprite;
-    Sprite.prototype.className = "Sprite";
+    Captor.prototype = Object.create(TGraphicalObject.prototype);
+    Captor.prototype.constructor = Captor;
+    Captor.prototype.className = "Captor";
 
-    var graphics = Sprite.prototype.graphics;
+    var graphics = Captor.prototype.graphics;
 
-    Sprite.prototype.gClass = graphics.addClass("TGraphicalObject", "TSprite", {
+    Captor.prototype.gClass = graphics.addClass("TGraphicalObject", "TCaptor", {
         init: function(props, defaultProps) {
             this._super(TUtils.extend({
                 collisionWatched: false,
             }, props), defaultProps);
             this.watchCollisions(true);
-            this.encounteredObjects = new Array();
-            this.lastEncounteredObjects = new Array();
         },
         goTo: function(x, y) {
             this.perform(function(x, y) {
-                this.p.destinationX = x + this.p.w / 2;
-                this.p.destinationY = y + this.p.h / 2;
-                this.p.direction = Sprite.DIRECTION_NONE;
+                this.p.x = x;
+                this.p.y = y;
             }, [x, y]);
+        },
+        setSize: function(w, h) {
+            this.perform(function(w, h) {
+                this.p.w = w;
+                this.p.h = h;
+                graphics.objectResized(this);
+            }, [w, h]);
         },
         watchCollisions: function(value) {
             this.perform(function(value) {
@@ -59,24 +48,35 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
     });
     
     /**
-     * Move Sprite's top-left pixel to coordinates {x,y}.
+     * Move Captor's top-left pixel to coordinates {x,y}.
      * @param {Number} x
      * @param {Number} y
      */
-    Sprite.prototype._goTo = function(x, y) {
+    Captor.prototype._goTo = function(x, y) {
         x = TUtils.getInteger(x);
         y = TUtils.getInteger(y);
         this.gObject.goTo(x, y);
     };
+    
+    /**
+     * Set Captor's width and height.
+     * @param {Number} w
+     * @param {Number} h
+     */
+    Captor.prototype._setSize = function(w, h) {
+        h = TUtils.getInteger(w);
+        w = TUtils.getInteger(h);
+        this.gObject.goTo(w, h);
+    };
 
     /**
-     * Checks if Sprite have collisions triggered.
+     * Checks if Captor have collisions triggered.
      * @param {Boolean} value
      */
-    Sprite.prototype._watchCollisions = function(value) {
+    Captor.prototype._watchCollisions = function(value) {
         value = TUtils.getBoolean(value);
         this.gObject.watchCollisions(value);
     };
 
-    return Sprite;
+    return Captor;
 });
