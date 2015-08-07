@@ -3,8 +3,8 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'TUtils', 'objects/shapes/
      * Defines Quadrilateral, inherited from Polygon.
      * @exports Quadrilateral
      */
-    var Quadrilateral = function () {
-        Polygon.call(this);
+    var Quadrilateral = function (p1, p2, p3, p4) {
+        Polygon.call(this, p1, p2, p3, p4);
     };
 
     Quadrilateral.prototype = Object.create(Polygon.prototype);
