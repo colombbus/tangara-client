@@ -1,4 +1,4 @@
-define(['ui/TComponent', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jquery', 'ace/ace', 'ace/autocomplete', 'ace/range'], function(TComponent, TParser, TLog, TEnvironment, TUtils, TRuntime, $, ace, ace_autocomplete, ace_range) {
+define(['ui/TComponent', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jquery', 'ace/ace', 'ace/autocomplete', 'ace/range', 'platform-pr'], function(TComponent, TParser, TLog, TEnvironment, TUtils, TRuntime, $, ace, ace_autocomplete, ace_range) {
 
     function TLearnEditor(callback) {
         var $editor, $editorText;
@@ -47,7 +47,14 @@ define(['ui/TComponent', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRunti
                     popupTriggered = false;
                 }
             });
-
+            aceEditor.commands.addCommand({
+                name: "save",
+                bindKey: {win: "Ctrl-S", mac: "Command-S"},
+                exec: function(arg) {
+                    platform.validate("stay");
+                }
+            });
+            
             aceEditor.completers = [consoleCompleter];
 
             //this.enableMethodHelper();

@@ -1,4 +1,4 @@
-define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRuntime', 'TEnvironment', 'TParser', 'TExercise'], function(TComponent, $, TLearnCanvas, TLearnEditor, TRuntime, TEnvironment, TParser, TExercise) {
+define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRuntime', 'TEnvironment', 'TParser', 'TExercise', 'platform-pr'], function(TComponent, $, TLearnCanvas, TLearnEditor, TRuntime, TEnvironment, TParser, TExercise) {
     function TLearnFrame(callback) {
         var $lesson, $lessonContent, $message, $messageContent, $instructions;
         var canvas, editor;
@@ -99,16 +99,19 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             exercise.init();
         };
 
-        var validateStep = function() {
-            window.console.log("step validated")
+        var validateStep = function(message) {
+            if(typeof message === "undefined" || message === "")
+                message = "Bravo, vous avez réussi !";
+            showMessage(message);
         };
 
         var invalidateStep = function(message) {
             showMessage(message);
         };
 
-        this.validateStep = function() {
-            validateStep();
+        this.validateStep = function(message) {
+            validateStep(message);
+            platform.validate("next");
         };
 
         this.invalidateStep = function(message) {
@@ -172,6 +175,10 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
         this.getCode = function() {
             return editor.getValue();
         };
+        
+        this.setCode = function(value) {
+            editor.setValue(value);
+        }
 
     }
 
