@@ -43,12 +43,12 @@ define(['platform-pr', 'json'], function() {
             callback(parseInt($("body").outerHeight(true)));
         };
 
-        this.unload = function (callback) {
+        /*this.unload = function (callback) {
             if (typeof Tracker !== 'undefined') {
                 Tracker.endTrackInputs();
             }
             callback();
-        };
+        };*/
 
         this.getState = function (callback) {
             var res = {};
@@ -58,20 +58,8 @@ define(['platform-pr', 'json'], function() {
             callback(JSON.stringify(res));
         };
 
-        this.getMetaData = function (callback) {
-            if (typeof json !== 'undefined') {
-                callback(json);
-            } else {
-                callback({nbHints: 0});
-            }
-        };
-
         this.reloadAnswer = function (strAnswer, callback) {
-            if (strAnswer == "") {
-                this.reloadAnswerObject(this.getDefaultAnswerObject());
-            } else {
-                this.reloadAnswerObject(JSON.parse(strAnswer));
-            }
+            frame.setCode(strAnswer);
             callback();
         };
 
@@ -101,13 +89,20 @@ define(['platform-pr', 'json'], function() {
             code = code === "undefined" ? "" : code.raw;
             callback(JSON.stringify(i) + "\n" + code);*/
         };
-    
-        this.reloadAnswer = function (strAnswer, callback) {
-            //t = answersFromStrAnswer(strAnswer);
-            callback();
-        };    
-     
         
+        this.getMetaData = function (callback) {
+            var l = document.location.href;
+            var metaData = {
+                id : l.substring(0, l.lastIndexOf("#")),
+                language : "fr",
+                version : 1.0,
+                title : "title",
+                authors : ["Colombbus - France-IOI"],
+                license : "license",
+                minWidth : 800
+            };
+            callback(metaData);
+        };
     };
     
     return Task; 
