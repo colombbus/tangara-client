@@ -1,5 +1,9 @@
 define(['TParser', 'TLink', 'TEnvironment', 'TUtils', 'TError'], function(TParser, TLink, TEnvironment, TUtils, TError) {
-
+    /**
+     * TProgram is used to manage programs inside a project.
+     * @param {String} value    Program's name
+     * @exports TProgram
+     */
     function TProgram(value) {
         var statements = new Array();
         var code = "";
@@ -24,6 +28,11 @@ define(['TParser', 'TLink', 'TEnvironment', 'TUtils', 'TError'], function(TParse
             newProgram = true;
         }
 
+        /**
+         * Save the current program.
+         * If it's a new program, create it.
+         * @param {Function} callback
+         */
         this.save = function(callback) {
             if (newProgram) {
                 // First create program
@@ -77,6 +86,10 @@ define(['TParser', 'TLink', 'TEnvironment', 'TUtils', 'TError'], function(TParse
             }
         };
 
+        /**
+         * Loads Program 'name'.
+         * @param {Function} callback
+         */
         this.load = function(callback) {
             TLink.getProgramCode(name, function(codeData) {
                 if (codeData instanceof TError) {
@@ -90,6 +103,9 @@ define(['TParser', 'TLink', 'TEnvironment', 'TUtils', 'TError'], function(TParse
             });
         };
 
+        /**
+         * Parse the code to get its statements.
+         */
         function parse() {
             if (code.trim().length > 0) {
                 statements = TParser.parse(code);
@@ -99,11 +115,19 @@ define(['TParser', 'TLink', 'TEnvironment', 'TUtils', 'TError'], function(TParse
             codeChanged = false;
         }
 
+        /**
+         * Change the code.
+         * @param {String} value    New code
+         */
         this.setCode = function(value) {
             code = value;
             codeChanged = true;
         };
 
+        /**
+         * Loads the code if needed, and returns it.
+         * @returns {String}
+         */
         this.getCode = function() {
             if (!loaded && !newProgram) {
                 this.load();
@@ -111,6 +135,10 @@ define(['TParser', 'TLink', 'TEnvironment', 'TUtils', 'TError'], function(TParse
             return code;
         };
 
+        /**
+         * Parse the code if it has changed, and returns statements.
+         * @return {Statements[]}
+         */
         this.getStatements = function() {
             if (codeChanged) {
                 parse();
@@ -118,10 +146,20 @@ define(['TParser', 'TLink', 'TEnvironment', 'TUtils', 'TError'], function(TParse
             return statements;
         };
 
+        /**
+         * Get Program's name.
+         * @returns {String}
+         */
         this.getName = function() {
             return name;
         };
 
+        /**
+         * Returns the displayed Program's name.
+         * (The name, with or without an asterisk
+         * depending of its modification state.)
+         * @returns {String}
+         */
         this.getDisplayedName = function() {
             if (modified) {
                 return TEnvironment.getMessage("program-modified", name);
@@ -130,10 +168,19 @@ define(['TParser', 'TLink', 'TEnvironment', 'TUtils', 'TError'], function(TParse
             }
         };
 
+        /**
+         * Set Program's name.
+         * @param {String} value
+         */
         this.setName = function(value) {
             name = value;
         };
 
+        /**
+         * Rename the current program.
+         * @param {String} value    New name
+         * @param {Function} callback
+         */
         this.rename = function(value, callback) {
             if (!newProgram) {
                 TLink.renameProgram(name, value, function(error) {
@@ -160,22 +207,42 @@ define(['TParser', 'TLink', 'TEnvironment', 'TUtils', 'TError'], function(TParse
             }
         };
 
+        /**
+         * Get Program's ID.
+         * @returns {String}
+         */
         this.getId = function() {
             return TProgram.findId(name);
         };
 
+        /**
+         * Set 'modified' value.
+         * @param {Boolean} value
+         */
         this.setModified = function(value) {
             modified = value;
         };
 
+        /**
+         * Returns true if the code has been modified.
+         * @returns {Boolean}
+         */
         this.isModified = function() {
             return modified;
         };
 
+        /**
+         * Returns true if the current program is a new one.
+         * @returns {Boolean}
+         */
         this.isNew = function() {
             return newProgram;
         };
 
+        /**
+         * Delete current program.
+         * @param {Function} callback
+         */
         this.delete = function(callback) {
             if (!newProgram) {
                 TLink.deleteProgram(name, function(error) {
@@ -191,6 +258,11 @@ define(['TParser', 'TLink', 'TEnvironment', 'TUtils', 'TError'], function(TParse
         };
     }
 
+    /**
+     * Hash Program to get an ID. Returns it.
+     * @param {String} value
+     * @returns {String|Number}
+     */
     function hashCode(value) {
         var hash = 0, i, chr, len;
         if (value.length === 0)
@@ -202,8 +274,12 @@ define(['TParser', 'TLink', 'TEnvironment', 'TUtils', 'TError'], function(TParse
         }
         return hash.toString(16);
     }
-
-
+    
+    /**
+     * Get Program's ID.
+     * @param {String} name
+     * @returns {String}
+     */
     TProgram.findId = function(name) {
         var id = hashCode(name);
         return id;
@@ -211,5 +287,3 @@ define(['TParser', 'TLink', 'TEnvironment', 'TUtils', 'TError'], function(TParse
 
     return TProgram;
 });
-
-

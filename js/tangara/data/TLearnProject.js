@@ -1,4 +1,7 @@
 define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError'], function(TLink, TProgram, TEnvironment, TUtils, TError) {
+    /**
+     * TLEARNPROJECT
+     */
     function TLearnProject() {
 
         var name;
@@ -8,34 +11,68 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError'], function(TLink
 
         var step;
 
+        /**
+         * Set LP's name.
+         * @param {String} value
+         */
         this.setName = function(value) {
             name = value;
         };
 
+        /**
+         * Returns LP's name.
+         * @returns {String}
+         */
         this.getName = function() {
             return name;
         };
 
+        /**
+         * Set LP's ID.
+         * @param {String} value
+         */
         this.setId = function(value) {
             id = value;
         };
 
+        /**
+         * Returns LP's ID.
+         * @returns {String
+         */
         this.getId = function() {
             return id;
         };
 
+        /**
+         * TBD
+         * Returns false.
+         * @param {String} name
+         * @returns {Boolean}
+         */
         this.isProgramEdited = function(name) {
             return false;
         };
 
+        /**
+         * Set step to value.
+         * @param {String} value
+         */
         this.setStep = function(value) {
             step = value;
         };
 
+        /**
+         * Returns resources name.
+         * @returns {String[]}
+         */
         this.getResourcesNames = function() {
             return resourcesNames;
         };
 
+        /**
+         * Returns resources.
+         * @returns {Resources[]}
+         */
         this.getResources = function() {
             return resources;
         };
@@ -48,6 +85,11 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError'], function(TLink
             return resources[name]['base-name'];
         };
 
+        /**
+         * TBD
+         * Returns false.
+         * @returns {Boolean}
+         */
         this.isUnsaved = function() {
             return false;
         };
@@ -58,4 +100,3 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError'], function(TLink
     return TLearnProject;
 
 });
-

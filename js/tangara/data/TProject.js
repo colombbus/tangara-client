@@ -11,19 +11,35 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
         var editedProgramsNames = [];
         var editedProgramsArray = [];
 
+        /**
+         * 
+         * @param {type} value
+         * @returns {undefined}Set Project's name.
+         * @param {String} value
+         */
         this.setName = function(value) {
             name = value;
         };
 
+        /**
+         * Get Project's name.
+         */
         this.getName = function() {
             return name;
         };
 
+        /**
+         * Set Project's ID.
+         * @param {String} value
+         */
         this.setId = function(value) {
             id = value;
             TLink.setProjectId(value);
         };
 
+        /**
+         * Get Project's ID.
+         */
         this.getId = function() {
             return id;
         };
@@ -58,6 +74,10 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
             }
         };
 
+        /**
+         * Create a new Program for Project, and return it.
+         * @returns {TProgram}
+         */
         this.createProgram = function() {
             var program = new TProgram(programs);
             var name = program.getName();
@@ -73,6 +93,12 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
             program.setCode(session.getValue());
         };
 
+        /**
+         * Save the current program.
+         * @param {TProgram} program
+         * @param {Function} callback
+         * @param {?} session
+         */
         this.saveProgram = function(program, callback, session) {
             if (typeof session !== 'undefined') {
                 this.updateSession(program, session);
@@ -80,6 +106,12 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
             program.save(callback);
         };
 
+        /**
+         * Get 'name' if it's an edited program.
+         * @param {String} name
+         * @returns {TProgram|Boolean} If 'name' is edited, returns it.
+         * Else return false.
+         */
         this.getEditedProgram = function(name) {
             if (typeof editedPrograms[name] !== 'undefined') {
                 return editedPrograms[name];
@@ -103,6 +135,12 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
             }
         };
 
+        /**
+         * Get statements of a program given in parameter.
+         * Send it in parameter to callback.
+         * @param {String} name
+         * @param {Function} callback
+         */
         this.getProgramStatements = function(name, callback) {
             if (typeof editedPrograms[name] === 'undefined') {
                 var program = new TProgram(name);
@@ -128,6 +166,12 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
             }
         };
         
+        /**
+         * Get code of a program given in parameter.
+         * Send it in parameter to callback.
+         * @param {String} name
+         * @param {Function} callback
+         */
         this.getProgramCode = function(name, callback) {
             if (typeof editedPrograms[name] === 'undefined') {
                 var program = new TProgram(name);
@@ -147,10 +191,24 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
             }
         };
 
+        /**
+         * 
+         * @param {type} name
+         * @returns {Boolean}Checks if a program is edited.
+         * @param {String} name
+         * @returns {Boolean}
+         */
         this.isProgramEdited = function(name) {
             return (typeof editedPrograms[name] !== 'undefined');
         };
 
+        /**
+         * 
+         * @param {type} name
+         * @returns {Boolean}Close a program.
+         * @param {String} name
+         * @returns {Boolean}
+         */
         this.closeProgram = function(name) {
             if (typeof editedPrograms[name] === 'undefined') {
                 return false;
@@ -176,6 +234,12 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
             return true;
         };
 
+        /**
+         * Find previous edited program
+         * @param {String} name
+         * @returns {TProgram|Boolean} Return false if there is
+         * no edited program.
+         */
         this.findPreviousEditedProgram = function(name) {
             if (editedProgramsNames.length === 0) {
                 return false;
@@ -198,11 +262,17 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
             sessions[program.getName()] = session;
         };
 
-
+        /**
+         * Get Programs names.
+         */
         this.getProgramsNames = function() {
             return programs;
         };
 
+        /**
+         * Returns the array of edited programs.
+         * @returns {TProgram[]}
+         */
         this.getEditedPrograms = function() {
             return editedPrograms;
         };
@@ -215,6 +285,10 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
             return editedProgramsArray;
         };
 
+        /**
+         * Initialize Project, get Programs list and Resources.
+         * @param {Function} callback
+         */
         this.init = function(callback) {
             programs = [];
             editedPrograms = {};
@@ -253,10 +327,18 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
             });
         };
 
+        /**
+         * Return resources names.
+         * @returns {String[]}
+         */
         this.getResourcesNames = function() {
             return resourcesNames;
         };
 
+        /**
+         * Return resources names.
+         * @returns {Resource[]}
+         */
         this.getResources = function() {
             return resources;
         };
@@ -270,6 +352,12 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
             }
         };
 
+        /**
+         * Returns the first index available.
+         * Throw an error if resource 'name' already exists.
+         * @param {String} name
+         * @returns {Number}
+         */
         this.getNewResourceIndex = function(name) {
             var i;
             for (i = 0; i < resourcesNames.length; i++) {
@@ -317,6 +405,12 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
             }
         };
 
+        /**
+         * Rename a resource.
+         * @param {String} name
+         * @param {String} newBaseName
+         * @param {Function} callback
+         */
         this.renameResource = function(name, newBaseName, callback) {
             var i = resourcesNames.indexOf(name);
             if (i > -1) {
@@ -390,6 +484,10 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
             return resources[name]['base-name'];
         };
 
+        /**
+         * Preload an image.
+         * @param {String} name
+         */
         this.preloadImage = function(name) {
             var img = new Image();
             img.src = this.getResourceLocation(name);
@@ -404,6 +502,10 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
              }*/
         };
 
+        /**
+         * Returns true if a least one program is modified.
+         * @returns {Boolean}
+         */
         this.isUnsaved = function() {
             for (var i = 0; i < editedProgramsNames.length; i++) {
                 var program = editedPrograms[editedProgramsNames[i]];
@@ -414,6 +516,11 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
             return false;
         };
 
+        /**
+         * Delete a program.
+         * @param {String} name
+         * @param {Function} callback
+         */
         this.deleteProgram = function(name, callback) {
             if (typeof editedPrograms[name] !== 'undefined') {
                 var program = editedPrograms[name];
@@ -438,6 +545,11 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
             }
         };
 
+        /**
+         * Delete a resource.
+         * @param {String} name
+         * @param {Function} callback
+         */
         this.deleteResource = function(name, callback) {
             var i = resourcesNames.indexOf(name);
             if (i > -1) {
@@ -463,6 +575,11 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
             }
         };
 
+        /**
+         * Duplicate an existing resource.
+         * @param {String} name
+         * @param {Function} callback
+         */
         this.duplicateResource = function(name, callback) {
             var self = this;
             TLink.duplicateResource(name, function(newData) {
@@ -481,6 +598,13 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
             });
         };
 
+        /**
+         * Create a new resource.
+         * @param {String} name
+         * @param {Number} width
+         * @param {Number} height
+         * @param {Function} callback
+         */
         this.createResource = function(name, width, height, callback) {
             // create image
             var canvas = document.createElement("canvas");

@@ -9,56 +9,103 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/teacher/Teach
         var instructions = false;
         var hints = false;
 
+        /**
+         * Set Project's ID.
+         * @param {String} value
+         */
         this.setId = function(value) {
             project.setId(value);
         };
         
+        /**
+         * Set Teacher's frame.
+         * @param {String} value
+         */
         this.setFrame = function(value) {
             Teacher.setFrame(value);
         };
         
+        /**
+         * Returns Project's ID.
+         * @returns {String}
+         */
         this.getId = function() {
             return project.getId();
         };
         
+        /**
+         * Checks if Exercise has insructions.
+         * @returns {Boolean}
+         */
         this.hasInstructions = function() {
             return (instructions !== false);
         };
         
+        /**
+         * Checks if Exercise has a solution.
+         * @returns {Boolean}
+         */
         this.hasSolution = function() {
             return (solutionCode !== false);
         };
 
+        /**
+         * Checks if Exercise has hints.
+         * @returns {Boolean}
+         */
         this.hasHints = function() {
             return (hints !== false);
         };
 
+        /**
+         * Checks if Exercise has start statementse.
+         * @returns {Boolean}
+         */
         this.hasStart = function() {
             return (startStatements !== false);
         };
 
+        /**
+         * Checks if Exercise has check statements.
+         * @returns {Boolean}
+         */
         this.hasCheck = function() {
             return (checkStatements !== false);
         };
         
+        /**
+         * Get Project's instructions if defined.
+         * @param {Function} callback
+         */
         this.getInstructions = function(callback) {
             if (instructions !== false) {
                 project.getResourceContent("instructions.html", callback);
             }
         };
         
+        /**
+         * Returns solution code.
+         * @returns {String}
+         */
         this.getSolution = function() {
             if (solutionCode !== false) {
                 return solutionCode;
             }
         };
         
+        /**
+         * Get Project's hints.
+         * @param {function} callback
+         */
         this.getHints = function(callback) {
             if (hints !== false) {
                 project.getResourceContent("hints.html", callback);
             }
         };        
         
+        /**
+         * Exectute start statements if any.
+         */
         this.init = function() {
             if (startStatements !== false) {
                 TRuntime.executeStatements(startStatements);
@@ -94,6 +141,10 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/teacher/Teach
             });
         };
 
+        /**
+         * Loads solution code.
+         * @param {Function} callback
+         */
         var loadSolution = function(callback) {
             project.getProgramCode("solution", function(result) {
                 if (!(result instanceof TError)) {
@@ -103,6 +154,10 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/teacher/Teach
             });
         };
         
+        /**
+         * Initialize Exercise.
+         * @param {Function} callback
+         */
         this.load = function(callback) {
             checkStatements = false;
             startStatements = false;
