@@ -91,7 +91,6 @@ define(['platform-pr', 'json'], function() {
         };
         
         this.getMetaData = function (callback) {
-            alert("hooked on a feeling 7");
             var l = document.location.href;
             var metaData = {
                 id : l.substring(0, l.lastIndexOf("#")),

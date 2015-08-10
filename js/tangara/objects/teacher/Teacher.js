@@ -125,6 +125,8 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
      * @returns {string} message
      */
     function getMessage(value) {
+        if(messages.length === 0)
+            return "Messages corresponding to scores have not been initialized."
         if(typeof value === "undefined" || isNan(value))
             value = score;
         var r = 0;
@@ -132,6 +134,10 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
             if(messages[i].score <= value && messages[i].score > messages[r].score)
                 r = i;
         return messages[r].message;
+    };
+    
+    Teacher.prototype.getMessage = function(value) {
+        return getMessage(value);
     };
     
     Teacher.prototype.setScore = function(value) {
@@ -145,20 +151,28 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
     /**
      * Validate the current step if "frame" is true.
      */
-    Teacher.prototype.validateStep = function() {
+    function validateStep() {
         if (frame) {
             frame.validateStep();
         }
+    };
+    
+    Teacher.prototype.validateStep = function() {
+        validateStep();
     };
 
     /**
      * Invalidate the current step if "frame" is true. Send a message.
      * @param {String} message
      */
-    Teacher.prototype.invalidateStep = function(message) {
+    function invalidateStep(message) {
         if (frame) {
             frame.invalidateStep(message);
         }
+    };
+    
+    Teacher.prototype.invalidateStep = function(message) {
+        invalidateStep(message);
     };
     
     /**
@@ -170,24 +184,27 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
     };
     
     /**
+     * Check if the current score is sufficiently high to validate the task
+     * @returns {Boolean}
+     */
+    function taskValidated() {
+        return score > scoreLimit;
+    };
+    
+    Teacher.prototype.taskValidated = function() {
+        return taskValidated();
+    };
+    
+    /**
      * Validate or invalidate the task
      */
     Teacher.prototype.done = function() {
-        if(frame) {
-            if (score > scoreLimit) {
-                frame.validateStep(getMessage());
-            }
-            else {
-                frame.invalidateStep(getMessage());
-            }
-        }
-        //uncomment this part and erase the one above if possible
-        /*if (score > scoreLimit) {
+        if (taskValidated()) {
             validateStep(getMessage());
         }
         else {
             invalidateStep(getMessage());
-        }*/
+        }
     };
     
     Teacher.prototype.wait = function(delay) {

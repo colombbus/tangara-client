@@ -1,4 +1,4 @@
-define(['platform-pr', 'json'], function() {
+define(['objects/teacher/Teacher', 'platform-pr', 'json'], function(Teacher) {
     function Grader() {
         
         var acceptedAnswers = null;
@@ -33,10 +33,15 @@ define(['platform-pr', 'json'], function() {
             return r;
         };
 
+        //due to the impossibility to simply evaluate the code
         this.gradeTask = function (strAnswer, token, callback) {
-            var taskParams = platform.getTaskParams();
+            /*var taskParams = platform.getTaskParams();
             var answers = answersFromStrAnswer(strAnswer);
-            callback(taskParams.noScore, "Mkay");
+            callback(taskParams.noScore, "Mkay");*/
+            //if(teacher.taskValidated())
+                callback(Teacher.getScore(), Teacher.getMessage());
+                //callback(taskParams.noScore, Teacher.getMessage());
+            
         };           
         
     }
