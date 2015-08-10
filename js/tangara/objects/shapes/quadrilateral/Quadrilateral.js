@@ -1,26 +1,26 @@
 define(['jquery', 'TEnvironment', 'TGraphicalObject', 'TUtils', 'objects/shapes/polygon/Polygon'], function ($, TEnvironment, TGraphicalObject, TUtils, Polygon) {
     /**
-     * Defines Triangle, inherited from Polygon.
-     * @exports Triangle
+     * Defines Quadrilateral, inherited from Polygon.
+     * @exports Quadrilateral
      */
-    var Triangle = function (p1, p2, p3) {
-        Polygon.call(this, p1, p2, p3);
+    var Quadrilateral = function (p1, p2, p3, p4) {
+        Polygon.call(this, p1, p2, p3, p4);
     };
 
-    Triangle.prototype = Object.create(Polygon.prototype);
-    Triangle.prototype.constructor = Triangle;
-    Triangle.prototype.className = "Triangle";
+    Quadrilateral.prototype = Object.create(Polygon.prototype);
+    Quadrilateral.prototype.constructor = Quadrilateral;
+    Quadrilateral.prototype.className = "Quadrilateral";
 
-    var graphics = Triangle.prototype.graphics;
+    var graphics = Quadrilateral.prototype.graphics;
 
-    Triangle.prototype.gClass = graphics.addClass("TPolygon", "TTriangle", {
+    Quadrilateral.prototype.gClass = graphics.addClass("TPolygon", "TQuadrilateral", {
         init: function (props, defaultProps) {
             this._super(TUtils.extend({
             }, props), defaultProps);
         },
         setVertices: function (value) {
             this.p.vertices = [];
-            if (value.length === 3) {
+            if (value.length === 4) {
                 for (var i = 0; i < value.length; i++) {
                     this.p.vertices.push(value[i]);
                 }
@@ -31,5 +31,5 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'TUtils', 'objects/shapes/
         }
     });
 
-    return Triangle;
+    return Quadrilateral;
 });

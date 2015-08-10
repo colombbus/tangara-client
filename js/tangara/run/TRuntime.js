@@ -7,7 +7,6 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
         var log;
         var tObjects = new Array();
         var tGraphicalObjects = new Array();
-        var currentProgramName;
         var designMode = false;
         var frozen = false;
         var wasFrozen = false;
@@ -21,6 +20,9 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             // link interpreter to runtimeFrame
             interpreter.setRuntimeFrame(runtimeFrame);
 
+            // link interpreter to errorHandler
+            interpreter.setErrorHandler(handleError);
+            
             // create graphics;
             graphics = new TGraphics();
 
@@ -30,6 +32,8 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             
             self = this;
             window.console.log("loading base classes");
+            // set repeat keyword
+            TParser.setRepeatKeyword(TEnvironment.getMessage("repeat-keyword"));
             loadBaseClasses(TEnvironment.getLanguage(), function(baseNames) {
                 window.console.log("accessing objects list from: " + classesUrl);
                 $.ajax({
@@ -205,7 +209,7 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
 
         // COMMANDS EXECUTION
 
-        this.handleError = function(err, value, lines) {
+        var handleError = function(err) {
             var error;
             if (!(err instanceof TError)) {
                 error = new TError(err);
@@ -213,18 +217,18 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             } else {
                 error = err;
             }
-            error.setProgramName(currentProgramName);
-            if (currentProgramName === null) {
-                error.setCode(value);
+            if (typeof log !== 'undefined') {
+                log.addError(error);
+            } else {
+                window.console.error(error);
             }
-            if (!lines) {
-                error.setLines([]);
-            }
-            this.logError(error);
         };
 
-        this.executeStatements = function(statements) {
-            interpreter.addStatements(statements);
+        this.executeStatements = function(statements, programName) {
+            if (typeof programName === 'undefined') {
+                programName = null;
+            }
+            interpreter.addStatements(statements, programName);
         };
 
         this.executeStatementsNow = function(statements, log) {
@@ -232,20 +236,15 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
         };
 
         this.executeNow = function(commands, parameter, logCommands) {
-            try {
-                this.executeStatementsNow(commands, logCommands);
-            } catch (error) {
-                this.handleError(error, commands.raw, false);
-            }
+            this.executeStatementsNow(commands, logCommands);
         };
 
-        this.executeFrom = function(object) {
-            try {
-                var statements = object.getStatements();
-                this.executeStatements(statements);
-            } catch (error) {
-                this.handleError(error, object.getValue(), true);
+        this.executeFrom = function(object, programName) {
+            if (typeof programName === 'undefined') {
+                programName = null;
             }
+            var statements = object.getStatements();
+            this.executeStatements(statements, programName);
         };
         
         // LOG MANAGEMENT
@@ -258,14 +257,6 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
         this.logCommand = function(command) {
             if (typeof log !== 'undefined') {
                 log.addCommand(command);
-            }
-        };
-
-        this.logError = function(error) {
-            if (typeof log !== 'undefined') {
-                log.addError(error);
-            } else {
-                window.console.error(error);
             }
         };
 
@@ -384,14 +375,6 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
                 tObjects[i].freeze(value);
             }
             frozen = value;
-        };
-
-        this.setCurrentProgramName = function(name) {
-            currentProgramName = name;
-        };
-
-        this.getCurrentProgramName = function() {
-            return currentProgramName;
         };
 
         this.getGraphics = function() {

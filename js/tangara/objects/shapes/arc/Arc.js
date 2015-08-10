@@ -1,38 +1,36 @@
 define(['jquery', 'TEnvironment', 'TGraphicalObject', 'TUtils', 'objects/shapes/shape/Shape'], function ($, TEnvironment, TGraphicalObject, TUtils, Shape) {
     /**
-     * Defines Polygon, inherited from Shape.
-     * @exports Polygon
+     * Defines Arc, inherited from Shape.
+     * @exports Arc
      */
-    var Polygon = function () {
+    var Arc = function () {
         Shape.call(this);
-        if (arguments[0]) {
-            this.gObject.setVertices(arguments);
-        }
     };
 
-    Polygon.prototype = Object.create(Shape.prototype);
-    Polygon.prototype.constructor = Polygon;
-    Polygon.prototype.className = "Polygon";
+    Arc.prototype = Object.create(Shape.prototype);
+    Arc.prototype.constructor = Arc;
+    Arc.prototype.className = "Arc";
 
-    var graphics = Polygon.prototype.graphics;
+    var graphics = Arc.prototype.graphics;
 
-    Polygon.prototype.gClass = graphics.addClass("TShape", "TPolygon", {
+    Arc.prototype.gClass = graphics.addClass("TShape", "TArc", {
         init: function (props, defaultProps) {
             this._super(TUtils.extend({
-                vertices: [],
-                initVertices: false,
                 fill: false,
                 tangle: 0,
                 tx: 50,
                 ty: 50,
+                ray: false,
+                startingAngle: false,
+                endingAngle: false
             }, props), defaultProps);
         },
-        setVertices: function (value) {
-            this.p.vertices = [];
-            for (var i = 0; i < value.length; i++) {
-                this.p.vertices.push(value[i]);
-            }
-            this.p.initVertices = true;
+        setAngles: function (start, end) {
+            this.p.startingAngle = start;
+            this.p.endingAngle = end;
+        },
+        setRay: function (ray) {
+            this.p.ray = ray;
         },
         step: function(dt) {
             var p = this.p;
@@ -63,32 +61,47 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'TUtils', 'objects/shapes/
         },
         draw: function (ctx) {
             var p = this.p;
-            if (p.initVertices) {
+            if (p.ray !== false && p.startingAngle !== false) {
                 ctx.beginPath();
-                ctx.translate(p.tx + p.vertices[0].gObject.p.x, p.ty + p.vertices[0].gObject.p.y);
-                ctx.rotate(this.p.tangle / 180 * Math.PI);
-                ctx.moveTo(0, 0);
-                for (var i = 1; i < p.vertices.length; i++) {
-                    ctx.lineTo(p.vertices[i].gObject.p.x - p.vertices[0].gObject.p.x, p.vertices[i].gObject.p.y - p.vertices[0].gObject.p.y);
-                }
-                ctx.closePath();
-                ctx.strokeStyle = p.color;
-                ctx.lineWidth = p.width;
-                ctx.stroke();
+                ctx.translate(p.tx, p.ty);
+                ctx.rotate(p.tangle / 180 * Math.PI);
+                ctx.arc(0, 0, p.ray, p.startingAngle / 180 * Math.PI, p.endingAngle / 180 * Math.PI);
                 if (this.p.fill) {
+                    ctx.closePath();
                     ctx.fillStyle = p.fillColor;
                     ctx.fill();
                 }
+                ctx.strokeStyle = p.color;
+                ctx.lineWidth = p.width;
+                ctx.stroke();
+                
             }
         }
     });
 
     /**
-     * Set vertices's coordinates. 
+     * Set the starting and ending angle of the arc
+     * @param {Number} start    degrees
+     * @param {Number} end  degrees
      */
-    Polygon.prototype._setVertices = function () {
-        this.gObject.setVertices(arguments);
+    Arc.prototype._setAngles = function (start, end) {
+        if (typeof start !== 'undefined' && typeof end !== 'undefined') {
+            start = TUtils.getInteger(start);
+            end = TUtils.getInteger(end);
+            this.gObject.setAngles(start, end);
+        }
+    };
+    
+    /**
+     * Set the rayon of Arc.
+     * @param {Number} ray
+     */
+    Arc.prototype._setRay = function (ray) {
+        if (typeof ray !== 'undefined') {
+            ray = TUtils.getInteger(ray);
+            this.gObject.setRay(ray);
+        }
     };
 
-    return Polygon;
+    return Arc;
 });

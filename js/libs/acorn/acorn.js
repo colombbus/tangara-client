@@ -446,6 +446,15 @@
   // TWEAK FOR TANGARA: added 'repeat' as keyword
   var isKeyword = makePredicate("break case catch continue debugger default do else finally for function if return switch throw try var while with null true false instanceof typeof void delete new in this repeat");
 
+  // TWEAK FOR TANGARA: added ability to set the "repeat" keyword
+  exports.setRepeatKeyword = function(repeatWord) {
+      _repeat.keyword =repeatWord;
+      delete keywordTypes["repeat"];
+      keywordTypes[repeatWord] = _repeat;
+      isKeyword = makePredicate("break case catch continue debugger default do else finally for function if return switch throw try var while with null true false instanceof typeof void delete new in this "+repeatWord);
+  }
+
+
   // ## Character categories
 
   // Big ugly regular expressions that match characters in the

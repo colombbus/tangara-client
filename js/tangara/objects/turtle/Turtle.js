@@ -25,7 +25,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
             this._super(TUtils.extend({
                 inMovement: false,
                 type: TGraphicalObject.TYPE_TURTLE,
-                tangle: 0,
+                tangle: 90,
                 tx: 50,
                 ty: 50,
                 stroke: true,
@@ -37,7 +37,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
                 velocityY: 200
             }, props), defaultProps);
         },
-        move: function(value) {
+        walk: function(value) {
             this.synchronousManager.begin();
             this.perform(function(value) {
                 var x = Math.cos((this.p.tangle - 90) / 180 * Math.PI) * value;
@@ -116,7 +116,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
                 ctx.stroke();
             }
             
-            ctx.translate(p.tx - 50, p.ty - 50);
+            ctx.translate(p.tx, p.ty);
             ctx.rotate(this.p.tangle / 180 * Math.PI);
             if (p.asset) {
                 ctx.drawImage(this.resources.getUnchecked(p.asset), -p.cx, -p.cy);
@@ -141,21 +141,10 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
      * Move Turtle of "value" pixels forward, depending of its angle.
      * @param {Number} value
      */
-    Turtle.prototype._moveForward = function(value) {
+    Turtle.prototype._walk = function(value) {
         if (typeof value !== 'undefined') {
             value = TUtils.getInteger(value);
-            this.gObject.move(value);
-        }
-    };
-    
-    /**
-     * Move Turtle of "value" pixels backward, depending of its angle.
-     * @param {Number} value
-     */
-    Turtle.prototype._moveBackward = function(value) {
-        if (typeof value !== 'undefined') {
-            value = TUtils.getInteger(value);
-            this.gObject.move(-value);
+            this.gObject.walk(value);
         }
     };
 
@@ -200,5 +189,28 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
         }
     };
     
+    /**
+     * Rotate Turtle to the right.
+     */
+    TGraphicalObject.prototype._rotateRight = function() {
+        //TODO: parseFloat
+        this.gObject.rotate(90);
+    };
+    
+    /**
+     * Rotate Turtle to the left.
+     */
+    TGraphicalObject.prototype._rotateLeft = function() {
+        //TODO: parseFloat
+        this.gObject.rotate(270);
+    };
+    
+    /**
+     * Rotate Turtle behind.
+     */
+    TGraphicalObject.prototype._rotateBehind = function() {
+        //TODO: parseFloat
+        this.gObject.rotate(180);
+    };
     return Turtle;
 });

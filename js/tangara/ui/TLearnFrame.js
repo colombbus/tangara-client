@@ -1,4 +1,4 @@
-define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRuntime', 'TEnvironment', 'TParser', 'TExercise', 'platform-pr'], function(TComponent, $, TLearnCanvas, TLearnEditor, TRuntime, TEnvironment, TParser, TExercise) {
+define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRuntime', 'TEnvironment', 'TParser', 'TExercise', 'TError', 'platform-pr'], function(TComponent, $, TLearnCanvas, TLearnEditor, TRuntime, TEnvironment, TParser, TExercise, TError) {
     function TLearnFrame(callback) {
         var $lesson, $lessonContent, $message, $messageContent, $instructions;
         var canvas, editor;
@@ -48,6 +48,8 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             canvas.displayed();
             editor.displayed();
             exercise.setFrame(this);
+            // declare itself as log 
+            TRuntime.setLog(this);
             initialized = true;
         };
 
@@ -75,21 +77,15 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
                 }
                 //TODO: only if no error
                 exercise.check(statements);
-            } catch (error) {
-                var code, message;
-                if (typeof error.getCode !== 'undefined') {
-                    code = error.getCode();
-                }
-                if (typeof error.getMessage !== 'undefined') {
-                    message = error.getMessage();
-                } else if (typeof error.message !== 'undefined') {
-                    message = error.message;
+            } catch (err) {
+                var error;
+                if (!(err instanceof TError)) {
+                    error = new TError(err);
+                    error.detectError();
                 } else {
-                    message = 'undefined error';
+                    error = err;
                 }
-                if (typeof message === 'string') {
-                    showError(message)
-                }
+                showError(error.getMessage());
             }
         };
 
@@ -179,6 +175,17 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
         this.setCode = function(value) {
             editor.setValue(value);
         }
+
+        // LOG MANAGEMENT
+        
+        this.addError = function(error) {
+            showError(error.getMessage());
+        };
+
+        this.addCommand = function(command) {
+            // do nothing
+        };
+
 
     }
 

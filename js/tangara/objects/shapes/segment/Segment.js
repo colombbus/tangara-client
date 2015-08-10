@@ -1,26 +1,26 @@
 define(['jquery', 'TEnvironment', 'TGraphicalObject', 'TUtils', 'objects/shapes/polygon/Polygon'], function ($, TEnvironment, TGraphicalObject, TUtils, Polygon) {
     /**
-     * Defines Triangle, inherited from Polygon.
-     * @exports Triangle
+     * Defines Segment, inherited from Polygon.
+     * @exports Segment
      */
-    var Triangle = function (p1, p2, p3) {
+    var Segment = function (p1, p2, p3) {
         Polygon.call(this, p1, p2, p3);
     };
 
-    Triangle.prototype = Object.create(Polygon.prototype);
-    Triangle.prototype.constructor = Triangle;
-    Triangle.prototype.className = "Triangle";
+    Segment.prototype = Object.create(Polygon.prototype);
+    Segment.prototype.constructor = Segment;
+    Segment.prototype.className = "Segment";
 
-    var graphics = Triangle.prototype.graphics;
+    var graphics = Segment.prototype.graphics;
 
-    Triangle.prototype.gClass = graphics.addClass("TPolygon", "TTriangle", {
+    Segment.prototype.gClass = graphics.addClass("TPolygon", "TSegment", {
         init: function (props, defaultProps) {
             this._super(TUtils.extend({
             }, props), defaultProps);
         },
         setVertices: function (value) {
             this.p.vertices = [];
-            if (value.length === 3) {
+            if (value.length === 2) {
                 for (var i = 0; i < value.length; i++) {
                     this.p.vertices.push(value[i]);
                 }
@@ -31,5 +31,5 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'TUtils', 'objects/shapes/
         }
     });
 
-    return Triangle;
+    return Segment;
 });
