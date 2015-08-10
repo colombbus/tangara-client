@@ -125,15 +125,12 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
      * @returns {string} message
      */
     function getMessage(value) {
-        if(typeof value === "undefined")
+        if(typeof value === "undefined" || isNan(value))
             value = score;
         var r = 0;
         for(var i = 1; i < messages.length; i++)
-        {
             if(messages[i].score <= value && messages[i].score > messages[r].score)
                 r = i;
-            alert(value + " " + messages[i].score + " " + messages[i].message);
-        }
         return messages[r].message;
     };
     
@@ -184,6 +181,7 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
                 frame.invalidateStep(getMessage());
             }
         }
+        //uncomment this part and erase the one above if possible
         /*if (score > scoreLimit) {
             validateStep(getMessage());
         }

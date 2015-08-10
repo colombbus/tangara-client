@@ -91,13 +91,14 @@ define(['platform-pr', 'json'], function() {
         };
         
         this.getMetaData = function (callback) {
-            alert("hooked on a feeling 5");
+            alert("hooked on a feeling 7");
+            var l = document.location.href;
             var metaData = {
-                id : "id",
-                language : "language",
+                id : l.substring(0, l.lastIndexOf("#")),
+                language : "fr",
                 version : 1.0,
                 title : "title",
-                authors : ["author 1"],
+                authors : ["Colombbus - France-IOI"],
                 license : "license",
                 minWidth : 800
             };
