@@ -33,9 +33,8 @@ var miniPlatformShowSolution = function() {
 };
 
 var miniPlatformPreviewGrade = function(answer) {
-   var json = getTaskResources();
    var minScore = -3;
-   if (json.fullFeedback) {
+   if (task.fullFeedback) {
       minScore = 0;
    }
    var maxScore = 6;
@@ -49,17 +48,7 @@ var miniPlatformPreviewGrade = function(answer) {
       $("#previewScorePopup").show();
       $("#previewScoreMessage").html("<b>Votre score : " + score + "/" + maxScore + "</b><br/>Vous pouvez maintenant lire la solution en bas de la page.");
    };
-   if (json.acceptedAnswers && json.acceptedAnswers[0]) {
-      if ($.inArray("" + answer, json.acceptedAnswers) > -1) {
-         score = maxScore;
-      }
-      else {
-         score = minScore;
-      }
-      showGrade(score);
-   } else {
-      score = grader.gradeTask(answer, null, showGrade);
-   }
+   score = grader.gradeTask(answer, null, showGrade);
 };
 
 var alreadyStayed = false;
@@ -119,9 +108,10 @@ $(document).ready(function() {
          } catch(exception) {
             alert("Error: invalid options");
          }
-         var json = getTaskResources();
          var minScore = -3;
-         if (json.fullFeedback) {
+         var res;
+         task.getMetaData(function (metaData) { res = metaData; });
+         if (res.fullFeedback) {
             minScore = 0;
          }
          platform.getTaskParams = function(key, defaultValue) {
@@ -154,7 +144,7 @@ $(document).ready(function() {
             $("#task h1").show();
          }
 
-         if (json.fullFeedback) {
+         if (task.fullFeedback) {
             loadedViews.grader = true;
          }
          var showViewsHandlerFactory = function (view) {

@@ -47,7 +47,7 @@ require.config({
         },
         
         'miniPlatform': {
-            deps: ['jquery', 'platform-pr'],
+            deps: ['jquery', 'platform-pr', 'Task'],
             exports: '$'
         }
     }    
@@ -109,12 +109,13 @@ function load() {
     });
 }
 
-var loading = new Image();
+/*var loading = new Image();
 loading.src = "images/loader2.gif";
 if (loading.complete) {
     load();
 } else {
     loading.onload = load();
-}
+}*/
+load();
 
 
