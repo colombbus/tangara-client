@@ -47,7 +47,7 @@ require.config({
         },
         
         'miniPlatform': {
-            deps: ['jquery'],
+            deps: ['jquery', 'platform-pr'],
             exports: '$'
         }
     }    
