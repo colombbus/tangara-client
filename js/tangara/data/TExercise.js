@@ -1,4 +1,8 @@
 define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/teacher/Teacher'], function(TEnvironment, TRuntime, TProject, TError, Teacher) {
+    /**
+     * TExercise manage exercises in "Learn" part of Declick.
+     * @exports TExercise
+     */
     function TExercise() {
         // associated project
         var project = new TProject();
@@ -112,10 +116,18 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/teacher/Teach
             }
         };
         
+        /**
+         * Checks if Teachet is in parser mode.
+         * @returns {Boolean}
+         */
         this.isParserMode = function() {
             return Teacher.get("parser");
         };
         
+        /**
+         * Execute check statements.
+         * @param {Statements[]} statements
+         */
         this.check = function(statements) {
             Teacher.setStatements(statements);
             if (checkStatements !== false) {
@@ -123,6 +135,10 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/teacher/Teach
             }
         };
         
+        /**
+         * Loads start statements.
+         * @param {Function} callback
+         */
         var loadStart = function(callback) {
             project.getProgramStatements("start", function(result) {
                 if (!(result instanceof TError)) {
@@ -132,6 +148,10 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/teacher/Teach
             });
         };
         
+        /**
+         * Loads check statements.
+         * @param {Function} callback
+         */
         var loadCheck = function(callback) {
             project.getProgramStatements("check", function(result) {
                 if (!(result instanceof TError)) {
