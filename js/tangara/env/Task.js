@@ -43,37 +43,34 @@ define(['platform-pr', 'json'], function() {
             callback(parseInt($("body").outerHeight(true)));
         };
 
-        /*this.unload = function (callback) {
-            if (typeof Tracker !== 'undefined') {
-                Tracker.endTrackInputs();
-            }
-            callback();
-        };*/
-
         this.getState = function (callback) {
-            var res = {};
+            var res;
             this.getAnswer(function (displayedAnswer) {
-                res.displayedAnswer = displayedAnswer;
+                res = displayedAnswer;
             });
-            callback(JSON.stringify(res));
+            callback(res);
         };
 
         this.reloadAnswer = function (strAnswer, callback) {
-            frame.setCode(strAnswer);
+            try {
+                var score = JSON.parse(strAnswer).score;
+                var message = JSON.parse(strAnswer).message;
+                var code = JSON.parse(strAnswer).code;
+                frame.setScore(score); //really useful?
+                frame.setMessage(message); //really useful?
+                frame.setCode(code);
+            } catch(e) {
+                window.console.log(e);
+            }
             callback();
         };
 
         this.reloadState = function (state, callback) {
-            var stateObject = JSON.parse(state);
-            if (typeof stateObject.displayedAnswer !== 'undefined') {
-                this.reloadAnswer(stateObject.displayedAnswer, callback);
-            } else {
-                callback();
-            }
+            this.reloadAnswer(state, callback);
         };
+        
     
         this.load = function (views, callback) {
-            callback();
             this.reloadAnswer("", callback);
         };
 
@@ -82,18 +79,16 @@ define(['platform-pr', 'json'], function() {
         };
 
         this.getAnswer = function (callback) {
-            callback(frame.getCode());
-            /*i = 1;
-            for(; i <= MAX_STEP && steps[i]; i++);
-            code = editor.getStatements()[0];
-            code = code === "undefined" ? "" : code.raw;
-            callback(JSON.stringify(i) + "\n" + code);*/
+            var text = '{"score":"' + frame.getScore()
+                    + '", "message":"' + frame.getMessage()
+                    + '", "code":"' + frame.getCode() + '"}';
+            callback(text);
         };
         
         this.getMetaData = function (callback) {
-            var l = document.location.href;
+            var link = document.location.href;
             var metaData = {
-                id : l.substring(0, l.lastIndexOf("#")),
+                id : link.substring(0, link.lastIndexOf("#")),
                 language : "fr",
                 version : 1.0,
                 title : "title",

@@ -27,10 +27,9 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
     var statements = [];
     var frame = false;
     var values = {};
-    var messages = [];
+    var message;
     var scoreLimit = 1;
     var score = 0;
-    var nbExecutions = 0; //number of appeals to wait
     
     /**
      * Set the array of statements.
@@ -110,34 +109,23 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
     };
     
     /**
-     * Associate a message to a range of score
-     * @param {number} score
-     * @param {string} message
+     * @param {string} value
      */
-    Teacher.prototype.setMessage = function(score, message) {
-        if(nbExecutions === 1)
-            messages.push({score : score, message : message});
+    Teacher.prototype.setMessage = function(value) {
+        message = value;
     };
     
     /**
-     * Get the message associated to a score by taking the closer less or equal one
-     * @param {number} value could be any score, current score by default
      * @returns {string} message
      */
-    function getMessage(value) {
-        if(messages.length === 0)
-            return "Messages corresponding to scores have not been initialized."
-        if(typeof value === "undefined" || isNan(value))
-            value = score;
-        var r = 0;
-        for(var i = 1; i < messages.length; i++)
-            if(messages[i].score <= value && messages[i].score > messages[r].score)
-                r = i;
-        return messages[r].message;
+    function getMessage() {
+        if(typeof message === "undefined")
+            message = "Message indéfini.";
+        return message;
     };
     
-    Teacher.prototype.getMessage = function(value) {
-        return getMessage(value);
+    Teacher.prototype.getMessage = function() {
+        return getMessage();
     };
     
     Teacher.prototype.setScore = function(value) {
@@ -149,16 +137,17 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
     };
     
     /**
-     * Validate the current step if "frame" is true.
+     * Validate the current step if "frame" is true
+     * @param {String} message
      */
-    function validateStep() {
+    function validateStep(message) {
         if (frame) {
-            frame.validateStep();
+            frame.validateStep(message);
         }
     };
     
-    Teacher.prototype.validateStep = function() {
-        validateStep();
+    Teacher.prototype.validateStep = function(message) {
+        validateStep(message);
     };
 
     /**
@@ -199,12 +188,10 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
      * Validate or invalidate the task
      */
     Teacher.prototype.done = function() {
-        if (taskValidated()) {
+        if (taskValidated())
             validateStep(getMessage());
-        }
-        else {
+        else
             invalidateStep(getMessage());
-        }
     };
     
     Teacher.prototype.wait = function(delay) {
@@ -213,7 +200,6 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
         window.setTimeout(function() {
             parent.synchronousManager.end();
         }, delay);
-        nbExecutions++;
     };
 
     /**

@@ -117,14 +117,30 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/teacher/Teach
         };
         
         /**
-         * Checks if Teachet is in parser mode.
+         * Checks if Teacher is in parser mode.
          * @returns {Boolean}
          */
         this.isParserMode = function() {
             return Teacher.get("parser");
         };
+
+        this.getScore = function() {
+            return Teacher.getScore();
+        };
         
-        /**
+        this.setScore = function(value) {
+            return Teacher.setScore(value);
+        };
+        
+        this.getMessage = function() {
+            return Teacher.getMessage();
+        };
+        
+        this.setMessage = function(value) {
+            return Teacher.setMessage(value);
+        };
+        
+		/**
          * Execute check statements.
          * @param {Statements[]} statements
          */

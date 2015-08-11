@@ -1,4 +1,4 @@
-define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRuntime', 'TEnvironment', 'TParser', 'TExercise', 'TError', 'platform-pr'], function(TComponent, $, TLearnCanvas, TLearnEditor, TRuntime, TEnvironment, TParser, TExercise, TError) {
+define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRuntime', 'TEnvironment', 'TParser', 'TExercise', 'TError', 'platform-pr', 'miniPlatform'], function(TComponent, $, TLearnCanvas, TLearnEditor, TRuntime, TEnvironment, TParser, TExercise, TError) {
     function TLearnFrame(callback) {
         var $lesson, $lessonContent, $message, $messageContent, $instructions;
         var canvas, editor;
@@ -106,8 +106,8 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
         };
 
         this.validateStep = function(message) {
-            validateStep(message);
             platform.validate("next");
+            showMessage(message);
         };
 
         this.invalidateStep = function(message) {
@@ -168,14 +168,60 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             });
         };
         
+        /*due to the fact that some functions have to get through
+         * the editor before atteining Teacher, no direct appeal
+         * to Teacher are done here; there are all get through
+         * the editor
+         */
+        
+        /**
+         * Get the code unparsed
+         * @returns {string}
+         */
         this.getCode = function() {
             return editor.getValue();
         };
         
+        /**
+         * Set the code in the editor
+         * @param {string} value
+         */
         this.setCode = function(value) {
             editor.setValue(value);
-        }
-
+        };
+        
+        /**
+         * Get the score
+         * @returns {number}
+         */
+        this.getScore = function() {
+            return exercise.getScore();
+        };
+        
+        /**
+         * Set the score
+         * @param {number} value
+         */
+        this.setScore = function(value) {
+            return exercise.setScore(value);
+        };
+        
+        /**
+         * Get the message
+         * @returns {string}
+         */
+        this.getMessage = function() {
+            return exercise.getMessage();
+        };
+        
+        /**
+         * Set the message
+         * @param {string} value
+         * @returns {unresolved}
+         */
+        this.setMessage = function(value) {
+            return exercise.setMessage(value);
+        };
         // LOG MANAGEMENT
         
         this.addError = function(error) {
