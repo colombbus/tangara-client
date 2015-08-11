@@ -1,4 +1,5 @@
 {
+    "hide": ["_setAngle", "_rotate"],
     "fr": {
         "methods":[
             {"name":"_setAngles","translated":"définirAngles","displayed":"définirAngles(0, 180)"},

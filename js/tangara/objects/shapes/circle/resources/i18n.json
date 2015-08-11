@@ -1,5 +1,5 @@
 {
-    "hide": ["_setAngle", "_rotate"],
+    "hide": ["_setAngles"],
     "fr": {
         "methods":[      
         ]
