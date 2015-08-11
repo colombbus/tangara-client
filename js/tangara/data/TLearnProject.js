@@ -1,6 +1,8 @@
 define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError'], function(TLink, TProgram, TEnvironment, TUtils, TError) {
     /**
-     * TLEARNPROJECT
+     * TLearnProject is like TProject, but adapted to "Learn" part of Declick.
+     * (Learn Project will be refered later as LP)
+     * @exports TLearnProject
      */
     function TLearnProject() {
 
@@ -77,10 +79,18 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError'], function(TLink
             return resources;
         };
 
+        /**
+         * Get the location of 'name' resource.
+         * @param {String} name
+         */
         this.getResourceLocation = function(name) {
             return TEnvironment.getResource("steps/" + step + "/" + name);
         };
 
+        /**
+         * Return base name of 'name' resource.
+         * @return {String}
+         */
         this.getResourceBaseName = function(name) {
             return resources[name]['base-name'];
         };
