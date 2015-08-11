@@ -1,4 +1,8 @@
 define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], function(TLink, TProgram, TEnvironment, TUtils, TError, TRuntime) {
+    /**
+     * TProject is used to manage Declick's projects.
+     * @exports TProject
+     */
     function TProject() {
 
         var name;
@@ -44,6 +48,16 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
             return id;
         };
 
+        /**
+         * 
+         * @param {type} oldName
+         * @param {type} newName
+         * @param {type} callback
+         * @returns {undefined}Rename 'oldname' program.
+         * @param {String} oldName  Program to rename
+         * @param {String} newName  New name of the program
+         * @param {Function} callback
+         */
         this.renameProgram = function(oldName, newName, callback) {
             if (typeof editedPrograms[oldName] !== 'undefined') {
                 var program = editedPrograms[oldName];
@@ -88,6 +102,11 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
             return program;
         };
 
+        /**
+         * TBD
+         * @param {TProgram} program
+         * @param {?} session
+         */
         this.updateSession = function(program, session) {
             sessions[program.getName()] = session;
             program.setCode(session.getValue());
@@ -119,6 +138,12 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
             return false;
         };
 
+        /**
+         * Edit 'name' program.
+         * @param {String} name
+         * @param {Function} callback
+         * @param {?} session
+         */
         this.editProgram = function(name, callback, session) {
             if (typeof editedPrograms[name] === 'undefined') {
                 var program = new TProgram(name);
@@ -254,10 +279,19 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
             return editedPrograms[value];
         };
 
+        /**
+         * Get session of 'program'.
+         * @param {TProgram} program
+         */
         this.getSession = function(program) {
             return sessions[program.getName()];
         };
 
+        /**
+         * Set the session of 'program' to 'session'.
+         * @param {TProgram} program
+         * @param {?} session
+         */
         this.setSession = function(program, session) {
             sessions[program.getName()] = session;
         };
@@ -277,10 +311,18 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
             return editedPrograms;
         };
 
+        /**
+         * Returns the array of programs names.
+         * @returns {String[]}
+         */
         this.getEditedProgramsNames = function() {
             return editedProgramsNames;
         };
-
+        
+        /**
+         * Returns the array of edited programs.
+         * @returns {TProgram[]}
+         */
         this.getEditedPrograms = function() {
             return editedProgramsArray;
         };
@@ -336,13 +378,18 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
         };
 
         /**
-         * Return resources names.
+         * Return resources.
          * @returns {Resource[]}
          */
         this.getResources = function() {
             return resources;
         };
 
+        /**
+         * Return a resource. Throw an error if 'name' resource is unknown.
+         * @param {String} name
+         * @returns {Resource}
+         */
         this.getResourceInfo = function(name) {
             if (typeof resources[name] !== 'undefined') {
                 return resources[name];
@@ -375,6 +422,10 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
             return i;
         };
 
+        /**
+         * TBD
+         * @param {String} name
+         */
         this.uploadingResource = function(name) {
             if (typeof resources[name] !== 'undefined') {
                 var e = new TError(TEnvironment.getMessage("resource-already-exists", name));
@@ -386,6 +437,11 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
             return i;
         };
 
+        /**
+         * TBD
+         * @param {String} name
+         * @param {Resource} data
+         */
         this.resourceUploaded = function(name, data) {
             resources[name] = data;
             if (data.type === 'image') {
@@ -395,6 +451,10 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
             }
         };
 
+        /**
+         * TBD
+         * @param {String} name
+         */
         this.removeUploadingResource = function(name) {
             if (typeof resources[name] !== 'undefined') {
                 resources[name] = undefined;
@@ -448,6 +508,12 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
             }
         };
 
+        /**
+         * TBD
+         * @param {String} name
+         * @param {type} data
+         * @param {Function} callback
+         */
         this.setResourceContent = function(name, data, callback) {
             var self = this;
             TLink.setResourceContent(name, data, function(newData) {
@@ -476,10 +542,20 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
             });
         };
 
+        /**
+         * Return location of 'name' resource.
+         * @param {String} name
+         * @return {String}
+         */
         this.getResourceLocation = function(name) {
             return TLink.getResourceLocation(name, resources[name].version);
         };
 
+        /**
+         * Return base name of 'name' resource.
+         * @param {String} name
+         * @return {String}
+         */
         this.getResourceBaseName = function(name) {
             return resources[name]['base-name'];
         };
@@ -493,6 +569,9 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
             img.src = this.getResourceLocation(name);
         };
 
+        /**
+         * Preload all images. (in development)
+         */
         this.preloadImages = function() {
             /*for (var i=0; i<resourcesNames.length; i++) {
              var name = resourcesNames[i];
@@ -628,10 +707,18 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
             });
         };
         
+        /**
+         * Get the content of 'name' resource.
+         * @param {String} name
+         * @param {Function} callback
+         */
         this.getResourceContent = function(name, callback) {
             return TLink.getResourceContent(name, resources[name].version, callback);
         };
 
+        /**
+         * Update array of edited programs. (sorted alphabetically)
+         */
         var updateEditedPrograms = function() {
             editedProgramsNames = Object.keys(editedPrograms);
             editedProgramsNames = TUtils.sortArray(editedProgramsNames);
@@ -641,6 +728,11 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
             }
         };
         
+        /**
+         * TBD
+         * @param {type} progress
+         * @param {Function} callback
+         */
         this.preloadResources = function(progress, callback) {
             // TODO: handle preload of other resource types
             var graphicalResources = [];
