@@ -8,7 +8,9 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
         var bottomLesson = 0;/*207;*/
         
         var exercise = new TExercise();
-
+        
+        var lastSubmission;
+        
         TComponent.call(this, "TLearnFrame.html", function(component) {
             $lesson = component.find("#tlearnframe-lesson");
             $lesson.find("#tlearnframe-lesson-congrats").text("Bravo !");
@@ -76,6 +78,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
                     TRuntime.executeStatements(statements);
                 }
                 //TODO: only if no error
+                lastSubmission = editor.getValue();
                 exercise.check(statements);
             } catch (err) {
                 var error;
@@ -173,6 +176,14 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
          * to Teacher are done here; there are all get through
          * the editor
          */
+        
+        /**
+         * Get the last submission
+         * @returns {string}
+         */
+        this.getLastSubmission = function() {
+            return lastSubmission;
+        };
         
         /**
          * Get the code unparsed

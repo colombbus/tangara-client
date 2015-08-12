@@ -4,24 +4,6 @@ define(['platform-pr', 'json'], function() {
         
         var frame = aFrame;
         
-        this.showViews = function (views, callback) {
-            if (views.forum || views.hint || views.editor) {
-                //console.error("this task does not have forum, hint nor editor specific view, showing task view instead.");
-                views.task = true;
-            }
-            $.each(['task', 'solution'], function (i, view) {
-                if (views[view]) {
-                    $('#' + view).show();
-                } else {
-                    $('#' + view).hide();
-                }
-            });
-            if (typeof this.hackShowViews === 'function') {
-                this.hackShowViews(views);
-            }
-            callback();
-        };
-        
         this.getViews = function(callback) {
             var views = {
                 task: {},
@@ -44,31 +26,33 @@ define(['platform-pr', 'json'], function() {
         };
 
         this.getState = function (callback) {
-            var res;
-            this.getAnswer(function (displayedAnswer) {
-                res = displayedAnswer;
-            });
+            callback(frame.getCode());
+        };
+        
+        this.reloadState = function (state, callback) {
+            frame.setCode(state);
+            callback();
+        };
+        
+        this.getAnswer = function (callback) {
+            var res = JSON.stringify(
+                {score : frame.getScore(),
+                message : frame.getMessage(),
+                code : frame.getLastSubmission()});
             callback(res);
         };
-
+        
         this.reloadAnswer = function (strAnswer, callback) {
             try {
-                var score = JSON.parse(strAnswer).score;
-                var message = JSON.parse(strAnswer).message;
-                var code = JSON.parse(strAnswer).code;
-                frame.setScore(score); //really useful?
-                frame.setMessage(message); //really useful?
-                frame.setCode(code);
+                var json = JSON.parse(strAnswer);
+                frame.setScore(json.score); //really useful?
+                frame.setMessage(json.message); //really useful?
+                frame.setCode(json.code);
             } catch(e) {
                 window.console.log(e);
             }
             callback();
         };
-
-        this.reloadState = function (state, callback) {
-            this.reloadAnswer(state, callback);
-        };
-        
     
         this.load = function (views, callback) {
             this.reloadAnswer("", callback);
@@ -76,13 +60,6 @@ define(['platform-pr', 'json'], function() {
 
         this.unload = function (callback) {
             callback();
-        };
-
-        this.getAnswer = function (callback) {
-            var text = '{"score":"' + frame.getScore()
-                    + '", "message":"' + frame.getMessage()
-                    + '", "code":"' + frame.getCode() + '"}';
-            callback(text);
         };
         
         this.getMetaData = function (callback) {
