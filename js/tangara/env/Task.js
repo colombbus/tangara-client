@@ -4,6 +4,10 @@ define(['platform-pr', 'json'], function() {
         
         var frame = aFrame;
         
+        this.showViews = function(views, callback) {
+            callback();
+        };
+        
         this.getViews = function(callback) {
             var views = {
                 task: {},
@@ -43,13 +47,15 @@ define(['platform-pr', 'json'], function() {
         };
         
         this.reloadAnswer = function (strAnswer, callback) {
-            try {
-                var json = JSON.parse(strAnswer);
-                frame.setScore(json.score); //really useful?
-                frame.setMessage(json.message); //really useful?
-                frame.setCode(json.code);
-            } catch(e) {
-                window.console.log(e);
+            if(strAnswer !== "") {
+                try {
+                    var json = JSON.parse(strAnswer);
+                    frame.setScore(json.score); //really useful?
+                    frame.setMessage(json.message); //really useful?
+                    frame.setCode(json.code);
+                } catch(e) {
+                    window.console.log(e);
+                }
             }
             callback();
         };

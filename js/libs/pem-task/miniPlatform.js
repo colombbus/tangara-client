@@ -34,7 +34,9 @@ var miniPlatformShowSolution = function() {
 
 var miniPlatformPreviewGrade = function(answer) {
    var minScore = -3;
-   if (task.fullFeedback) {
+   var res;
+   task.getMetaData(function (metaData) { res = metaData; });
+   if (res.fullFeedback) {
       minScore = 0;
    }
    var maxScore = 6;
@@ -110,6 +112,8 @@ $(document).ready(function() {
          }
          var minScore = -3;
          var res;
+         if(typeof task !== "undefined")
+             clearInterval(tryToLoad);
          task.getMetaData(function (metaData) { res = metaData; });
          if (res.fullFeedback) {
             minScore = 0;
@@ -143,8 +147,9 @@ $(document).ready(function() {
          if (!taskOptions.hideTitle) {
             $("#task h1").show();
          }
-
-         if (task.fullFeedback) {
+         
+         //vérifier res
+         if (res.fullFeedback) {
             loadedViews.grader = true;
          }
          var showViewsHandlerFactory = function (view) {
@@ -172,6 +177,7 @@ $(document).ready(function() {
             });
          });
       };
-      setTimeout(platformLoad, 0);
+      //setTimeout(platformLoad, 1000);
+      var tryToLoad = setInterval(platformLoad, 1000);
    }
 });
