@@ -100,6 +100,8 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
     
     /**
      * Check if the code matches with the regexp
+     * /!\ to verify "o = new O()", don't forget the \ before parenthesis
+     * /!\ abort the syntax verification of the code 
      * @param {String} value
      * @returns {Boolean} Returns true if the code matches with the regexp, else false.
      */
@@ -192,8 +194,7 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
         if (taskValidated()) {
             validateStep(getMessage());
         }
-        else
-        {
+        else {
             invalidateStep(getMessage());
         }
     };

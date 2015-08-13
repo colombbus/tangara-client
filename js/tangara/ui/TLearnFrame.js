@@ -111,7 +111,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
 
         this.validateStep = function(message) {
             platform.validate("next");
-            showMessage(message);
+            validateStep(message);
         };
 
         this.invalidateStep = function(message) {

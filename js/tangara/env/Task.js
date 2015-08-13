@@ -50,9 +50,9 @@ define(['platform-pr', 'json'], function() {
             if(strAnswer !== "") {
                 try {
                     var answer = JSON.parse(strAnswer);
-                    frame.setScore(json.score);
-                    frame.setMessage(json.message);
-                    frame.setCode(json.code);
+                    frame.setScore(answer.score);
+                    frame.setMessage(answer.message);
+                    frame.setCode(answer.code);
                 } catch(e) {
                     window.console.log(e);
                 }
