@@ -86,7 +86,9 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TProgram', 'TError', 'ui/TViewe
             });
         });
 
-
+        /**
+         * Display Sidebar.
+         */
         this.displayed = function() {
             this.displayPrograms();
             this.init();
@@ -212,6 +214,9 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TProgram', 'TError', 'ui/TViewe
             viewer.displayed();
         };
 
+        /**
+         * Init Sidebar.
+         */
         this.init = function() {
             $sidebarPrograms.removeClass("loading");
             this.updatePrograms();
@@ -221,6 +226,9 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TProgram', 'TError', 'ui/TViewe
             textEditor.init();
         };
 
+        /**
+         * Loads Programs and Resources.
+         */
         this.load = function() {
             $sidebarPrograms.empty();
             $sidebarFiles.empty();
@@ -228,6 +236,9 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TProgram', 'TError', 'ui/TViewe
             $sidebarResources.addClass("loading");
         };
 
+        /**
+         * Update Programs.
+         */
         this.updatePrograms = function() {
             var project = TEnvironment.getProject();
             var programList = project.getProgramsNames();
@@ -315,7 +326,12 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TProgram', 'TError', 'ui/TViewe
             }
         };
 
-
+        /**
+         * TBD
+         * @param {type} name
+         * @param {type} type
+         * @returns {TSidebar_L1.TSidebar.getResourceDiv.resourceDiv}
+         */
         function getResourceDiv(name, type) {
             var resourceDiv = document.createElement("div");
             resourceDiv.className = "tsidebar-file tsidebar-type-" + type;
