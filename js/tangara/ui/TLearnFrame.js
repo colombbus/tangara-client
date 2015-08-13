@@ -32,7 +32,8 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
                 execute();
             });
             $instructions = component.find("#tlearnframe-instructions");
-
+            $solution = component.find("#tlearnframe-solution");
+            
             var self = this;
             canvas = new TLearnCanvas(function(c) {
                 component.find("#TLearnCanvas").replaceWith(c);
@@ -233,6 +234,23 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
          */
         this.setMessage = function(value) {
             return exercise.setMessage(value);
+        };
+        
+        /**
+         * Get the message
+         * @returns {string}
+         */
+        this.getSolution = function() {
+            return exercise.getSolution();
+        };
+        
+        /**
+         * Display the solution
+         */
+        this.displaySolution = function() {
+            if (exercise.hasSolution()) {
+                $solution.html(exercise.getSolution());
+            }
         };
         // LOG MANAGEMENT
         
