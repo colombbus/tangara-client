@@ -115,6 +115,9 @@ $(document).ready(function() {
          if(typeof task !== "undefined") {
              clearInterval(tryToLoad);
          }
+         else {
+             return; //vérifier que ça ne pose pas de problème
+         }
          task.getMetaData(function (metaData) { res = metaData; });
          if (res.fullFeedback) {
             minScore = 0;
