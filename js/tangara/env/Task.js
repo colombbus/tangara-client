@@ -5,6 +5,10 @@ define(['platform-pr', 'json'], function() {
         var frame = aFrame;
         
         this.showViews = function(views, callback) {
+            //setInterval(function () { alert(frame.getSolution()); }, 1000);
+            if(views.solution) {
+                frame.displaySolution();
+            }
             callback();
         };
         
