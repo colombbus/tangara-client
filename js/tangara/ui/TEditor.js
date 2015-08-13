@@ -1,5 +1,9 @@
 define(['ui/TComponent', 'jquery', 'ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 'ace/autocomplete', 'TEnvironment', 'TUI', 'TUtils', 'TRuntime'], function(TComponent, $, ace, ace_edit_session, ace_range, ace_undo_manager, ace_autocomplete, TEnvironment, TUI, TUtils, TRuntime) {
-
+    /**
+     * TEditor manages the editor console. It runs with lib ace.
+     * @param {Function} callback
+     * @exports {TEditor}
+     */
     function TEditor(callback) {
         var $editor;
 
@@ -33,6 +37,9 @@ define(['ui/TComponent', 'jquery', 'ace/ace', 'ace/edit_session', 'ace/range', '
         var triggerPopup = false;
         var editionEnabled = false;
 
+        /**
+         * Initialize Editor.
+         */
         this.displayed = function() {
             aceEditor = ace.edit($editor.attr("id"));
             aceEditor.setShowPrintMargin(false);
@@ -79,15 +86,25 @@ define(['ui/TComponent', 'jquery', 'ace/ace', 'ace/edit_session', 'ace/range', '
             this.disable();
         };
 
+        /**
+         * Show Editor.
+         */
         this.show = function() {
             $editor.show();
             aceEditor.focus();
         };
 
+        /**
+         * Hide Editor.
+         */
         this.hide = function() {
             $editor.hide();
         };
 
+        /**
+         * Get code in Editor.
+         * @returns {String}
+         */
         this.getValue = function() {
             var simpleText = aceEditor.getSession().getValue();
             var protectedText = TUtils.addQuoteDelimiters(simpleText);
@@ -95,11 +112,18 @@ define(['ui/TComponent', 'jquery', 'ace/ace', 'ace/edit_session', 'ace/range', '
             return command;
         };
 
+        /**
+         * Update Program & get statements of Program's code.
+         * @returns {Statement[]}
+         */
         this.getStatements = function() {
             this.updateProgram();
             return program.getStatements();
         };
 
+        /**
+         * Update Program's code.
+         */
         this.updateProgram = function() {
             if (codeChanged) {
                 program.setCode(this.getValue());
@@ -107,19 +131,35 @@ define(['ui/TComponent', 'jquery', 'ace/ace', 'ace/edit_session', 'ace/range', '
             }
         };
 
+        /**
+         * Returns current Program.
+         * @returns {TProgram}
+         */
         this.getProgram = function() {
             return program;
         };
 
+        /**
+         * Set a Program.
+         * @param {TProgram} value
+         */
         this.setProgram = function(value) {
             program = value;
             codeChanged = true;
         };
 
+        /**
+         * Returns Program's name.
+         * @returns {String}
+         */
         this.getProgramName = function() {
             return program.getName();
         };
 
+        /**
+         * Set Session.
+         * @param {Session} session
+         */
         this.setSession = function(session) {
             if (disabled) {
                 aceEditor.setReadOnly(false);
@@ -132,20 +172,33 @@ define(['ui/TComponent', 'jquery', 'ace/ace', 'ace/edit_session', 'ace/range', '
             aceEditor.setSession(session);
         };
 
+        /**
+         * Returns current Session.
+         * @returns {Session}
+         */
         this.getSession = function() {
             return aceEditor.getSession();
         };
 
+        /**
+         * Reset current Session.
+         */
         this.reset = function() {
             var undo = aceEditor.getSession().getUndoManager();
             undo.reset();
             codeChanged = false;
         };
 
+        /**
+         * Brings the current `textInput` into focus.
+         */
         this.giveFocus = function() {
             aceEditor.focus();
         };
 
+        /**
+         * Disable Editor.
+         */
         this.disable = function() {
             aceEditor.setSession(disabledSession);
             aceEditor.setReadOnly(true);
@@ -156,6 +209,9 @@ define(['ui/TComponent', 'jquery', 'ace/ace', 'ace/edit_session', 'ace/range', '
             disabled = true;
         };
 
+        /**
+         * Remove error marker.
+         */
         this.removeError = function() {
             if (errorMarker !== null) {
                 aceEditor.getSession().removeMarker(errorMarker);
@@ -163,6 +219,12 @@ define(['ui/TComponent', 'jquery', 'ace/ace', 'ace/edit_session', 'ace/range', '
             }
         };
 
+        /**
+         * Set an error on a line or a range of lines :
+         * - One number : Set an error on lines[0]
+         * - Two numbers : Set an error on lines[0] to lines[1]
+         * @param {Number[]} lines
+         */
         this.setError = function(lines) {
             this.removeError();
             var range;
@@ -180,6 +242,11 @@ define(['ui/TComponent', 'jquery', 'ace/ace', 'ace/edit_session', 'ace/range', '
             }, 100);
         };
 
+        /**
+         * Create a new session.
+         * @param {TProgram} program
+         * @returns {Session}
+         */
         this.createSession = function(program) {
             var session = new AceEditSession(program.getCode());
             session.setMode("ace/mode/javascript");
@@ -189,18 +256,28 @@ define(['ui/TComponent', 'jquery', 'ace/ace', 'ace/edit_session', 'ace/range', '
             return session;
         };
 
+        /**
+         * Enable helping methods.
+         */
         this.enableMethodHelper = function() {
             aceEditor.commands.addCommand(dotCommand);
             aceEditor.commands.addCommand(backspaceCommand);
             aceEditor.commands.addCommand(AceAutocomplete.startCommand);
         };
 
+        /**
+         * Disable helping methods.
+         */
         this.disableMethodHelper = function() {
             aceEditor.commands.removeCommand(dotCommand);
             aceEditor.commands.removeCommand(backspaceCommand);
             aceEditor.commands.removeCommand(AceAutocomplete.startCommand);
         };
 
+        /**
+         * Enable or disable the edition.
+         * @param {Boolean} value
+         */
         this.setEditionEnabled = function(value) {
             editionEnabled = value;
         };
