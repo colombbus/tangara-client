@@ -1,5 +1,9 @@
 define(['TUI', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jquery', 'ace/ace', 'ace/autocomplete', 'ace/range', 'ui/TComponent'], function(TUI, TParser, TLog, TEnvironment, TUtils, TRuntime, $, ace, ace_autocomplete, ace_range, TComponent) {
-
+    /**
+     * TConsole manages the console for Declick's users. It runs with lib ace.
+     * @param {Function} callback
+     * @exports {TConsole}
+     */
     function TConsole(callback) {
         var $console, $consoleText;
 
@@ -120,6 +124,10 @@ define(['TUI', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jque
 
         };
 
+        /**
+         * Returns code in Console.
+         * @returns {String}
+         */
         this.getValue = function() {
             var simpleText = aceEditor.getSession().getValue();
             var protectedText = TUtils.addQuoteDelimiters(simpleText);
@@ -127,34 +135,58 @@ define(['TUI', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jque
             return command;
         };
 
+        /**
+         * Set code in Console to value.
+         * @param {String} value
+         */
         this.setValue = function(value) {
             aceEditor.getSession().setValue(value);
             // set cursor to the end of line
             aceEditor.gotoPageDown();
         };
-
+        
+        /**
+         * Brings the current `textInput` into focus.
+         */
         this.focus = function() {
             aceEditor.focus();
         };
 
+        /**
+         * Returns statements of Console's code.
+         * @returns {Statement[]}
+         */
         this.getStatements = function() {
             return TParser.parse(this.getValue());
         };
 
+        /**
+         * Clear Console.
+         */
         this.clear = function() {
             aceEditor.setValue("");
             browsingHistory = false;
         };
 
+        /**
+         * Show Console.
+         */
         this.show = function() {
             $console.show();
             aceEditor.focus();
         };
 
+        /**
+         * Hide Console.
+         */
         this.hide = function() {
             $console.hide();
         };
 
+        /**
+         * Get Console's height.
+         * @returns {Number}
+         */
         this.getHeight = function() {
             if (computedHeight === -1) {
                 computedHeight = $console.outerHeight(false);
@@ -162,12 +194,18 @@ define(['TUI', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jque
             return computedHeight;
         };
 
+        /**
+         * Enable helping methods.
+         */
         this.enableMethodHelper = function() {
             aceEditor.commands.addCommand(dotCommand);
             aceEditor.commands.addCommand(backspaceCommand);
             aceEditor.commands.addCommand(AceAutocomplete.startCommand);
         };
 
+        /**
+         * Disable helping methods.
+         */
         this.disableMethodHelper = function() {
             aceEditor.commands.removeCommand(dotCommand);
             aceEditor.commands.removeCommand(backspaceCommand);
