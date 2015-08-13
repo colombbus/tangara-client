@@ -112,8 +112,9 @@ $(document).ready(function() {
          }
          var minScore = -3;
          var res;
-         if(typeof task !== "undefined")
+         if(typeof task !== "undefined") {
              clearInterval(tryToLoad);
+         }
          task.getMetaData(function (metaData) { res = metaData; });
          if (res.fullFeedback) {
             minScore = 0;

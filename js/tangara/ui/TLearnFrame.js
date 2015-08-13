@@ -9,7 +9,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
         
         var exercise = new TExercise();
         
-        var lastSubmission;
+        var lastSubmission = "";
         
         TComponent.call(this, "TLearnFrame.html", function(component) {
             $lesson = component.find("#tlearnframe-lesson");
@@ -99,8 +99,9 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
         };
 
         var validateStep = function(message) {
-            if(typeof message === "undefined" || message === "")
+            if(typeof message === "undefined" || message === "") {
                 message = "Bravo, vous avez réussi !";
+            }
             showMessage(message);
         };
 

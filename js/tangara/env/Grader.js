@@ -16,9 +16,9 @@ define(['platform-pr', 'json'], function() {
         }*/
 
         this.gradeTask = function (strAnswer, token, callback) {
-            var str = JSON.parse(strAnswer);
-            var score = str.score;
-            var message = str.message;
+            var answer = JSON.parse(strAnswer);
+            var score = answer.score;
+            var message = answer.message;
             callback(score, message);
         };           
         

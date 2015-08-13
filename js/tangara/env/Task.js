@@ -49,9 +49,9 @@ define(['platform-pr', 'json'], function() {
         this.reloadAnswer = function (strAnswer, callback) {
             if(strAnswer !== "") {
                 try {
-                    var json = JSON.parse(strAnswer);
-                    frame.setScore(json.score); //really useful?
-                    frame.setMessage(json.message); //really useful?
+                    var answer = JSON.parse(strAnswer);
+                    frame.setScore(json.score);
+                    frame.setMessage(json.message);
                     frame.setCode(json.code);
                 } catch(e) {
                     window.console.log(e);

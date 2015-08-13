@@ -27,7 +27,7 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
     var statements = [];
     var frame = false;
     var values = {};
-    var message;
+    var message = "";
     var scoreLimit = 1;
     var score = 0;
     
@@ -119,8 +119,9 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
      * @returns {string} message
      */
     function getMessage() {
-        if(typeof message === "undefined")
+        if(typeof message === "undefined") {
             message = "Message indéfini.";
+        }
         return message;
     };
     
@@ -188,10 +189,13 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
      * Validate or invalidate the task
      */
     Teacher.prototype.done = function() {
-        if (taskValidated())
+        if (taskValidated()) {
             validateStep(getMessage());
+        }
         else
+        {
             invalidateStep(getMessage());
+        }
     };
     
     Teacher.prototype.wait = function(delay) {
