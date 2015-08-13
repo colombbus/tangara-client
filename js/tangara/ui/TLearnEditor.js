@@ -1,5 +1,8 @@
 define(['ui/TComponent', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jquery', 'ace/ace', 'ace/autocomplete', 'ace/range', 'platform-pr'], function(TComponent, TParser, TLog, TEnvironment, TUtils, TRuntime, $, ace, ace_autocomplete, ace_range) {
-
+    /**
+     * TLearnEditor is like TEditor, but adapted to "Learn" part of Declick.
+     * @exports TLearnEditor
+     */
     function TLearnEditor(callback) {
         var $editor, $editorText;
 
@@ -21,6 +24,9 @@ define(['ui/TComponent', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRunti
         var popupTimeout;
         var triggerPopup = false;
 
+        /**
+         * Initialize LearnEditor.
+         */
         this.displayed = function() {
             aceEditor = ace.edit($editorText.attr("id"));
             aceEditor.getSession().setMode("ace/mode/javascript");
@@ -61,6 +67,10 @@ define(['ui/TComponent', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRunti
 
         };
 
+        /**
+         * Get code in LearnEditor.
+         * @returns {String}
+         */
         this.getValue = function() {
             var simpleText = aceEditor.getSession().getValue();
             var protectedText = TUtils.addQuoteDelimiters(simpleText);
@@ -68,51 +78,82 @@ define(['ui/TComponent', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRunti
             return command;
         };
 
+        /**
+         * Set code in LearnEditor to value.
+         * @param {String} value
+         */
         this.setValue = function(value) {
             aceEditor.getSession().setValue(value);
             // set cursor to the end of line
             aceEditor.gotoPageDown();
         };
-
+        
+        /**
+         * Brings the current `textInput` into focus.
+         */
         this.focus = function() {
             aceEditor.focus();
         };
-
+        
+        /**
+         * Update Program & get statements of Program's code.
+         * @returns {Statement[]}
+         */
         this.getStatements = function() {
             return TParser.parse(this.getValue());
         };
 
+        /**
+         * Clear LearnEditor.
+         */
         this.clear = function() {
             aceEditor.setValue("");
         };
 
+        /**
+         * Show LearnEditor.
+         */
         this.show = function() {
             $editor.show();
             aceEditor.focus();
         };
 
+        /**
+         * Hide LearnEditor.
+         */
         this.hide = function() {
             $editor.hide();
         };
 
+        /**
+         * Get LearnEditor's height.
+         * @returns {Number}
+         */
         this.getHeight = function() {
             if (computedHeight === -1) {
                 computedHeight = $editor.outerHeight(false);
             }
             return computedHeight;
         };
-
+        
+        /**
+         * Enable helping methods.
+         */
         this.enableMethodHelper = function() {
             aceEditor.commands.addCommand(dotCommand);
             aceEditor.commands.addCommand(backspaceCommand);
             aceEditor.commands.addCommand(AceAutocomplete.startCommand);
         };
-
+        
+        /**
+         * Disable helping methods.
+         */
         this.disableMethodHelper = function() {
             aceEditor.commands.removeCommand(dotCommand);
             aceEditor.commands.removeCommand(backspaceCommand);
             aceEditor.commands.removeCommand(AceAutocomplete.startCommand);
         };
+
 
         var consoleCompleter = {
             getCompletions: function(editor, session, pos, prefix, callback) {
