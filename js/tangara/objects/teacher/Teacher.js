@@ -244,7 +244,20 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
     Teacher.prototype.debug = function(value) {
         console.debug(value);
     };
-
+    
+    /**
+     * Checks if two numbers have the same value.
+     * @param {Number} x
+     * @param {Number} y
+     * @returns {Boolean}
+     */
+    Teacher.prototype.equalNumbers = function(x, y) {
+        if (Math.abs(x - y) < 0.0000000001) {
+            return true;
+        }
+        return false;
+    };
+    
     var teacherInstance = new Teacher();
 
     return teacherInstance;
