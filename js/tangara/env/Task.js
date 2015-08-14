@@ -30,7 +30,7 @@ define(['platform-pr', 'json'], function() {
 
 
         this.getHeight = function (callback) {
-            callback(parseInt($("body").outerHeight(true)));
+            callback(800);
         };
 
         this.getState = function (callback) {

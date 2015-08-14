@@ -188,6 +188,11 @@ if (!isCrossDomain()) {
                 delete PmInterface.callbacks[message.messageId];
                 return;
             }
+            if(typeof task === "undefined")
+            {
+                setTimeout(function() { PmInterface.messageCallback(e); }, 250);
+                return;
+            }
             var object = task;
             var functionName = message.request;
             if (message.request.lastIndexOf('grader.', 0) === 0) {
