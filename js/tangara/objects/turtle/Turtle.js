@@ -87,10 +87,10 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
                         p.ty = Math.max(p.ty - stepY, p.destinationY);
                         p.moving = true;
                     }
-                    if (Math.abs(p.tx - p.destinationX) < 0.0000000001) {
+                    if (TUtils.equalNumbers(p.tx - p.destinationX)) {
                         p.tx = p.destinationX;
                     }
-                    if (Math.abs(p.ty - p.destinationY) < 0.0000000001) {
+                    if (TUtils.equalNumbers(p.ty - p.destinationY)) {
                         p.ty = p.destinationY;
                     }
                 }

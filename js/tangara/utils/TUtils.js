@@ -749,6 +749,18 @@ define(['TEnvironment', 'jquery'], function(TEnvironment, $) {
             return $.extend(dest, source);
         };
 
+        /**
+         * Checks if two numbers have the same value.
+         * @param {Number} x
+         * @param {Number} y
+         * @returns {Boolean}
+         */
+        this.equalNumbers = function(x, y) {
+            if (Math.abs(x - y) < 0.0000000001) {
+                return true;
+            }
+            return false;
+        };
     };
     
     var utilInstance = new TUtils();
