@@ -104,11 +104,11 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
             var p = this.p;
             for (var i = 0 ; i < p.coordinates.length ; i += 2) {
                 ctx.beginPath();
-                ctx.moveTo(p.coordinates[i][0] - p.cx, p.coordinates[i][1] - p.cy);
+                ctx.moveTo(p.coordinates[i][0] - p.cx + 50, p.coordinates[i][1] - p.cy + 50);
                 if (i >= p.coordinates.length - 2 && p.trackPath) {
-                    ctx.lineTo(p.tx - p.cx, p.ty - p.cy);
+                    ctx.lineTo(p.tx - p.cx + 50, p.ty - p.cy + 50);
                 } else {
-                    ctx.lineTo(p.coordinates[i + 1][0] - p.cx, p.coordinates[i + 1][1] - p.cy);
+                    ctx.lineTo(p.coordinates[i + 1][0] - p.cx + 50, p.coordinates[i + 1][1] - p.cy + 50);
                 }
                 ctx.closePath();
                 ctx.strokeStyle = p.coordinates[i][2];
