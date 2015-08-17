@@ -5,7 +5,6 @@ define(['platform-pr', 'json'], function() {
         var frame = aFrame;
         
         this.showViews = function(views, callback) {
-            //setInterval(function () { alert(frame.getSolution()); }, 1000);
             if(views.solution) {
                 frame.displaySolution();
             }
@@ -60,6 +59,11 @@ define(['platform-pr', 'json'], function() {
                 } catch(e) {
                     window.console.log(e);
                 }
+            }
+            else {
+                frame.setScore(0);
+                frame.setMessage("");
+                frame.setCode("");
             }
             callback();
         };
