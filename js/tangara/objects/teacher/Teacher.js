@@ -132,7 +132,12 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
     };
     
     Teacher.prototype.setScore = function(value) {
-        score = value;
+        if(-1e-10 < value && value < 1 + 1e-10) {
+            score = value;
+        }
+        else {
+            window.console.log("Score must be between 0 and 1.")
+        }
     };
     
     Teacher.prototype.getScore = function() {
