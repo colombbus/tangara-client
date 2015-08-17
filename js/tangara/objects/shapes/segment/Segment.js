@@ -3,8 +3,8 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'TUtils', 'objects/shapes/
      * Defines Segment, inherited from Polygon.
      * @exports Segment
      */
-    var Segment = function (p1, p2, p3) {
-        Polygon.call(this, p1, p2, p3);
+    var Segment = function (p1, p2) {
+        Polygon.call(this, p1, p2);
     };
 
     Segment.prototype = Object.create(Polygon.prototype);
