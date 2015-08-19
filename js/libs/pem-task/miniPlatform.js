@@ -116,7 +116,7 @@ $(document).ready(function() {
              clearInterval(tryToLoad);
          }
          else {
-             return; //vérifier que ça ne pose pas de problème
+             return;
          }
          task.getMetaData(function (metaData) { res = metaData; });
          if (res.fullFeedback) {

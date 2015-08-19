@@ -5,7 +5,6 @@ define(['platform-pr', 'json'], function() {
         var frame = aFrame;
         
         this.showViews = function(views, callback) {
-            //setInterval(function () { alert(frame.getSolution()); }, 1000);
             if(views.solution) {
                 frame.displaySolution();
             }
@@ -30,7 +29,7 @@ define(['platform-pr', 'json'], function() {
 
 
         this.getHeight = function (callback) {
-            callback(parseInt($("body").outerHeight(true)));
+            callback(800);
         };
 
         this.getState = function (callback) {
@@ -60,6 +59,11 @@ define(['platform-pr', 'json'], function() {
                 } catch(e) {
                     window.console.log(e);
                 }
+            }
+            else {
+                frame.setScore(0);
+                frame.setMessage("");
+                frame.setCode("");
             }
             callback();
         };
