@@ -448,7 +448,30 @@ define(['TEnvironment', 'jquery'], function(TEnvironment, $) {
         this.rgbToHex = function (color) {
             return "#" + this.componentToHex(color[0]) + this.componentToHex(color[1]) + this.componentToHex(color[2]);
         };
+        
+        /**
+         * Convert Hexadecimal color in RGB color.
+         * @param {String} hex
+         * @returns {Number[]}    Color in RGB
+         */
+        this.hexToRgb = function (hex) {
+            var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)] : null;
+        };
 
+        /**
+         * Reverse a color.
+         * @param {Number[]} color
+         * @returns {Number[]}
+         */
+        this.reverseColor = function(color) {
+            var ret = []
+            ret[0] = ((color[0] > 64 && color[0] < 192) ? ((color[0] + 128) % 256) : (255 - color[0]));
+            ret[1] = ((color[1] > 64 && color[1] < 192) ? ((color[1] + 128) % 256) : (255 - color[1]));
+            ret[2] = ((color[2] > 64 && color[2] < 192) ? ((color[2] + 128) % 256) : (255 - color[2]));
+            return ret;
+        }
+        
         /**
          * Sort an array by ASCII. Consideres an upper case as a lower case.
          * @param {String[]} value
