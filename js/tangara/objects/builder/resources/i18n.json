@@ -1,0 +1,17 @@
+{
+    "hide": ["_alwaysMoveForward", "_alwaysMoveBackward", "_alwaysMoveUpward", "_alwaysMoveDownward", "_setImage", "_addImage", "_setTransparent", "_displayImage", "_displayNextImage", "_displayPreviousImage", "_removeImage", "_removeImageSet", "_setCharacter"],
+    "fr": {
+        "methods":[
+            {"name":"_moveForward","translated":"avancer","displayed":"avancer(50)"},
+            {"name":"_moveBackward","translated":"reculer","displayed":"reculer(50)"},
+            {"name":"_moveUpward","translated":"monter","displayed":"monter(50)"},
+            {"name":"_moveDownward","translated":"descendre","displayed":"descendre(50)"},
+            {"name":"_setVelocity","translated":"d\u00e9finirVitesse","displayed":"d\u00e9finirVitesse(100)"},
+            {"name":"_setStep","translated":"d\u00e9finirPas","displayed":"d\u00e9finirPas(50)"},
+            {"name":"_countItems","translated":"compterItems","displayed":"compterItems()"},
+            {"name":"_pickupItem","translated":"ramasserItem","displayed":"ramasserItem()"},
+            {"name":"_dropItem","translated":"déposerItem","displayed":"déposerItem()"},
+            {"name":"_countCarriedItems","translated":"compterItemsRamass\u00e9s","displayed":"compterItemsRamass\u00e9s()"}
+            ]
+    }
+}

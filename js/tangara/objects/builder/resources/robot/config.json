@@ -1,0 +1,9 @@
+{
+    "images": {
+            "forward":["robot.png"],
+            "backward":["robot.png"],
+            "front":["robot.png"]
+        },
+    "durationMove": 1,
+    "durationPause": 1
+}

@@ -431,5 +431,14 @@
             "en": "Segment"
         },
         "parents": true
+    },
+    "Builder": {
+        "path": "builder",
+        "translations": {
+            "fr": "Macon",
+            "es": "TBD",
+            "en": "Builder"
+        },
+        "parents": true
     }
 }
