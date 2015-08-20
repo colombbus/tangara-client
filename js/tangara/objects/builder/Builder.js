@@ -150,6 +150,10 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
         this.gObject.moveDownward();
     };
 
+    /**
+     * Put a brick.
+     * @param {Number} number
+     */
     Builder.prototype._build = function(number) {
         var p = this.gObject.p;
         if (p.arrayX >= p.nbColumns) {
