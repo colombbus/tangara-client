@@ -449,5 +449,14 @@
             "en": "Stopwatch"
         },
         "parents": true
+    },
+    "Calculator": {
+        "path": "calculator",
+        "translations": {
+            "fr": "Calculatrice",
+            "es": "TBD",
+            "en": "Calculator"
+        },
+        "parents": true
     }
 }
