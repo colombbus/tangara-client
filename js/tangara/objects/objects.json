@@ -440,5 +440,14 @@
             "en": "Builder"
         },
         "parents": true
+    },
+    "Stopwatch": {
+        "path": "stopwatch",
+        "translations": {
+            "fr": "Chronomètre",
+            "es": "TBD",
+            "en": "Stopwatch"
+        },
+        "parents": true
     }
 }
