@@ -245,11 +245,15 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
         };
         
         /**
-         * Display the solution
+         * Display or hide the solution
+         * @param {boolean} display or hide the solution
          */
-        this.displaySolution = function() {
-            if (exercise.hasSolution()) {
+        this.displaySolution = function(display) {
+            if (exercise.hasSolution() && display) {
                 $solution.html(exercise.getSolution());
+            }
+            else {
+                $solution.html("");
             }
         };
         // LOG MANAGEMENT
