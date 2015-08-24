@@ -458,5 +458,14 @@
             "en": "Calculator"
         },
         "parents": true
+    },
+     "TArray": {
+        "path": "tarray",
+        "translations": {
+            "fr": "Tableau",
+            "es": "TBD",
+            "en": "TArray"
+        },
+        "parents": true
     }
 }
