@@ -1,4 +1,8 @@
 define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function(TObject, TUtils, TRuntime, TEnvironment) {
+    /**
+     * I'm making sounds right now. /o/
+     * @exports Sound
+     */
     var Sound = function(name) {
         TObject.call(this, name);
 
@@ -15,6 +19,15 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function(TObject, TUti
 
     var graphics = TRuntime.getGraphics();
 
+    /**
+     * Add a new sound.
+     * If "project" is at true, loads it from the project,
+     * else loads it from the object.
+     * @param {String} name
+     * @param {String} set
+     * @param {boolean} project
+     * @returns {asset}
+     */
     Sound.prototype.addSound = function(name, set, project) {
         name = TUtils.getString(name);
         var asset;
@@ -51,22 +64,40 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function(TObject, TUti
         }
         return asset;
     };
+    
+    /**
+     * Calls addSoung with project at true.
+     * @param {String} name
+     * @param {String} set
+     */
     Sound.prototype._addSound = function(name, set) {
         this.addSound(name, set, true);
     };
 
+    /**
+     * Enable or disable Sound's repetition.
+     * @param {Boolean} state
+     */
     Sound.prototype._loop = function(state) {
-        if (state)
-            this.loop = true;
-        else
-            this.loop = false;
+        this.loop = state;
     };
+    
+    /**
+     * Play "name" sound.
+     * Repeats it if state is at true.
+     * @param {String} name
+     */
     Sound.prototype._play = function(name) {
         var asset = this.sounds[name];
         // TODO: wait for loading
         var audio = TRuntime.getGraphics().getAudio();
         audio.play(asset, {loop: this.loop});
     };
+    
+    /**
+     * Stop "name" sound.
+     * @param {String} name
+     */
     Sound.prototype._stop = function(name) {
         var asset = this.sounds[name];
         var audio = TRuntime.getGraphics().getAudio();
