@@ -5,9 +5,7 @@ define(['platform-pr', 'json'], function() {
         var frame = aFrame;
         
         this.showViews = function(views, callback) {
-            if(views.solution) {
-                frame.displaySolution();
-            }
+            frame.displaySolution(views.solution);
             callback();
         };
         

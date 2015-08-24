@@ -441,12 +441,21 @@
         },
         "parents": true
     },
-    "TArray": {
-        "path": "tarray",
+    "Stopwatch": {
+        "path": "stopwatch",
         "translations": {
-            "fr": "Tableau",
+            "fr": "Chronomètre",
             "es": "TBD",
-            "en": "TArray"
+            "en": "Stopwatch"
+        },
+        "parents": true
+    },
+    "Calculator": {
+        "path": "calculator",
+        "translations": {
+            "fr": "Calculatrice",
+            "es": "TBD",
+            "en": "Calculator"
         },
         "parents": true
     }
