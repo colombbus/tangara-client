@@ -83,8 +83,9 @@ define(['platform-pr', 'json'], function() {
                 title : "title",
                 authors : ["Colombbus - France-IOI"],
                 license : "license",
-                minWidth : 800,
-                fullFeedback : true
+                minWidth : "auto",
+                fullFeedback : true,
+                autoHeight : true
             };
             callback(metaData);
         };
