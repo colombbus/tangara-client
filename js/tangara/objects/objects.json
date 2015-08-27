@@ -467,5 +467,14 @@
             "en": "TArray"
         },
         "parents": true
+    },
+     "List": {
+        "path": "list",
+        "translations": {
+            "fr": "Liste",
+            "es": "TBD",
+            "en": "List"
+        },
+        "parents": true
     }
 }
