@@ -101,7 +101,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
 
         var validateStep = function(message) {
             if(typeof message === "undefined" || message === "") {
-                message = "Bravo, vous avez réussi !";
+                message = "Bravo, tu as réussi !";
             }
             showMessage(message);
         };
