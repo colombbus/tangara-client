@@ -28,7 +28,7 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
     var frame = false;
     var values = {};
     var message = "";
-    var scoreLimit = 1;
+    var scoreLimit = 0;
     var score = 0;
     
     /**
@@ -187,7 +187,7 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
      * @returns {Boolean}
      */
     function taskValidated() {
-        return score > scoreLimit;
+        return score > scoreLimit + 1e-10;
     };
     
     Teacher.prototype.taskValidated = function() {

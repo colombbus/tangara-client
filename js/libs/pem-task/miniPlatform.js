@@ -33,13 +33,13 @@ var miniPlatformShowSolution = function() {
 };
 
 var miniPlatformPreviewGrade = function(answer) {
-   var minScore = -3;
+   var minScore = 0;
    var res;
    task.getMetaData(function (metaData) { res = metaData; });
    if (res.fullFeedback) {
       minScore = 0;
    }
-   var maxScore = 6;
+   var maxScore = 100;
    var score;
    var showGrade = function(score) {
       if ($("#previewScorePopup").length === 0) {
