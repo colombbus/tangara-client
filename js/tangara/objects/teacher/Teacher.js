@@ -28,7 +28,7 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
     var frame = false;
     var values = {};
     var message = "";
-    var scoreLimit = 0;
+    var scoreLimit = 0.5;
     var score = 0;
     
     /**
@@ -136,9 +136,7 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
             score = value;
         }
         else {
-            //display the problem, a bit dirty
-            message = "Score must be between 0 and 1.";
-            window.console.log(message);
+            log("Score must be between 0 and 1.");
         }
     };
     
@@ -179,6 +177,9 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
      * @param {number} value
      */
     Teacher.prototype.scoreToValidate = function(value) {
+        if (value < 0.5) {
+           log("Fixed score to validate is too low.");
+        }
         scoreLimit = value;
     };
     
@@ -187,7 +188,7 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
      * @returns {Boolean}
      */
     function taskValidated() {
-        return score > scoreLimit + 1e-10;
+        return score > scoreLimit - 1e-10;
     };
     
     Teacher.prototype.taskValidated = function() {
@@ -195,9 +196,17 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
     };
     
     /**
-     * Validate or invalidate the task
+     * Validate or invalidate the task, need to be appeal by 
+     * @param {String} value1 is an optionnal message
+     * @param {String} value2 is an optionnal score
      */
-    Teacher.prototype.done = function() {
+    Teacher.prototype.done = function(value1, value2) {
+        if(typeof value1 !== "undefined") {
+           message = value1;
+        }
+        if(typeof value2 !== "undefined") {
+           score = value2;
+        }
         if (taskValidated()) {
             validateStep(getMessage());
         }
