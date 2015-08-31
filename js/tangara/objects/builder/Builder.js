@@ -1,7 +1,7 @@
 define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'objects/platform/Platform'], function($, TUtils, SynchronousManager, Robot, Platform) {
     /**
      * Defines Builder, inherited from Robot.
-     * The main difference with Robot is that it executes commands one by one.
+     * It's a robot which can deposit tiles.
      * @exports Builder
      */
     var Builder = function() {
@@ -28,7 +28,8 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
                 nbRows: 0,
                 nbColumns: 0,
                 x: 38,
-                y: 29
+                y: 29,
+                tiles: 0
             }, props), defaultProps);
         },
         moveForward: function() {
@@ -86,6 +87,7 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
         },
         addTile: function(number) {
             this.p.platform[this.p.arrayX][this.p.arrayY] = number;
+            this.p.tiles += 1;
         },
         draw: function(ctx) {
             var p = this.p;
