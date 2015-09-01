@@ -32,37 +32,37 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
                 tiles: 0
             }, props), defaultProps);
         },
-        moveForward: function() {
+        moveForward: function(nb) {
             this.synchronousManager.begin();
             this.perform(function() {
                 this.p.inMovement = true;
-                this.p.arrayX += 1;
+                this.p.arrayX += nb;
                 this.p.destinationX += this.p.length;
-            }, []);
+            }, [nb]);
         },
-        moveBackward: function() {
+        moveBackward: function(nb) {
             this.synchronousManager.begin();
             this.perform(function() {
                 this.p.inMovement = true;
-                this.p.arrayX -= 1;
+                this.p.arrayX -= nb;
                 this.p.destinationX -= this.p.length;
-            }, []);
+            }, [nb]);
         },
-        moveUpward: function() {
+        moveUpward: function(nb) {
             this.synchronousManager.begin();
             this.perform(function() {
                 this.p.inMovement = true;
-                this.p.arrayY -= 1;
+                this.p.arrayY -= nb;
                 this.p.destinationY -= this.p.length;
-            }, []);
+            }, [nb]);
         },
-        moveDownward: function() {
+        moveDownward: function(nb) {
             this.synchronousManager.begin();
-            this.perform(function() {
+            this.perform(function(nb) {
                 this.p.inMovement = true;
                 this.p.arrayY += 1;
                 this.p.destinationY += this.p.length;
-            }, []);
+            }, [nb]);
         },
         addRows: function() {
             for (var i = this.p.nbRows ; i <= this.p.arrayY ; i++) {
@@ -126,31 +126,63 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
     });
     
     /**
-     * Move Builder of "length" pixels forward (to the right).
+     * Move Builder of "number" tiles forward (to the right).
+     * If no parameter is given, move it one case forward.
+     * A tile corresponds to 'length' pixels.
+     * @param {Integer} number
      */
-    Builder.prototype._moveForward = function() {
-        this.gObject.moveForward();
+    Builder.prototype._moveForward = function(number) {
+        if (typeof number !== 'undefined') {
+            number = TUtils.getInteger(number);
+            this.gObject.moveForward(number);
+        } else {
+            this.gObject.moveForward(1);
+        }   
     };
 
     /**
-     * Move Builder of "length" pixels backward (to the left).
+     * Move Builder of "number" tiles backward (to the left).
+     * If no parameter is given, move it one case backward.
+     * A tile corresponds to 'length' pixels.
+     * @param {Integer} number
      */
-    Builder.prototype._moveBackward = function() {
-        this.gObject.moveBackward();
+    Builder.prototype._moveBackward = function(number) {
+        if (typeof number !== 'undefined') {
+            number = TUtils.getInteger(number);
+            this.gObject.moveBackward(number);
+        } else {
+            this.gObject.moveBackward(1);
+        }   
     };
-    
+   
     /**
-     * Move Builder of "length" pixels upward.
+     * Move Builder of "number" tiles upward.
+     * If no parameter is given, move it one case upward.
+     * A tile corresponds to 'length' pixels.
+     * @param {Integer} number
      */
-    Builder.prototype._moveUpward = function() {
-        this.gObject.moveUpward();
+    Builder.prototype._moveUpward = function(number) {
+        if (typeof number !== 'undefined') {
+            number = TUtils.getInteger(number);
+            this.gObject.moveUpward(number);
+        } else {
+            this.gObject.moveUpward(1);
+        }   
     };
-    
+
     /**
-     * Move Builder of "length" pixels downward.
+     * Move Builder of "number" tiles downward.
+     * If no parameter is given, move it one case downward.
+     * A tile corresponds to 'length' pixels.
+     * @param {Integer} number
      */
-    Builder.prototype._moveDownward = function() {
-        this.gObject.moveDownward();
+    Builder.prototype._moveDownward = function(number) {
+        if (typeof number !== 'undefined') {
+            number = TUtils.getInteger(number);
+            this.gObject.moveDownward(number);
+        } else {
+            this.gObject.moveDownward(1);
+        }   
     };
 
     /**
