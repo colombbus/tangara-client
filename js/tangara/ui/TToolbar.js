@@ -77,7 +77,6 @@ define(['ui/TComponent', 'jquery', 'TEnvironment', 'TUI'], function(TComponent, 
             // Start with editor mode disabled
             self.disableProgramOptions();
             self.disableResourceOptions();
-            $buttonExecute.hide();
 
             if (typeof callback !== 'undefined') {
                 callback.call(this, component);
