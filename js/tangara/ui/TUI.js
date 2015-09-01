@@ -465,9 +465,11 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 log.saveScroll();
                 log.hide();
                 frame.lowerSeparator(log.getHeight());
+                frame.disableSeparator();
                 minimized = true;
             } else {
                 log.show();
+                frame.enableSeparator();
                 frame.raiseSeparator(log.getHeight());
                 log.restoreScroll();
                 if (!editorEnabled) {

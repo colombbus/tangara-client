@@ -58,6 +58,14 @@ body, html {
     background:url("../images/handle.png") no-repeat scroll 50% 1px #EBEBEB;
 }
 
+.split-pane-divider.disabled  {
+    background-image:none;
+}
+
+.split-pane.horizontal-percent > .split-pane-divider.disabled {
+    cursor:default;
+}
+
 /* TCanvas */
 
 #tcanvas-outer {
