@@ -239,7 +239,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
             var error = log.getError(index);
             if (error.getProgramName() === null) {
                 // error from command
-                this.enableConsole();
+                this.disableEditor();
                 console.setValue(error.getCode());
                 console.focus();
             } else {
