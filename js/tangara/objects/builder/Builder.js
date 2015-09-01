@@ -21,14 +21,14 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
     Builder.prototype.gClass = graphics.addClass("TRobot", "TBuilder", {
         init: function(props, defaultProps) {
             this._super(TUtils.extend({
-                length: 128,
+                length: 88,
                 platform: [],
                 arrayX: 0,
                 arrayY: 0,
                 nbRows: 0,
                 nbColumns: 0,
-                x: 38,
-                y: 29,
+                x: 18,
+                y: 9,
                 tiles: 0
             }, props), defaultProps);
         },
@@ -86,8 +86,9 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
             this.p.nbColumns = i;
         },
         addTile: function(number) {
+            if (this.p.platform[this.p.arrayX][this.p.arrayY] === 0)
+                this.p.tiles += 1;
             this.p.platform[this.p.arrayX][this.p.arrayY] = number;
-            this.p.tiles += 1;
         },
         draw: function(ctx) {
             var p = this.p;
