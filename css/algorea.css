@@ -1,0 +1,7 @@
+#menu-logo {
+   background: red;
+}
+
+#menu-logo-content:after {
+   content: "Declick";
+}
