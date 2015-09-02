@@ -6,7 +6,6 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
      */
     var Builder = function() {
         Robot.call(this, "robot");
-        this.step = 50;
         this.synchronousManager = new SynchronousManager();
         this.gObject.synchronousManager = this.synchronousManager;
         var gObject = this.gObject;
@@ -21,48 +20,45 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
     Builder.prototype.gClass = graphics.addClass("TRobot", "TBuilder", {
         init: function(props, defaultProps) {
             this._super(TUtils.extend({
-                length: 88,
                 platform: [],
                 arrayX: 0,
                 arrayY: 0,
                 nbRows: 0,
                 nbColumns: 0,
-                x: 18,
-                y: 9,
                 tiles: 0
             }, props), defaultProps);
         },
-        moveForward: function(nb) {
+        moveForward: function(value) {
             this.synchronousManager.begin();
-            this.perform(function() {
+            this.perform(function(value) {
                 this.p.inMovement = true;
-                this.p.arrayX += nb;
-                this.p.destinationX += this.p.length;
-            }, [nb]);
+                this.p.arrayX += value;
+                this.p.destinationX += value * this.p.length;
+            }, [value]);
         },
-        moveBackward: function(nb) {
+        moveBackward: function(value) {
             this.synchronousManager.begin();
-            this.perform(function() {
+            this.perform(function(value) {
                 this.p.inMovement = true;
-                this.p.arrayX -= nb;
-                this.p.destinationX -= this.p.length;
-            }, [nb]);
+                this.p.arrayX -= value;
+                this.p.destinationX -= value * this.p.length;
+            }, [value]);
         },
-        moveUpward: function(nb) {
+        moveUpward: function(value) {
             this.synchronousManager.begin();
-            this.perform(function() {
+            this.perform(function(value) {
                 this.p.inMovement = true;
-                this.p.arrayY -= nb;
-                this.p.destinationY -= this.p.length;
-            }, [nb]);
+                this.p.arrayY -= value;
+                this.p.destinationY -= value * this.p.length;
+            }, [value]);
         },
-        moveDownward: function(nb) {
+        moveDownward: function(value) {
             this.synchronousManager.begin();
-            this.perform(function(nb) {
+            this.perform(function(value) {
                 this.p.inMovement = true;
                 this.p.arrayY += 1;
-                this.p.destinationY += this.p.length;
-            }, [nb]);
+                this.p.destinationY += value * this.p.length;
+            }, [value]);
         },
         addRows: function() {
             for (var i = this.p.nbRows ; i <= this.p.arrayY ; i++) {
@@ -124,66 +120,6 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
             }
         }
     });
-    
-    /**
-     * Move Builder of "number" tiles forward (to the right).
-     * If no parameter is given, move it one case forward.
-     * A tile corresponds to 'length' pixels.
-     * @param {Integer} number
-     */
-    Builder.prototype._moveForward = function(number) {
-        if (typeof number !== 'undefined') {
-            number = TUtils.getInteger(number);
-            this.gObject.moveForward(number);
-        } else {
-            this.gObject.moveForward(1);
-        }   
-    };
-
-    /**
-     * Move Builder of "number" tiles backward (to the left).
-     * If no parameter is given, move it one case backward.
-     * A tile corresponds to 'length' pixels.
-     * @param {Integer} number
-     */
-    Builder.prototype._moveBackward = function(number) {
-        if (typeof number !== 'undefined') {
-            number = TUtils.getInteger(number);
-            this.gObject.moveBackward(number);
-        } else {
-            this.gObject.moveBackward(1);
-        }   
-    };
-   
-    /**
-     * Move Builder of "number" tiles upward.
-     * If no parameter is given, move it one case upward.
-     * A tile corresponds to 'length' pixels.
-     * @param {Integer} number
-     */
-    Builder.prototype._moveUpward = function(number) {
-        if (typeof number !== 'undefined') {
-            number = TUtils.getInteger(number);
-            this.gObject.moveUpward(number);
-        } else {
-            this.gObject.moveUpward(1);
-        }   
-    };
-
-    /**
-     * Move Builder of "number" tiles downward.
-     * If no parameter is given, move it one case downward.
-     * A tile corresponds to 'length' pixels.
-     * @param {Integer} number
-     */
-    Builder.prototype._moveDownward = function(number) {
-        if (typeof number !== 'undefined') {
-            number = TUtils.getInteger(number);
-            this.gObject.moveDownward(number);
-        } else {
-            this.gObject.moveDownward(1);
-        }   
-    };
 
     /**
      * Put a brick.
