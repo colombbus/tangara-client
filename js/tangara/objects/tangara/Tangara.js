@@ -49,8 +49,9 @@ define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink
      */
     Tangara.prototype._loadScript = function(name) {
         name = TUtils.getString(name);
-        var statements = TLink.getProgramStatements(name);
-        TRuntime.executeStatements(statements, name);
+        TLink.getProgramStatements(name, function(statements) {
+            TRuntime.executeStatements(statements, name);        
+        });
     };
 
     /**

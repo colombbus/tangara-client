@@ -35,33 +35,73 @@ define(['ui/TComponent', 'jquery', 'TEnvironment', 'TUI'], function(TComponent, 
             $buttonEditor.click(function(e) {
                 TUI.toggleEditor();
             });
+            
+            // prevent double click from toggling console 
+            $buttonEditor.dblclick(function(event){
+                event.stopPropagation();
+            });
+            
             $buttonExecute.append(TEnvironment.getMessage('button-execute'));
             $buttonExecute.click(function(e) {
                 TUI.execute();
             });
+            // prevent double click from toggling console 
+            $buttonExecute.dblclick(function(event){
+                event.stopPropagation();
+            });
+
             $optionClear.append(TEnvironment.getMessage('option-clear'));
             $optionClear.click(function(e) {
                 TUI.clear(true);
             });
+            // prevent double click from toggling console 
+            $optionClear.dblclick(function(event){
+                event.stopPropagation();
+            });
+
             $optionDesignMode.append(TEnvironment.getMessage('option-design-mode'));
             $optionDesignMode.click(function(e) {
                 TUI.toggleDesignMode();
             });
+            // prevent double click from toggling console 
+            $optionDesignMode.dblclick(function(event){
+                event.stopPropagation();
+            });
+            
             $optionSaveProgram.append(TEnvironment.getMessage('option-save-program'));
             $optionSaveProgram.click(function(e) {
                 TUI.saveProgram();
             });
+            // prevent double click from toggling console 
+            $optionSaveProgram.dblclick(function(event){
+                event.stopPropagation();
+            });
+            
             $optionNewProgram.append(TEnvironment.getMessage('option-new-program'));
             $optionNewProgram.click(function(e) {
                 TUI.newProgram();
             });
+            // prevent double click from toggling console 
+            $optionNewProgram.dblclick(function(event){
+                event.stopPropagation();
+            });
+            
             $optionNewResource.append(TEnvironment.getMessage('option-new-resource'));
             $optionNewResource.click(function(e) {
                 TUI.newResource();
             });
+            // prevent double click from toggling console 
+            $optionNewResource.dblclick(function(event){
+                event.stopPropagation();
+            });
+
             $optionDelete.append(TEnvironment.getMessage('option-delete'));
             $optionDelete.click(function(e) {
                 TUI.delete();
+            });
+            // prevent double click from toggling console 
+            $optionDelete.dblclick(function(event){
+                event.stopPropagation();
             });
 
 
@@ -77,7 +117,6 @@ define(['ui/TComponent', 'jquery', 'TEnvironment', 'TUI'], function(TComponent, 
             // Start with editor mode disabled
             self.disableProgramOptions();
             self.disableResourceOptions();
-            $buttonExecute.hide();
 
             if (typeof callback !== 'undefined') {
                 callback.call(this, component);

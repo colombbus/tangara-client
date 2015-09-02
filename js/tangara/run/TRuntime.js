@@ -243,8 +243,12 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             if (typeof programName === 'undefined') {
                 programName = null;
             }
-            var statements = object.getStatements();
-            this.executeStatements(statements, programName);
+            try {
+                var statements = object.getStatements();
+                this.executeStatements(statements, programName);
+            } catch (e) {
+                handleError(e);
+            }
         };
         
         // LOG MANAGEMENT

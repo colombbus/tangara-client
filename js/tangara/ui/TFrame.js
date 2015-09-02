@@ -5,6 +5,7 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui
         var $frame, $top, $separator, $bottom, $loading;
 
         var frame = this;
+        var separatorEnabled = true;
 
         TComponent.call(this, "TFrame.html", function(component) {
             waiting = ['canvas', 'editor', 'sidebar', 'toolbar', 'console', 'log'];
@@ -64,6 +65,12 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui
             });
         });
 
+        var checkSeparatorEnabled = function(event) {
+            if (!separatorEnabled) {
+                event.stopImmediatePropagation();
+            }
+        };
+
         this.displayed = function() {
             canvas.displayed();
             editor.displayed();
@@ -71,6 +78,8 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui
             console.displayed();
             toolbar.displayed();
             log.displayed();
+            // Important to attach handler before calling splitPane
+            $separator.on("mousedown", checkSeparatorEnabled);
             $('.split-pane').splitPane();
             initialized = true;
             $loading.fadeOut(1000, function() {
@@ -92,6 +101,17 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui
 
         this.raiseSeparator = function(value) {
             this.lowerSeparator(-value);
+        };
+        
+        this.disableSeparator = function() {
+            separatorEnabled = false;
+            $separator.addClass("disabled");
+        };
+        
+        this.enableSeparator = function() {
+            separatorEnabled = true;
+            $separator.removeClass("disabled");
+            //$separator.show();
         };
 
         // Declare global functions
