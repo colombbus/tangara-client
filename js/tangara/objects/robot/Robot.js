@@ -6,7 +6,6 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
      */
     var Robot = function() {
         Hero.call(this, "robot");
-        this.step = 50;
         this.synchronousManager = new SynchronousManager();
         this.gObject.synchronousManager = this.synchronousManager;
         var gObject = this.gObject;
@@ -22,9 +21,12 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
     Robot.prototype.gClass = graphics.addClass("THero", "TRobot", {
         init: function(props, defaultProps) {
             this._super(TUtils.extend({
+                length: 80,
                 inMovement: false,
                 encountered: [],
-                carriedItems: []
+                carriedItems: [],
+                x: 14,
+                y: 5
             }, props), defaultProps);
         },
         step: function(dt) {
@@ -49,28 +51,28 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
             this.synchronousManager.begin();
             this.perform(function(value) {
                 this.p.inMovement = true;
-                this.p.destinationX += value;
+                this.p.destinationX += value * this.p.length;
             }, [value]);
         },
         moveBackward: function(value) {
             this.synchronousManager.begin();
             this.perform(function(value) {
                 this.p.inMovement = true;
-                this.p.destinationX -= value;
+                this.p.destinationX -= value * this.p.length;
             }, [value]);
         },
         moveUpward: function(value) {
             this.synchronousManager.begin();
             this.perform(function(value) {
                 this.p.inMovement = true;
-                this.p.destinationY -= value;
+                this.p.destinationY -= value * this.p.length;
             }, [value]);
         },
         moveDownward: function(value) {
             this.synchronousManager.begin();
             this.perform(function(value) {
                 this.p.inMovement = true;
-                this.p.destinationY += value;
+                this.p.destinationY += value * this.p.length;
             }, [value]);
         },
         countItems: function() {
@@ -111,57 +113,65 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
     // MOVEMENT MANAGEMENT
     
     /**
-     * Move Sprite of "value" pixels forward (to the right).
-     * if "value" is undefined, always move forward.
-     * @param {Number} value
+     * Move Robot of "number" tiles forward (to the right).
+     * If no parameter is given, move it one case forward.
+     * A tile corresponds to 'length' pixels.
+     * @param {Integer} number
      */
-    Robot.prototype._moveForward = function(value) {
-        if (typeof value === 'undefined') {
-            value = this.step;
-        }
-        value = TUtils.getInteger(value);
-        this.gObject.moveForward(value);
+    Robot.prototype._moveForward = function(number) {
+        if (typeof number !== 'undefined') {
+            number = TUtils.getInteger(number);
+            this.gObject.moveForward(number);
+        } else {
+            this.gObject.moveForward(1);
+        }   
     };
     
     /**
-     * Move Sprite of "value" pixels backward (to the left).
-     * if "value" is undefined, always move backward.
-     * @param {Number} value
+     * Move Robot of "number" tiles backward (to the left).
+     * If no parameter is given, move it one case backward.
+     * A tile corresponds to 'length' pixels.
+     * @param {Integer} number
      */
-    Robot.prototype._moveBackward = function(value) {
-        if (typeof value === 'undefined') {
-            value = this.step;
-        }
-        value = TUtils.getInteger(value);
-        this.gObject.moveBackward(value);
+    Robot.prototype._moveBackward = function(number) {
+        if (typeof number !== 'undefined') {
+            number = TUtils.getInteger(number);
+            this.gObject.moveBackward(number);
+        } else {
+            this.gObject.moveBackward(1);
+        }   
     };
-    
+   
     /**
-     * Move Sprite of "value" pixels upward.
-     * if "value" is undefined, always move upward.
-     * @param {Number} value
+     * Move Robot of "number" tiles upward.
+     * If no parameter is given, move it one case upward.
+     * A tile corresponds to 'length' pixels.
+     * @param {Integer} number
      */
-    Robot.prototype._moveUpward = function(value) {
-        if (typeof value === 'undefined') {
-            value = this.step;
-        }
-        value = TUtils.getInteger(value);
-        this.gObject.moveUpward(value);
+    Robot.prototype._moveUpward = function(number) {
+        if (typeof number !== 'undefined') {
+            number = TUtils.getInteger(number);
+            this.gObject.moveUpward(number);
+        } else {
+            this.gObject.moveUpward(1);
+        }   
     };
-    
+
     /**
-     * Move Sprite of "value" pixels downward.
-     * if "value" is undefined, always move downward.
-     * @param {Number} value
+     * Move Robot of "number" tiles downward.
+     * If no parameter is given, move it one case downward.
+     * A tile corresponds to 'length' pixels.
+     * @param {Integer} number
      */
-    Robot.prototype._moveDownward = function(value) {
-        if (typeof value === 'undefined') {
-            value = this.step;
-        }
-        value = TUtils.getInteger(value);
-        this.gObject.moveDownward(value);
+    Robot.prototype._moveDownward = function(number) {
+        if (typeof number !== 'undefined') {
+            number = TUtils.getInteger(number);
+            this.gObject.moveDownward(number);
+        } else {
+            this.gObject.moveDownward(1);
+        }   
     };
-    
+
     /**
      * Move Sprite downward while nothing stops it.
      */
