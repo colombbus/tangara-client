@@ -173,30 +173,6 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
     };
 
     /**
-     * Move Sprite downward while nothing stops it.
-     */
-    Robot.prototype._alwaysMoveDownward = function() {
-    };
-
-    /**
-     * Move Sprite upward while nothing stops it.
-     */
-    Robot.prototype._alwaysMoveUpward = function() {
-    };
-
-    /**
-     * Move Sprite backward while nothing stops it.
-     */
-    Robot.prototype._alwaysMoveBackward = function() {
-    };
-    
-    /**
-     * Move Sprite forward while nothing stops it.
-     */
-    Robot.prototype._alwaysMoveForward = function() {
-    };
-
-    /**
      * Set the base value of movements.
      * It's the value used if no parameter are entered to movement actions.
      * @param {Number} value
