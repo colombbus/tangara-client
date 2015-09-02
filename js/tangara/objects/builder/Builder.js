@@ -21,44 +21,10 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
         init: function(props, defaultProps) {
             this._super(TUtils.extend({
                 platform: [],
-                arrayX: 0,
-                arrayY: 0,
                 nbRows: 0,
                 nbColumns: 0,
                 tiles: 0
             }, props), defaultProps);
-        },
-        moveForward: function(value) {
-            this.synchronousManager.begin();
-            this.perform(function(value) {
-                this.p.inMovement = true;
-                this.p.arrayX += value;
-                this.p.destinationX += value * this.p.length;
-            }, [value]);
-        },
-        moveBackward: function(value) {
-            this.synchronousManager.begin();
-            this.perform(function(value) {
-                this.p.inMovement = true;
-                this.p.arrayX -= value;
-                this.p.destinationX -= value * this.p.length;
-            }, [value]);
-        },
-        moveUpward: function(value) {
-            this.synchronousManager.begin();
-            this.perform(function(value) {
-                this.p.inMovement = true;
-                this.p.arrayY -= value;
-                this.p.destinationY -= value * this.p.length;
-            }, [value]);
-        },
-        moveDownward: function(value) {
-            this.synchronousManager.begin();
-            this.perform(function(value) {
-                this.p.inMovement = true;
-                this.p.arrayY += 1;
-                this.p.destinationY += value * this.p.length;
-            }, [value]);
         },
         addRows: function() {
             for (var i = this.p.nbRows ; i <= this.p.arrayY ; i++) {

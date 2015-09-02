@@ -25,6 +25,8 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
                 inMovement: false,
                 encountered: [],
                 carriedItems: [],
+                arrayX: 0,
+                arrayY: 0,
                 x: 14,
                 y: 5
             }, props), defaultProps);
@@ -51,6 +53,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
             this.synchronousManager.begin();
             this.perform(function(value) {
                 this.p.inMovement = true;
+                this.p.arrayX += value;
                 this.p.destinationX += value * this.p.length;
             }, [value]);
         },
@@ -58,6 +61,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
             this.synchronousManager.begin();
             this.perform(function(value) {
                 this.p.inMovement = true;
+                this.p.arrayX -= value;
                 this.p.destinationX -= value * this.p.length;
             }, [value]);
         },
@@ -65,6 +69,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
             this.synchronousManager.begin();
             this.perform(function(value) {
                 this.p.inMovement = true;
+                this.p.arrayY -= value;
                 this.p.destinationY -= value * this.p.length;
             }, [value]);
         },
@@ -72,6 +77,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
             this.synchronousManager.begin();
             this.perform(function(value) {
                 this.p.inMovement = true;
+                this.p.arrayY += 1;
                 this.p.destinationY += value * this.p.length;
             }, [value]);
         },
