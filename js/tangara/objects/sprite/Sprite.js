@@ -369,6 +369,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
     Sprite.prototype._alwaysMoveBackward = function() {
         this.gObject.alwaysMoveBackward();
     };
+    
     /**
      * Move Sprite of "value" pixels upward.
      * if "value" is undefined, always move upward.
@@ -486,6 +487,11 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
         }
     };
 
+    /**
+     * Call removeImage. (Useless ?)
+     * @param {String} name
+     * @param {String} set
+     */
     Sprite.prototype._removeImage = function(name, set) {
         this.removeImage(name, set);
     };
@@ -696,10 +702,19 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
         this.gObject.addCollisionCommand(param1, param2);
     };
 
+    /**
+     * Call _ifCollision with inverted paramters.
+     * @param {String} who      Object or Category linked to collision
+     * @param {String} command  Command to execute if collision
+     */
     Sprite.prototype._ifCollisionWith = function(who, command) {
         this._ifCollision(command, who);
     };
 
+    /**
+     * Get the string corresponding to Sprite.
+     * @returns {String}
+     */
     Sprite.prototype.toString = function() {
         return this.gObject.toString();
     };
@@ -732,10 +747,6 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
                 parent.setDisplayedImage(name);
             }
         });
-    };
-
-    Sprite.prototype.couleurTransparente = function(red, green, blue) {
-        this._setTransparent(red, green, blue);
     };
     
     /**
