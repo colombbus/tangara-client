@@ -23,8 +23,8 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'TUtils', 'objects/shapes/
                 initVertices: false,
                 fill: false,
                 tangle: 0,
-                tx: 50,
-                ty: 50,
+                tx: 0,
+                ty: 0
             }, props), defaultProps);
         },
         setVertices: function (value) {
