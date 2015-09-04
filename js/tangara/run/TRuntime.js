@@ -209,13 +209,16 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
 
         // COMMANDS EXECUTION
 
-        var handleError = function(err) {
+        var handleError = function(err, programName) {
             var error;
             if (!(err instanceof TError)) {
                 error = new TError(err);
                 error.detectError();
             } else {
                 error = err;
+            }
+            if (typeof programName !== 'undefined') {
+                error.setProgramName(programName);
             }
             if (typeof log !== 'undefined') {
                 log.addError(error);
@@ -247,7 +250,7 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
                 var statements = object.getStatements();
                 this.executeStatements(statements, programName);
             } catch (e) {
-                handleError(e);
+                handleError(e, programName);
             }
         };
         
