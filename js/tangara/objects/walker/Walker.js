@@ -74,8 +74,8 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
             	// block encountered
                 this.p.x -= col.separate[0];
                 this.p.y -= col.separate[1];
+                this.stop();
                 if (this.p.mayFall) {
-                    this.p.destinationY = this.p.y;
                     if (col.normalY < -0.3 && this.p.vy > 0) {
                         // landed
                         this.p.vy = 0;
