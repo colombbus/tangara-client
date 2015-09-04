@@ -26,7 +26,8 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
                 jumpDelay: 10,
                 jumpAvailable: 0,
                 jumpSpeed: -300,
-                waitingForBlocks: 0
+                waitingForBlocks: 0,
+                blocked:false
             }, props), defaultProps);
             this.blocks = new Array();
         },
@@ -58,6 +59,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
                 }
                 // Look for blocks or platforms
                 var skip = 0;
+                this.p.blocked = false;
                 var collided = this.stage.TsearchSkip(this, TGraphicalObject.TYPE_BLOCK|TGraphicalObject.TYPE_PLATFORM, skip);
                 // Max 2 overlapping blocks are searched
                 while (collided !== false && skip < 2) {
@@ -72,6 +74,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
             var id = object.getId();
             if ((object.p.type === TGraphicalObject.TYPE_PLATFORM && this.blocks.indexOf(id) > -1) || (object.p.type === TGraphicalObject.TYPE_BLOCK && this.blocks.indexOf(id) > -1 && !object.checkTransparency(this, col))) {
             	// block encountered
+                this.p.blocked = true;
                 this.p.x -= col.separate[0];
                 this.p.y -= col.separate[1];
                 if (this.p.mayFall) {
