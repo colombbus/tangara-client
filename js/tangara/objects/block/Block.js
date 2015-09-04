@@ -64,7 +64,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
                         separateXL = i + 1;
                         clear = false;
                     }
-                    index = objectX + objectWidth - i;
+                    index = objectX + objectWidth - 1 - i;
                     if ((typeof mask[middleY][index] !== 'undefined') && !mask[middleY][index]) {
                         separateXR = i + 1;
                         clear = false;
