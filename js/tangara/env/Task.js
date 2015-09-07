@@ -13,8 +13,8 @@ define(['platform-pr', 'json'], function() {
             var views = {
                 task: {},
                 solution: {},
-                hint: {requires: "task"},
-                forum: {requires: "task"},
+                /*hint: {requires: "task"},
+                forum: {requires: "task"},*/
                 editor: {requires: "task"}
             };
             callback(views);
