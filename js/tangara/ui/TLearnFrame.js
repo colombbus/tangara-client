@@ -1,4 +1,4 @@
-define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRuntime', 'TEnvironment', 'TParser', 'TExercise', 'TError', 'platform-pr', 'miniPlatform'], function(TComponent, $, TLearnCanvas, TLearnEditor, TRuntime, TEnvironment, TParser, TExercise, TError) {
+define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRuntime', 'TEnvironment', 'TParser', 'TExercise', 'TError', 'platform-pr'], function(TComponent, $, TLearnCanvas, TLearnEditor, TRuntime, TEnvironment, TParser, TExercise, TError) {
     function TLearnFrame(callback) {
         var $lesson, $lessonContent, $message, $messageContent, $instructions;
         var canvas, editor;
