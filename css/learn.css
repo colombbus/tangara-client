@@ -77,6 +77,8 @@ body {
     background-color:#5e5e5e;
     padding:10px;
     color:#FFFFFF;
+    height:100%;
+    box-sizing:border-box;
     position:relative;
 }
 
