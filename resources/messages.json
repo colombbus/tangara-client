@@ -115,6 +115,8 @@
         "button-help":"Aide",
         "button-previous":"Précédent",
         "button-next":"Suivant",
+        "button-check":"Vérifier",
+        "button-erase":"Effacer",
         "repeat-keyword":"répéter"
     }
 }

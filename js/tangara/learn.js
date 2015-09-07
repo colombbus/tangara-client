@@ -96,11 +96,13 @@ function load() {
                         frame.displayed();
                         // trigger resize in order for canvas to update its size (and remove the 5px bottom margin)
                         $(window).resize();
-                        frame.init();
                         if (isNaN(exerciseId)) {
                             window.console.error("Could not find exercise id");
+                            frame.init();
                         } else {
-                            frame.loadExercise(exerciseId);
+                            frame.loadExercise(exerciseId, function() {
+                                frame.init();
+                            });
                         }
                     });
                 });
@@ -109,13 +111,12 @@ function load() {
     });
 }
 
-/*var loading = new Image();
+var loading = new Image();
 loading.src = "images/loader2.gif";
 if (loading.complete) {
     load();
 } else {
     loading.onload = load();
-}*/
-load();
+}
 
 

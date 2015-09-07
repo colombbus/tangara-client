@@ -2,18 +2,36 @@
 	<div id="tlearnframe-main">
 		<div id="tlearnframe-left">
 			<div id="tlearnframe-instruction">
-				<div id="tlearnframe-instructions"></div>
+                            <div id="tlearnframe-instructions"></div>
 			</div>
+                        <div id="tlearnframe-solution">
+                            <div id="tlearnframe-solution-content"></div>
+                        </div>
 		</div>
 		<div id="tlearnframe-right">
+                        <div id="tlearnframe-text">
+                            <div id="tlearnframe-text-input-frame">
+                                <textarea id="tlearnframe-text-input"></textarea>
+                                <div id="tlearnframe-text-message">
+                                        <a href="#" id="tlearnframe-text-message-close"></a>
+                                        <div id="tlearnframe-text-message-content"></div>
+                                </div>
+                            </div>
+                            <div id="tlearnframe-text-buttons">
+					<button class="ttoolbar-button ttoolbar-button-check">
+						<img src="images/play_orange.png" class="ttoolbar-button-image">
+					</button>
+					<button class="ttoolbar-button ttoolbar-button-erase">
+						<img src="images/reset.png" class="ttoolbar-button-image">
+					</button>
+                            </div>
+                        </div>
 			<div id="tlearnframe-canvas">
 				<div id="TLearnCanvas"></div>
 				<div id="tlearnframe-message">
 					<a href="#" id="tlearnframe-message-close"></a>
 					<div id="tlearnframe-message-content"></div>
 				</div>
-                                <div id="tlearnframe-solution">
-			</div>
 			</div>
 			<div id="tlearnframe-bottom">
 				<div id="tlearnframe-buttons">
@@ -26,12 +44,9 @@
 				</div>
 				<div id="TLearnEditor"></div>
 			</div>
-			<div id="tlearnframe-lesson">
-				<div id="tlearnframe-lesson-congrats">
-				</div>
-				<div id="tlearnframe-lesson-content">
-				</div>
-			</div>	
 		</div>
 	</div>
+	<div id="tlearnframe-loading">
+		<img src="images/loader2.gif">
+	</div>    
 </div>

@@ -44,6 +44,7 @@ body {
     float:left;
     height:100%;
     margin-right:7px;
+    position:relative;
 }
 
 #tlearnframe-steps {
@@ -333,39 +334,108 @@ body {
     color:#E47637;
 }
 
-#tlearnframe-lesson {
+#tlearnframe-solution {
     position:absolute;
     background-color:black;
     visibility:hidden;
     width:100%;
     top:0;
-    bottom:/*207px;*/0px;
+    bottom:0;
     z-index:3;
     color:#ffffff;
-    font-size:16pt;
 }
 
-#tlearnframe-lesson-congrats {
-    font-size:20pt;
-    color:#ffffff;
-    background-color:#ef6e13;
-    padding:10px;
-}
-
-#tlearnframe-lesson-content {
+#tlearnframe-solution-content {
     padding:20px;
-}
-
-#tlearnframe-lesson-content h1 {
-    font-family:CoolCrayon, Comfortaa, "Helvetica Neue",Helvetica,Arial,sans-serif;
-    font-size:50pt;
-    text-align:center;
-    margin-top:20px;
-    margin-bottom:20px;
-}
-
-
-#tlearnframe-lesson-content code {
     font-family: Comfortaa, "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+
+#tlearnframe-solution-content code {
     color:#f6a71f;
+}
+
+#tlearnframe-solution-content h1 {
+    color:#f6a71f;
+    text-align:center;
+    margin-top:10px;
+    margin-bottom:10px;
+}
+
+#tlearnframe-text {
+    display:none;
+    position:absolute;
+    top:0;
+    bottom:0;
+    width:100%;
+    background-color:#DFDFDF;
+    z-index:2;
+    text-align:center;
+}
+
+#tlearnframe-text-input-frame {
+    position:relative;
+    width:80%;
+    height:50%;
+    margin-top:20px;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+#tlearnframe-text-input {
+    font-family:'Monaco','Menlo','Ubuntu Mono','Consolas','source-code-pro',monospace;
+    font-size:20px;
+    width:100%;
+    height:100%;
+    box-sizing:border-box;
+}
+
+#tlearnframe-text-message {
+    position:absolute;
+    bottom:0;
+    width:100%;
+    min-height:50px;
+    padding:10px;
+    display:none;
+    box-sizing:border-box;
+    z-index:3;    
+}
+
+#tlearnframe-text-message.tlearnframe-error {
+    background-color:#ef6e13;
+    color:#ffffff;
+}
+
+#tlearnframe-text-message.tlearnframe-message {
+    background-color:#6dbea9;/*#58422a;*/
+    color:#ffffff;
+}
+
+#tlearnframe-text-message-close {
+    display:block;
+    float:right;
+    width:18px;
+    height:18px;
+    margin-right:5px;
+    margin-top:2px;
+    background-image:url(../images/clear_grey.png);
+}
+
+#tlearnframe-loading {
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background-color:white;
+    z-index:100;
+}
+
+#tlearnframe-loading img {
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    margin:auto;
 }
