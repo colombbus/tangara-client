@@ -81,17 +81,25 @@ body {
     height:100%;
     box-sizing:border-box;
     position:relative;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size:16px;
+    line-height:30px;
 }
 
+#tlearnframe-instructions h1 {
+    font-family:Comfortaa,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size:20px;
+    /*color:#f6a71f;*/
+}
+
+#tlearnframe-instruction .code {
+    color:#F6A71F;
+}
 
 #tlearnframe-solution {
     display:none;
 }
 
-#tlearnframe-instruction .code {
-    font-family:Comfortaa, "Helvetica Neue",Helvetica,Arial,sans-serif;
-    color:#F6A71F;
-}
 
 #tlearnframe-navigation {
     position:absolute;
@@ -439,3 +447,4 @@ body {
     bottom:0;
     margin:auto;
 }
+
