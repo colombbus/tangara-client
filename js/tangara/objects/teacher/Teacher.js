@@ -99,6 +99,15 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
     };
     
     /**
+     * Returns the number of statements.
+     * @returns {Number}
+     */
+    Teacher.prototype.statementsLength = function()
+    {
+        return (statements.length);
+    }
+    
+    /**
      * Check if the code matches with the regexp
      * /!\ to verify "o = new O()", don't forget the \ before parenthesis
      * /!\ abort the syntax verification of the code 
