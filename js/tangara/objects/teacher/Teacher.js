@@ -288,10 +288,16 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
         return false;
     };
     
+    /**
+     * Set Text Mode.
+     */
     Teacher.prototype.setTextMode = function() {
         frame.setTextMode();
     };
 
+    /**
+     * Set Program Mode.
+     */
     Teacher.prototype.setProgramMode = function() {
         frame.setProgramMode();
     };
