@@ -80,7 +80,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
             this.synchronousManager.begin();
             this.perform(function(value) {
                 this.p.inMovement = true;
-                this.p.arrayY += 1;
+                this.p.arrayY += value;
                 this.p.destinationY += value * this.p.length;
             }, [value]);
         },
