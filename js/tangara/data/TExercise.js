@@ -116,14 +116,6 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/teacher/Teach
             }
         };
         
-        /**
-         * Checks if Teacher is in parser mode.
-         * @returns {Boolean}
-         */
-        this.isParserMode = function() {
-            return Teacher.get("parser");
-        };
-
         this.getScore = function() {
             return Teacher.getScore();
         };

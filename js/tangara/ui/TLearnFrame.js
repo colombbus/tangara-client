@@ -1,25 +1,30 @@
-define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRuntime', 'TEnvironment', 'TParser', 'TExercise', 'TError', 'platform-pr', 'miniPlatform'], function(TComponent, $, TLearnCanvas, TLearnEditor, TRuntime, TEnvironment, TParser, TExercise, TError) {
+define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRuntime', 'TEnvironment', 'TParser', 'TExercise', 'TError', 'platform-pr'], function(TComponent, $, TLearnCanvas, TLearnEditor, TRuntime, TEnvironment, TParser, TExercise, TError) {
     function TLearnFrame(callback) {
-        var $lesson, $lessonContent, $message, $messageContent, $instructions;
+        var $text, $message, $textMessage, $textMessageContent, $messageContent, $instructions, $solution, $solutionContent, $input, $loading;
         var canvas, editor;
 
-        var lessonHTML;
-
-        var bottomLesson = 0;/*207;*/
-        
         var exercise = new TExercise();
         
         var lastSubmission = "";
         
+        var bottomSolution = 0;
+        
+        var textMode = false;
+        
         TComponent.call(this, "TLearnFrame.html", function(component) {
-            $lesson = component.find("#tlearnframe-lesson");
-            $lesson.find("#tlearnframe-lesson-congrats").text("Bravo !");
-            $lessonContent = component.find("#tlearnframe-lesson-content");
+            $text = component.find("#tlearnframe-text");
+            $input = $text.find("#tlearnframe-text-input");
             $message = component.find("#tlearnframe-message");
             $messageContent = component.find("#tlearnframe-message-content");
+            $textMessage = component.find("#tlearnframe-text-message");
+            $textMessageContent = component.find("#tlearnframe-text-message-content");
             var $messageClose = component.find("#tlearnframe-message-close");
             $messageClose.click(function(e) {
                 $message.fadeOut(500);
+            });
+            var $textMessageClose = component.find("#tlearnframe-text-message-close");
+            $textMessageClose.click(function(e) {
+                $textMessage.fadeOut(500);
             });
             var $buttonClear = component.find(".ttoolbar-button-clear");
             $buttonClear.append("Réinitialiser");
@@ -31,8 +36,22 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             $buttonExecute.click(function(e) {
                 execute();
             });
+            var $buttonErase = component.find(".ttoolbar-button-erase");
+            $buttonErase.append(TEnvironment.getMessage('button-erase'));
+            $buttonErase.click(function(e) {
+                clear();
+            });
+            var $buttonCheck = component.find(".ttoolbar-button-check");
+            $buttonCheck.append(TEnvironment.getMessage('button-check'));
+            $buttonCheck.click(function(e) {
+                execute();
+            });
             $instructions = component.find("#tlearnframe-instructions");
             $solution = component.find("#tlearnframe-solution");
+            $solution = component.find("#tlearnframe-solution");
+            $solutionContent = component.find("#tlearnframe-solution-content");
+            
+            $loading = component.find("#tlearnframe-loading");            
             
             var self = this;
             canvas = new TLearnCanvas(function(c) {
@@ -56,31 +75,35 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             initialized = true;
         };
 
-
         this.init = function() {
-            var height = $lesson.height();
-            $lesson.css('top', -height + "px");
-            $lesson.css('bottom', height + bottomLesson + "px");
-            $lesson.css('visibility', 'visible');
-            $lesson.hide();
-            $("#tcanvas").css('visibility', 'visible');
+            var height = $solution.height();
+            $solution.css('top', -height + "px");
+            $solution.css('bottom', height + bottomSolution + "px");
+            $solution.css('visibility', 'visible');
+            $solution.hide();
+            $loading.fadeOut(1000, function() {
+                $(this).remove();
+            });            
             canvas.removeLoading();
         };
 
         var execute = function() {
             hideMessage();
-            clear();
+            if (!textMode) {
+                clear();
+            }
             try {
-                if(exercise.isParserMode()) {
-                    var statements = editor.getValue();
-                }
-                else {
-                    var statements = editor.getStatements();
-                    TRuntime.executeStatements(statements);
+                var value;
+                if(textMode) {
+                    value = $input.val();
+                    lastSubmission = value;
+                } else {
+                    value = editor.getStatements();
+                    lastSubmission = editor.getValue();
+                    TRuntime.executeStatements(value);
                 }
                 //TODO: only if no error
-                lastSubmission = editor.getValue();
-                exercise.check(statements);
+                exercise.check(value);
             } catch (err) {
                 var error;
                 if (!(err instanceof TError)) {
@@ -95,7 +118,11 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
 
         var clear = function() {
             hideMessage();
-            TRuntime.clear();
+            if (textMode) {
+                $input.val("");
+            } else {
+                TRuntime.clear();
+            }
             exercise.init();
         };
 
@@ -111,7 +138,12 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
         };
 
         this.validateStep = function(message) {
-            platform.validate("next");
+            try {
+                platform.validate("next");
+            } catch (e) {
+                console.error("Error validating step");
+                console.debug(e);
+            }
             validateStep(message);
         };
 
@@ -120,30 +152,47 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
         };
 
         var showError = function(message) {
-            $messageContent.text(message);
-            $message.addClass("tlearnframe-error");
-            $message.show();
+            if (textMode) {
+                $textMessageContent.text(message);
+                $textMessage.addClass("tlearnframe-error");
+                $textMessage.show();
+            } else {
+                $messageContent.text(message);
+                $message.addClass("tlearnframe-error");
+                $message.show();
+            }
         };
 
         var showMessage = function(message) {
-            $messageContent.text(message);
-            $message.addClass("tlearnframe-message");
-            $message.show();
+            if (textMode) {
+                $textMessageContent.text(message);
+                $textMessage.addClass("tlearnframe-message");
+                $textMessage.show();
+            } else {
+                $messageContent.text(message);
+                $message.addClass("tlearnframe-message");
+                $message.show();
+            }
         };
 
         var hideMessage = function() {
             $message.hide();
             $message.removeClass("tlearnframe-error");
             $message.removeClass("tlearnframe-message");
+            $textMessage.hide();
+            $textMessage.removeClass("tlearnframe-error");
+            $textMessage.removeClass("tlearnframe-message");
         };
 
-        this.loadExercise = function(id) {
-            if ($lesson.is(":visible")) {
-                closeLesson();
+        this.loadExercise = function(id, callback) {
+            if ($solution.is(":visible")) {
+                closeSolution();
             }
-            if ($message.is(":visible")) {
+            if ($message.is(":visible") || $textMessage.is(":visible")) {
                 hideMessage();
             }
+            // by default: program mode
+            this.setProgramMode();
             TRuntime.clear();
             editor.clear();
             exercise.setId(id);
@@ -156,19 +205,23 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
                     });                    
                 } else {
                     exercise.init();
-                }                
+                }
+                // TODO: send callback to exercise.init() when interpreter supports callbacks
+                if (typeof callback !== 'undefined') {
+                    callback.call(this);
+                }
             });
         };
 
 
-        var openLesson = function() {
-            $lessonContent.html(lessonHTML);
-            $lesson.show().stop().animate({top: "0px", bottom: bottomLesson + "px"}, 600);
+        var openSolution = function(solutionHTML) {
+            $solutionContent.html(solutionHTML);
+            $solution.show().stop().animate({top: "0px", bottom: bottomSolution + "px"}, 600);
         };
 
-        var closeLesson = function() {
-            var height = $lesson.height();
-            $lesson.stop().animate({top: -height + "px", bottom: height + bottomLesson + "px"}, 600, function() {
+        var closeSolution = function() {
+            var height = $solution.height();
+            $solution.stop().animate({top: -height + "px", bottom: height + bottomSolution + "px"}, 600, function() {
                 $(this).hide();
             });
         };
@@ -250,12 +303,23 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
          */
         this.displaySolution = function(display) {
             if (exercise.hasSolution() && display) {
-                $solution.html(exercise.getSolution());
-            }
-            else {
-                $solution.html("");
+                openSolution(exercise.getSolution());
+            } else {
+                closeSolution();
             }
         };
+        
+        this.setTextMode = function() {
+            $text.show();
+            textMode = true;
+        };
+
+        this.setProgramMode = function() {
+            $text.hide();
+            textMode = false;
+        };
+
+        
         // LOG MANAGEMENT
         
         this.addError = function(error) {

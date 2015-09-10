@@ -5,7 +5,13 @@ define(['platform-pr', 'json'], function() {
         var frame = aFrame;
         
         this.showViews = function(views, callback) {
-            frame.displaySolution(views.solution);
+            if (typeof views.task !== 'undefined' && views.task) {
+                // show task view
+                frame.displaySolution(false);
+            } else if (typeof views.solution !== 'undefined' && views.solution) {
+                // show solution
+                frame.displaySolution(true);
+            }
             callback();
         };
         
@@ -13,8 +19,8 @@ define(['platform-pr', 'json'], function() {
             var views = {
                 task: {},
                 solution: {},
-                hint: {requires: "task"},
-                forum: {requires: "task"},
+                /*hint: {requires: "task"},
+                forum: {requires: "task"},*/
                 editor: {requires: "task"}
             };
             callback(views);

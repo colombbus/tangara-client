@@ -689,7 +689,11 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
         var evalMemberExpression = function(expression) {
             var objectName = evalExpression(expression.object);
             var propertyName = evalExpression(expression.property);
-            return objectName + "." + propertyName;
+            if (expression.computed) {
+                return objectName + "[" + propertyName + "]";
+            } else {
+                return objectName + "." + propertyName;
+            }
         };
 
         var evalIdentifier = function(expression) {

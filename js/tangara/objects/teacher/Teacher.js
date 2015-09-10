@@ -288,6 +288,14 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
         return false;
     };
     
+    Teacher.prototype.setTextMode = function() {
+        frame.setTextMode();
+    };
+
+    Teacher.prototype.setProgramMode = function() {
+        frame.setProgramMode();
+    };
+    
     var teacherInstance = new Teacher();
 
     return teacherInstance;

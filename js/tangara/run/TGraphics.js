@@ -53,12 +53,8 @@ define(['jquery', 'quintus'], function($, Quintus) {
         Q.Stage.prototype.TsearchSkip = function(obj, collisionMask, skip) {
             var col;
 
-            // If the object doesn't have a grid, regrid it
-            // so we know where to search
-            // and skip adding it to the grid only if it's not on this stage
-            if (!obj.grid) {
-                this.regrid(obj, obj.stage !== this);
-            }
+            Q._generateCollisionPoints(obj);
+            this.regrid(obj, obj.stage !== this);
 
             if (typeof skip === 'undefined') {
                 skip = 0;
