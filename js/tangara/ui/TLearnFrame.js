@@ -195,6 +195,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             this.setProgramMode();
             TRuntime.clear();
             editor.clear();
+            $input.val();
             exercise.setId(id);
             exercise.load(function() {
                 // set instruction
@@ -351,6 +352,8 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
         };
         
         this.setTextMode = function() {
+            // copy current value if any
+            this.setText(this.getCode());
             $text.show();
             textMode = true;
         };
