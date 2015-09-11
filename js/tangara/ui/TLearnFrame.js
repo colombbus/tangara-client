@@ -119,10 +119,12 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
         var clear = function() {
             hideMessage();
             if (textMode) {
+                // clear editor value
                 $input.val("");
-                // set editor value as well since setTextMode will copy value
+                // clear code editor value as well since setTextMode will copy value
                 editor.setValue("");
             } else {
+                // clear runtime
                 TRuntime.clear();
             }
             exercise.init();
@@ -294,9 +296,9 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
          */        
         this.setAnswer = function(value) {
             if (textMode) {
-                return this.setText(value);
+                this.setText(value);
             } else {
-                return this.setCode(value);
+                this.setCode(value);
             }
         };
         
