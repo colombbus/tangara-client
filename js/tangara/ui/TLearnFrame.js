@@ -247,6 +247,27 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
         this.getCode = function() {
             return editor.getValue();
         };
+
+        /**
+         * Get the value of text input
+         * @returns {string}
+         */
+        this.getText = function() {
+            return $input.val();
+        };
+        
+        
+        /**
+         * Get the answer entered by user
+         * @returns {string}
+         */
+        this.getAnswer = function() {
+            if (textMode) {
+                return this.getText();
+            } else {
+                return this.getCode();
+            }
+        };
         
         /**
          * Set the code in the editor
@@ -254,6 +275,26 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
          */
         this.setCode = function(value) {
             editor.setValue(value);
+        };
+        
+        /**
+         * Set the value of text editor
+         * @param {string} value
+         */
+        this.setText = function(value) {
+            $input.val(value);
+        };
+        
+        /**
+         * Set the value of user's answer
+         * @param {string} value
+         */        
+        this.setAnswer = function(value) {
+            if (textMode) {
+                return this.setText(value);
+            } else {
+                return this.setCode(value);
+            }
         };
         
         /**

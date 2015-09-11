@@ -37,11 +37,11 @@ define(['platform-pr', 'json'], function() {
         };
 
         this.getState = function (callback) {
-            callback(frame.getCode());
+            callback(frame.getAnswer());
         };
         
         this.reloadState = function (state, callback) {
-            frame.setCode(state);
+            frame.setAnswer(state);
             callback();
         };
         
