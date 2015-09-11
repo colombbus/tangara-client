@@ -49,7 +49,7 @@ define(['platform-pr', 'json'], function() {
             var res = JSON.stringify(
                 {score : frame.getScore(),
                 message : frame.getMessage(),
-                code : frame.getLastSubmission()});
+                value : frame.getLastSubmission()});
             callback(res);
         };
         
@@ -59,7 +59,7 @@ define(['platform-pr', 'json'], function() {
                     var answer = JSON.parse(strAnswer);
                     frame.setScore(answer.score);
                     frame.setMessage(answer.message);
-                    frame.setCode(answer.code);
+                    frame.setAnswer(answer.value);
                 } catch(e) {
                     window.console.log(e);
                 }
@@ -67,7 +67,7 @@ define(['platform-pr', 'json'], function() {
             else {
                 frame.setScore(0);
                 frame.setMessage("");
-                frame.setCode("");
+                frame.setAnswer("");
             }
             callback();
         };
