@@ -120,6 +120,8 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             hideMessage();
             if (textMode) {
                 $input.val("");
+                // set editor value as well since setTextMode will copy value
+                editor.setValue("");
             } else {
                 TRuntime.clear();
             }
