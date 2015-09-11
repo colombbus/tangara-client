@@ -2,7 +2,7 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
     /**
      * Defines Teacher, inherited from TObject.
      * Teacher is an object used to validate routes.
-     * It compare values with statements, and can (un)validate steps.
+     * It compares values with statements, and can (un)validate steps.
      * @exports Teacher
      */
     var Teacher = function() {
@@ -56,10 +56,10 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
     };
 
     /**
-     * Compare the contents of "statement" and "value".
+     * Checks if all contents of "value" are in "statement".
      * @param {String[]} statement
      * @param {String[]} value
-     * @returns {Boolean}   Returns true if contents are equals, else false.
+     * @returns {Boolean}
      */
     function check(statement, value) {
         for (var key in value) {
@@ -99,6 +99,15 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
     };
     
     /**
+     * Returns the number of statements.
+     * @returns {Number}
+     */
+    Teacher.prototype.statementsLength = function()
+    {
+        return (statements.length);
+    }
+    
+    /**
      * Check if the code matches with the regexp
      * /!\ to verify "o = new O()", don't forget the \ before parenthesis
      * /!\ abort the syntax verification of the code 
@@ -111,15 +120,13 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
     };
     
     /**
+     * Set message to "value".
      * @param {string} value
      */
     Teacher.prototype.setMessage = function(value) {
         message = value;
     };
     
-    /**
-     * @returns {string} message
-     */
     function getMessage() {
         if(typeof message === "undefined") {
             message = "Message indéfini.";
@@ -127,10 +134,18 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
         return message;
     };
     
+     /**
+     * Get the value of message.
+     * @returns {string}
+     */
     Teacher.prototype.getMessage = function() {
         return getMessage();
     };
     
+    /**
+     * Changes the score.
+     * @param {Number} value
+     */
     Teacher.prototype.setScore = function(value) {
         if(-1e-10 < value && value < 1 + 1e-10) {
             score = value;
@@ -140,34 +155,38 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
         }
     };
     
+    /**
+     * Returns the score.
+     * @returns {Number}
+     */
     Teacher.prototype.getScore = function() {
         return score;
     };
     
-    /**
-     * Validate the current step if "frame" is true
-     * @param {String} message
-     */
     function validateStep(message) {
         if (frame) {
             frame.validateStep(message);
         }
     };
     
+    /**
+     * Validate the current step if "frame" is true
+     * @param {String} message
+     */
     Teacher.prototype.validateStep = function(message) {
         validateStep(message);
     };
 
-    /**
-     * Invalidate the current step if "frame" is true. Send a message.
-     * @param {String} message
-     */
     function invalidateStep(message) {
         if (frame) {
             frame.invalidateStep(message);
         }
     };
     
+    /**
+     * Invalidate the current step if "frame" is true. Send a message.
+     * @param {String} message
+     */
     Teacher.prototype.invalidateStep = function(message) {
         invalidateStep(message);
     };
@@ -183,14 +202,14 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
         scoreLimit = value;
     };
     
-    /**
-     * Check if the current score is sufficiently high to validate the task
-     * @returns {Boolean}
-     */
     function taskValidated() {
         return score > scoreLimit - 1e-10;
     };
     
+    /**
+     * Check if the current score is sufficiently high to validate the task
+     * @returns {Boolean}
+     */
     Teacher.prototype.taskValidated = function() {
         return taskValidated();
     };
@@ -215,6 +234,10 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
         }
     };
     
+    /**
+     * Waits for "delay" ms.
+     * @param {Number} delay
+     */
     Teacher.prototype.wait = function(delay) {
         this.synchronousManager.begin();
         var parent = this;
@@ -274,10 +297,16 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
         return false;
     };
     
+    /**
+     * Set Text Mode.
+     */
     Teacher.prototype.setTextMode = function() {
         frame.setTextMode();
     };
 
+    /**
+     * Set Program Mode.
+     */
     Teacher.prototype.setProgramMode = function() {
         frame.setProgramMode();
     };
