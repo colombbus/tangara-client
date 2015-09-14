@@ -43,7 +43,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
                         item.setLocation(x + i * 10, y);
                     }
                 }
-                if (p.blocked) {
+                if (p.blocked && p.moving) {
                     this.stop();
                 }
                 if (p.inMovement && !p.moving) {

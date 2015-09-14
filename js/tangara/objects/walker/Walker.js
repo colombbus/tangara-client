@@ -55,7 +55,8 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
                 this._super(dt);
                 if (this.p.mayFall) {
                     // actually set location to destination in order to fall
-                	this.p.y = this.p.destinationY;
+                    this.p.y = this.p.destinationY;
+                    this.p.moving = true;
                 }
                 // Look for blocks or platforms
                 var skip = 0;
