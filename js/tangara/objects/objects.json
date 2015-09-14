@@ -476,5 +476,14 @@
             "en": "List"
         },
         "parents": true
+    },
+     "Captor": {
+        "path": "captor",
+        "translations": {
+            "fr": "Capteur",
+            "es": "TBD",
+            "en": "Captor"
+        },
+        "parents": true
     }
 }
