@@ -64,8 +64,8 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
                         ctx.beginPath();
                         ctx.moveTo(i * p.length - p.x, j * p.length - p.y);
                         ctx.lineTo((i + 1) * p.length - p.x, j * p.length - p.y);
-                        ctx.lineTo((i + 1) * p.length - p.x, (j + 0.25) * p.length - p.y);
-                        ctx.lineTo(i * p.length - p.x, (j + 0.25) * p.length - p.y);
+                        ctx.lineTo((i + 1) * p.length - p.x, (j + 0.4) * p.length - p.y);
+                        ctx.lineTo(i * p.length - p.x, (j + 0.4) * p.length - p.y);
                         ctx.closePath();
                         var color = TUtils.getColor(colorsArray[p.platform[i][j]]);
                         ctx.strokeStyle = TUtils.rgbToHex(color);

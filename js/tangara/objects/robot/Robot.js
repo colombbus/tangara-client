@@ -21,14 +21,14 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
     Robot.prototype.gClass = graphics.addClass("THero", "TRobot", {
         init: function(props, defaultProps) {
             this._super(TUtils.extend({
-                length: 80,
+                length: 40,
                 inMovement: false,
                 encountered: [],
                 carriedItems: [],
                 arrayX: 0,
                 arrayY: 0,
-                x: 14,
-                y: 5
+                x: 7,
+                y: 2
             }, props), defaultProps);
         },
         step: function(dt) {
