@@ -64,17 +64,17 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
                         ctx.beginPath();
                         ctx.moveTo(i * p.length - p.x, j * p.length - p.y);
                         ctx.lineTo((i + 1) * p.length - p.x, j * p.length - p.y);
-                        ctx.lineTo((i + 1) * p.length - p.x, (j + 1) * p.length - p.y);
-                        ctx.lineTo(i * p.length - p.x, (j + 1) * p.length - p.y);
+                        ctx.lineTo((i + 1) * p.length - p.x, (j + 0.25) * p.length - p.y);
+                        ctx.lineTo(i * p.length - p.x, (j + 0.25) * p.length - p.y);
                         ctx.closePath();
                         var color = TUtils.getColor(colorsArray[p.platform[i][j]]);
                         ctx.strokeStyle = TUtils.rgbToHex(color);
                         ctx.stroke();
                         ctx.fillStyle = TUtils.rgbToHex(color);
                         ctx.fill();
-                        ctx.fillStyle = TUtils.rgbToHex(TUtils.reverseColor(color));
+                        /*ctx.fillStyle = TUtils.rgbToHex(TUtils.reverseColor(color));
                         ctx.textBaseline = "middle";
-                        ctx.fillText(p.platform[i][j], (i + 0.5) * p.length - p.x, (j + 0.5) * p.length - p.y);
+                        ctx.fillText(p.platform[i][j], (i + 0.5) * p.length - p.x, (j + 0.5) * p.length - p.y);*/
                     }
                 }
             }
