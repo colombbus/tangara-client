@@ -5,7 +5,7 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
      * @exports Builder
      */
     var Builder = function() {
-        Robot.call(this, "robot");
+        Robot.call(this, "builder");
         this.synchronousManager = new SynchronousManager();
         this.gObject.synchronousManager = this.synchronousManager;
         var gObject = this.gObject;
