@@ -9,6 +9,7 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/teacher/Teach
         TEnvironment.setProject(project);
         var checkStatements = false;
         var startStatements = false;
+        var endStatements = false;
         var solutionCode = false;
         var instructions = false;
         var hints = false;
@@ -69,6 +70,15 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/teacher/Teach
             return (startStatements !== false);
         };
 
+
+        /**
+         * Checks if Exercise has end statementse.
+         * @returns {Boolean}
+         */
+        this.hasEnd = function() {
+            return (endStatements !== false);
+        };
+        
         /**
          * Checks if Exercise has check statements.
          * @returns {Boolean}
@@ -132,12 +142,15 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/teacher/Teach
             return Teacher.setMessage(value);
         };
         
-		/**
+        /**
          * Execute check statements.
          * @param {Statements[]} statements
          */
         this.check = function(statements) {
             Teacher.setStatements(statements);
+            if (endStatements !== false) {
+                TRuntime.executeStatements(endStatements);
+            }
             if (checkStatements !== false) {
                 TRuntime.executeStatements(checkStatements);
             }
@@ -151,6 +164,19 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/teacher/Teach
             project.getProgramStatements("start", function(result) {
                 if (!(result instanceof TError)) {
                     startStatements = result;
+                }
+                callback.call(this);
+            });
+        };
+
+        /**
+         * Loads end statements.
+         * @param {Function} callback
+         */
+        var loadEnd = function(callback) {
+            project.getProgramStatements("end", function(result) {
+                if (!(result instanceof TError)) {
+                    endStatements = result;
                 }
                 callback.call(this);
             });
@@ -189,6 +215,7 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/teacher/Teach
         this.load = function(callback) {
             checkStatements = false;
             startStatements = false;
+            endStatements = false;
             solutionCode = false;
             instructions = false;
             hints = false;
@@ -197,6 +224,7 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/teacher/Teach
                 // 1st check existing programs
                 var programs = project.getProgramsNames();
                 var startPresent = false;
+                var endPresent = false;
                 var checkPresent = false;
                 var solutionPresent = false;
                 var toLoad = 0;
@@ -204,6 +232,11 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/teacher/Teach
                 if (programs.indexOf("start") > -1) {
                     toLoad++;
                     startPresent = true;
+                }
+
+                if (programs.indexOf("end") > -1) {
+                    toLoad++;
+                    endPresent = true;
                 }
 
                 if (programs.indexOf("check") > -1) {
@@ -235,6 +268,9 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/teacher/Teach
                 };
                 if (startPresent) {
                     loadStart(checkLoad);
+                }
+                if (endPresent) {
+                    loadEnd(checkLoad);
                 }
                 if (checkPresent) {
                     loadCheck(checkLoad);
