@@ -78,7 +78,8 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
                 reset:false,
                 drawBaseTile:false,
                 built:false,
-                designMode:false
+                designMode:false,
+                tiles: [[]]
             }, props), defaultProps);
             if (!this.p.built) {
             	this.spriteSheet = false;
