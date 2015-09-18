@@ -37,8 +37,10 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
             }, props), defaultProps);
         },
         step: function(dt) {
-            this._super(dt);
             var p = this.p;
+            var oldX = p.x;
+            var oldY = p.y;
+            this._super(dt);
             if (!p.dragging && !p.frozen) {
                 if (p.moving) {
                     var x = p.x - p.w / 2;
@@ -48,8 +50,12 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
                         item.setLocation(x + i * 10, y);
                     }
                 }
-                if (p.blocked && p.moving) {
-                    this.stop();
+                
+                //TODO: remove p.blocked?
+                if (p.inMovement && p.moving && p.blocked && oldX === p.x && oldY === p.y) {
+                    p.moving = false;
+                    p.destinationX = p.x;
+                    p.destinationY = p.y;
                 }
                 if (p.inMovement && !p.moving) {
                     p.inMovement = false;
