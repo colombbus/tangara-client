@@ -134,7 +134,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
             this.perform(function() {
             	this.p.vy=0;
             }, {});
-        },
+        }
         
     });
 
