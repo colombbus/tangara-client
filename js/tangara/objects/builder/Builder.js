@@ -105,5 +105,31 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
         this.gObject.addTile(number);
     };
     
+    
+    /**
+     * Get platform structure
+     * @returns array
+     */
+    Builder.prototype._getStructure = function() {
+        // TODO: correct p.platform order
+        // invert platform
+        var p = this.gObject.p.platform;
+        var p2 = [];
+        
+        if (p.length>0 && p[0].length>0) {
+            var cols = p.length;
+            var rows = p[0].length;
+            for (var i=0;i<rows;i++) {
+                p2[i] = [];
+                for (var j=0;j<cols;j++) {
+                    p2[i][j] =  p[j][i];
+                }
+            }
+            return p2;
+        } else {
+            return [[]];
+        }
+    };
+    
     return Builder;
 });
