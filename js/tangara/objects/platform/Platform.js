@@ -211,7 +211,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
 	      if(this.blocks[blockY]  && this.blocks[blockY][blockX]) {
 	        ctx.drawImage(this.blocks[blockY][blockX],startX,startY);
 	      }
-	    },          
+	    }       
     });
     
     /**
@@ -289,7 +289,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
      * Add a new column, at the end of the structure.
      * If the column is too short, it is filled with 0.
      * If the column is too long, it is truncated.
-     * @param {Number[]} row
+     * @param {Number[]} col
      */
     Platform.prototype._addColumn = function(col) {
     	col = TUtils.getArray(col);
@@ -314,13 +314,11 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
      */
     Platform.prototype._loadStructure = function(structure) {
     	var newRows = [];
-    	//window.console.debug(structure[0]);
     	if (TUtils.checkArray(structure)) {
     		if (!TUtils.checkArray(structure[0])) {
                 throw new Error(this.getMessage("structure incorrect"));
     		}
-    		//window.console.log("on passe ici");
-    		var newNbCols = structure[0].length
+    		var newNbCols = structure[0].length;
     		for (var i=0; i<structure.length; i++) {
     			newRows[i] = [];
     			for (var j = 0; j<newNbCols; j++) {
