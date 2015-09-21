@@ -49,8 +49,10 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
                         var item = p.carriedItems[i];
                         item.setLocation(x + i * 10, y);
                     }
+                } else if (p.mayFall && !(p.platform && p.platform[x] && p.platform[x][y + 1])) {
+                    this.moveDownward();
                 }
-                
+                    
                 //TODO: remove p.blocked?
                 if (p.inMovement && p.moving && p.blocked && oldX === p.x && oldY === p.y) {
                     p.moving = false;
