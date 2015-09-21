@@ -193,16 +193,6 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
     };
 
     /**
-     * Set the base value of movements.
-     * It's the value used if no parameter are entered to movement actions.
-     * @param {Number} value
-     */
-    Robot.prototype._setStep = function(value) {
-        value = TUtils.getInteger(value);
-        this.step = value;
-    };
-
-    /**
      * Count the number of items in Stage.
      * @returns {Number}
      */
@@ -235,4 +225,3 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
 
     return Robot;
 });
-
