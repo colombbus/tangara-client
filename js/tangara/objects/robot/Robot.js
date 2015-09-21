@@ -63,37 +63,37 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
                 }
             }
         },
-        moveForward: function(value) {
+        moveForward: function() {
             this.synchronousManager.begin();
-            this.perform(function(value) {
+            this.perform(function() {
                 this.p.inMovement = true;
-                this.p.arrayX += value;
-                this.p.destinationX += value * this.p.length;
-            }, [value]);
+                this.p.arrayX += 1;
+                this.p.destinationX += this.p.length;
+            }, []);
         },
-        moveBackward: function(value) {
+        moveBackward: function() {
             this.synchronousManager.begin();
-            this.perform(function(value) {
+            this.perform(function() {
                 this.p.inMovement = true;
-                this.p.arrayX -= value;
-                this.p.destinationX -= value * this.p.length;
-            }, [value]);
+                this.p.arrayX -= 1;
+                this.p.destinationX -= this.p.length;
+            }, []);
         },
-        moveUpward: function(value) {
+        moveUpward: function() {
             this.synchronousManager.begin();
-            this.perform(function(value) {
+            this.perform(function() {
                 this.p.inMovement = true;
-                this.p.arrayY -= value;
-                this.p.destinationY -= value * this.p.length;
-            }, [value]);
+                this.p.arrayY -= 1;
+                this.p.destinationY -= this.p.length;
+            }, []);
         },
-        moveDownward: function(value) {
+        moveDownward: function() {
             this.synchronousManager.begin();
-            this.perform(function(value) {
+            this.perform(function() {
                 this.p.inMovement = true;
-                this.p.arrayY += value;
-                this.p.destinationY += value * this.p.length;
-            }, [value]);
+                this.p.arrayY += 1;
+                this.p.destinationY += this.p.length;
+            }, []);
         },
         countItems: function() {
             var skip = 0;
@@ -143,8 +143,11 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
             number = TUtils.getInteger(number);
             this.gObject.moveForward(number);
         } else {
-            this.gObject.moveForward(1);
-        }   
+            number = 1;
+        }
+        for (var i = 0 ; i < number ; i++) {
+            this.gObject.moveForward();
+        }
     };
     
     /**
@@ -158,8 +161,11 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
             number = TUtils.getInteger(number);
             this.gObject.moveBackward(number);
         } else {
-            this.gObject.moveBackward(1);
-        }   
+            number = 1;
+        }
+        for (var i = 0 ; i < number ; i++) {
+            this.gObject.moveBackward();
+        }
     };
    
     /**
@@ -173,8 +179,11 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
             number = TUtils.getInteger(number);
             this.gObject.moveUpward(number);
         } else {
-            this.gObject.moveUpward(1);
-        }   
+            number = 1;
+        }
+        for (var i = 0 ; i < number ; i++) {
+            this.gObject.moveUpward();
+        }
     };
 
     /**
@@ -188,8 +197,11 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
             number = TUtils.getInteger(number);
             this.gObject.moveDownward(number);
         } else {
-            this.gObject.moveDownward(1);
-        }   
+            number = 1;
+        }
+        for (var i = 0 ; i < number ; i++) {
+            this.gObject.moveDownward();
+        }
     };
 
     /**
@@ -222,6 +234,14 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
     Robot.prototype._countCarriedItems = function() {
         return this.gObject.countCarriedItems();
     };
-
+    
+    /**
+     * Get the Platform for Robot.
+     * @param {Number[][]} platform
+     */
+    Robot.prototype._getPlatform = function(platform) {
+        this.gObject.p.platform = platform;
+    };
+    
     return Robot;
 });
