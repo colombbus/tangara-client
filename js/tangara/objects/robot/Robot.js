@@ -205,6 +205,14 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
     };
 
     /**
+     * Robot jumps of two tiles.
+     */
+    Robot.prototype._jump = function() {
+        this.gObject.moveForward();
+        this.gObject.moveForward();
+    };
+
+    /**
      * Count the number of items in Stage.
      * @returns {Number}
      */
