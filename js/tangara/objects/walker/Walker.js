@@ -171,7 +171,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
      * @param {Boolean} value
      */
     Walker.prototype._mayFall = function(value) {
-        if (typeof value !== 'undefined') {
+        if (typeof value === 'boolean') {
             value = TUtils.getBoolean(value);
         } else {
             value = true;
