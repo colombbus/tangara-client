@@ -146,6 +146,11 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
                             });
                         });
                     }
+                } else {
+                    classesToLoad--;
+                    if (classesToLoad === 0 && typeof callback !== 'undefined') {
+                        callback.call(self, translatedNames);
+                    }                    
                 }
             });
         };
