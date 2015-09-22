@@ -171,7 +171,11 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
      * @param {Boolean} value
      */
     Walker.prototype._mayFall = function(value) {
-        value = TUtils.getBoolean(value);
+        if (typeof value !== 'undefined') {
+            value = TUtils.getBoolean(value);
+        } else {
+            value = true;
+        }
         this.gObject.mayFall(value);
     };
 
