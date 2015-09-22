@@ -39,7 +39,7 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
                         if (e !== false) {
                             callback.call(this, e);
                         } else {
-                            callback.call(this, data['programs']);                            
+                            callback.call(this, data['programs'], data['id']);                            
                         }
                     },
                     error: function(data, status, error) {
@@ -283,7 +283,7 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
                             if (e!==false) {
                                 callback.call(this, e);
                             } else {
-                                callback.call(this, data['resources']);                                
+                                callback.call(this, data['resources'], data['id']);                                
                             }
                         }
                     },
