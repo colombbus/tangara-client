@@ -29,9 +29,12 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
                 tiles: 0
             }, props), defaultProps);
         },
-        addRows: function() {
-            for (var i = this.p.nbRows ; i <= this.p.gridY ; i++) {
-                for (var j = 0 ; j <= this.p.gridX ; j++) {
+        addRows: function(y) {
+            if (typeof y === 'undefined') {
+                y = this.p.gridY;
+            }
+            for (var i = this.p.nbRows ; i <= y ; i++) {
+                for (var j = 0 ; j <= this.p.nbColumns ; j++) {
                     this.p.platform[j][i] = 0;
                 }
             };
@@ -39,21 +42,28 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
         },
         addColumn: function(i) {
             var column = [];
-            for (var j = 0 ; j <= this.p.gridY ; j++) {
+            for (var j = 0 ; j <= this.p.nbRows ; j++) {
                     column[j] = 0;
             }
             this.p.platform[i] = column;
         },
-        addColumns: function() {
-            for (var i = this.p.nbColumns ; i <= this.p.gridX ; i++) {
+        addColumns: function(x) {
+            if (typeof x === 'undefined') {
+                x = this.p.gridX;
+            }
+            for (var i = this.p.nbColumns ; i <= x ; i++) {
                 this.addColumn(i);
             };
             this.p.nbColumns = i;
         },
-        addTile: function(number) {
-            if (this.p.platform[this.p.gridX][this.p.gridY] === 0)
+        addTile: function(number, x, y) {
+            if (typeof x === 'undefined') {
+                x = this.p.gridX;
+                y = this.p.gridY;
+            }
+            if (this.p.platform[x][y] === 0)
                 this.p.tiles += 1;
-            this.p.platform[this.p.gridX][this.p.gridY] = number;
+            this.p.platform[x][y] = number;
         },
         draw: function(ctx) {
             var p = this.p;
@@ -107,46 +117,80 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
     });
 
     /**
-     * Put a brick at current location
+     * 
      */
-    Builder.prototype._build = function() {
+    
+    /*
+     * Put a brick at given location
+     * If no location given, use current location
+     * @param {Integer} x
+     * @param {Integer} y
+     */
+    Builder.prototype._build = function(x,y) {
         var p = this.gObject.p;
-        if (p.gridX >= p.nbColumns) {
-            this.gObject.addColumns();
+        if (typeof x === 'undefined') {
+            x = p.gridX;
+            y = p.gridY;
+        } else {
+            x = TUtils.getInteger(x);
+            y = TUtils.getInteger(y);
         }
-        if (p.gridY >= p.nbRows) {
-            this.gObject.addRows();
+        if (x >= p.nbColumns) {
+            this.gObject.addColumns(x);
         }
-        this.gObject.addTile(Builder.BRICK);
+        if (y >= p.nbRows) {
+            this.gObject.addRows(y);
+        }
+        this.gObject.addTile(Builder.BRICK,x,y);
     };
     
 
     /*
      * Build a door at current location 
+     * If no location given, use current location
+     * @param {Integer} x
+     * @param {Integer} y
      */
-    Builder.prototype._setDoor = function() {
+    Builder.prototype._setDoor = function(x,y) {
         var p = this.gObject.p;
-        if (p.gridX >= p.nbColumns) {
-            this.gObject.addColumns();
+        if (typeof x === 'undefined') {
+            x = p.gridX;
+            y = p.gridY;
+        } else {
+            x = TUtils.getInteger(x);
+            y = TUtils.getInteger(y);
         }
-        if (p.gridY >= p.nbRows) {
-            this.gObject.addRows();
+        if (x >= p.nbColumns) {
+            this.gObject.addColumns(x);
         }
-        this.gObject.addTile(Builder.DOOR);
+        if (y >= p.nbRows) {
+            this.gObject.addRows(y);
+        }
+        this.gObject.addTile(Builder.DOOR,x,y);
     };
 
     /*
      * Build an exit at current location 
+     * If no location given, use current location
+     * @param {Integer} x
+     * @param {Integer} y
      */
-    Builder.prototype._setExit = function() {
+    Builder.prototype._setExit = function(x,y) {
         var p = this.gObject.p;
-        if (p.gridX >= p.nbColumns) {
-            this.gObject.addColumns();
+        if (typeof x === 'undefined') {
+            x = p.gridX;
+            y = p.gridY;
+        } else {
+            x = TUtils.getInteger(x);
+            y = TUtils.getInteger(y);
+        }        
+        if (x >= p.nbColumns) {
+            this.gObject.addColumns(x);
         }
-        if (p.gridY >= p.nbRows) {
-            this.gObject.addRows();
+        if (y >= p.nbRows) {
+            this.gObject.addRows(y);
         }
-        this.gObject.addTile(Builder.EXIT);
+        this.gObject.addTile(Builder.EXIT,x,y);
     };
     
     
