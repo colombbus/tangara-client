@@ -1,4 +1,4 @@
-define(['jquery'], function($) {
+define(['jquery', 'TUtils'], function($, TUtils) {
     /**
      * Internationalization of Declick.
      * Allows the program to be adapted to various languages.
@@ -10,6 +10,8 @@ define(['jquery'], function($) {
         var waiting = {};
         var translatedClasses = [];
         var self;
+        var storageSupport = (typeof window.localStorage !== 'undefined');
+        
         
         /**
          * Translate a method.
@@ -68,18 +70,16 @@ define(['jquery'], function($) {
                 }
             } else {
                 // load translation file
-                $.ajax({
-                    dataType: "json",
-                    url: file,
-                    success: function(data) {
-                        processedFiles[file] = {};
-                        if (typeof data.hide !== "undefined") {
-                            // there are methods to hide
-                            hiddenMethods[file] = data.hide;
-                            hideMethods = hideMethods.concat(data.hide);
-                        } else {
-                            hiddenMethods[file] = [];
-                        }
+                getResource(file, [language, 'hide'], function(data) {
+                    processedFiles[file] = {};
+                    if (typeof data.hide !== "undefined") {
+                        // there are methods to hide
+                        hiddenMethods[file] = data.hide;
+                        hideMethods = hideMethods.concat(data.hide);
+                    } else {
+                        hiddenMethods[file] = [];
+                    }
+                    if (typeof data[language] !== "undefined") {
                         $.each(data[language]['methods'], function(key, val) {
                             if (hideMethods.indexOf(val.name) === -1) {
                                 if (typeof aClass.prototype[val.translated] === 'undefined') {
@@ -87,22 +87,18 @@ define(['jquery'], function($) {
                                     addTranslatedMethod(aClass, val.name, val.translated);
                                     translatedMethods[val.translated] = val.displayed;                                    
                                     var value = {translated: val.translated, displayed: val.displayed};
-//                                    classMethods[aClass.prototype.className][val.translated] = val.displayed;
+    //                                    classMethods[aClass.prototype.className][val.translated] = val.displayed;
                                     processedFiles[file][val.name] = value;
                                 }
                             } else {
                                 hideTranslatedMethod(aClass, val.translated);
                             }
                         });
-                        if (typeof callback !== 'undefined') {
-                            callback.call(self, translatedMethods, hideMethods);
-                        }
-                    },
-                    error: function(data, status, error) {
+                    } else {
                         window.console.error("Error loading translated methods (" + file + "): " + status);
-                        if (typeof callback !== 'undefined') {
-                            callback.call(self, translatedMethods, hideMethods);
-                        }
+                    }
+                    if (typeof callback !== 'undefined') {
+                        callback.call(self, translatedMethods, hideMethods);
                     }
                 });
             }
@@ -134,33 +130,22 @@ define(['jquery'], function($) {
                 }
             } else {
                 // load message file
-                $.ajax({
-                    dataType: "json",
-                    url: file,
-                    global: false,
-                    success: function(data) {
-                        processedFiles[file] = {};
-                        if (typeof data[language] !== 'undefined') {
-                            $.each(data[language], function(name, value) {
-                                if (typeof aClass.messages[name] === 'undefined') {
-                                    // only set message if not already set
-                                    aClass.messages[name] = value;
-                                    processedFiles[file][name] = value;
-                                }
-                            });
-                            window.console.log("found messages in language: " + language);
-                        } else {
-                            window.console.log("found no messages for language: " + language);
-                        }
-                        if (typeof callback !== 'undefined') {
-                            callback.call(self);
-                        }
-                    },
-                    error: function(data, status, error) {
-                        window.console.error("Error loading messages for class: " + aClass);
-                        if (typeof callback !== 'undefined') {
-                            callback.call(self);
-                        }
+                getResource(file, language, function(data) {
+                    processedFiles[file] = {};
+                    if (typeof data[language] !== 'undefined') {
+                        $.each(data[language], function(name, value) {
+                            if (typeof aClass.messages[name] === 'undefined') {
+                                // only set message if not already set
+                                aClass.messages[name] = value;
+                                processedFiles[file][name] = value;
+                            }
+                        });
+                        window.console.log("found messages in language: " + language);
+                    } else {
+                        window.console.log("found no messages for language: " + language);
+                    }
+                    if (typeof callback !== 'undefined') {
+                        callback.call(self);
                     }
                 });
             }
@@ -237,7 +222,50 @@ define(['jquery'], function($) {
                     callback.call(self);
                 }
             });
-        };    
+        };
+        
+        var getResource = function(name, fields, callback) {
+            if (storageSupport) {
+                // try to retrieve value from local storage
+                var value = localStorage.getItem(name);
+                if (value) {
+                    // value is available from local storage
+                    callback.call(this,JSON.parse(value));
+                    return;
+                }
+            }
+            $.ajax({
+                dataType: "json",
+                url: name,
+                success: function(data) {
+                    var value = {};
+                    if (TUtils.checkString(fields)) {
+                        fields = [fields];
+                    }
+                    for (var i=0; i<fields.length; i++) {
+                        if (typeof data[fields[i]] !== 'undefined') {
+                            value[fields[i]] = data[fields[i]];
+                            window.console.log("found field '"+fields[i]+"' in resource '"+name);
+                        }
+                    }
+                    if (storageSupport) {
+                        localStorage.setItem(name,JSON.stringify(value));
+                    }
+                    callback.call(this, value);
+                },
+                error: function(data, status, error) {
+                    window.console.error("Error loading resource '"+name+"'");
+                    callback.call(this);
+                }
+            });
+        };
+        
+        this.clearCache = function() {
+            if (storageSupport) {
+                localStorage.clear();
+            }
+        };
+
         
     };
     
