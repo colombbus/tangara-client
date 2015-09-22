@@ -30,8 +30,8 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
                 inMovement: false,
                 encountered: [],
                 carriedItems: [],
-                arrayX: 0,
-                arrayY: 0,
+                gridX: 0,
+                gridY: 0,
                 x: 7,
                 y: 2
             }, props), defaultProps);
@@ -61,6 +61,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
                 }
                 if (p.inMovement && !p.moving) {
                     p.inMovement = false;
+                    this.updateGridLocation();
                     this.synchronousManager.end();
                 }
             }
@@ -69,7 +70,6 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
             this.synchronousManager.begin();
             this.perform(function() {
                 this.p.inMovement = true;
-                this.p.arrayX += 1;
                 this.p.destinationX += this.p.length;
             }, []);
         },
@@ -77,7 +77,6 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
             this.synchronousManager.begin();
             this.perform(function() {
                 this.p.inMovement = true;
-                this.p.arrayX -= 1;
                 this.p.destinationX -= this.p.length;
             }, []);
         },
@@ -85,7 +84,6 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
             this.synchronousManager.begin();
             this.perform(function() {
                 this.p.inMovement = true;
-                this.p.arrayY -= 1;
                 this.p.destinationY -= this.p.length;
             }, []);
         },
@@ -93,7 +91,6 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
             this.synchronousManager.begin();
             this.perform(function() {
                 this.p.inMovement = true;
-                this.p.arrayY += 1;
                 this.p.destinationY += this.p.length;
             }, []);
         },
@@ -129,6 +126,16 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
         },
         countCarriedItems: function() {
             return this.p.carriedItems.length;
+        },
+        setLocation: function(x, y) {
+            this._super(x, y);            
+            this.perform(function() {
+                this.updateGridLocation();
+            }, []);
+        },
+        updateGridLocation: function() {
+            this.p.gridX = Math.floor(this.p.x/this.p.length);
+            this.p.gridY = Math.floor(this.p.y/this.p.length);
         }
     });
 
@@ -143,7 +150,6 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
     Robot.prototype._moveForward = function(number) {
         if (typeof number !== 'undefined') {
             number = TUtils.getInteger(number);
-            this.gObject.moveForward(number);
         } else {
             number = 1;
         }
@@ -161,7 +167,6 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
     Robot.prototype._moveBackward = function(number) {
         if (typeof number !== 'undefined') {
             number = TUtils.getInteger(number);
-            this.gObject.moveBackward(number);
         } else {
             number = 1;
         }
@@ -179,7 +184,6 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
     Robot.prototype._moveUpward = function(number) {
         if (typeof number !== 'undefined') {
             number = TUtils.getInteger(number);
-            this.gObject.moveUpward(number);
         } else {
             number = 1;
         }
@@ -197,7 +201,6 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
     Robot.prototype._moveDownward = function(number) {
         if (typeof number !== 'undefined') {
             number = TUtils.getInteger(number);
-            this.gObject.moveDownward(number);
         } else {
             number = 1;
         }
