@@ -3,7 +3,9 @@
     "fr": {
         "methods":[
             {"name":"_build","translated":"poser","displayed":"poser()"},
-            {"name":"_getStructure","translated":"récupérerStructure","displayed":"récupérerStructure()"}
+            {"name":"_getStructure","translated":"récupérerStructure","displayed":"récupérerStructure()"},
+            {"name":"_setDoor","translated":"placerPorte","displayed":"placerPorte()"},
+            {"name":"_setExit","translated":"placerSortie","displayed":"placerSortie()"}
             ]
     }
 }
