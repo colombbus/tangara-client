@@ -29,56 +29,62 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
                 tiles: 0
             }, props), defaultProps);
         },
-        addRows: function(y) {
-            if (typeof y === 'undefined') {
-                y = this.p.gridY;
+        addRow: function() {
+            var p = this.p;
+            p.platform[p.nbRows] = [];
+            for (var j=0; j< p.nbColumns; j++) {
+                p.platform[p.nbRows][j] = 0;
             }
-            for (var i = this.p.nbRows ; i <= y ; i++) {
-                for (var j = 0 ; j <= this.p.nbColumns ; j++) {
-                    this.p.platform[j][i] = 0;
-                }
-            };
-            this.p.nbRows = i;
+            p.nbRows++;
         },
-        addColumn: function(i) {
-            var column = [];
-            for (var j = 0 ; j <= this.p.nbRows ; j++) {
-                    column[j] = 0;
+        addColumn: function() {
+            var p = this.p;
+            for (var i=0; i< p.nbRows; i++) {
+                p.platform[i][p.nbColumns] = 0;
             }
-            this.p.platform[i] = column;
+            p.nbColumns++;
+        },
+        addRows: function(y) {
+            var p = this.p;
+            if (typeof y === 'undefined') {
+                y = p.gridY;
+            }
+            for (var i= p.nbRows ; i<=y ; i++) {
+                this.addRow();
+            }
         },
         addColumns: function(x) {
+            var p = this.p;
             if (typeof x === 'undefined') {
-                x = this.p.gridX;
+                x = p.gridX;
             }
-            for (var i = this.p.nbColumns ; i <= x ; i++) {
-                this.addColumn(i);
-            };
-            this.p.nbColumns = i;
+            for (var j= p.nbColumns ; j<=x ; j++) {
+                this.addColumn();
+            }
         },
         addTile: function(number, x, y) {
             if (typeof x === 'undefined') {
                 x = this.p.gridX;
                 y = this.p.gridY;
             }
-            if (this.p.platform[x][y] === 0)
+            if (this.p.platform[y][x] === 0)
                 this.p.tiles += 1;
-            this.p.platform[x][y] = number;
+            this.p.platform[y][x] = number;
         },
         draw: function(ctx) {
             var p = this.p;
-            for (var i = 0; i < p.nbColumns ; i++)
+            for (var i = 0; i < p.nbRows ; i++)
             {
-                for (var j = 0 ; j < p.nbRows ; j++)
+                for (var j = 0 ; j < p.nbColumns ; j++)
                 {
                     if (p.platform[i][j]) {
                         ctx.beginPath();
-                        ctx.moveTo(i * p.length - p.x, j * p.length - p.y);
-                        ctx.lineTo((i + 1) * p.length - p.x, j * p.length - p.y);
+                        ctx.moveTo(j * p.length - p.x, i * p.length - p.y);
+                        ctx.lineTo((j + 1) * p.length - p.x, i * p.length - p.y);
                         switch (p.platform[i][j]) {
                             case Builder.BRICK: 
-                                ctx.lineTo((i + 1) * p.length - p.x, (j + 0.4) * p.length - p.y);
-                                ctx.lineTo(i * p.length - p.x, (j + 0.4) * p.length - p.y);
+                                ctx.lineTo((j + 1) * p.length - p.x, (i + 0.4) * p.length - p.y);
+                                ctx.lineTo(j * p.length - p.x, (i + 0.4) * p.length - p.y);
                                 ctx.closePath();
                                 ctx.strokeStyle = "#000000";
                                 ctx.stroke();
@@ -86,8 +92,8 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
                                 ctx.fill();
                                 break;
                             case Builder.DOOR:
-                                ctx.lineTo((i + 1) * p.length - p.x, (j + 1) * p.length - p.y);
-                                ctx.lineTo(i * p.length - p.x, (j + 1) * p.length - p.y);
+                                ctx.lineTo((j + 1) * p.length - p.x, (i + 1) * p.length - p.y);
+                                ctx.lineTo(j * p.length - p.x, (i + 1) * p.length - p.y);
                                 ctx.closePath();
                                 ctx.strokeStyle = "#8b6f37";
                                 ctx.stroke();
@@ -95,8 +101,8 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
                                 ctx.fill();
                                 break;
                             case Builder.EXIT:
-                                ctx.lineTo((i + 1) * p.length - p.x, (j + 1) * p.length - p.y);
-                                ctx.lineTo(i * p.length - p.x, (j + 1) * p.length - p.y);
+                                ctx.lineTo((j + 1) * p.length - p.x, (i + 1) * p.length - p.y);
+                                ctx.lineTo(j * p.length - p.x, (i + 1) * p.length - p.y);
                                 ctx.closePath();
                                 ctx.strokeStyle = "#00FF00";
                                 ctx.stroke();
@@ -199,18 +205,15 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
      * @returns array
      */
     Builder.prototype._getStructure = function() {
-        // TODO: correct p.platform order
-        // invert platform
         var p = this.gObject.p.platform;
         var p2 = [];
         
         if (p.length>0 && p[0].length>0) {
-            var cols = p.length;
-            var rows = p[0].length;
-            for (var i=0;i<rows;i++) {
+            var cols = p[0].length;
+            for (var i=0; i<p.length ; i ++) {
                 p2[i] = [];
-                for (var j=0;j<cols;j++) {
-                    if (p[j][i] === Builder.BRICK) {
+                for (var j=0; j<cols; j++) {
+                    if (p[i][j] === Builder.BRICK) {
                         p2[i][j] = Builder.BRICK;
                     } else {
                         p2[i][j] = 0;
