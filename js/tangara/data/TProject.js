@@ -341,13 +341,14 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
             editedProgramsArray = [];
             // get program list
             var self = this;
-            TLink.getProgramList(function(arg) {
+            TLink.getProgramList(function(arg, id) {
                 if (arg instanceof TError) {
                     // error sent: stop there
                     TEnvironment.setProjectAvailable(false);
                     window.console.error(arg.getMessage());
                     callback.call(this);                    
                 } else {
+                    self.setId(id);
                     programs = arg;
                     // sort programs and resources alphabetically
                     programs = TUtils.sortArray(programs);
