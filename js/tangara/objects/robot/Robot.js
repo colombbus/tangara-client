@@ -32,6 +32,8 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
                 carriedItems: [],
                 gridX: 0,
                 gridY: 0,
+                baseX: 7,
+                baseY: 2,
                 x: 7,
                 y: 2
             }, props), defaultProps);
@@ -254,6 +256,17 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
      */
     Robot.prototype._getPlatform = function(platform) {
         this.gObject.p.platform = platform;
+    };
+    
+    /**
+     * Set the coordinates of Robot.
+     * @param {Number} x
+     * @param {Number} y
+     */
+    Robot.prototype._setLocation = function(x, y) {
+        x = TUtils.getInteger(x) * this.gObject.p.length + this.gObject.p.baseX;
+        y = TUtils.getInteger(y) * this.gObject.p.length + this.gObject.p.baseY;
+        this.gObject.setLocation(x, y);
     };
     
     return Robot;
