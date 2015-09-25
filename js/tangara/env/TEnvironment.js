@@ -1,4 +1,4 @@
-define(['jquery'], function($) {
+define(['jquery', 'TResource'], function($, TResource) {
      /**
      * TEnvironment defines the environment variables (language, project,
      * and project's availability), get several URLs, and have several other
@@ -16,7 +16,7 @@ define(['jquery'], function($) {
         this.language = "fr";
 
         // Config parameters: default values
-        this.config = {"debug": false, "backend-path": "/tangara-ui/web/app.php/"};
+        this.config = {"debug": false, "backend-path": "/tangara-server/web/app.php/", "cache":true};
         this.debug;
 
         /**
@@ -37,26 +37,22 @@ define(['jquery'], function($) {
                     if (self.config['document-domain']) {
                         document.domain = self.config['document-domain'];
                     }
+                    TResource.setCacheEnabled(self.isCacheEnabled());
+                    
                     window.console.log("* Retrieving translated messages");
                     var messageFile = self.getResource("messages.json");
-                    window.console.log("getting messages from: " + messageFile);
                     var language = self.language;
-                    $.ajax({
-                        dataType: "json",
-                        url: messageFile,
-                        success: function(data) {
-                            if (typeof data[language] !== 'undefined') {
-                                self.messages = data[language];
-                                window.console.log("found messages in language: " + language);
-                            } else {
-                                window.console.log("found no messages for language: " + language);
-                            }
-                            if (typeof callback !== 'undefined') {
-                                callback.call(self);
-                            }
+                    TResource.get(messageFile,[language], function(data) {
+                        if (typeof data[language] !== 'undefined') {
+                            window.console.log("found messages in language: " + language);
+                            self.messages = data[language];
+                        } else {
+                            window.console.log("found no messages for language: " + language);
                         }
+                        if (typeof callback !== 'undefined') {
+                            callback.call(self);
+                        }                        
                     });
-                    
                 }
             });
         };
@@ -230,6 +226,14 @@ define(['jquery'], function($) {
                 console.log("3D functions supported");
             }
             return support3D;
+        };
+        
+        /**
+         * Checks if cache (i.e. localStorage) is enabled.
+         * @returns {Boolean}   Returns true cache is enabled, otherwise false
+         */
+        this.isCacheEnabled = function() {
+            return (typeof window.localStorage !== 'undefined' && this.config['cache']);
         };
     };
 
