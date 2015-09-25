@@ -14,7 +14,6 @@ require.config({
         "jquery-ui": '../libs/jquery.ui-1.11.2',
         "TProject": "data/TProject",
         "TProgram": "data/TProgram",
-        "TLearnProject": "data/TLearnProject",
         "TEnvironment": "env/TEnvironment",
         "TLink": "env/TLink",
         "TI18n": "env/TI18n",
@@ -59,7 +58,7 @@ require.config({
 // Start the main app logic.
 
 function load() {
-    require(['jquery', 'TEnvironment', 'TRuntime', 'ui/TLearnFrame', 'TLearnProject', 'Task', 'Grader'], function($, TEnvironment, TRuntime, TLearnFrame, TProject, Task, Grader) {
+    require(['jquery', 'TEnvironment', 'TRuntime', 'ui/TLearnFrame', 'Task', 'Grader'], function($, TEnvironment, TRuntime, TLearnFrame, Task, Grader) {
         window.console.log("*******************");
         window.console.log("* Loading Environment *");
         window.console.log("*******************");
@@ -77,7 +76,7 @@ function load() {
                     window.console.log("* Initiating link *");
                     window.console.log("*******************");
                     // Create task and grader
-                    window.task = new Task(frame);
+                    window.task = new Task(this);
                     window.grader = new Grader();
                     // get exercise id
                     var exerciseId;
@@ -92,19 +91,23 @@ function load() {
                     window.console.log("********************");
                     window.console.log("* Loading exercise *");
                     window.console.log("********************");
-                    
+                    var self = this;
                     $(document).ready(function() {
-                        frame.displayed();
-                        // trigger resize in order for canvas to update its size (and remove the 5px bottom margin)
-                        $(window).resize();
-                        if (isNaN(exerciseId)) {
-                            window.console.error("Could not find exercise id");
-                            frame.init();
-                        } else {
-                            frame.loadExercise(exerciseId, function() {
-                                frame.init();
-                            });
-                        }
+                        // postpone execution in case everything is cached
+                        setTimeout(function() {
+                            // Create task and grader
+                            self.displayed();
+                            // trigger resize in order for canvas to update its size (and remove the 5px bottom margin)
+                            $(window).resize();
+                            if (isNaN(exerciseId)) {
+                                window.console.error("Could not find exercise id");
+                                self.init();
+                            } else {
+                                self.loadExercise(exerciseId, function() {
+                                    self.init();
+                                });
+                            }
+                        },0);
                     });
                 });
             });
