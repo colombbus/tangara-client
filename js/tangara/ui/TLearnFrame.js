@@ -72,7 +72,6 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             exercise.setFrame(this);
             // declare itself as log 
             TRuntime.setLog(this);
-            initialized = true;
         };
 
         this.init = function() {
