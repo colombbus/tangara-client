@@ -331,7 +331,7 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
          * Initialize Project, get Programs list and Resources.
          * @param {Function} callback
          */
-        this.init = function(callback) {
+        this.init = function(callback, id) {
             programs = [];
             editedPrograms = {};
             resources = {};
@@ -339,6 +339,12 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
             sessions = {};
             editedProgramsNames = [];
             editedProgramsArray = [];
+            id = false;
+            if (typeof id !== 'undefined') {
+                this.setId(id);
+            } else {
+                this.setId(false);
+            }
             // get program list
             var self = this;
             TLink.getProgramList(function(arg, id) {

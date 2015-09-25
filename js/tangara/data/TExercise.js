@@ -212,7 +212,7 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/teacher/Teach
          * Initialize Exercise.
          * @param {Function} callback
          */
-        this.load = function(callback) {
+        this.load = function(callback, id) {
             checkStatements = false;
             startStatements = false;
             endStatements = false;
@@ -278,7 +278,7 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/teacher/Teach
                 if (solutionPresent) {
                     loadSolution(checkLoad);
                 }
-            });
+            }, id);
             
         };
     }
