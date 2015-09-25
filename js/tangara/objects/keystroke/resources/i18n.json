@@ -7,7 +7,8 @@
             {"name": "_deactivate", "translated": "d\u00e9sactiver", "displayed": "d\u00e9sactiver()"},
             {"name": "_addCommandRelease", "translated": "ajouterCommandeRepos", "displayed": "ajouterCommandeRepos(\"commande\")"},
             {"name": "_removeCommandRelease", "translated": "supprimerCommandesRepos", "displayed": "supprimerCommandesRepos()"},
-            {"name":"_displayCommands","translated":"afficherCommandes","displayed":"afficherCommandes(true)"}
+            {"name":"_displayCommands","translated":"afficherCommandes","displayed":"afficherCommandes(true)"},
+            {"name":"_detect","translated":"d\u00e9tecter","displayed":"d\u00e9tecter(\"touche\")"}
         ]
     }
 }

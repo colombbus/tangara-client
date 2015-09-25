@@ -4,7 +4,8 @@
         "gauche":"left",
         "droite":"right",
         "haut":"up",
-        "bas":"down"
+        "bas":"down",
+        "unknwon key":"La touche « {0} » n'existe pas"
     },
     "en": {
     }

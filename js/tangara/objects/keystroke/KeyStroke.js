@@ -36,7 +36,11 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TObject', 'TRunti
     KeyStroke.prototype.getKeyCode = function(key) {
         key = TUtils.removeAccents(key);
         key = this.getMessage(key);
-        return TUtils.getkeyCode(key);
+        var code = TUtils.getkeyCode(key);
+        if (code === false) {
+            throw new Error(TUtils.format(this.getMessage("unknwon key"), key));
+        }
+        return code;
     };
 
     /**
@@ -254,6 +258,16 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TObject', 'TRunti
     KeyStroke.prototype._displayCommands = function(value) {
         value = TUtils.getBoolean(value);
         this.commands.logCommands(value);
+    };
+
+    /**
+     * Detect if a given key is down
+     * @param {String} key
+     */
+    
+    KeyStroke.prototype._detect = function(key) {
+        var keycode = this.getKeyCode(key);
+        return (typeof this.keys[keycode] !== 'undefined' && this.keys[keycode]);
     };
 
     return KeyStroke;
