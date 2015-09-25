@@ -1378,7 +1378,13 @@
 // TWEAK FOR TANGARA : added _repeat 
     case _repeat:
       next();
-      node.count = parseParenExpression();
+      expect(_parenL);
+      if (tokType === _parenR) {
+          node.count = null;
+      } else {
+          node.count = parseExpression();
+      }
+      expect(_parenR);
       labels.push(loopLabel);
       node.body = parseStatement();
       labels.pop();
