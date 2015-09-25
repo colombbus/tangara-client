@@ -339,7 +339,6 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
             sessions = {};
             editedProgramsNames = [];
             editedProgramsArray = [];
-            id = false;
             if (typeof id !== 'undefined') {
                 this.setId(id);
             } else {
