@@ -1,4 +1,4 @@
-define(['jquery', 'TEnvironment', 'TUtils'], function($, TEnvironment, TUtils) {
+define(['jquery', 'TEnvironment', 'TUtils', 'TResource'], function($, TEnvironment, TUtils, TResource) {
 
     function TComponent(component, callback) {
 
@@ -7,7 +7,7 @@ define(['jquery', 'TEnvironment', 'TUtils'], function($, TEnvironment, TUtils) {
         if (TUtils.checkString(component)) {
             // 'component' holds the name of html template
             var url = TEnvironment.getBaseUrl() + "/components/" + component;
-            $.get(url, function(data) {
+            TResource.getPlain(url, function(data) {
                 domComponent = $(data);
                 if (typeof callback !== 'undefined') {
                     callback.call(this, domComponent);
