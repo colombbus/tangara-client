@@ -33,7 +33,8 @@ require.config({
         "json": "../libs/pem-task/json2.min",
         "Task": "env/Task",
         "Grader": "env/Grader",
-        "TExercise": "data/TExercise"
+        "TExercise": "data/TExercise",
+        "TResource": "data/TResource"
     },
     map: {
         "fileupload": {

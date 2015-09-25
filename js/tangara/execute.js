@@ -23,7 +23,8 @@ require.config({
         "ResourceManager": "utils/ResourceManager",
         "SynchronousManager": "utils/SynchronousManager",
         "TError": "utils/TError",
-        "TUtils": "utils/TUtils"
+        "TUtils": "utils/TUtils",
+        "TResource": "data/TResource"
     }
 });
 
