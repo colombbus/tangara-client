@@ -1,4 +1,4 @@
-define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager', 'Sprite'], function($, TEnvironment, TUtils, CommandManager, ResourceManager, Sprite) {
+define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager', 'objects/sprite/Sprite'], function($, TEnvironment, TUtils, CommandManager, ResourceManager, Sprite) {
     /**
      * Defines Sensor, inherited from Sprite.
      * @exports Sensor
@@ -16,16 +16,10 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
     Sensor.prototype.gClass = graphics.addClass("TSprite", "TSensor", {
         init: function(props, defaultProps) {
             this._super(TUtils.extend({
-                collisionWatched: false,
+                collisionWatched: true
             }, props), defaultProps);
             this.on("hit");
             this.watchCollisions(true);
-        },
-        goTo: function(x, y) {
-            this.perform(function(x, y) {
-                this.p.x = x;
-                this.p.y = y;
-            }, [x, y]);
         },
         setSize: function(w, h) {
             this.perform(function(w, h) {
@@ -33,19 +27,11 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
                 this.p.h = h;
                 graphics.objectResized(this);
             }, [w, h]);
+        },
+        hit: function(collided) {
+            console.debug(collided);
         }
     });
-    
-    /**
-     * Move Sensor's top-left pixel to coordinates {x,y}.
-     * @param {Number} x
-     * @param {Number} y
-     */
-    Sensor.prototype._goTo = function(x, y) {
-        x = TUtils.getInteger(x);
-        y = TUtils.getInteger(y);
-        this.gObject.goTo(x, y);
-    };
     
     /**
      * Set Sensor's width and height.
