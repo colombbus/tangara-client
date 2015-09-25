@@ -2,5 +2,6 @@
     "debug": false,
     "backend-path": "/tangara-server/web/app.php/",
     "wpaint-path": "/js/libs/wpaint-2.5.0/",
-    "document-domain": false
+    "document-domain": false,
+    "cache": true
 }
