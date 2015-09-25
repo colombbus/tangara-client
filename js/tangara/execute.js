@@ -10,7 +10,6 @@ require.config({
         "babylon": '../libs/babylonjs/babylon.1.14',
         "TProject": "data/TProject",
         "TProgram": "data/TProgram",
-        "TLearnProject": "data/TLearnProject",
         "TEnvironment": "env/TEnvironment",
         "TLink": "env/TLink",
         "TI18n": "env/TI18n",
@@ -23,7 +22,8 @@ require.config({
         "ResourceManager": "utils/ResourceManager",
         "SynchronousManager": "utils/SynchronousManager",
         "TError": "utils/TError",
-        "TUtils": "utils/TUtils"
+        "TUtils": "utils/TUtils",
+        "TResource": "data/TResource"
     }
 });
 

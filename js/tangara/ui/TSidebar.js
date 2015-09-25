@@ -54,30 +54,6 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TProgram', 'TError', 'ui/TViewe
             var self = this;
 
             viewer = new TViewer(function(c) {
-                viewer.setNextHandler(function() {
-                    var current = $sidebarFiles.find('.tsidebar-current');
-                    var nextImage = current.next('.tsidebar-type-image');
-                    if (nextImage.length === 0)
-                        nextImage = $sidebarFiles.find('.tsidebar-type-image:first');
-                    current.removeClass('tsidebar-current');
-                    nextImage.addClass('tsidebar-current');
-                    $sidebarResources.stop().animate({scrollTop: $sidebarResources.scrollTop() + nextImage.position().top}, 1000);
-                    var name = nextImage.find('.tsidebar-file-name').text();
-                    return name;
-                });
-
-                viewer.setPrevHandler(function() {
-                    var current = $sidebarFiles.find('.tsidebar-current');
-                    var prevImage = current.prev('.tsidebar-type-image');
-                    if (prevImage.length === 0)
-                        prevImage = $sidebarFiles.find('.tsidebar-type-image:last');
-                    current.removeClass('tsidebar-current');
-                    prevImage.addClass('tsidebar-current');
-                    $sidebarResources.stop().animate({scrollTop: $sidebarResources.scrollTop() + prevImage.position().top}, 1000);
-                    var name = prevImage.find('.tsidebar-file-name').text();
-                    return name;
-                });
-
                 textEditor = new TTextEditor(function(d) {
                     if (typeof callback !== 'undefined') {
                         callback.call(self, component);
@@ -90,6 +66,30 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TProgram', 'TError', 'ui/TViewe
          * Display Sidebar.
          */
         this.displayed = function() {
+            viewer.setNextHandler(function() {
+                var current = $sidebarFiles.find('.tsidebar-current');
+                var nextImage = current.next('.tsidebar-type-image');
+                if (nextImage.length === 0)
+                    nextImage = $sidebarFiles.find('.tsidebar-type-image:first');
+                current.removeClass('tsidebar-current');
+                nextImage.addClass('tsidebar-current');
+                $sidebarResources.stop().animate({scrollTop: $sidebarResources.scrollTop() + nextImage.position().top}, 1000);
+                var name = nextImage.find('.tsidebar-file-name').text();
+                return name;
+            });
+
+            viewer.setPrevHandler(function() {
+                var current = $sidebarFiles.find('.tsidebar-current');
+                var prevImage = current.prev('.tsidebar-type-image');
+                if (prevImage.length === 0)
+                    prevImage = $sidebarFiles.find('.tsidebar-type-image:last');
+                current.removeClass('tsidebar-current');
+                prevImage.addClass('tsidebar-current');
+                $sidebarResources.stop().animate({scrollTop: $sidebarResources.scrollTop() + prevImage.position().top}, 1000);
+                var name = prevImage.find('.tsidebar-file-name').text();
+                return name;
+            });
+            
             this.displayPrograms();
             this.init();
             // Set up blueimp fileupload plugin

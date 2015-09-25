@@ -1,4 +1,4 @@
-define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterpreter', 'TUtils', 'TI18n'], function($, TError, TGraphics, TParser, TEnvironment, TInterpreter, TUtils, TI18n) {
+define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterpreter', 'TUtils', 'TI18n', 'TResource'], function($, TError, TGraphics, TParser, TEnvironment, TInterpreter, TUtils, TI18n, TResource) {
     function TRuntime() {
         var runtimeFrame;
         var interpreter = new TInterpreter();
@@ -35,20 +35,15 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             // set repeat keyword
             TParser.setRepeatKeyword(TEnvironment.getMessage("repeat-keyword"));
             loadBaseClasses(TEnvironment.getLanguage(), function(baseNames) {
-                window.console.log("accessing objects list from: " + classesUrl);
-                $.ajax({
-                    dataType: "json",
-                    url: classesUrl,
-                    success: function(data) {
-                        loadClasses(data, TEnvironment.getLanguage(), function(translatedNames) {
-                            // Ask parser to protect translated names
-                            TParser.protectIdentifiers(translatedNames.concat(baseNames));
-                            window.console.log("**** TRUNTIME INITIALIZED ****");
-                            if (typeof callback !== "undefined") {
-                                callback.call(self);
-                            }
-                        });
-                    }
+                TResource.get(classesUrl,[], function(data) {
+                    loadClasses(data, TEnvironment.getLanguage(), function(translatedNames) {
+                        // Ask parser to protect translated names
+                        TParser.protectIdentifiers(translatedNames.concat(baseNames));
+                        window.console.log("**** TRUNTIME INITIALIZED ****");
+                        if (typeof callback !== "undefined") {
+                            callback.call(self);
+                        }
+                    });
                 });
             });
         };

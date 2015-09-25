@@ -1,4 +1,4 @@
-define(['jquery', 'TUtils'], function($, TUtils) {
+define(['jquery', 'TResource'], function($, TResource) {
     /**
      * Internationalization of Declick.
      * Allows the program to be adapted to various languages.
@@ -10,8 +10,6 @@ define(['jquery', 'TUtils'], function($, TUtils) {
         var waiting = {};
         var translatedClasses = [];
         var self;
-        var storageSupport = (typeof window.localStorage !== 'undefined');
-        
         
         /**
          * Translate a method.
@@ -70,7 +68,7 @@ define(['jquery', 'TUtils'], function($, TUtils) {
                 }
             } else {
                 // load translation file
-                getResource(file, [language, 'hide'], function(data) {
+                TResource.get(file, [language, 'hide'], function(data) {
                     processedFiles[file] = {};
                     if (typeof data.hide !== "undefined") {
                         // there are methods to hide
@@ -130,7 +128,7 @@ define(['jquery', 'TUtils'], function($, TUtils) {
                 }
             } else {
                 // load message file
-                getResource(file, language, function(data) {
+                TResource.get(file, [language], function(data) {
                     processedFiles[file] = {};
                     if (typeof data[language] !== 'undefined') {
                         $.each(data[language], function(name, value) {
@@ -223,49 +221,6 @@ define(['jquery', 'TUtils'], function($, TUtils) {
                 }
             });
         };
-        
-        var getResource = function(name, fields, callback) {
-            if (storageSupport) {
-                // try to retrieve value from local storage
-                var value = localStorage.getItem(name);
-                if (value) {
-                    // value is available from local storage
-                    callback.call(this,JSON.parse(value));
-                    return;
-                }
-            }
-            $.ajax({
-                dataType: "json",
-                url: name,
-                success: function(data) {
-                    var value = {};
-                    if (TUtils.checkString(fields)) {
-                        fields = [fields];
-                    }
-                    for (var i=0; i<fields.length; i++) {
-                        if (typeof data[fields[i]] !== 'undefined') {
-                            value[fields[i]] = data[fields[i]];
-                            window.console.log("found field '"+fields[i]+"' in resource '"+name);
-                        }
-                    }
-                    if (storageSupport) {
-                        localStorage.setItem(name,JSON.stringify(value));
-                    }
-                    callback.call(this, value);
-                },
-                error: function(data, status, error) {
-                    window.console.error("Error loading resource '"+name+"'");
-                    callback.call(this);
-                }
-            });
-        };
-        
-        this.clearCache = function() {
-            if (storageSupport) {
-                localStorage.clear();
-            }
-        };
-
         
     };
     
