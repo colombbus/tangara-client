@@ -1,5 +1,7 @@
 define(['TError', 'TUtils'], function(TError, TUtils) {
     function TInterpreter() {
+        var MAX_LOOP = 99;
+        
         var runtimeFrame;
         var errorHandler;
         var definedFunctions = {};
@@ -419,19 +421,43 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
 
         var evalRepeatStatement = function(statement) {
             if (typeof statement.controls === 'undefined') {
-                var count = evalExpression(statement.count, true);
-                if (isNaN(count)) {
-                    //TODO: throw real TError
-                    throw "count is not an integer";
+                statement.controls = {};
+                if (statement.count !== null) {
+                    var count = evalExpression(statement.count, true);
+                    if (isNaN(count)) {
+                        //TODO: throw real TError
+                        throw "count is not an integer";
+                    }
+                    statement.controls.count = count;
+                } else {
+                    statement.controls.count = null;
                 }
-                statement.controls = {count: count};
+                statement.controls.loop = 0;
             }
-            if (statement.controls.count > 0) {
-                statement.controls.count--;
+            statement.controls.loop++;
+            // loop management
+            if (statement.controls.loop > MAX_LOOP) {
+                // suspend execution in order to allow interruption
+                statement.controls.loop = 0;
+                suspended = true;
+                setTimeout(function() {
+                    if (suspended) {
+                        suspended = false;
+                        run();
+                    }
+                }, 0);
+            }
+            if (statement.controls.count !== null) {
+                if (statement.controls.count > 0) {
+                    statement.controls.count--;
+                    insertStatement(statement.body);
+                    return false;
+                } else { 
+                    return true;
+                }
+            } else {
                 insertStatement(statement.body);
                 return false;
-            } else {
-                return true;
             }
         };
 
