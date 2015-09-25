@@ -127,8 +127,9 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TResource'], function($, TEnvironme
      * draw it.
      */
     TError.prototype.detectError = function() {
-        // Undefined 
-        var result = this.detectRegex_undefined.exec(this.message);
+        var message = this.message;
+        // Undefined
+        var result = this.detectRegex_undefined.exec(message);
         if (result !== null && result.length > 0) {
             var name = result[1];
             name = TUtils.convertUnicode(name);
@@ -147,12 +148,12 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TResource'], function($, TEnvironme
             }
             return;
         }
-        var result = this.detectRegex_syntax_error.exec(this.message);
+        var result = this.detectRegex_syntax_error.exec(message);
         if (result !== null) {
             this.message = this.translate("runtime-error-syntax-error");
             return;
         }
-        var result = this.detectRegex_not_a_variable.exec(this.message);
+        var result = this.detectRegex_not_a_variable.exec(message);
         if (result !== null && result.length > 0) {
             var name = result[1];
             name = TUtils.convertUnicode(name);
