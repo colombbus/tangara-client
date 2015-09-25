@@ -88,21 +88,22 @@ define(['jquery'], function($) {
          * @param {Function} callback
          */
         this.getPlain = function(name, callback) {
-            /* DEACTIVATED FOR NOW
-             * if (cacheEnabled) {
+            if (cacheEnabled) {
                 // try to retrieve value from local storage
                 var value = localStorage.getItem(name);
                 if (value) {
                     // value is available from local storage
-                    callback.call(this,value);
+                    // postpone callback execution
+                    setTimeout(function() {
+                        callback.call(this,value);
+                    }, 0);
                     return;
                 }
-            }*/
+            }
             $.ajax({
                 dataType: "text",
                 url: name,
                 success: function(data) {
-                    /* DEACTIVATED FOR NOW
                     if (cacheEnabled) {
                         try {
                             localStorage.setItem(name,data);
@@ -111,7 +112,6 @@ define(['jquery'], function($) {
                         }
 
                     }
-                    */
                     callback.call(this, data);
                 },
                 error: function(data, status, error) {
