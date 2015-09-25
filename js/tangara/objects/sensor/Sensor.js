@@ -1,23 +1,24 @@
-define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager', 'TGraphicalObject'], function($, TEnvironment, TUtils, CommandManager, ResourceManager, TGraphicalObject) {
-    /**Spri
-     * Defines Sensor, inherited from TGraphicalObject.
+define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager', 'Sprite'], function($, TEnvironment, TUtils, CommandManager, ResourceManager, Sprite) {
+    /**
+     * Defines Sensor, inherited from Sprite.
      * @exports Sensor
      */
     var Sensor = function() {
-        TGraphicalObject.call(this);
+        Sprite.call(this);
     };
 
-    Sensor.prototype = Object.create(TGraphicalObject.prototype);
+    Sensor.prototype = Object.create(Sprite.prototype);
     Sensor.prototype.constructor = Sensor;
     Sensor.prototype.className = "Sensor";
 
     var graphics = Sensor.prototype.graphics;
 
-    Sensor.prototype.gClass = graphics.addClass("TGraphicalObject", "TSensor", {
+    Sensor.prototype.gClass = graphics.addClass("TSprite", "TSensor", {
         init: function(props, defaultProps) {
             this._super(TUtils.extend({
                 collisionWatched: false,
             }, props), defaultProps);
+            this.on("hit");
             this.watchCollisions(true);
         },
         goTo: function(x, y) {
@@ -32,18 +33,6 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
                 this.p.h = h;
                 graphics.objectResized(this);
             }, [w, h]);
-        },
-        watchCollisions: function(value) {
-            this.perform(function(value) {
-                if (value === this.p.collisionWatched)
-                    return;
-                if (value) {
-                    this.on("hit", this, "objectEncountered");
-                } else {
-                    this.off("hit", this, "objectEncountered");
-                }
-                this.p.collisionWatched = value;
-            }, [value]);
         }
     });
     
@@ -67,15 +56,6 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
         h = TUtils.getInteger(w);
         w = TUtils.getInteger(h);
         this.gObject.goTo(w, h);
-    };
-
-    /**
-     * Checks if Sensor have collisions triggered.
-     * @param {Boolean} value
-     */
-    Sensor.prototype._watchCollisions = function(value) {
-        value = TUtils.getBoolean(value);
-        this.gObject.watchCollisions(value);
     };
 
     return Sensor;
