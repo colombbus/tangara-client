@@ -19,30 +19,32 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             initRuntimeFrame();
             // link interpreter to runtimeFrame
             interpreter.setRuntimeFrame(runtimeFrame);
-
             // link interpreter to errorHandler
             interpreter.setErrorHandler(handleError);
             
             // create graphics;
             graphics = new TGraphics();
 
-            window.console.log("* Retrieving list of translated objects");
-            // find objects and translate them
-            var classesUrl = TEnvironment.getObjectListUrl();
-            
             self = this;
             window.console.log("loading base classes");
             // set repeat keyword
             TParser.setRepeatKeyword(TEnvironment.getMessage("repeat-keyword"));
             loadBaseClasses(TEnvironment.getLanguage(), function(baseNames) {
+                window.console.log("* Retrieving list of translated objects");
+                // find objects and translate them
+                var classesUrl = TEnvironment.getObjectListUrl();
                 TResource.get(classesUrl,[], function(data) {
                     loadClasses(data, TEnvironment.getLanguage(), function(translatedNames) {
                         // Ask parser to protect translated names
                         TParser.protectIdentifiers(translatedNames.concat(baseNames));
-                        window.console.log("**** TRUNTIME INITIALIZED ****");
-                        if (typeof callback !== "undefined") {
-                            callback.call(self);
-                        }
+                        // Load translated error messages
+                        window.console.log("* Loading translated error messages");
+                        TError.loadMessages(function() {
+                            window.console.log("**** TRUNTIME INITIALIZED ****");
+                            if (typeof callback !== "undefined") {
+                                callback.call(self);
+                            }
+                        });
                     });
                 });
             });

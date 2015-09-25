@@ -72,7 +72,6 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             exercise.setFrame(this);
             // declare itself as log 
             TRuntime.setLog(this);
-            initialized = true;
         };
 
         this.init = function() {
@@ -200,7 +199,6 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             TRuntime.clear();
             editor.clear();
             $input.val();
-            exercise.setId(id);
             exercise.load(function() {
                 // set instruction
                 if (exercise.hasInstructions()) {
@@ -215,7 +213,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
                 if (typeof callback !== 'undefined') {
                     callback.call(this);
                 }
-            });
+            }, id);
         };
 
 

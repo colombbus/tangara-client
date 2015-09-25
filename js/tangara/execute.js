@@ -45,7 +45,6 @@ function load() {
                         $(window).resize();
                         canvas.showLoading();
                         var currentProject = new TProject();
-                        currentProject.setId(init_projectId);
                         currentProject.init(function() {
                             TEnvironment.setProject(currentProject);
                             currentProject.getProgramStatements(init_programName, function(statements) {
@@ -59,7 +58,7 @@ function load() {
                                     TRuntime.executeStatements(statements, init_programName);
                                 });
                             });
-                        });
+                        }, init_projectId);
                     });
                 });
             });

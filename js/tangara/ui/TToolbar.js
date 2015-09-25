@@ -5,8 +5,6 @@ define(['ui/TComponent', 'jquery', 'TEnvironment', 'TUI'], function(TComponent, 
         var editorMode = false;
         var programOptions = true;
 
-        var self = this;
-
         TComponent.call(this, "TToolbar.html", function(component) {
             $buttonExecute = component.find(".ttoolbar-button-execute");
             $buttonEditor = component.find(".ttoolbar-mode-editor");

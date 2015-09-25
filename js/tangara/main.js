@@ -95,10 +95,7 @@ function load() {
                     currentProject.init(function() {
                         TEnvironment.setProject(currentProject);
                         $(document).ready(function() {
-                            // postpone execution in case everything is cached
-                            setTimeout(function() {
-                                frame.displayed();
-                            },0);
+                            frame.displayed();
                         });
                     });
                 });
