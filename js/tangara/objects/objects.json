@@ -477,12 +477,12 @@
         },
         "parents": true
     },
-     "Captor": {
-        "path": "captor",
+     "Sensor": {
+        "path": "sensor",
         "translations": {
             "fr": "Capteur",
             "es": "TBD",
-            "en": "Captor"
+            "en": "Sensor"
         },
         "parents": true
     }
