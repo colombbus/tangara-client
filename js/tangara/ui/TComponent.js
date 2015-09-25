@@ -7,10 +7,11 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TResource'], function($, TEnvironme
         if (TUtils.checkString(component)) {
             // 'component' holds the name of html template
             var url = TEnvironment.getBaseUrl() + "/components/" + component;
+            var self = this;
             TResource.getPlain(url, function(data) {
                 domComponent = $(data);
                 if (typeof callback !== 'undefined') {
-                    callback.call(this, domComponent);
+                    callback.call(self, domComponent);
                 }
             });
         } else {
