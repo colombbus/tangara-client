@@ -24,7 +24,6 @@ require.config({
         "wPaint/plugins/flip": 'plugins/wPaint.menu.main.flip',
         "TProject": "data/TProject",
         "TProgram": "data/TProgram",
-        "TLearnProject": "data/TLearnProject",
         "TEnvironment": "env/TEnvironment",
         "TLink": "env/TLink",
         "TI18n": "env/TI18n",
@@ -96,7 +95,10 @@ function load() {
                     currentProject.init(function() {
                         TEnvironment.setProject(currentProject);
                         $(document).ready(function() {
-                            frame.displayed();
+                            // postpone execution in case everything is cached
+                            setTimeout(function() {
+                                frame.displayed();
+                            },0);
                         });
                     });
                 });
