@@ -98,6 +98,9 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
             }
         },
         mayFall: function(value) {
+			if (typeof value === 'undefined') {
+				value = true;
+			}
             this.perform(function() {
                 this.p.mayFall = value;
             });
