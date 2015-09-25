@@ -32,8 +32,8 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
                 carriedItems: [],
                 gridX: 0,
                 gridY: 0,
-                baseX: 7,
-                baseY: 2,
+                baseX: 0,
+                baseY: 0,
                 x: 7,
                 y: 2
             }, props), defaultProps);
