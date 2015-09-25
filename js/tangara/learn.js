@@ -28,7 +28,6 @@ require.config({
         "TError": "utils/TError",
         "TUtils": "utils/TUtils",
         "platform-pr": "../libs/pem-task/platform-pr",
-        "miniPlatform": "../libs/pem-task/miniPlatform",
         "json": "../libs/pem-task/json2.min",
         "Task": "env/Task",
         "Grader": "env/Grader",
@@ -43,11 +42,6 @@ require.config({
     shim: {
         'platform-pr': {
             deps: ['jquery'],
-            exports: '$'
-        },
-        
-        'miniPlatform': {
-            deps: ['jquery', 'platform-pr', 'Task'],
             exports: '$'
         }
     }    
