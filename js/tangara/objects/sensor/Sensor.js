@@ -16,9 +16,8 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
     Sensor.prototype.gClass = graphics.addClass("TSprite", "TSensor", {
         init: function(props, defaultProps) {
             this._super(TUtils.extend({
-                collisionWatched: true
+                initialized: true
             }, props), defaultProps);
-            this.on("hit");
             this.watchCollisions(true);
         },
         setSize: function(w, h) {
@@ -28,9 +27,6 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
                 graphics.objectResized(this);
             }, [w, h]);
         },
-        hit: function(collided) {
-            console.debug(collided);
-        }
     });
     
     /**
@@ -41,7 +37,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
     Sensor.prototype._setSize = function(w, h) {
         h = TUtils.getInteger(w);
         w = TUtils.getInteger(h);
-        this.gObject.goTo(w, h);
+        this.gObject.setSize(w, h);
     };
 
     return Sensor;
