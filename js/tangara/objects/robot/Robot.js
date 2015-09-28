@@ -34,8 +34,8 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
                 gridY: 0,
                 baseX: 0,
                 baseY: 0,
-                x: 7,
-                y: 2
+                x: 0,
+                y: 0
             }, props), defaultProps);
         },
         step: function(dt) {
