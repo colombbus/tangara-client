@@ -25,6 +25,8 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
                 this.p.w = w;
                 this.p.h = h;
                 graphics.objectResized(this);
+                this.p.x += w / 2;
+                this.p.y += h / 2;
             }, [w, h]);
         },
     });
