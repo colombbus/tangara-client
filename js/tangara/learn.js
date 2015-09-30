@@ -44,6 +44,9 @@ require.config({
         'platform-pr': {
             deps: ['jquery'],
             exports: '$'
+        },
+        'split-pane': {
+            deps: ['jquery']
         }
     }    
 });

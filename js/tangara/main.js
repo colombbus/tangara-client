@@ -65,6 +65,9 @@ require.config({
         },
         'wColorPicker': {
             deps: ['wPaint']
+        },
+        'split-pane': {
+            deps: ['jquery']
         }
     }
 });
