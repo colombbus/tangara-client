@@ -70,8 +70,8 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
      * @param {Number} h
      */
     Sensor.prototype._setSize = function (w, h) {
-        h = TUtils.getInteger(w);
-        w = TUtils.getInteger(h);
+        w = TUtils.getInteger(w);
+        h = TUtils.getInteger(h);
         this.gObject.setSize(w, h);
     };
 
