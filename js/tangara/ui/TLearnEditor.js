@@ -155,6 +155,13 @@ define(['ui/TComponent', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRunti
         };
 
 
+        /**
+         * Resize the ACE editor according to its container's height
+         */
+        this.resize = function() {
+            aceEditor.resize();
+        };
+
         var consoleCompleter = {
             getCompletions: function(editor, session, pos, prefix, callback) {
                 pos.column--;
