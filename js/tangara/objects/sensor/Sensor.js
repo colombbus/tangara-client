@@ -37,10 +37,10 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
         draw: function (ctx) {
             var p = this.p;
             ctx.beginPath();
-            ctx.moveTo(0, 0);
-            ctx.lineTo(p.w, 0);
-            ctx.lineTo(p.w, p.h);
-            ctx.lineTo(0, p.h);
+            ctx.moveTo(-p.w / 2, -p.h / 2);
+            ctx.lineTo(p.w / 2, -p.h / 2);
+            ctx.lineTo(p.w / 2, p.h / 2);
+            ctx.lineTo(-p.w / 2, p.h / 2);
             ctx.closePath();
             ctx.strokeStyle = p.color;
             ctx.lineWidth = p.width;
