@@ -5,8 +5,6 @@ define(['ui/TComponent', 'jquery', 'TEnvironment', 'TUI'], function(TComponent, 
         var editorMode = false;
         var programOptions = true;
 
-        var self = this;
-
         TComponent.call(this, "TToolbar.html", function(component) {
             $buttonExecute = component.find(".ttoolbar-button-execute");
             $buttonEditor = component.find(".ttoolbar-mode-editor");
@@ -114,16 +112,15 @@ define(['ui/TComponent', 'jquery', 'TEnvironment', 'TUI'], function(TComponent, 
                 return false;
             });
 
-            // Start with editor mode disabled
-            self.disableProgramOptions();
-            self.disableResourceOptions();
-
             if (typeof callback !== 'undefined') {
                 callback.call(this, component);
             }
         });
 
         this.displayed = function() {
+            // Start with editor mode disabled
+            this.disableProgramOptions();
+            this.disableResourceOptions();
         };
 
         this.enableConsole = function() {

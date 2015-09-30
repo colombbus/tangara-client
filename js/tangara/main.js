@@ -24,7 +24,6 @@ require.config({
         "wPaint/plugins/flip": 'plugins/wPaint.menu.main.flip',
         "TProject": "data/TProject",
         "TProgram": "data/TProgram",
-        "TLearnProject": "data/TLearnProject",
         "TEnvironment": "env/TEnvironment",
         "TLink": "env/TLink",
         "TI18n": "env/TI18n",
@@ -37,7 +36,8 @@ require.config({
         "ResourceManager": "utils/ResourceManager",
         "SynchronousManager": "utils/SynchronousManager",
         "TError": "utils/TError",
-        "TUtils": "utils/TUtils"
+        "TUtils": "utils/TUtils",
+        "TResource": "data/TResource"
     },
     map: {
         "fileupload": {
@@ -65,6 +65,9 @@ require.config({
         },
         'wColorPicker': {
             deps: ['wPaint']
+        },
+        'split-pane': {
+            deps: ['jquery']
         }
     }
 });

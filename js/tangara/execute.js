@@ -10,7 +10,6 @@ require.config({
         "babylon": '../libs/babylonjs/babylon.1.14',
         "TProject": "data/TProject",
         "TProgram": "data/TProgram",
-        "TLearnProject": "data/TLearnProject",
         "TEnvironment": "env/TEnvironment",
         "TLink": "env/TLink",
         "TI18n": "env/TI18n",
@@ -23,7 +22,8 @@ require.config({
         "ResourceManager": "utils/ResourceManager",
         "SynchronousManager": "utils/SynchronousManager",
         "TError": "utils/TError",
-        "TUtils": "utils/TUtils"
+        "TUtils": "utils/TUtils",
+        "TResource": "data/TResource"
     }
 });
 
@@ -45,7 +45,6 @@ function load() {
                         $(window).resize();
                         canvas.showLoading();
                         var currentProject = new TProject();
-                        currentProject.setId(init_projectId);
                         currentProject.init(function() {
                             TEnvironment.setProject(currentProject);
                             currentProject.getProgramStatements(init_programName, function(statements) {
@@ -59,7 +58,7 @@ function load() {
                                     TRuntime.executeStatements(statements, init_programName);
                                 });
                             });
-                        });
+                        }, init_projectId);
                     });
                 });
             });

@@ -73,6 +73,10 @@ body {
     background-image:url(../images/step_orange.png);
 }
 
+.split-pane-divider {
+    background: #ebebeb url("../images/handle.png") no-repeat scroll 50% 1px;
+    height: 5px;
+}
 
 #tlearnframe-instruction {
     background-color:#5e5e5e;
@@ -109,19 +113,20 @@ body {
     left:0;
 }
 
-
-
 #tlearnframe-right {
     margin-left: 400px;
     height:100%;
     position:relative;
+    width:auto;
 }
+
 #tlearnframe-canvas {
     position:absolute;
     top:0;
     bottom:240px;
     width:100%;
     z-index:1;
+    overflow:hidden;
 }
 
 #tcanvas_container {
@@ -207,12 +212,17 @@ body {
     background-image:url(../images/clear_grey.png);
 }
 
+#tlearnframe-separator {
+    bottom:240px;
+}
+
 #tlearnframe-bottom {
     height:240px;
     width:100%;
     position:absolute;
     bottom:0;
-    z-index:1;    
+    z-index:1;
+    overflow:hidden;
 }
 
 #tlearnframe-buttons {
@@ -223,7 +233,10 @@ body {
 }
 
 #tlearneditor {
-    height:200px;
+    position:absolute;
+    top:40px;
+    bottom:0;
+    width:100%;
 }
 
 #tlearneditor-text {

@@ -282,6 +282,13 @@ define(['ui/TComponent', 'jquery', 'ace/ace', 'ace/edit_session', 'ace/range', '
             editionEnabled = value;
         };
 
+        /**
+         * Resize the ACE editor according to its container's height
+         */
+        this.resize = function() {
+            aceEditor.resize();
+        };
+
         var editorCompleter = {
             getCompletions: function(editor, session, pos, prefix, callback) {
                 pos.column--;

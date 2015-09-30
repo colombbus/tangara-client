@@ -1,5 +1,7 @@
 define(['TError', 'TUtils'], function(TError, TUtils) {
     function TInterpreter() {
+        var MAX_LOOP = 99;
+        
         var runtimeFrame;
         var errorHandler;
         var definedFunctions = {};
@@ -106,8 +108,26 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
             }
         };
 
-        this.insertStatements = function(statements) {
-            insertStatements(statements);
+        this.addPriorityStatements = function(statements, log) {
+            // Find index at which insertion has to be made
+            var index=0;
+            while (index<stack[executionLevel].length && typeof stack[executionLevel][index].priority !== 'undefined') {
+                index++;
+            }
+            var statement;
+            for (var i = statements.length - 1; i >= 0; i--) {
+                statement = statements[i];
+                // Set statement as priority one
+                statement.priority = true;
+                // Set log information
+                statement.log = log;
+                // Insert statement
+                stack[executionLevel].splice(index, 0, statement);
+            }
+            // Update stackPointer if required
+            if (stackPointer[executionLevel]>=index) {
+                stackPointer[executionLevel]+=statements.length;
+            }
             if (!running) {
                 this.start();
             }
@@ -148,7 +168,7 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
                         // We haven't changed execution level
                         if (consume === true) {
                             stack[executionLevel].splice(stackPointer[executionLevel], 1);
-                            if (typeof statement.inserted === 'undefined' || statement.log) {
+                            if ((typeof statement.inserted === 'undefined' && typeof statement.priority === 'undefined') || statement.log) {
                                 logCommand(statement.raw);
                             }
                             if (typeof statement.controls !== 'undefined') {
@@ -419,19 +439,43 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
 
         var evalRepeatStatement = function(statement) {
             if (typeof statement.controls === 'undefined') {
-                var count = evalExpression(statement.count, true);
-                if (isNaN(count)) {
-                    //TODO: throw real TError
-                    throw "count is not an integer";
+                statement.controls = {};
+                if (statement.count !== null) {
+                    var count = evalExpression(statement.count, true);
+                    if (isNaN(count)) {
+                        //TODO: throw real TError
+                        throw "count is not an integer";
+                    }
+                    statement.controls.count = count;
+                } else {
+                    statement.controls.count = null;
                 }
-                statement.controls = {count: count};
+                statement.controls.loop = 0;
             }
-            if (statement.controls.count > 0) {
-                statement.controls.count--;
+            statement.controls.loop++;
+            // loop management
+            if (statement.controls.loop > MAX_LOOP) {
+                // suspend execution in order to allow interruption
+                statement.controls.loop = 0;
+                suspended = true;
+                setTimeout(function() {
+                    if (suspended) {
+                        suspended = false;
+                        run();
+                    }
+                }, 0);
+            }
+            if (statement.controls.count !== null) {
+                if (statement.controls.count > 0) {
+                    statement.controls.count--;
+                    insertStatement(statement.body);
+                    return false;
+                } else { 
+                    return true;
+                }
+            } else {
                 insertStatement(statement.body);
                 return false;
-            } else {
-                return true;
             }
         };
 

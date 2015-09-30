@@ -195,12 +195,21 @@
         },
         "parents": true
     },
-    "KeyStroke": {
-        "path": "keystroke",
+    "OldKeyStroke": {
+        "path": "oldkeystroke",
         "translations": {
             "fr": "CommandesClavier",
             "es": "TBT",
             "en": "KeyStroke"
+        },
+        "parents": true
+    },
+    "KeyStroke": {
+        "path": "keystroke",
+        "translations": {
+            "fr": "Clavier",
+            "es": "TBT",
+            "en": "Keys"
         },
         "parents": true
     },
@@ -477,12 +486,12 @@
         },
         "parents": true
     },
-     "Captor": {
-        "path": "captor",
+     "Sensor": {
+        "path": "sensor",
         "translations": {
             "fr": "Capteur",
             "es": "TBD",
-            "en": "Captor"
+            "en": "Sensor"
         },
         "parents": true
     }

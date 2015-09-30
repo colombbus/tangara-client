@@ -16,18 +16,6 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui
                     waiting.splice(i, 1);
                 }
                 if (waiting.length === 0) {
-                    // Set UI
-                    TUI.setFrame(frame);
-                    TUI.setCanvas(canvas);
-                    TUI.setEditor(editor);
-                    TUI.setSidebar(sidebar);
-                    TUI.setToolbar(toolbar);
-                    TUI.setConsole(console);
-                    TUI.setLog(log);
-
-                    // Plug Runtime with Log
-                    TRuntime.setLog(log);
-
                     if (typeof callback !== 'undefined') {
                         callback.call(this, component);
                     }
@@ -72,12 +60,27 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui
         };
 
         this.displayed = function() {
+            // Set UI
+            TUI.setFrame(frame);
+            TUI.setCanvas(canvas);
+            TUI.setEditor(editor);
+            TUI.setSidebar(sidebar);
+            TUI.setToolbar(toolbar);
+            TUI.setConsole(console);
+            TUI.setLog(log);
+
+            // Plug Runtime with Log
+            TRuntime.setLog(log);
+            
             canvas.displayed();
             editor.displayed();
             sidebar.displayed();
             console.displayed();
             toolbar.displayed();
             log.displayed();
+            $frame.on("splitpane:resized", function() {
+                editor.resize();
+            });
             // Important to attach handler before calling splitPane
             $separator.on("mousedown", checkSeparatorEnabled);
             $('.split-pane').splitPane();

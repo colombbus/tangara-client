@@ -1,193 +1,192 @@
-define(['jquery', 'TEnvironment', 'TUtils'], function($, TEnvironment, TUtils) {
+define(['jquery', 'TEnvironment', 'TUtils', 'TResource'], function($, TEnvironment, TUtils, TResource) {
     /**
      * TError is used to format and draw error messages.
      * @exports TError
      * @param {type} e
      */
     function TError(e) {
-        var message = "";
-        var lines = [];
-        var programName = null;
-        var code = null;
-
-        var detectRegex_undefined = /(\S*)\sis\snot\sdefined/i;
-        var detectRegex_not_a_function = /(\S*)\sis\snot\sa\sfunction/i;
-        var detectRegex_syntax_error = /Unexpected\stoken\s/i;
-        var detectRegex_not_a_variable = /Can\'t\sfind\svariable\:\s(\S*)/i;
-        var detectRegex_unterminated_string = /Unterminated\sstring\sconstant/i;
-        var detectRegex_unknown_function = /unknown\sfunction/i;
+        this.message = "";
+        this.lines = [];
+        this.programName = null;
+        this.code = null;
 
         // Initialization from error object
         if (typeof e !== 'undefined') {
             if (typeof e === 'string') {
-                message = translate(e);
+                this.message = this.translate(e);
             } else {
                 if (typeof e.message !== 'undefined') {
-                    message = translate(e.message);
+                    this.message = this.translate(e.message);
                 }
                 if (typeof e.loc !== 'undefined') {
                     // e.loc set by acorn parser
-                    lines[0] = e.loc.line;
-                    lines[1] = e.loc.line;
+                    this.lines[0] = e.loc.line;
+                    this.lines[1] = e.loc.line;
                 }
             }
         }
-
-        /**
-         * Translate an error.
-         * @param {String} text
-         * @returns {String}    Returns the translated error, or the original
-         * string if failed.
-         */
-        function translate(text) {
-            if (typeof TError.errors !== 'undefined' && typeof TError.errors[text] !== 'undefined') {
-                var translatedText = TError.errors[text];
-                if (arguments.length > 1) {
-                    // message has to be parsed
-                    var elements = arguments;
-                    translatedText = translatedText.replace(/{(\d+)}/g, function(match, number) {
-                        number = parseInt(number) + 1;
-                        return typeof elements[number] !== 'undefined' ? elements[number] : match;
-                    });
-                }
-                return translatedText;
-            } else {
-                return text;
-            }
-        }
-
-        /**
-         * Set lines to value.
-         * @param {Number[]} value
-         */
-        this.setLines = function(value) {
-            lines = value;
-        };
-
-        /**
-         * Get the value of lines.
-         * @returns {Number[]}
-         */
-        this.getLines = function() {
-            return lines;
-        };
-
-        /**
-         * Get the error message.
-         * @returns {String}
-         */
-        this.getMessage = function() {
-            if (programName !== null && typeof lines !== 'undefined' && lines.length > 0) {
-                if (lines.length === 2 && lines[0] !== lines[1]) {
-                    return message + " (lignes " + lines[0] + " à " + lines[1] + ")";
-                } else {
-                    return message + " (ligne " + lines[0] + ")";
-                }
-            }
-            return message;
-        };
-
-        /**
-         * Get the Program Name.
-         * @returns {String} 
-         */
-        this.getProgramName = function() {
-            return programName;
-        };
-
-        /**
-         * Set the Program Name to name.
-         * @param {String} name
-         * @returns {undefined}
-         */
-        this.setProgramName = function(name) {
-            programName = name;
-        };
-
-        /**
-         * Set code to value.
-         * @param {String} value
-         */
-        this.setCode = function(value) {
-            code = value;
-        };
-
-        /**
-         * Get code.
-         * @return {String}
-         */
-        this.getCode = function() {
-            return code;
-        };
-
-        /**
-         * Detect the error, translate it into an user-friendly message and
-         * draw it.
-         */
-        this.detectError = function() {
-            // Undefined 
-            var result = detectRegex_undefined.exec(message);
-            if (result !== null && result.length > 0) {
-                var name = result[1];
-                name = TUtils.convertUnicode(name);
-                message = translate("runtime-error-undefined", name);
-                return;
-            }
-            // Not a function 
-            var result = detectRegex_not_a_function.exec(message);
-            if (result !== null && result.length > 0) {
-                var name = result[1];
-                name = TUtils.convertUnicode(name);
-                if (name === 'undefined') {
-                    message = translate("runtime-error-undefined-not-a-function");
-                } else {
-                    message = translate("runtime-error-not-a-function", name);
-                }
-                return;
-            }
-            var result = detectRegex_syntax_error.exec(message);
-            if (result !== null) {
-                message = translate("runtime-error-syntax-error");
-                return;
-            }
-            var result = detectRegex_not_a_variable.exec(message);
-            if (result !== null && result.length > 0) {
-                var name = result[1];
-                name = TUtils.convertUnicode(name);
-                message = translate("runtime-error-not-variable-error", name);
-                return;
-            }
-            var result = detectRegex_unterminated_string.exec(message);
-            if (result !== null) {
-                message = translate("runtime-error-unterminated-string-error");
-                return;
-            }
-            var result = detectRegex_unknown_function.exec(message);
-            if (result !== null) {
-                message = translate("runtime-error-unknown-function");
-                return;
-            }
-        };
     }
+    
+    TError.prototype.detectRegex_undefined = /(\S*)\sis\snot\sdefined/i;
+    TError.prototype.detectRegex_not_a_function = /(\S*)\sis\snot\sa\sfunction/i;
+    TError.prototype.detectRegex_syntax_error = /Unexpected\stoken\s/i;
+    TError.prototype.detectRegex_not_a_variable = /Can\'t\sfind\svariable\:\s(\S*)/i;
+    TError.prototype.detectRegex_unterminated_string = /Unterminated\sstring\sconstant/i;
+    TError.prototype.detectRegex_unknown_function = /unknown\sfunction/i;
+    
+    /**
+     * Translate an error.
+     * @param {String} text
+     * @returns {String}    Returns the translated error, or the original
+     * string if failed.
+     */
+    TError.prototype.translate = function(text) {
+        if (typeof this.constructor.errors !== 'undefined' && typeof this.constructor.errors[text] !== 'undefined') {
+            var translatedText = this.constructor.errors[text];
+            if (arguments.length > 1) {
+                // message has to be parsed
+                var elements = arguments;
+                translatedText = translatedText.replace(/{(\d+)}/g, function(match, number) {
+                    number = parseInt(number) + 1;
+                    return typeof elements[number] !== 'undefined' ? elements[number] : match;
+                });
+            }
+            return translatedText;
+        } else {
+            return text;
+        }
+    };
 
-    // Load translated errors
-    var errorsFile = TEnvironment.getResource("errors.json");
-    window.console.log("getting errors from: " + errorsFile);
-    var language = TEnvironment.getLanguage();
+    /**
+     * Set lines to value.
+     * @param {Number[]} value
+     */
+    TError.prototype.setLines = function(value) {
+        this.lines = value;
+    };
 
-    $.ajax({
-        dataType: "json",
-        url: errorsFile,
-        async: false,
-        success: function(data) {
+    /**
+     * Get the value of lines.
+     * @returns {Number[]}
+     */
+    TError.prototype.getLines = function() {
+        return this.lines;
+    };
+
+    /**
+     * Get the error message.
+     * @returns {String}
+     */
+    TError.prototype.getMessage = function() {
+        if (this.programName !== null && typeof this.lines !== 'undefined' && this.lines.length > 0) {
+            var lines = this.lines;
+            if (lines.length === 2 && lines[0] !== lines[1]) {
+                return this.message + " (lignes " + lines[0] + " à " + lines[1] + ")";
+            } else {
+                return this.message + " (ligne " + lines[0] + ")";
+            }
+        }
+        return this.message;
+    };
+
+    /**
+     * Get the Program Name.
+     * @returns {String} 
+     */
+    TError.prototype.getProgramName = function() {
+        return this.programName;
+    };
+
+    /**
+     * Set the Program Name to name.
+     * @param {String} name
+     * @returns {undefined}
+     */
+    TError.prototype.setProgramName = function(name) {
+        this.programName = name;
+    };
+
+    /**
+     * Set code to value.
+     * @param {String} value
+     */
+    TError.prototype.setCode = function(value) {
+        this.code = value;
+    };
+
+    /**
+     * Get code.
+     * @return {String}
+     */
+    TError.prototype.getCode = function() {
+        return this.code;
+    };
+
+    /**
+     * Detect the error, translate it into an user-friendly message and
+     * draw it.
+     */
+    TError.prototype.detectError = function() {
+        var message = this.message;
+        // Undefined
+        var result = this.detectRegex_undefined.exec(message);
+        if (result !== null && result.length > 0) {
+            var name = result[1];
+            name = TUtils.convertUnicode(name);
+            this.message = this.translate("runtime-error-undefined", name);
+            return;
+        }
+        // Not a function 
+        var result = this.detectRegex_not_a_function.exec(message);
+        if (result !== null && result.length > 0) {
+            var name = result[1];
+            name = TUtils.convertUnicode(name);
+            if (name === 'undefined') {
+                this.message = this.translate("runtime-error-undefined-not-a-function");
+            } else {
+                this.message = this.translate("runtime-error-not-a-function", name);
+            }
+            return;
+        }
+        var result = this.detectRegex_syntax_error.exec(message);
+        if (result !== null) {
+            this.message = this.translate("runtime-error-syntax-error");
+            return;
+        }
+        var result = this.detectRegex_not_a_variable.exec(message);
+        if (result !== null && result.length > 0) {
+            var name = result[1];
+            name = TUtils.convertUnicode(name);
+            this.message = this.translate("runtime-error-not-variable-error", name);
+            return;
+        }
+        var result = this.detectRegex_unterminated_string.exec(message);
+        if (result !== null) {
+            this.message = this.translate("runtime-error-unterminated-string-error");
+            return;
+        }
+        var result = this.detectRegex_unknown_function.exec(message);
+        if (result !== null) {
+            this.message = this.translate("runtime-error-unknown-function");
+            return;
+        }
+    };
+
+    TError.loadMessages = function(callback) {
+        // Load translated errors
+        var errorsFile = TEnvironment.getResource("errors.json");
+        var language = TEnvironment.getLanguage();
+        TResource.get(errorsFile, [language], function(data) {
             if (typeof data[language] !== 'undefined') {
                 TError.errors = data[language];
                 window.console.log("found errors translated in language: " + language);
             } else {
                 window.console.log("found no translated errors for language: " + language);
             }
-        }
-    });
+            callback.call(this);
+        });
+    };
+
 
     return TError;
 
