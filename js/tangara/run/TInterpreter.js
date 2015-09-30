@@ -295,8 +295,8 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
 
         var evalBlockStatement = function(statement) {
             enterBlock();
-            insertStatement({type: "ControlOperation", operation: "leaveBlock"});
             insertStatements(statement.body);
+            insertStatement({type: "ControlOperation", operation: "leaveBlock"});
             return true;
         };
 
@@ -427,8 +427,8 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
             } else {
                 var result = evalExpression(statement.test, true);
                 if (result) {
-                    insertStatement(statement.update);
                     insertStatement(statement.body);
+                    insertStatement(statement.update);
                     // statement not consumed
                     return false;
                 } else {
@@ -651,8 +651,8 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
             }
             // start a new executionLevel
             raiseExecutionLevel(expression);
-            insertStatement({type: "ControlOperation", operation: "leaveFunction"});
             insertStatement(block);
+            insertStatement({type: "ControlOperation", operation: "leaveFunction"});
 
             // temporary value, will be replaced by value returned by a return statement, if any
             return null;
