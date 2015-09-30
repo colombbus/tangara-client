@@ -116,15 +116,42 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
         };
 
         var insertStatement = function(statement, log) {
+            // Find index at which insertion has to be made
+            var index=0;
+            while (index<stack[executionLevel].length && typeof stack[executionLevel][index].inserted !== 'undefined') {
+                index++;
+            }
+            // Set statement as inserted
             statement.inserted = true;
+            // Set log information
             statement.log = log;
-            stack[executionLevel].unshift(statement);
-            stackPointer[executionLevel]++;
+            // Insert statement
+            stack[executionLevel].splice(index, 0, statement);
+            // Update stackPointer if required
+            if (stackPointer[executionLevel]>=index) {
+                stackPointer[executionLevel]++;
+            }
         };
 
         var insertStatements = function(statements, log) {
+            // Find index at which insertion has to be made
+            var index=0;
+            while (index<stack[executionLevel].length && typeof stack[executionLevel][index].inserted !== 'undefined') {
+                index++;
+            }
+            var statement;
             for (var i = statements.length - 1; i >= 0; i--) {
-                insertStatement(statements[i], log);
+                statement = statements[i];
+                // Set statement as inserted
+                statement.inserted = true;
+                // Set log information
+                statement.log = log;
+                // Insert statement
+                stack[executionLevel].splice(index, 0, statement);
+            }
+            // Update stackPointer if required
+            if (stackPointer[executionLevel]>=index) {
+                stackPointer[executionLevel]+=statements.length;
             }
         };
 
