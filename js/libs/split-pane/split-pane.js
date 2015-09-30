@@ -8,15 +8,26 @@ Released under the MIT license
 https://raw.github.com/shagstrom/split-pane/master/LICENSE
 
 */
+
+// 
+// ADDED TWEAKS FOR DECLICK: SEE LINES 21 AND 99
+// 
 (function($) {
 	
 	$.fn.splitPane = function() {
 		var $splitPanes = this;
 		$splitPanes.each(setMinHeightAndMinWidth);
 		$splitPanes.append('<div class="split-pane-resize-shim">');
-		var eventType = ('ontouchstart' in document) ? 'touchstart' : 'mousedown';
+		/*var eventType = ('ontouchstart' in document) ? 'touchstart' : 'mousedown';
 		$splitPanes.children('.split-pane-divider').html('<div class="split-pane-divider-inner"></div>');
-		$splitPanes.children('.split-pane-divider').bind(eventType, mousedownHandler);
+		$splitPanes.children('.split-pane-divider').bind(eventType, mousedownHandler);*/
+                // FIXED FOR DECLICK: in case of TOUCH device, bind mousedown AND touchstart 
+                // (otherwise don't work on PC with touch screens
+		$splitPanes.children('.split-pane-divider').html('<div class="split-pane-divider-inner"></div>');
+		$splitPanes.children('.split-pane-divider').bind('mousedown', mousedownHandler);
+                if ('ontouchstart' in document) {
+                    $splitPanes.children('.split-pane-divider').bind('touchstart', mousedownHandler);
+                }
 		setTimeout(function() {
 			// Doing this later because of an issue with Chrome (v23.0.1271.64) returning split-pane width = 0
 			// and triggering multiple resize events when page is being opened from an <a target="_blank"> .
@@ -85,6 +96,8 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 		$(document).one(endEvent, function(event) {
 			$(document).unbind(moveEvent, moveEventHandler);
 			$divider.removeClass('dragged touch');
+                        // TWEAK FOR DECLICK
+                        $splitPane.trigger("splitpane:resized");
 			$resizeShim.hide();
 		});
 	}
