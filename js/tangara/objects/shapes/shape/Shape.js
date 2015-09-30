@@ -62,7 +62,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
     };
         
     /**
-     * Enable or disable the fill of the polygon.
+     * Enable or disable the fill of the shape.
      * Default value : False. 
      * @param {Boolean} value
      */
@@ -73,7 +73,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
     };
     
     /**
-     * Change the color of the shape's fill.</br>
+     * Change the color of the shape's fill.
      * Default value : marron | [128, 0, 0]
      * @param {String|Number} red
      * @param {Number} green
