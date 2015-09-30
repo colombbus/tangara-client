@@ -237,7 +237,7 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
         };
 
         this.executeStatementsNow = function(statements, log) {
-            interpreter.insertStatements(statements, log);
+            interpreter.addPriorityStatements(statements, log);
         };
 
         this.executeNow = function(commands, parameter, logCommands) {

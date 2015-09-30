@@ -108,42 +108,17 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
             }
         };
 
-        this.insertStatements = function(statements) {
-            insertStatements(statements);
-            if (!running) {
-                this.start();
-            }
-        };
-
-        var insertStatement = function(statement, log) {
+        this.addPriorityStatements = function(statements, log) {
             // Find index at which insertion has to be made
             var index=0;
-            while (index<stack[executionLevel].length && typeof stack[executionLevel][index].inserted !== 'undefined') {
-                index++;
-            }
-            // Set statement as inserted
-            statement.inserted = true;
-            // Set log information
-            statement.log = log;
-            // Insert statement
-            stack[executionLevel].splice(index, 0, statement);
-            // Update stackPointer if required
-            if (stackPointer[executionLevel]>=index) {
-                stackPointer[executionLevel]++;
-            }
-        };
-
-        var insertStatements = function(statements, log) {
-            // Find index at which insertion has to be made
-            var index=0;
-            while (index<stack[executionLevel].length && typeof stack[executionLevel][index].inserted !== 'undefined') {
+            while (index<stack[executionLevel].length && typeof stack[executionLevel][index].priority !== 'undefined') {
                 index++;
             }
             var statement;
             for (var i = statements.length - 1; i >= 0; i--) {
                 statement = statements[i];
-                // Set statement as inserted
-                statement.inserted = true;
+                // Set statement as priority one
+                statement.priority = true;
                 // Set log information
                 statement.log = log;
                 // Insert statement
@@ -152,6 +127,22 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
             // Update stackPointer if required
             if (stackPointer[executionLevel]>=index) {
                 stackPointer[executionLevel]+=statements.length;
+            }
+            if (!running) {
+                this.start();
+            }
+        };
+
+        var insertStatement = function(statement, log) {
+            statement.inserted = true;
+            statement.log = log;
+            stack[executionLevel].unshift(statement);
+            stackPointer[executionLevel]++;
+        };
+
+        var insertStatements = function(statements, log) {
+            for (var i = statements.length - 1; i >= 0; i--) {
+                insertStatement(statements[i], log);
             }
         };
 
@@ -177,7 +168,7 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
                         // We haven't changed execution level
                         if (consume === true) {
                             stack[executionLevel].splice(stackPointer[executionLevel], 1);
-                            if (typeof statement.inserted === 'undefined' || statement.log) {
+                            if ((typeof statement.inserted === 'undefined' && typeof statement.priority === 'undefined') || statement.log) {
                                 logCommand(statement.raw);
                             }
                             if (typeof statement.controls !== 'undefined') {
@@ -295,8 +286,8 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
 
         var evalBlockStatement = function(statement) {
             enterBlock();
-            insertStatements(statement.body);
             insertStatement({type: "ControlOperation", operation: "leaveBlock"});
+            insertStatements(statement.body);
             return true;
         };
 
@@ -427,8 +418,8 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
             } else {
                 var result = evalExpression(statement.test, true);
                 if (result) {
-                    insertStatement(statement.body);
                     insertStatement(statement.update);
+                    insertStatement(statement.body);
                     // statement not consumed
                     return false;
                 } else {
@@ -651,8 +642,8 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
             }
             // start a new executionLevel
             raiseExecutionLevel(expression);
-            insertStatement(block);
             insertStatement({type: "ControlOperation", operation: "leaveFunction"});
+            insertStatement(block);
 
             // temporary value, will be replaced by value returned by a return statement, if any
             return null;
