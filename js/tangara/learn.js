@@ -6,6 +6,7 @@ require.config({
         "ace": '../libs/ace-1.1.7',
         "babylon": '../libs/babylonjs/babylon.1.14',
         "babylonjs": '../libs/babylon-editor/babylon-editor',
+        "split-pane": '../libs/split-pane/split-pane',
         "quintus": '../libs/quintus-0.2.0/quintus-all.min',
         "acorn": '../libs/acorn/acorn',
         "TObject": 'objects/tobject/TObject',

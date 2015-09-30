@@ -1,6 +1,6 @@
-define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRuntime', 'TEnvironment', 'TParser', 'TExercise', 'TError', 'platform-pr'], function(TComponent, $, TLearnCanvas, TLearnEditor, TRuntime, TEnvironment, TParser, TExercise, TError) {
+define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRuntime', 'TEnvironment', 'TParser', 'TExercise', 'TError', 'platform-pr'], function(TComponent, $, SplitPane, TLearnCanvas, TLearnEditor, TRuntime, TEnvironment, TParser, TExercise, TError) {
     function TLearnFrame(callback) {
-        var $text, $message, $textMessage, $textMessageContent, $messageContent, $instructions, $solution, $solutionContent, $input, $loading;
+        var $text, $message, $textMessage, $textMessageContent, $messageContent, $instructions, $solution, $solutionContent, $input, $loading, $right;
         var canvas, editor;
 
         var exercise = new TExercise();
@@ -51,7 +51,9 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             $solution = component.find("#tlearnframe-solution");
             $solutionContent = component.find("#tlearnframe-solution-content");
             
-            $loading = component.find("#tlearnframe-loading");            
+            $loading = component.find("#tlearnframe-loading");
+            
+            $right = component.find("#tlearnframe-right");
             
             var self = this;
             canvas = new TLearnCanvas(function(c) {
@@ -70,6 +72,10 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             canvas.displayed();
             editor.displayed();
             exercise.setFrame(this);
+            $right.on("splitpane:resized", function() {
+                editor.resize();
+            });
+            $('.split-pane').splitPane();
             // declare itself as log 
             TRuntime.setLog(this);
         };
@@ -379,8 +385,8 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
 
     }
 
-    TLearnCanvas.prototype = Object.create(TComponent.prototype);
-    TLearnCanvas.prototype.constructor = TLearnCanvas;
+    TLearnFrame.prototype = Object.create(TComponent.prototype);
+    TLearnFrame.prototype.constructor = TLearnFrame;
 
     return TLearnFrame;
 });
