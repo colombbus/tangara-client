@@ -30,6 +30,10 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
     var message = "";
     var scoreLimit = 0.5;
     var score = 0;
+    var displayedClasses = [];
+    var displayedMethods = [];
+	var completions = {};
+    
     
     /**
      * Set the array of statements.
@@ -311,6 +315,52 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
         frame.setProgramMode();
     };
     
+    /**
+     * Set Comletions.
+     */
+    Teacher.prototype.setCompletions = function(json) {
+		completions = json;
+	};
+    
+    /**
+     * Get classes completions.
+     */
+    Teacher.prototype.getDisplayedClasses = function() {
+		   for (var classes in completions) {
+            if (typeof completions[classes] === "undefined") {
+               return [];
+            }
+            if (typeof completions[classes] === 'object') {
+					displayedClasses.push(classes);
+            }
+        }
+		return displayedClasses;
+    };
+	
+	/**
+     * Get displayed methods.
+     */
+    Teacher.prototype.getDisplayedMethods = function(aClass){
+		var displayedClass=completions[aClass];
+		if (typeof displayedClass === "undefined"){
+			return [];
+		}
+		var methods = displayedClass['methods'];
+		//TODO really sort methods = TUtils.sortArray(methods);
+		if (typeof methods === "Array"){
+			return [];
+		}
+
+		for (var i in methods) {
+			displayedMethods.push({
+				caption: methods[i]["translated"],
+				value: methods[i]["displayed"]
+			});
+		}
+				
+		return displayedMethods;
+	};
+	
     var teacherInstance = new Teacher();
 
     return teacherInstance;
@@ -318,3 +368,26 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
 
 
 
+//	in order tests purposes : 
+//	var completions = {
+//			"Animation":{
+//				methods:[
+//            {"name":"_moveForward","translated":"avancer","displayed":"avancer(50)"},
+//            {"name":"_moveBackward","translated":"reculer","displayed":"reculer(50)"},
+//            {"name":"_moveUpward","translated":"monter","displayed":"monter(50)"},
+//            {"name":"_moveDownward","translated":"descendre","displayed":"descendre(50)"},
+//            {"name":"_raiseLeftArm","translated":"leverBrasGauche","displayed":"leverBrasGauche(90)"},
+//            {"name":"_raiseRightArm","translated":"leverBrasDroit","displayed":"leverBrasDroit(90)"}
+//				]
+//			},
+//			"Robot":{
+//				methods:[
+//            {"name":"_moveForward","translated":"avancer","displayed":"avancer(50)"},
+//            {"name":"_moveUpward","translated":"monter","displayed":"monter(50)"},
+//            {"name":"_moveDownward","translated":"descendre","displayed":"descendre(50)"},
+//            {"name":"_raiseLeftArm","translated":"leverBrasGauche","displayed":"leverBrasGauche(90)"},
+//            {"name":"_raiseRightArm","translated":"leverBrasDroit","displayed":"leverBrasDroit(90)"}
+//				]
+//			}
+//		
+//	};
