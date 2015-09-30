@@ -78,6 +78,9 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui
             console.displayed();
             toolbar.displayed();
             log.displayed();
+            $frame.on("splitpane:resized", function() {
+                editor.resize();
+            });
             // Important to attach handler before calling splitPane
             $separator.on("mousedown", checkSeparatorEnabled);
             $('.split-pane').splitPane();
