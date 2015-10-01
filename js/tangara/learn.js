@@ -33,7 +33,8 @@ require.config({
         "Task": "env/Task",
         "Grader": "env/Grader",
         "TExercise": "data/TExercise",
-        "TResource": "data/TResource"
+        "TResource": "data/TResource",
+        "jschannel": "../libs/jschannel/jschannel"
     },
     map: {
         "fileupload": {
@@ -42,7 +43,7 @@ require.config({
     },
     shim: {
         'platform-pr': {
-            deps: ['jquery'],
+            deps: ['jquery', 'jschannel'],
             exports: '$'
         },
         'split-pane': {
