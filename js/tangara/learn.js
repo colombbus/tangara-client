@@ -28,7 +28,7 @@ require.config({
         "SynchronousManager": "utils/SynchronousManager",
         "TError": "utils/TError",
         "TUtils": "utils/TUtils",
-        "platform-pr": "../libs/pem-task/platform-pr",
+        "platform-pr": "http://algorea-beta.eroux.fr/platform-pr",
         "json": "../libs/pem-task/json2.min",
         "Task": "env/Task",
         "Grader": "env/Grader",
