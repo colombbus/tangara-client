@@ -9,6 +9,7 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
         this.synchronousManager = new SynchronousManager();
         this.gObject.synchronousManager = this.synchronousManager;
         var gObject = this.gObject;
+        this.platform = new Platform();
     };
 
     Builder.prototype = Object.create(Robot.prototype);
@@ -224,6 +225,11 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
         } else {
             return [[]];
         }
+    };
+    
+    Builder.prototype._buildStructure = function() {
+        this.platform._loadStructure(this._getStructure());
+        this.platform._build();
     };
     
     return Builder;
