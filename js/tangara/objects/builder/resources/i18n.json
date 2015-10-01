@@ -2,10 +2,13 @@
     "hide": ["_startAutoAsset", "_setMovementDuration", "_setPauseDuration", "_setGravity", "_countItems", "_countCarriedItems", "_ifCatch", "_jump", "_stopAutoAsset", "_dropItem", "_mayCatch", "_mayFall", "_pickupItem", "_rotate", "_setJumpSpeed", "_zoomIn", "_zoomOut", "_moveTo", "_centerGoTo", "_setAngle", "_setStep", "_setCenterLocation", "_scale", "_getX", "_getY", "_getXCenter", "_getYCenter", "_watchCollisions", "_ifCollision", "_ifCollisionWith"],
     "fr": {
         "methods":[
-            {"name":"_buildGround","translated":"poser","displayed":"poserSol()"},
+            {"name":"_buildGround","translated":"poserSol","displayed":"poserSol()"},
             {"name":"_getStructure","translated":"récupérerStructure","displayed":"récupérerStructure()"},
-            {"name":"_buildDoor","translated":"placerPorte","displayed":"poserPorte()"},
-            {"name":"_buildExit","translated":"placerSortie","displayed":"poserSortie()"}
+            {"name":"_buildDoor","translated":"poserPorte","displayed":"poserPorte()"},
+            {"name":"_buildExit","translated":"poserSortie","displayed":"poserSortie()"},
+            {"name":"_build","translated":"construire","displayed":"construire()"},
+            {"name":"_addTile","translated":"ajouterBrique","displayed":"ajouterBrique(\"image\")"},
+            {"name":"_getPlatform","translated":"récupérerPlateforme","displayed":"récupérerPlateforme()"}
             ]
     }
 }
