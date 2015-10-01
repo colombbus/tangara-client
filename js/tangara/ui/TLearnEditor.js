@@ -1,4 +1,4 @@
-define(['ui/TComponent', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jquery', 'ace/ace', 'ace/autocomplete', 'ace/range', 'platform-pr'], function(TComponent, TParser, TLog, TEnvironment, TUtils, TRuntime, $, ace, ace_autocomplete, ace_range) {
+define(['objects/teacher/Teacher','ui/TComponent', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jquery', 'ace/ace', 'ace/autocomplete', 'ace/range', 'platform-pr'], function(Teacher, TComponent, TParser, TLog, TEnvironment, TUtils, TRuntime, $, ace, ace_autocomplete, ace_range) {
     /**
      * TLearnEditor is like TEditor, but adapted to "Learn" part of Declick.
      * @exports TLearnEditor
@@ -63,7 +63,7 @@ define(['ui/TComponent', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRunti
             
             aceEditor.completers = [consoleCompleter];
 
-            //this.enableMethodHelper();
+            this.enableMethodHelper();
 
         };
 
@@ -142,6 +142,7 @@ define(['ui/TComponent', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRunti
         this.enableMethodHelper = function() {
             aceEditor.commands.addCommand(dotCommand);
             aceEditor.commands.addCommand(backspaceCommand);
+            aceEditor.commands.addCommand(classCommand);
             aceEditor.commands.addCommand(AceAutocomplete.startCommand);
         };
         
@@ -151,6 +152,7 @@ define(['ui/TComponent', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRunti
         this.disableMethodHelper = function() {
             aceEditor.commands.removeCommand(dotCommand);
             aceEditor.commands.removeCommand(backspaceCommand);
+            aceEditor.commands.removeCommand(classCommand);
             aceEditor.commands.removeCommand(AceAutocomplete.startCommand);
         };
 
@@ -166,13 +168,15 @@ define(['ui/TComponent', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRunti
             getCompletions: function(editor, session, pos, prefix, callback) {
                 pos.column--;
                 var token = session.getTokenAt(pos.row, pos.column);
-
+				var endToken = "(";
                 if (token === null) {
                     return false;
                 }
 
                 var tokens = session.getTokens(pos.row);
                 var index = token.index;
+				
+				var methodNames=[];
 
                 // TODO: see if we can handle this situation in js
                 /*if (token.type === "rparen") {
@@ -189,7 +193,21 @@ define(['ui/TComponent', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRunti
                 }
 
                 var name = token.value.trim();
+				// Class completion
+                if (name === "new") {
+                    var classNames = Teacher.getDisplayedClasses();
+                    methodNames = TUtils.sortArray(classNames);
 
+                    var completions = [];
+                    for (var j = 0; j < methodNames.length; j++) {
+                        completions.push({
+                            caption: methodNames[j],
+                            value: methodNames[j] + "()"
+                        });
+                    }
+                    callback(null, completions);
+                    return;
+                }
                 for (var i = index - 1; i >= 0; i--) {
                     token = tokens[i];
                     if (token.type !== "identifier" && token.type !== "text") {
@@ -206,19 +224,27 @@ define(['ui/TComponent', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRunti
                 if (name.length === 0) {
                     return false;
                 }
+				
+				var range = new AceRange(0, 0, pos.row, pos.column);
+                var valueBefore = session.getDocument().getTextRange(range);
+                // Since regex do not support unicode...
+                var unicodeName = TUtils.toUnicode(name);
+                //console.log("unicode " + name);
+                var regex = new RegExp("(?:^|\\s)" + unicodeName + "\\s*=\\s*new\\s*([\\S^\\" + endToken + "]*)\\s*\\" + endToken);
 
-                var className = TRuntime.getTObjectClassName(name);
-                var methods = TEnvironment.getClassMethods(className);
-                var methodNames = Object.keys(methods);
-                methodNames = TUtils.sortArray(methodNames);
+                var result = regex.exec(valueBefore);
 
                 var completions = [];
-                for (var j = 0; j < methodNames.length; j++) {
-                    completions.push({
-                        caption: methodNames[j],
-                        value: methods[methodNames[j]]
-                    });
+
+                if (name === "tangara") {
+                    result = [name, name];
                 }
+                if (result !== null && result.length > 0) {
+                    var className = result[1];
+					completions = Teacher.getDisplayedMethods(className);
+                 
+                }
+								
                 callback(null, completions);
             }
         };
@@ -246,20 +272,20 @@ define(['ui/TComponent', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRunti
             },
             readOnly: true // false if this command should not apply in readOnly mode
         };
-//        var classCommand = {
-//            name: "classHelper",
-//            bindKey: {win: 'Space', mac: 'Space'},
-//            exec: function (editor) {
-//                var cursor = editor.selection.getCursor();
-//                var token = editor.getSession().getTokenAt(cursor.row, cursor.column - 1);
-//
-//                if (token !== null && token.type === "keyword" && token.value === "new") {
-//                    triggerPopup = true;
-//                }
-//                return false;
-//            },
-//            readOnly: true // false if this command should not apply in readOnly mode
-//        };
+        var classCommand = {
+            name: "classHelper",
+            bindKey: {win: 'Space', mac: 'Space'},
+            exec: function (editor) {
+                var cursor = editor.selection.getCursor();
+                var token = editor.getSession().getTokenAt(cursor.row, cursor.column - 1);
+
+                if (token !== null && token.type === "keyword" && token.value === "new") {
+                    triggerPopup = true;
+                }
+                return false;
+            },
+            readOnly: true // false if this command should not apply in readOnly mode
+        };
     }
 
     TLearnEditor.prototype = Object.create(TComponent.prototype);
