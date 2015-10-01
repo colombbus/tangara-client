@@ -77,6 +77,7 @@ function load() {
                     // Create task and grader
                     window.task = new Task(this);
                     window.grader = new Grader();
+                    window.platform.initWithTask(window.task);
                     // get exercise id
                     var exerciseId;
                     if (typeof init_exerciseId !== 'undefined') {
