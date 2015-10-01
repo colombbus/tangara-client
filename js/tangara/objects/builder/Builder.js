@@ -64,13 +64,23 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
             }
         },
         addTile: function(number, x, y) {
+            var p = this.p;
             if (typeof x === 'undefined') {
-                x = this.p.gridX;
-                y = this.p.gridY;
+                x = p.gridX;
+                y = p.gridY;
+            } else {
+                x = TUtils.getInteger(x);
+                y = TUtils.getInteger(y);
             }
-            if (this.p.platform[y][x] === 0)
-                this.p.tiles += 1;
-            this.p.platform[y][x] = number;
+            if (x >= p.nbColumns) {
+                this.addColumns(x);
+            }
+            if (y >= p.nbRows) {
+                this.addRows(y);
+            }
+            if (p.platform[y][x] === 0)
+                p.tiles += 1;
+            p.platform[y][x] = number;
         },
         draw: function(ctx) {
             var p = this.p;
@@ -122,10 +132,6 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
             }
         }
     });
-
-    /**
-     * 
-     */
     
     /*
      * Put a brick at given location
@@ -134,20 +140,6 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
      * @param {Integer} y
      */
     Builder.prototype._build = function(x,y) {
-        var p = this.gObject.p;
-        if (typeof x === 'undefined') {
-            x = p.gridX;
-            y = p.gridY;
-        } else {
-            x = TUtils.getInteger(x);
-            y = TUtils.getInteger(y);
-        }
-        if (x >= p.nbColumns) {
-            this.gObject.addColumns(x);
-        }
-        if (y >= p.nbRows) {
-            this.gObject.addRows(y);
-        }
         this.gObject.addTile(Builder.BRICK,x,y);
     };
     
@@ -159,20 +151,6 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
      * @param {Integer} y
      */
     Builder.prototype._setDoor = function(x,y) {
-        var p = this.gObject.p;
-        if (typeof x === 'undefined') {
-            x = p.gridX;
-            y = p.gridY;
-        } else {
-            x = TUtils.getInteger(x);
-            y = TUtils.getInteger(y);
-        }
-        if (x >= p.nbColumns) {
-            this.gObject.addColumns(x);
-        }
-        if (y >= p.nbRows) {
-            this.gObject.addRows(y);
-        }
         this.gObject.addTile(Builder.DOOR,x,y);
     };
 
@@ -183,20 +161,6 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
      * @param {Integer} y
      */
     Builder.prototype._setExit = function(x,y) {
-        var p = this.gObject.p;
-        if (typeof x === 'undefined') {
-            x = p.gridX;
-            y = p.gridY;
-        } else {
-            x = TUtils.getInteger(x);
-            y = TUtils.getInteger(y);
-        }        
-        if (x >= p.nbColumns) {
-            this.gObject.addColumns(x);
-        }
-        if (y >= p.nbRows) {
-            this.gObject.addRows(y);
-        }
         this.gObject.addTile(Builder.EXIT,x,y);
     };
     
