@@ -139,7 +139,7 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
      * @param {Integer} x
      * @param {Integer} y
      */
-    Builder.prototype._build = function(x,y) {
+    Builder.prototype._buildGround = function(x,y) {
         this.gObject.addTile(Builder.BRICK,x,y);
     };
     
@@ -150,7 +150,7 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
      * @param {Integer} x
      * @param {Integer} y
      */
-    Builder.prototype._setDoor = function(x,y) {
+    Builder.prototype._buildDoor = function(x,y) {
         this.gObject.addTile(Builder.DOOR,x,y);
     };
 
@@ -160,7 +160,7 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
      * @param {Integer} x
      * @param {Integer} y
      */
-    Builder.prototype._setExit = function(x,y) {
+    Builder.prototype._buildExit = function(x,y) {
         this.gObject.addTile(Builder.EXIT,x,y);
     };
     
