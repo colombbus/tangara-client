@@ -46,7 +46,8 @@ if (!isCrossDomain()) {
          platform.parent_platform = platformArg;
       },
       trigger: function(event, content) {
-         for (var object in this.registered_objects) {
+         for (var i = 0; i < platform.registered_objects.length; i++) {
+            object = platform.registered_objects[i];
             if (typeof (object[event]) != "undefined") {
                object[event].apply(object, content);
             }
@@ -121,9 +122,10 @@ if (!isCrossDomain()) {
       platform.ready = true;
    };
 
-   platform.registered_objects = {};
+   platform.registered_objects = [];
    platform.trigger = function(event, content) {
-      for (var object in platform.registered_objects) {
+      for (var i = 0; i < platform.registered_objects.length; i++) {
+         object = platform.registered_objects[i];
          if (typeof (object[event]) != "undefined") {
             object[event].apply(object, content);
          }
@@ -198,5 +200,13 @@ if (!isCrossDomain()) {
 }
 
 window.platform = platform;
+
+$('document').ready(function() {
+   console.error(window.task);
+   // if task is ready, use it, otherwise wait for initWithTask call
+   if (!platform.ready && typeof window.task.load === 'function') {
+      platform.initWithTask(window.task);
+   }
+});
 
 }());
