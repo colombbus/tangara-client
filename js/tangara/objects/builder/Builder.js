@@ -196,5 +196,13 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
         this.platform._build();
     };
     
+    Builder.prototype._addTile = function(imageName) {
+        this.platform._addTile(imageName);
+    };
+    
+    Builder.prototype._getPlatform = function() {
+        return this.platform;
+    };
+    
     return Builder;
 });
