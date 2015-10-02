@@ -10,10 +10,10 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
         this.gObject.synchronousManager = this.synchronousManager;
         var gObject = this.gObject;
         this.platform = new Platform();
-        this.platform.addTile(this.getResource("brick.png"));
-        this.platform.addTile(this.getResource("door.png"));
-        this.platform.addTile(this.getResource("exit.png"));
-        this.platform.addTile(this.getResource("wall.png"));
+        this.platform.addTile("brick.png", this.getResource("brick.png"));
+        this.platform.addTile("door.png", this.getResource("door.png"));
+        this.platform.addTile("exit.png", this.getResource("exit.png"));
+        this.platform.addTile("wall.png", this.getResource("wall.png"));
     };
 
     Builder.prototype = Object.create(Robot.prototype);
