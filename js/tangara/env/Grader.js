@@ -17,8 +17,8 @@ define(['platform-pr', 'json'], function() {
 
         this.gradeTask = function (strAnswer, token, callback) {
             var answer = JSON.parse(strAnswer);
-            platform.getTaskParams(function(params) {
-               var score = answer.score * params.maxScore;
+            platform.getTaskParams('maxScore', 100, function(maxScore) {
+               var score = answer.score * maxScore;
                callback(score, answer.message);
             });
         };           
