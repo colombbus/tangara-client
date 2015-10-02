@@ -68,6 +68,7 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TLearnCanvas', 'ui/TLearnEd
 
         });
 
+        // wait until $right's height is not null
         var initSplitPane = function() {
             if ($right.height()>0) {
                 $('.split-pane').splitPane();
