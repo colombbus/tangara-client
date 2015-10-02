@@ -220,6 +220,7 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
     };
     
     Builder.prototype._getPlatform = function() {
+        this._buildStructure();
         return this.platform;
     };
     
