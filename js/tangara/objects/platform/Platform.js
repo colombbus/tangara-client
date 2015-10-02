@@ -223,18 +223,28 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
     Platform.prototype._addTile = function(imageName) {
         imageName = TUtils.getString(imageName);
         try {
-	    	this.tiles.push(imageName);
-	    	var asset = TEnvironment.getProjectResource(imageName);
-	    	var self = this;
-	    	this.resources.add(imageName, asset, function() {
-	    		if (self.built) {
-	    			// build sheet only if object already built
-	    			self.buildSheet();
-	    		}
-	    	});
+            this.addTile(imageName, TEnvironment.getProjectResource(imageName));
         } catch (e) {
             throw new Error(this.getMessage("file not found", name));
         }
+    };
+    
+    /**
+     * Set a new tile image. There can be many tiles.
+     * Its value in the structure will depend of the moment where it is added :
+     * The first time added will have the value "1", the second "2", etc...
+     * @param {String} name    name of the image
+     * @param {String} path    path to image
+     */
+    Platform.prototype.addTile = function(imageName, imagePath) {
+        var self = this;
+        this.tiles.push(imageName);
+        this.resources.add(imageName, imagePath, function() {
+            if (self.built) {
+                // build sheet only if object already built
+                self.buildSheet();
+            }
+        });
     };
     
     /**
