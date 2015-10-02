@@ -22,13 +22,13 @@ define(['jquery'], function($) {
                         timeStamp = oldTimeStamp;
                     }
                 }
-            }
-            try {
-                localStorage.setItem("timestamp", timeStamp);
-            } catch (e) {
-                // in case setItem throws an exception (e.g. private mode)
-                // set cacheEnabled to false
-                cacheEnabled = false;
+                try {
+                    localStorage.setItem("timestamp", timeStamp);
+                } catch (e) {
+                    // in case setItem throws an exception (e.g. private mode)
+                    // set cacheEnabled to false
+                    cacheEnabled = false;
+                }                
             }
             return cacheEnabled;
         };
