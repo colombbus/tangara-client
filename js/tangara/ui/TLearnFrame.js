@@ -84,7 +84,6 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TLearnCanvas', 'ui/TLearnEd
             $right.on("splitpane:resized", function() {
                 editor.resize();
             });
-            window.console.log("split pane : height of right component: "+$right.height());
             initSplitPane();
             // declare itself as log 
             TRuntime.setLog(this);
