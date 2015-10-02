@@ -6,7 +6,8 @@
             {"name":"_getStructure","translated":"récupérerStructure","displayed":"récupérerStructure()"},
             {"name":"_buildDoor","translated":"poserPorte","displayed":"poserPorte()"},
             {"name":"_buildExit","translated":"poserSortie","displayed":"poserSortie()"},
-            {"name":"_build","translated":"construire","displayed":"construire()"},
+            {"name":"_buildWall","translated":"poserMur","displayed":"poserMur()"},
+            {"name":"_buildStructure","translated":"construire","displayed":"construire()"},
             {"name":"_addTile","translated":"ajouterBrique","displayed":"ajouterBrique(\"image\")"},
             {"name":"_getPlatform","translated":"récupérerPlateforme","displayed":"récupérerPlateforme()"}
             ]
