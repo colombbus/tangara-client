@@ -18,6 +18,7 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
     Builder.BRICK = 0x01;
     Builder.DOOR = 0x02;
     Builder.EXIT = 0x03;
+    Builder.WALL = 0x04;
 
     var graphics = Builder.prototype.graphics;
 
@@ -120,6 +121,15 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
                                 ctx.fillStyle = "#00FF00";
                                 ctx.fill();
                                 break;
+                            case Builder.WALL: 
+                                ctx.lineTo((j + 1) * p.length - p.x, (i + 1) * p.length - p.y);
+                                ctx.lineTo(j * p.length - p.x, (i + 1) * p.length - p.y);
+                                ctx.closePath();
+                                ctx.strokeStyle = "#000000";
+                                ctx.stroke();
+                                ctx.fillStyle = "#000000";
+                                ctx.fill();
+                                break;
                         }
                     }
                 }
@@ -164,6 +174,15 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
         this.gObject.addTile(Builder.EXIT,x,y);
     };
     
+    /*
+     * Build an wall at current location 
+     * If no location given, use current location
+     * @param {Integer} x
+     * @param {Integer} y
+     */
+    Builder.prototype._buildWall = function(x,y) {
+        this.gObject.addTile(Builder.WALL,x,y);
+    };
     
     /**
      * Get platform structure
