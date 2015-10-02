@@ -693,7 +693,7 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
         };
 
         var evalConditionalExpression = function(expression) {
-            var value = evalExpression(expression.test);
+            var value = evalExpression(expression.test, true);
             if (value) {
                 return evalExpression(expression.consequent);
             } else {
