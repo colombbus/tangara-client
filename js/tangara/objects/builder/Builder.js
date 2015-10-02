@@ -10,6 +10,10 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
         this.gObject.synchronousManager = this.synchronousManager;
         var gObject = this.gObject;
         this.platform = new Platform();
+        this.platform.addTile(this.getResource("brick.png"));
+        this.platform.addTile(this.getResource("door.png"));
+        this.platform.addTile(this.getResource("exit.png"));
+        this.platform.addTile(this.getResource("wall.png"));
     };
 
     Builder.prototype = Object.create(Robot.prototype);
@@ -149,7 +153,7 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
      * @param {Integer} x
      * @param {Integer} y
      */
-    Builder.prototype._buildGround = function(x,y) {
+    Builder.prototype._buildBrick = function(x,y) {
         this.gObject.addTile(Builder.BRICK,x,y);
     };
     
