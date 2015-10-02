@@ -75,6 +75,7 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TLearnCanvas', 'ui/TLearnEd
             $right.on("splitpane:resized", function() {
                 editor.resize();
             });
+            window.console.log("split pane : height of right component: "+$right.height());
             $('.split-pane').splitPane();
             // declare itself as log 
             TRuntime.setLog(this);
@@ -88,7 +89,7 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TLearnCanvas', 'ui/TLearnEd
             $solution.hide();
             $loading.fadeOut(1000, function() {
                 $(this).remove();
-            });            
+            });
             canvas.removeLoading();
         };
 
