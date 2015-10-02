@@ -155,6 +155,9 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
         var suspendedException = function() {
         };
 
+        var levelRaisedException = function() {
+        };
+
         var run = function() {
             var statement;
             try {
@@ -348,9 +351,6 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
         var evalReturnStatement = function(statement) {
             if (executionLevel > 0) {
                 var value = evalExpression(statement.argument);
-                if (typeof value === "string") {
-                    value = "\"" + value + "\"";
-                }
                 lowerExecutionLevel(value);
                 return true;
             } else {
@@ -604,7 +604,10 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
                 }
                 return result;
             } catch (err) {
-                if (err instanceof suspendedException) {
+                if (err instanceof levelRaisedException) {
+                    // level was raised: we keep statement in stack
+                    return false;
+                } else if (err instanceof suspendedException) {
                     // running was stopped during statement execution: we keep statement in stack
                     return false;
                 } else {
@@ -645,8 +648,8 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
             insertStatement({type: "ControlOperation", operation: "leaveFunction"});
             insertStatement(block);
 
-            // temporary value, will be replaced by value returned by a return statement, if any
-            return null;
+            // interrupt current execution so that upper execution level is handled
+            throw new levelRaisedException();
         };
 
         var evalFunctionExpression = function(expression, callback) {
@@ -757,7 +760,7 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
         var evalExpression = function(expression, eval) {
             if (suspended) {
                 // execution has been suspended during statement : we stop
-                throw new suspendedException;
+                throw new suspendedException();
             }
             if (typeof expression.result !== 'undefined') {
                 // expression was already evaluated: return result
@@ -821,7 +824,7 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
                 cached[executionLevel].push(expression);
                 return result;
             } catch (err) {
-                if (!(err instanceof TError)) {
+                if (!(err instanceof TError || err instanceof levelRaisedException)) {
                     var error = new TError(err);
                     error.setLines([expression.loc.start.line, expression.loc.end.line]);
                     error.detectError();
