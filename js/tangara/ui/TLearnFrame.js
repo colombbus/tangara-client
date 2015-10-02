@@ -68,6 +68,7 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TLearnCanvas', 'ui/TLearnEd
 
         });
 
+        // wait until $right's height is not null
         var initSplitPane = function() {
             if ($right.height()>0) {
                 $('.split-pane').splitPane();
@@ -83,7 +84,6 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TLearnCanvas', 'ui/TLearnEd
             $right.on("splitpane:resized", function() {
                 editor.resize();
             });
-            window.console.log("split pane : height of right component: "+$right.height());
             initSplitPane();
             // declare itself as log 
             TRuntime.setLog(this);
@@ -362,7 +362,9 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TLearnCanvas', 'ui/TLearnEd
          */
         this.displaySolution = function(display) {
             if (exercise.hasSolution() && display) {
-                openSolution(exercise.getSolution());
+                var solutionCode = exercise.getSolution();
+                var solutionHTML = solutionCode.replace(/\n/g,"<br>");
+                openSolution(solutionHTML);
             } else {
                 closeSolution();
             }
