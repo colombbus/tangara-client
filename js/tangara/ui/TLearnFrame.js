@@ -362,7 +362,9 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TLearnCanvas', 'ui/TLearnEd
          */
         this.displaySolution = function(display) {
             if (exercise.hasSolution() && display) {
-                openSolution(exercise.getSolution());
+                var solutionCode = exercise.getSolution();
+                var solutionHTML = solutionCode.replace(/\n/g,"<br>");
+                openSolution(solutionHTML);
             } else {
                 closeSolution();
             }
