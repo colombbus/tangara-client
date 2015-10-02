@@ -21,6 +21,9 @@ define(['jquery'], function($) {
                     } else {
                         timeStamp = oldTimeStamp;
                     }
+                } else {
+                    // initialize local storage
+                    localStorage.clear();
                 }
                 try {
                     localStorage.setItem("timestamp", timeStamp);
