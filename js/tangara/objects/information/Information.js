@@ -1,7 +1,7 @@
 define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TObject'], function($, TEnvironment, TUtils, CommandManager, TObject) {
     /**
      * Defines Information, inherited from TObject.
-     * User can click on information and trigger an associated command.
+     * It can display an alert window with a predefined text.
      * @param {String} label    Text displayed on the information
      * @exports Information
      */
@@ -25,7 +25,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TObject'], functi
     };
 
     /**
-     * Associate a command to Information.
+     * Associates a command to Information.
      * @param {String} command
      */
     Information.prototype._addCommand = function(command) {
@@ -35,16 +35,19 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TObject'], functi
     };
 
     /**
-     * Remove all commands associated to information.
+     * Removes all commands associated to information.
      */
     Information.prototype._removeCommands = function() {
         this.commands.removeCommands();
     };
 
+    /**
+     * Shows the alert window.
+     */
     Information.prototype._show = function() {
         window.alert(this.label);
         this.commands.executeCommands();
-    }
+    };
 
     return Information;
 });
