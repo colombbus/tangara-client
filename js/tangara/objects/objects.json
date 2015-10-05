@@ -494,5 +494,14 @@
             "en": "Sensor"
         },
         "parents": true
+    },
+     "Information": {
+        "path": "information",
+        "translations": {
+            "fr": "Information",
+            "es": "TBD",
+            "en": "Information"
+        },
+        "parents": true
     }
 }
