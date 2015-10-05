@@ -44,6 +44,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
   	          sy: 0,
   	          spacingX: 0,
   	          spacingY: 0,
+                  currentRow: 0,
   	          frameProperties: {}
   	          });
   	        if(options) { TUtils.extend(this,options); }
@@ -300,7 +301,11 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
      * @param {Number[]} row
      */
     Platform.prototype._addRow = function(row) {
-    	row = TUtils.getArray(row);
+        if (TUtils.checkArray(row)) {
+            row = TUtils.getArray(row);
+        } else {
+            row = arguments;
+        }
     	if (this.nbCols === 0 && this.nbRows === 0) {
     		this.nbCols = row.length;
     	}
@@ -372,7 +377,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
             throw new Error(this.getMessage("structure incorrect"));
     	}
     };
-    
+
     /**
      * Change the value of the tile [x,y] in structure to the value "number".
      * @param {Number} x
@@ -395,7 +400,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
     	}
     	this.gObject.setTile(x,y,number);
     };
-      
+
     /*
      * Put a brick at given location
      * If no location given, use current location
