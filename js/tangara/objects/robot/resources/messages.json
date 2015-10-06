@@ -1,9 +1,13 @@
 {
     "fr": {
         "robot":"robot",
-       "file not found":"Fichier « {0} » introuvable",
+        "file not found":"Fichier « {0} » introuvable",
         "resource not found":"Image « {0} » introuvable",
-        "wrong set":"Ensemble d'images incorrect"
+        "wrong set":"Ensemble d'images incorrect",
+        "gauche":"left",
+        "droite":"right",
+        "haut":"top",
+        "bas":"bottom"
     },
     "en": {
         "file not found":"File '{0}' not found",

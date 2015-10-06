@@ -35,13 +35,34 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
                 baseX: 0,
                 baseY: 0,
                 x: 0,
-                y: 0
+                y: 0,
+                blocked: [false, false, false, false],
+                inJump: false
             }, props), defaultProps);
+            this.on("bump.top", "bumpTop");
+            this.on("bump.bottom", "bumpBottom");
+            this.on("bump.left", "bumpLeft");
+            this.on("bump.right", "bumpRight");
         },
         step: function(dt) {
             var p = this.p;
             var oldX = p.x;
             var oldY = p.y;
+            if (this.p.inJump && this.p.vy>0) {
+                // jump is over
+                this.p.inJump = false;
+                this.synchronousManager.end();
+            }
+            if (this.p.mayFall && this.p.jumping) {
+                if (this.p.jumpAvailable > 0) {
+                    // perform a jump
+                    this.p.vy = this.p.jumpSpeed;
+                    this.p.inJump = true;
+                } else {
+                    this.p.jumping = false;
+                    this.synchronousManager.end();
+                }
+            }
             this._super(dt);
             if (!p.dragging && !p.frozen) {
                 if (p.moving) {
@@ -64,18 +85,55 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
                 }
             }
         },
+        bumpTop: function() {
+            this.p.blocked[0] = true;
+        },
+        bumpBottom: function() {
+            this.p.blocked[1] = true;
+        },
+        bumpLeft: function() {
+            this.p.blocked[2] = true;
+        },
+        bumpRight: function() {
+            this.p.blocked[3] = true;
+        },
+        initBumps: function() {
+            this.p.blocked = [false, false, false, false];
+        },
+        wasBlockedTop: function() {
+            return (this.p.blocked[0]);
+        },
+        wasBlockedBottom: function() {
+            return (this.p.blocked[1]);
+        },
+        wasBlockedLeft: function() {
+            return (this.p.blocked[2]);
+        },
+        wasBlockedRight: function() {
+            return (this.p.blocked[3]);
+        },
         moveForward: function() {
             this.synchronousManager.begin();
             this.perform(function() {
+                this.initBumps();
                 this.p.direction = Sprite.DIRECTION_NONE;
                 this.p.inMovement = true;
                 this.p.destinationX += this.p.length;
                 this.p.vx = this.p.speed;
             }, []);
         },
+        jump: function() {
+            if (this.p.mayFall) {
+                this.synchronousManager.begin();
+                this.perform(function() {
+                    this.p.jumping = true;
+                });
+            }
+        },
         moveBackward: function() {
             this.synchronousManager.begin();
             this.perform(function() {
+                this.initBumps();
                 this.p.direction = Sprite.DIRECTION_NONE;
                 this.p.inMovement = true;
                 this.p.destinationX -= this.p.length;
@@ -85,6 +143,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
         moveUpward: function() {
             this.synchronousManager.begin();
             this.perform(function() {
+                this.initBumps();
                 this.p.direction = Sprite.DIRECTION_NONE;
                 this.p.inMovement = true;
                 this.p.destinationY -= this.p.length;
@@ -94,6 +153,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
         moveDownward: function() {
             this.synchronousManager.begin();
             this.perform(function() {
+                this.initBumps();
                 this.p.direction = Sprite.DIRECTION_NONE;
                 this.p.inMovement = true;
                 this.p.destinationY += this.p.length;
@@ -263,6 +323,26 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
         x = TUtils.getInteger(x) * this.gObject.p.length + this.gObject.p.baseX;
         y = TUtils.getInteger(y) * this.gObject.p.length + this.gObject.p.baseY;
         this.gObject.setLocation(x, y);
+    };
+    
+    /**
+     * Test if Robot was blocked during the last move
+     * @param {String} way
+     * @returns {Boolean}
+     */
+    Robot.prototype._wasBlocked = function(way) {
+        way = this.getMessage(TUtils.getString(way));
+        switch (way) {
+            case "top":
+                return this.gObject.wasBlockedTop();
+            case "bottom": 
+                return this.gObject.wasBlockedBottom();
+            case "left":
+                return this.gObject.wasBlockedLeft();
+            case "right": 
+                return this.gObject.wasBlockedRight();
+        }
+        return false;
     };
     
     return Robot;
