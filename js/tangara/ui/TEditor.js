@@ -78,6 +78,14 @@ define(['ui/TComponent', 'jquery', 'ace/ace', 'ace/edit_session', 'ace/range', '
                 }
             });
 
+            aceEditor.commands.addCommand({
+                name: "execute",
+                bindKey: {win: "Ctrl-Return", mac: "Command-Return"},
+                exec: function(arg) {
+                    TUI.execute();
+                }
+            });
+
             aceEditor.completers = [editorCompleter];
 
             this.enableMethodHelper();
