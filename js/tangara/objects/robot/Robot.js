@@ -112,16 +112,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
         wasBlockedRight: function() {
             return (this.p.blocked[3]);
         },
-        moveForward: function() {
-            this.synchronousManager.begin();
-            this.perform(function() {
-                this.initBumps();
-                this.p.direction = Sprite.DIRECTION_NONE;
-                this.p.inMovement = true;
-                this.p.destinationX += this.p.length;
-                this.p.vx = this.p.speed;
-            }, []);
-        },
+        
         jump: function() {
             if (this.p.mayFall) {
                 this.synchronousManager.begin();
@@ -130,33 +121,43 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
                 });
             }
         },
-        moveBackward: function() {
+        moveBackward: function(n) {
             this.synchronousManager.begin();
             this.perform(function() {
                 this.initBumps();
                 this.p.direction = Sprite.DIRECTION_NONE;
                 this.p.inMovement = true;
-                this.p.destinationX -= this.p.length;
+                this.p.destinationX -= this.p.length*n;
                 this.p.vx = -this.p.speed;
             }, []);
         },
-        moveUpward: function() {
+        moveForward: function(n) {
             this.synchronousManager.begin();
             this.perform(function() {
                 this.initBumps();
                 this.p.direction = Sprite.DIRECTION_NONE;
                 this.p.inMovement = true;
-                this.p.destinationY -= this.p.length;
+                this.p.destinationX += this.p.length*n;
+                this.p.vx = this.p.speed;
+            }, []);
+        },        
+        moveUpward: function(n) {
+            this.synchronousManager.begin();
+            this.perform(function() {
+                this.initBumps();
+                this.p.direction = Sprite.DIRECTION_NONE;
+                this.p.inMovement = true;
+                this.p.destinationY -= this.p.length*n;
                 this.p.vy = -this.p.speed;
             }, []);
         },
-        moveDownward: function() {
+        moveDownward: function(n) {
             this.synchronousManager.begin();
             this.perform(function() {
                 this.initBumps();
                 this.p.direction = Sprite.DIRECTION_NONE;
                 this.p.inMovement = true;
-                this.p.destinationY += this.p.length;
+                this.p.destinationY += this.p.length*n;
                 this.p.vy = this.p.speed;
             }, []);
         },
@@ -219,9 +220,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
         } else {
             number = 1;
         }
-        for (var i = 0 ; i < number ; i++) {
-            this.gObject.moveForward();
-        }
+        this.gObject.moveForward(number);
     };
     
     /**
@@ -236,9 +235,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
         } else {
             number = 1;
         }
-        for (var i = 0 ; i < number ; i++) {
-            this.gObject.moveBackward();
-        }
+        this.gObject.moveBackward(number);
     };
    
     /**
@@ -253,9 +250,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
         } else {
             number = 1;
         }
-        for (var i = 0 ; i < number ; i++) {
-            this.gObject.moveUpward();
-        }
+        this.gObject.moveUpward(number);
     };
 
     /**
@@ -270,9 +265,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
         } else {
             number = 1;
         }
-        for (var i = 0 ; i < number ; i++) {
-            this.gObject.moveDownward();
-        }
+        this.gObject.moveDownward(number);
     };
 
     /**
