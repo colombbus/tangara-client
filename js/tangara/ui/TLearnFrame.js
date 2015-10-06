@@ -115,6 +115,7 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TLearnCanvas', 'ui/TLearnEd
                     value = editor.getStatements();
                     lastSubmission = editor.getValue();
                     TRuntime.executeStatements(value);
+                    canvas.giveFocus();
                 }
                 //TODO: only if no error
                 exercise.check(value);
