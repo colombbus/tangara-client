@@ -88,38 +88,38 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
                     if(collision.normalY < -0.3) {
                         if(!p.skipCollide && p.vy > 0) { 
                             p.vy = 0; 
+                            blockedY = true;
                         }
                         collision.impact = impactY;
                         this.trigger("bump.bottom",collision);
                         this.trigger("bump",collision);
-                        blockedY = true;
                     }
                     if(collision.normalY > 0.3) {
                         if(!p.skipCollide && p.vy < 0) { 
                             p.vy = 0; 
+                            blockedY = true;
                         }
                         collision.impact = impactY;
                         this.trigger("bump.top",collision);
                         this.trigger("bump",collision);
-                        blockedY = true;
                     }
                     if(collision.normalX < -0.3) {
                         if(!p.skipCollide && p.vx > 0) { 
                             p.vx = 0;  
+                            blockedX = true;
                         }
                         collision.impact = impactX;
                         this.trigger("bump.right",collision);
                         this.trigger("bump",collision);
-                        blockedX = true;
                     }
                     if(collision.normalX > 0.3) {
                         if(!p.skipCollide && p.vx < 0) { 
                             p.vx = 0; 
+                           blockedX = true;
                         }
                         collision.impact = impactX;
                         this.trigger("bump.left",collision);
                         this.trigger("bump",collision);
-                        blockedX = true;
                     }
                     if (Math.abs(collision.separate[0])>Math.abs(separate[0])) {
                         separate[0] = collision.separate[0];
