@@ -158,6 +158,7 @@ define(['TUtils', 'SynchronousManager', 'TObject', 'TRuntime'], function( TUtils
         this.waiting = false;
         this.keyWaited = false;
         this.keys = [];
+        this.synchronousManager.end();
     };
     
     
