@@ -1,4 +1,4 @@
-define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManager', 'objects/hero/Hero'], function($, TEnvironment, TUtils, CommandManager, SynchronousManager, Hero) {
+define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManager', 'TGraphicalObject', 'objects/sprite/Sprite', 'objects/hero/Hero'], function($, TEnvironment, TUtils, CommandManager, SynchronousManager, TGraphicalObject, Sprite, Hero) {
     /**
      * Defines Robot, inherited from Hero.
      * The main difference with Hero is that it executes commands one by one.
@@ -67,29 +67,37 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
         moveForward: function() {
             this.synchronousManager.begin();
             this.perform(function() {
+                this.p.direction = Sprite.DIRECTION_NONE;
                 this.p.inMovement = true;
                 this.p.destinationX += this.p.length;
+                this.p.vx = this.p.speed;
             }, []);
         },
         moveBackward: function() {
             this.synchronousManager.begin();
             this.perform(function() {
+                this.p.direction = Sprite.DIRECTION_NONE;
                 this.p.inMovement = true;
                 this.p.destinationX -= this.p.length;
+                this.p.vx = -this.p.speed;
             }, []);
         },
         moveUpward: function() {
             this.synchronousManager.begin();
             this.perform(function() {
+                this.p.direction = Sprite.DIRECTION_NONE;
                 this.p.inMovement = true;
                 this.p.destinationY -= this.p.length;
+                this.p.vy = -this.p.speed;
             }, []);
         },
         moveDownward: function() {
             this.synchronousManager.begin();
             this.perform(function() {
+                this.p.direction = Sprite.DIRECTION_NONE;
                 this.p.inMovement = true;
                 this.p.destinationY += this.p.length;
+                this.p.vx = this.p.speed;
             }, []);
         },
         countItems: function() {

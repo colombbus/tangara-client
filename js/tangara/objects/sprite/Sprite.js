@@ -171,20 +171,16 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
             if (!p.dragging && !p.frozen) {
                 if (p.direction === Sprite.DIRECTION_NONE) {
                     if (p.x < p.destinationX) {
-                        p.vx = p.speed;
                         p.x = Math.min(p.x + p.vx*dt, p.destinationX);
                         p.moving = true;
                     } else if (p.x > p.destinationX) {
-                        p.vx = -p.speed;
                         p.x = Math.max(p.x + p.vx*dt, p.destinationX);
                         p.moving = true;
                     }
                     if (p.y < p.destinationY) {
-                        p.vy = p.speed;
                         p.y = Math.min(p.y + p.vy*dt, p.destinationY);
                         p.moving = true;
                     } else if (p.y > p.destinationY) {
-                        p.vy = -p.speed;
                         p.y = Math.max(p.y + p.vy*dt, p.destinationY);
                         p.moving = true;
                     }                    
@@ -222,7 +218,8 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
         moveForward: function(value) {
             this.perform(function(value) {
                 this.p.direction = Sprite.DIRECTION_NONE;
-                this.p.destinationX += value;
+                this.p.destinationX = this.p.x + value;
+                this.p.vx = this.p.speed;
             }, [value]);
         },
         alwaysMoveForward: function() {
@@ -234,7 +231,9 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
         moveBackward: function(value) {
             this.perform(function(value) {
                 this.p.direction = Sprite.DIRECTION_NONE;
-                this.p.destinationX -= value;
+                //this.p.destinationX -= value;
+                this.p.destinationX = this.p.x - value;
+                this.p.vx = -this.p.speed;
             }, [value]);
         },
         alwaysMoveBackward: function() {
@@ -246,7 +245,8 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
         moveUpward: function(value) {
             this.perform(function(value) {
                 this.p.direction = Sprite.DIRECTION_NONE;
-                this.p.destinationY -= value;            
+                this.p.destinationY = this.p.y - value;
+                this.p.vy = -this.p.speed;
             }, [value]);
         },
         alwaysMoveUpward: function() {
@@ -258,7 +258,8 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
         moveDownward: function(value) {
             this.perform(function(value) {
                 this.p.direction = Sprite.DIRECTION_NONE;
-                this.p.destinationY += value;
+                this.p.destinationY = this.p.y + value;
+                this.p.vy = this.p.speed;
             }, [value]);
         },
         alwaysMoveDownward: function() {
@@ -271,6 +272,16 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
             this.perform(function(x, y) {
                 this.p.destinationX = x + this.p.w / 2;
                 this.p.destinationY = y + this.p.h / 2;
+                if (this.p.destinationX > this.p.x) {
+                    this.p.vx = this.p.speed;
+                } else {
+                    this.p.vx = -this.p.speed;
+                }
+                if (this.p.destinationY > this.p.y) {
+                    this.p.vy = this.p.speed;
+                } else {
+                    this.p.vy = -this.p.speed;
+                }
                 this.p.direction = Sprite.DIRECTION_NONE; 
             }, [x, y]);
         },
@@ -278,6 +289,16 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
             this.perform(function(x, y) {
                 this.p.destinationX = x;
                 this.p.destinationY = y;
+                if (this.p.destinationX > this.p.x) {
+                    this.p.vx = this.p.speed;
+                } else {
+                    this.p.vx = -this.p.speed;
+                }
+                if (this.p.destinationY > this.p.y) {
+                    this.p.vy = this.p.speed;
+                } else {
+                    this.p.vy = -this.p.speed;
+                }
                 this.p.direction = Sprite.DIRECTION_NONE;               
             }, [x, y]);
         },
@@ -285,6 +306,8 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
             this.perform(function() {
                 this.p.destinationX = this.p.x;
                 this.p.destinationY = this.p.y;
+                this.p.vx = 0;
+                this.p.vy = 0;
                 this.p.direction = Sprite.DIRECTION_NONE;
             }, {});
         },
