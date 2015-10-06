@@ -6,6 +6,7 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
         var graphics;
         var log;
         var tObjects = new Array();
+        var tInstances = new Array();
         var tGraphicalObjects = new Array();
         var designMode = false;
         var frozen = false;
@@ -299,6 +300,12 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             // initialize object with current state
             object.freeze(frozen);
         };
+        
+        this.addInstance = function(instance) {
+            tInstances.push(instance);
+            // initialize object with current state
+            instance.freeze(frozen);
+        };        
 
         this.removeObject = function(object) {
             var index = tObjects.indexOf(object);
@@ -358,6 +365,10 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
                 var object = tObjects[0];
                 // deleteObject will remove object from tGraphicalObjects
                 object.deleteObject();
+            }
+            // init instances
+            for (var i=0;i<tInstances.length;i++) {
+                tInstances[i].clear();
             }
             interpreter.clear();
         };
