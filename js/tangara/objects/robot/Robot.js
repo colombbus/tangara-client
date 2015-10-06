@@ -157,7 +157,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
                 this.p.direction = Sprite.DIRECTION_NONE;
                 this.p.inMovement = true;
                 this.p.destinationY += this.p.length;
-                this.p.vx = this.p.speed;
+                this.p.vy = this.p.speed;
             }, []);
         },
         countItems: function() {
