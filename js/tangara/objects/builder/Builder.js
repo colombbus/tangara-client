@@ -102,9 +102,9 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
                                 ctx.lineTo((j + 1) * p.length - p.x, (i + 0.4) * p.length - p.y);
                                 ctx.lineTo(j * p.length - p.x, (i + 0.4) * p.length - p.y);
                                 ctx.closePath();
-                                ctx.strokeStyle = "#FF0000";
+                                ctx.strokeStyle = "#000000";
                                 ctx.stroke();
-                                ctx.fillStyle = "#FF0000";
+                                ctx.fillStyle = "#000000";
                                 ctx.fill();
                                 break;
                             case Builder.DOOR:
@@ -129,9 +129,9 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
                                 ctx.lineTo((j + 1) * p.length - p.x, (i + 1) * p.length - p.y);
                                 ctx.lineTo(j * p.length - p.x, (i + 1) * p.length - p.y);
                                 ctx.closePath();
-                                ctx.strokeStyle = "#FF0000";
+                                ctx.strokeStyle = "#000000";
                                 ctx.stroke();
-                                ctx.fillStyle = "#FF0000";
+                                ctx.fillStyle = "#000000";
                                 ctx.fill();
                                 break;
                         }
