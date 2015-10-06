@@ -190,7 +190,7 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
     
     /**
      * Get platform structure
-     * @returns array
+     * @returns {array}
      */
     Builder.prototype._getStructure = function() {
         var p = this.gObject.p.platform;
@@ -214,15 +214,28 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
         }
     };
     
+    /**
+     * Build the Platform inside Builder.
+     */
     Builder.prototype._buildStructure = function() {
         this.platform._loadStructure(this._getStructure());
         this.platform._build();
     };
-    
+
+    /**
+     * Set a new tile image. There can be many tiles.
+     * Its value in the structure will depend of the moment where it is added :
+     * The first time added will have the value "1", the second "2", etc...
+     * @param {String} imageName    Image's name used for tiles
+     */
     Builder.prototype._addTile = function(imageName) {
         this.platform._addTile(imageName);
     };
     
+    /**
+     * Build the Platform inside Builder, and then return it.
+     * @returns {Platform}
+     */
     Builder.prototype._getPlatform = function() {
         this._buildStructure();
         return this.platform;
