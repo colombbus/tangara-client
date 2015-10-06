@@ -1,21 +1,25 @@
-define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManager', 'TGraphicalObject', 'objects/sprite/Sprite', 'objects/hero/Hero'], function($, TEnvironment, TUtils, CommandManager, SynchronousManager, TGraphicalObject, Sprite, Hero) {
+define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManager', 'TGraphicalObject', 'objects/sprite/Sprite', 'objects/hero/Hero', 'objects/platform/Platform'], function($, TEnvironment, TUtils, CommandManager, SynchronousManager, TGraphicalObject, Sprite, Hero, Platform) {
     /**
      * Defines Robot, inherited from Hero.
      * The main difference with Hero is that it executes commands one by one.
      * @param {String} name
      * @exports Robot
      */
-    var Robot = function(name) {
+    var Robot = function(name, auto) {
         if (typeof name !== 'undefined') {
             Hero.call(this, name);
         } else {
             Hero.call(this, "robot");
         }
+        if (typeof auto === 'undefined') {
+            auto = true;
+        }
         this.synchronousManager = new SynchronousManager();
         this.gObject.synchronousManager = this.synchronousManager;
-        var gObject = this.gObject;
+        if (auto) {
+            Platform.register(this);
+        }
     };
-
 
     Robot.prototype = Object.create(Hero.prototype);
     Robot.prototype.constructor = Robot;
@@ -200,6 +204,9 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
                 this.updateGridLocation();
             }, []);
         },
+        setGridLocation: function(x, y) {
+            this.setLocation(x*this.p.length, y*this.p.length);
+        },        
         updateGridLocation: function() {
             this.p.gridX = Math.floor(this.p.x/this.p.length);
             this.p.gridY = Math.floor(this.p.y/this.p.length);
@@ -336,6 +343,23 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
                 return this.gObject.wasBlockedRight();
         }
         return false;
+    };
+    
+    /**
+     * Link a platform to the Walker. Walker will not pass through.
+     * @param {String} platform
+     */
+    Robot.prototype._addPlatform = function(platform) {
+    	Hero.prototype._addPlatform.call(this, platform);
+        var door = platform.getDoorLocation();
+        this.gObject.setGridLocation(door[0], door[1]);
+    };    
+    
+    Robot.prototype.deleteObject = function() {
+        this.synchronousManager.end();
+        // remove object from instances list
+        Platform.unregister(this);
+        Hero.prototype.deleteObject.call(this);
     };
     
     return Robot;

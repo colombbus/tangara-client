@@ -15,21 +15,40 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
         this.resources = new ResourceManager();
         this.sheet = null;
         this.built = false;
+        this.doorLocation = [0,0];
         TRuntime.addGraphicalObject(this, false);
         var g = TRuntime.getGraphics().getInstance();
         g.stage().collisionLayer(this.gObject);
+        Platform.instances.push(this);
+        for (var i=0;i<Platform.registered.length;i++) {
+            var object = Platform.registered[i];
+            object._addPlatform(this);
+        }
     };
 
     Platform.prototype = Object.create(TGraphicalObject.prototype);
     Platform.prototype.constructor = Platform;
     Platform.prototype.className = "Platform";
-    Platform.BRICK = 0x01;
-    Platform.DOOR = 0x02;
-    Platform.EXIT = 0x03;
-    Platform.WALL = 0x04;
+    Platform.instances = [];
+    Platform.registered = [];
     
     var graphics = Platform.prototype.graphics;
     
+    Platform.register =  function(object) {
+        Platform.registered.push(object);
+        for (var i=0;i<Platform.instances.length; i++) {
+            var platform = Platform.instances[i];
+            object._addPlatform(platform);
+        }
+    };
+
+    Platform.unregister =  function(object) {
+        var index = Platform.registered.indexOf(object);
+        if (index > -1) {
+            Platform.registered.splice(index, 1);
+        }
+    };
+
     
     var TSpriteSheet = graphics.addClass("SpriteSheet", "TSpriteSheet", {
     	init: function(img, options) {
@@ -216,26 +235,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
 	      if(this.blocks[blockY]  && this.blocks[blockY][blockX]) {
 	        ctx.drawImage(this.blocks[blockY][blockX],startX,startY);
 	      }
-	},
-        addTile: function(number, x, y) {
-            var p = this.p;
-            if (typeof x === 'undefined') {
-                x = p.gridX;
-                y = p.gridY;
-            } else {
-                x = TUtils.getInteger(x);
-                y = TUtils.getInteger(y);
-            }
-            if (x >= p.nbColumns) {
-                this.addColumns(x);
-            }
-            if (y >= p.nbRows) {
-                this.addRows(y);
-            }
-            if (p.platform[y][x] === 0)
-                p.tiles += 1;
-            p.platform[y][x] = number;
-        }
+	}
     });
     
     /**
@@ -307,16 +307,16 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
             row = arguments;
         }
     	if (this.nbCols === 0 && this.nbRows === 0) {
-    		this.nbCols = row.length;
+            this.nbCols = row.length;
     	}
     	if (row.length < this.nbCols) {
-    		// Fill row with 0
-    		for (var i = row.length; i< this.nbCols; i++) {
-    			row.push(0);
-    		}
+            // Fill row with 0
+            for (var i = row.length; i< this.nbCols; i++) {
+                row.push(0);
+            }
     	} else if (row.length>this.nbCols) {
-    		// truncate row
-    		row.splice(this.nbCols, row.length);
+            // truncate row
+            row.splice(this.nbCols, row.length);
     	}
     	this.rows.push(row);
     	this.nbRows++;
@@ -353,25 +353,25 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
     Platform.prototype._loadStructure = function(structure) {
     	var newRows = [];
     	if (TUtils.checkArray(structure)) {
-    		if (!TUtils.checkArray(structure[0])) {
+            if (!TUtils.checkArray(structure[0])) {
                 throw new Error(this.getMessage("structure incorrect"));
-    		}
-    		var newNbCols = structure[0].length;
-    		for (var i=0; i<structure.length; i++) {
-    			newRows[i] = [];
-    			for (var j = 0; j<newNbCols; j++) {
-    				if (j<structure[i].length) {
-    					newRows[i][j] = structure[i][j];
-    				} else {
-    					// row too short: fill with 0
-    					newRows[i][j] = 0;
-    				}
-    			}
-    		}
-    		this.rows = newRows;
-    		this.nbRows = structure.length;
-    		this.nbCols = newNbCols;
-        	this.buildStructure();
+            }
+            var newNbCols = structure[0].length;
+            for (var i=0; i<structure.length; i++) {
+                newRows[i] = [];
+                for (var j = 0; j<newNbCols; j++) {
+                    if (j<structure[i].length) {
+                            newRows[i][j] = structure[i][j];
+                    } else {
+                            // row too short: fill with 0
+                            newRows[i][j] = 0;
+                    }
+                }
+            }
+            this.rows = newRows;
+            this.nbRows = structure.length;
+            this.nbCols = newNbCols;
+            this.buildStructure();
     	} else {
         	//TODO: offer to load structure from file as well (if structure is string)
             throw new Error(this.getMessage("structure incorrect"));
@@ -388,60 +388,39 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
     	x = TUtils.getInteger(x);
     	y = TUtils.getInteger(y);
     	number = TUtils.getInteger(number);
-    	if (x>this.nbCols || x<0) {
+    	if (x<0) {
             throw new Error(this.getMessage("x value incorrect", x));
     	}
-    	if (y>this.nbRows || y<0) {
+    	if (y<0) {
             throw new Error(this.getMessage("y value incorrect", y));
     	}
-    	if (number<0 || number > this.tiles.length+1) {
-    		// tile.length+1 to take base block (#0) into account
+    	if (number<0 || number > this.tiles.length) {
+            // tile.length+1 to take base block (#0) into account
             throw new Error(this.getMessage("tile number incorrect", number));
     	}
-    	this.gObject.setTile(x,y,number);
+        if (y>=this.nbRows) {
+            // rows have to be created
+            for (var i=this.nbRows; i<=y; i++) {
+                this.rows[i] = [];
+                for (var j=0; j<this.nbCols; j++) {
+                   this.rows[i].push[0];
+                }
+            }
+            this.nbRows = y+1;
+        }
+        if (x>=this.nbCols) {
+            // cols have to be created
+            for (var i=0; i< this.nbRows; i++) {
+                for (var j = this.nbCols; j<=x; j++) {
+                    this.rows[i].push(0);
+                }
+            }
+            this.nbCols = x+1;
+        }
+        this.rows[y][x] = number;
+        this.buildStructure();        
     };
 
-    /*
-     * Put a brick at given location
-     * If no location given, use current location
-     * @param {Integer} x
-     * @param {Integer} y
-     */
-    Platform.prototype._buildBrick = function(x,y) {
-        this.gObject.addTile(Platform.BRICK,x,y);
-    };
-    
-
-    /*
-     * Build a door at current location 
-     * If no location given, use current location
-     * @param {Integer} x
-     * @param {Integer} y
-     */
-    Platform.prototype._buildDoor = function(x,y) {
-        this.gObject.addTile(Platform.DOOR,x,y);
-    };
-
-    /*
-     * Build an exit at current location 
-     * If no location given, use current location
-     * @param {Integer} x
-     * @param {Integer} y
-     */
-    Platform.prototype._buildExit = function(x,y) {
-        this.gObject.addTile(Platform.EXIT,x,y);
-    };
-    
-    /*
-     * Build an wall at current location 
-     * If no location given, use current location
-     * @param {Integer} x
-     * @param {Integer} y
-     */
-    Platform.prototype._buildWall = function(x,y) {
-        this.gObject.addTile(Platform.WALL,x,y);
-    };
-    
     /**
      * Build Platform.
      */
@@ -520,12 +499,25 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
         }
     };
     
+    Platform.prototype.getDoorLocation = function() {
+        return this.doorLocation;
+    };
+    
+    Platform.prototype.setDoorLocation = function(x,y) {
+        this.doorLocation = [x,y];
+    };
+    
     /**
      * Delete Platform.
      */
     Platform.prototype.deleteObject = function() {
         var g = TRuntime.getGraphics().getInstance();
         g.stage().removeCollisionLayer(this.gObject);
+        // remove object from instances list
+        var index = Platform.instances.indexOf(this);
+        if (index > -1) {
+            Platform.instances.splice(index, 1);
+        }
     	TGraphicalObject.prototype.deleteObject.call(this);
     };
     
