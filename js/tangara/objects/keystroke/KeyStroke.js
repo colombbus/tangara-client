@@ -11,7 +11,6 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
         this.keyDown = false;
         this.keyboardEnabled = false;
         this.checkAllKeysUp = false;
-        this.waiting = false;
         this.keys = new Array();
         var that = this;
         this.listenerKeyDown = function(e) {
@@ -276,34 +275,6 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
     KeyStroke.prototype._displayCommands = function(value) {
         value = TUtils.getBoolean(value);
         this.commands.logCommands(value);
-    };
-
-
-    /**
-     * Detect if a given key is down
-     * @param {String} key
-     */
-    KeyStroke.prototype._wait = function(key) {
-        //TODO: find a better way
-        if (!this.keyboardEnabled) {
-            this.enableKeyboard();
-        }
-        this.waiting = true;
-        this.synchronousManager.start();
-    };
-
-    
-    /**
-     * Detect if a given key is down
-     * @param {String} key
-     */
-    KeyStroke.prototype._detect = function(key) {
-        //TODO: find a better way
-        if (!this.keyboardEnabled) {
-            this.enableKeyboard();
-        }        
-        var keycode = this.getKeyCode(key);
-        return (typeof this.keys[keycode] !== 'undefined' && this.keys[keycode]);
     };
 
     return KeyStroke;
