@@ -204,14 +204,14 @@
         },
         "parents": true
     },
-    "KeyStrokeInstance": {
-        "path": "keystrokeinstance",
+    "Keyboard": {
+        "path": "keyboard",
         "translations": {
             "fr": "clavier",
             "es": "TBT",
-            "en": "keys"
+            "en": "keyboard"
         },
-        "parents": true,
+        "parents": false,
         "instance": true
     },
     "Tangara": {
