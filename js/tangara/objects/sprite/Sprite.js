@@ -39,7 +39,9 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
             this._super(TUtils.extend({
                 destinationX: 0,
                 destinationY: 0,
-                velocity: 200,
+                vx: 0,
+                vy: 0,
+                speed: 200,
                 type: TGraphicalObject.TYPE_SPRITE,
                 direction: 'none',
                 category: '',
@@ -47,12 +49,13 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
                 hasCollisionCommands: false,
                 collisionWatched: false,
                 frozen: false,
-                asset: null
+                asset: null,
+                collisionMask: TGraphicalObject.TYPE_SPRITE,
+                collisions: []
             }, props), defaultProps);
             this.watchCollisions(true);
-            this.encounteredObjects = new Array();
-            this.lastEncounteredObjects = new Array();
-            this.reciprocalCol = new Array();
+            this.encounteredSprites = new Array();
+            this.lastEncounteredSprites = new Array();
             this.resources = {};
         },
         setResources: function(r) {
@@ -89,41 +92,60 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
         checkCollisions: function() {
             if (this.p.moving) {
                 // Look for other sprites
-                this.encounteredObjects = [];
-                this.reciprocalCol = false;
+                this.encounteredSprites = [];
                 var skip = 0;
-                var collided = this.stage.TsearchSkip(this, TGraphicalObject.TYPE_SPRITE, skip);
-                var collision = false, object;
-                while (collided && !collision) {
+                var object;
+                var collided = this.stage.TsearchSkip(this, this.p.collisionMask, skip, true);
+                // detect up to 3 objects
+                var nbCollisions = 3;
+                
+                while (collided && nbCollisions>0) {
                     object = collided.obj;
-                    this.encounteredObjects.push(object);
-                    if (this.lastEncounteredObjects.indexOf(object) === -1) {
-                        this.objectEncountered(collided);
-                        collision = true;
-                    } else {
-                        // look for another sprite
-                        skip++;
-                        collided = this.stage.TsearchSkip(this, TGraphicalObject.TYPE_SPRITE, skip);
+                    if (typeof object.getId !== 'undefined') {
+                        var id = object.getId();
+                        if (object.p.type === TGraphicalObject.TYPE_SPRITE) {
+                            this.encounteredSprites.push(id);
+                        }
+                        if (object.p.type !== TGraphicalObject.TYPE_SPRITE || this.lastEncounteredSprites.indexOf(id) === -1) {
+                            var collision = {};
+                            collision.obj = collided.obj;
+                            collision.separate = [];
+                            collision.separate[0] = collided.separate[0];
+                            collision.separate[1] = collided.separate[1];
+                            collision.normalX = collided.normalX;
+                            collision.normalY = collided.normalY;
+                            collision.magnitude = collided.magnitude;
+                            collision.distance = collided.distance;
+                            this.p.collisions.push(collision);
+                            nbCollisions --;
+                        }
                     }
+                    skip++;
+                    collided = this.stage.TsearchSkip(this, this.p.collisionMask, skip, false);
                 }
-                this.lastEncounteredObjects = this.encounteredObjects.slice(0);
-                if (collision) {
-                    // Do the reciprical collision
-                    collided.obj = this;
-                    collided.normalX *= -1;
-                    collided.normalY *= -1;
-                    collided.distance = 0;
-                    collided.magnitude = 0;
-                    collided.separate[0] = 0;
-                    collided.separate[1] = 0;
-                    object.trigger('hit', collided);
-                    object.trigger('hit.sprite', collided);
-                }
+                this.lastEncounteredSprites = this.encounteredSprites.slice(0);
+            }
+        },
+        handleCollisions: function() {
+            while (this.p.collisions.length>0) {
+                var collision = this.p.collisions.pop();
+                var object = collision.obj;
+                this.trigger('hit', collision);
+                this.trigger('hit.collision', collision);
+                // Do the reciprical collision
+                collision.obj = this;
+                collision.normalX *= -1;
+                collision.normalY *= -1;
+                collision.distance = 0;
+                collision.magnitude = 0;
+                collision.separate[0] = 0;
+                collision.separate[1] = 0;
+                object.trigger('hit', collision);
+                object.trigger('hit.sprite', collision);
             }
         },
         objectEncountered: function(col) {
-            if (this.p.collisionWatched && this.p.hasCollisionCommands) {
-                // TODO add event object with info on collision
+            if (this.p.collisionWatched && this.p.hasCollisionCommands ) {
                 var object = col.obj;
                 if (typeof object.getId !== 'undefined') {
                     var id = object.getId();
@@ -147,42 +169,33 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
             var p = this.p;
             p.moving = false;
             if (!p.dragging && !p.frozen) {
-                var step = p.velocity * dt;
-                switch (p.direction) {
-                    case Sprite.DIRECTION_NONE:
-                        if (p.x < p.destinationX) {
-                            p.x = Math.min(p.x + step, p.destinationX);
-                            p.moving = true;
-                        } else if (p.x > p.destinationX) {
-                            p.x = Math.max(p.x - step, p.destinationX);
-                            p.moving = true;
-                        }
-                        if (p.y < p.destinationY) {
-                            p.y = Math.min(p.y + step, p.destinationY);
-                            p.moving = true;
-                        } else if (p.y > p.destinationY) {
-                            p.y = Math.max(p.y - step, p.destinationY);
-                            p.moving = true;
-                        }
-                        break;
-                    case Sprite.DIRECTION_RIGHT:
-                        p.x += step;
+                if (p.direction === Sprite.DIRECTION_NONE) {
+                    if (p.x < p.destinationX) {
+                        p.vx = p.speed;
+                        p.x = Math.min(p.x + p.vx*dt, p.destinationX);
                         p.moving = true;
-                        break;
-                    case Sprite.DIRECTION_LEFT:
-                        p.x -= step;
+                    } else if (p.x > p.destinationX) {
+                        p.vx = -p.speed;
+                        p.x = Math.max(p.x + p.vx*dt, p.destinationX);
                         p.moving = true;
-                        break;
-                    case Sprite.DIRECTION_UP:
-                        p.y -= step;
+                    }
+                    if (p.y < p.destinationY) {
+                        p.vy = p.speed;
+                        p.y = Math.min(p.y + p.vy*dt, p.destinationY);
                         p.moving = true;
-                        break;
-                    case Sprite.DIRECTION_DOWN:
-                        p.y += step;
+                    } else if (p.y > p.destinationY) {
+                        p.vy = -p.speed;
+                        p.y = Math.max(p.y + p.vy*dt, p.destinationY);
                         p.moving = true;
-                        break;
+                    }                    
+                } else {
+                    p.x += p.vx*dt;
+                    p.y += p.vy*dt;
+                    p.moving = true;
                 }
+                this.p.collisions = [];
                 this.checkCollisions();
+                this.handleCollisions();
             }
         },
         designTouchEnd: function(touch) {
@@ -208,56 +221,64 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
         },
         moveForward: function(value) {
             this.perform(function(value) {
+                this.p.direction = Sprite.DIRECTION_NONE;
                 this.p.destinationX += value;
             }, [value]);
         },
         alwaysMoveForward: function() {
             this.perform(function() {
                 this.p.direction = Sprite.DIRECTION_RIGHT;
+                this.p.vx = this.p.speed;
             }, {});
         },
         moveBackward: function(value) {
             this.perform(function(value) {
+                this.p.direction = Sprite.DIRECTION_NONE;
                 this.p.destinationX -= value;
             }, [value]);
         },
         alwaysMoveBackward: function() {
             this.perform(function() {
                 this.p.direction = Sprite.DIRECTION_LEFT;
+                this.p.vx = -this.p.speed;
             }, {});
         },
         moveUpward: function(value) {
             this.perform(function(value) {
-                this.p.destinationY -= value;
+                this.p.direction = Sprite.DIRECTION_NONE;
+                this.p.destinationY -= value;            
             }, [value]);
         },
         alwaysMoveUpward: function() {
             this.perform(function() {
                 this.p.direction = Sprite.DIRECTION_UP;
+                this.p.vy = -this.p.speed;                                
             }, {});
         },
         moveDownward: function(value) {
             this.perform(function(value) {
+                this.p.direction = Sprite.DIRECTION_NONE;
                 this.p.destinationY += value;
             }, [value]);
         },
         alwaysMoveDownward: function() {
             this.perform(function() {
                 this.p.direction = Sprite.DIRECTION_DOWN;
+                this.p.vy = this.p.speed;
             }, {});
         },
         goTo: function(x, y) {
             this.perform(function(x, y) {
                 this.p.destinationX = x + this.p.w / 2;
                 this.p.destinationY = y + this.p.h / 2;
-                this.p.direction = Sprite.DIRECTION_NONE;
+                this.p.direction = Sprite.DIRECTION_NONE; 
             }, [x, y]);
         },
         centerGoTo: function(x, y) {
             this.perform(function(x, y) {
                 this.p.destinationX = x;
                 this.p.destinationY = y;
-                this.p.direction = Sprite.DIRECTION_NONE;
+                this.p.direction = Sprite.DIRECTION_NONE;               
             }, [x, y]);
         },
         stop: function() {
@@ -269,7 +290,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
         },
         setVelocity: function(value) {
             this.perform(function(value) {
-                this.p.velocity = value * 2;
+                this.p.speed = value * 2;
             }, [value]);
         },
         setCategory: function(name) {

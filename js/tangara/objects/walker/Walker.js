@@ -12,13 +12,14 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
     Walker.prototype = Object.create(Sprite.prototype);
     Walker.prototype.constructor = Walker;
     Walker.prototype.className = "Walker";
-
+    
     var graphics = Walker.prototype.graphics;
 
     Walker.prototype.gClass = graphics.addClass("TSprite", "TWalker", {
         init: function(props, defaultProps) {
             this._super(TUtils.extend({
                 type: TGraphicalObject.TYPE_WALKER | TGraphicalObject.TYPE_SPRITE,
+                collisionMask: TGraphicalObject.TYPE_SPRITE | TGraphicalObject.TYPE_PLATFORM | TGraphicalObject.TYPE_BLOCK,
                 mayFall: false,
                 jumping: false,
                 vy: 0,
@@ -26,70 +27,139 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
                 jumpDelay: 10,
                 jumpAvailable: 0,
                 jumpSpeed: -300,
-                waitingForBlocks: 0,
-                blocked:false
+                waitingForBlocks: 0
             }, props), defaultProps);
             this.blocks = new Array();
+            this.on("bump.bottom", "landed");
         },
         step: function(dt) {
-            if (!this.p.dragging && !this.p.frozen && this.p.waitingForBlocks === 0) {
-                if (this.p.mayFall && (this.p.direction === Sprite.DIRECTION_UP || this.p.direction === Sprite.DIRECTION_DOWN)) {
-                    // cannot move upward or downward when walker may fall
-                    this.p.direction = Sprite.DIRECTION_NONE;
-                }
-                if (this.p.mayFall) {
-                    if (this.p.jumpAvailable > 0)
-                        this.p.jumpAvailable--;
-                    if (this.p.jumping) {
-                        if (this.p.jumpAvailable > 0) {
-                            // perform a jump
-                            this.p.vy = this.p.jumpSpeed;
-                        }
-                        this.p.jumping = false;
-                    } else {
-                        this.p.vy += this.p.gravity * dt;
+            var p = this.p;
+            var dtStep = dt;
+            
+            while (dtStep > 0) {
+                dt = Math.min(1/30,dtStep);
+                if (!this.p.dragging && !this.p.frozen && this.p.waitingForBlocks === 0) {
+                    if (this.p.mayFall && (this.p.direction === Sprite.DIRECTION_UP || this.p.direction === Sprite.DIRECTION_DOWN)) {
+                        // cannot move upward or downward when walker may fall
+                        this.p.direction = Sprite.DIRECTION_NONE;
                     }
-                    // TODO: optimize this
-                    this.p.destinationY = this.p.y + this.p.vy * dt;
+                    if (this.p.mayFall) {
+                        this.p.vy += this.p.gravity * dt;
+                        if (this.p.jumpAvailable > 0)
+                            this.p.jumpAvailable--;
+                        if (this.p.jumping) {
+                            if (this.p.jumpAvailable > 0) {
+                                // perform a jump
+                                this.p.vy = this.p.jumpSpeed;
+                            }
+                            this.p.jumping = false;
+                        }
+                        if (this.p.direction === Sprite.DIRECTION_NONE) {
+                            this.p.destinationY = this.p.y + this.p.vy * dt;
+                        }
+                    }
                 }
                 this._super(dt);
-                if (this.p.mayFall) {
-                    // actually set location to destination in order to fall
-                    this.p.y = this.p.destinationY;
-                    this.p.moving = true;
-                }
-                // Look for blocks or platforms
-                var skip = 0;
-                this.p.blocked = false;
-                var collided = this.stage.TsearchSkip(this, TGraphicalObject.TYPE_BLOCK|TGraphicalObject.TYPE_PLATFORM, skip);
-                // Max 2 overlapping blocks are searched
-                while (collided !== false && skip < 2) {
-                    this.checkBlocks(collided);
-                    skip++;
-                    collided = this.stage.TsearchSkip(this, TGraphicalObject.TYPE_BLOCK|TGraphicalObject.TYPE_PLATFORM, skip);
-                }
+                dtStep -= dt;
             }
         },
-        checkBlocks: function(col) {
-            var object = col.obj;
-            var id = object.getId();
-            if ((object.p.type === TGraphicalObject.TYPE_PLATFORM && this.blocks.indexOf(id) > -1) || (object.p.type === TGraphicalObject.TYPE_BLOCK && this.blocks.indexOf(id) > -1 && !object.checkTransparency(this, col))) {
-            	// block encountered
-                this.p.blocked = true;
-                this.p.x -= col.separate[0];
-                this.p.y -= col.separate[1];
-                if (this.p.mayFall) {
-                    this.p.destinationY = this.p.y;
-                    if (col.normalY < -0.3 && this.p.vy > 0) {
-                        // landed
-                        this.p.vy = 0;
-                        this.p.jumpAvailable = this.p.jumpDelay;
-                    } else if (col.normalY > 0.3 && this.p.vy < 0) {
-                        // bumped top
-                        this.p.vy = 0;
+        checkCollisions: function() {
+            // search for sprites and blocks
+            this._super();
+            // search for any platform
+            graphics.searchCollisionLayer(this, TGraphicalObject.TYPE_PLATFORM, false);
+        },
+        handleCollisions: function() {
+            var separate = [];
+            var p = this.p;
+            separate[0] = 0;
+            separate[1] = 0;
+            var blockedX = false;
+            var blockedY = false;
+            while (this.p.collisions.length>0) {
+                var collision = this.p.collisions.pop();
+                var object = collision.obj;
+                var id = object.getId();
+                if (this.blocks.indexOf(id) > -1 && (object.p.type === TGraphicalObject.TYPE_PLATFORM || (object.p.type === TGraphicalObject.TYPE_BLOCK && !object.checkTransparency(this, collision)))) {
+                    var impactX = Math.abs(p.vx);
+                    var impactY = Math.abs(p.vy);
+                    collision.impact = 0;
+                    // Top collision
+                    if(collision.normalY < -0.3) {
+                        if(!p.skipCollide && p.vy > 0) { 
+                            p.vy = 0; 
+                        }
+                        collision.impact = impactY;
+                        this.trigger("bump.bottom",collision);
+                        this.trigger("bump",collision);
+                        blockedY = true;
+                    }
+                    if(collision.normalY > 0.3) {
+                        if(!p.skipCollide && p.vy < 0) { 
+                            p.vy = 0; 
+                        }
+                        collision.impact = impactY;
+                        this.trigger("bump.top",collision);
+                        this.trigger("bump",collision);
+                        blockedY = true;
+                    }
+                    if(collision.normalX < -0.3) {
+                        if(!p.skipCollide && p.vx > 0) { 
+                            p.vx = 0;  
+                        }
+                        collision.impact = impactX;
+                        this.trigger("bump.right",collision);
+                        this.trigger("bump",collision);
+                        blockedX = true;
+                    }
+                    if(collision.normalX > 0.3) {
+                        if(!p.skipCollide && p.vx < 0) { 
+                            p.vx = 0; 
+                        }
+                        collision.impact = impactX;
+                        this.trigger("bump.left",collision);
+                        this.trigger("bump",collision);
+                        blockedX = true;
+                    }
+                    if (Math.abs(collision.separate[0])>Math.abs(separate[0])) {
+                        separate[0] = collision.separate[0];
+                    }
+                    if (Math.abs(collision.separate[1])>Math.abs(separate[1])) {
+                        separate[1] = collision.separate[1];
                     }
                 }
+                if (object.p.type === TGraphicalObject.TYPE_SPRITE || object.p.type === TGraphicalObject.TYPE_BLOCK) {
+                    this.trigger('hit', collision);
+                    this.trigger('hit.collision', collision);
+                    // Do the reciprical collision
+                    collision.obj = this;
+                    collision.normalX *= -1;
+                    collision.normalY *= -1;
+                    collision.distance = 0;
+                    collision.magnitude = 0;
+                    collision.separate[0] = 0;
+                    collision.separate[1] = 0;
+                    object.trigger('hit', collision);
+                    object.trigger('hit.sprite', collision);
+                }
             }
+            p.x -= separate[0];
+            p.y -= separate[1];
+            if (blockedX) {
+                p.destinationX = p.x;
+                if (p.direction === Sprite.DIRECTION_RIGHT || p.direction === Sprite.DIRECTION_LEFT) {
+                    p.direction = Sprite.DIRECTION_NONE;
+                } 
+            }
+            if (blockedY) {
+                p.destinationY = p.y;
+                if (p.direction === Sprite.DIRECTION_UP || p.direction === Sprite.DIRECTION_BOTTOM) {
+                    p.direction = Sprite.DIRECTION_NONE;
+                } 
+            }
+        },
+        landed: function(col) {
+            this.p.jumpAvailable = this.p.jumpDelay;
         },
         addBlock: function(block) {
             var objId = block.getGObject().getId();
@@ -98,9 +168,9 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
             }
         },
         mayFall: function(value) {
-			if (typeof value === 'undefined') {
-				value = true;
-			}
+            if (typeof value === 'undefined') {
+                    value = true;
+            }
             this.perform(function() {
                 this.p.mayFall = value;
             });

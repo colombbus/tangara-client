@@ -251,16 +251,16 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
                 var p = this.p;
                 if (p.forwardAssetsCount > 0) {
                     // we assume that forwardAssetsCount is equal to backwardAssetsCount
-                    p.dtMovement = (p.durationMove / p.forwardAssetsCount) * 200 / p.velocity;
+                    p.dtMovement = (p.durationMove / p.forwardAssetsCount) * 200 / p.speed;
                 } else if (p.defaultAssetsCount > 0) {
                     // we assume that forwardAssetsCount is equal to backwardAssetsCount
-                    p.dtMovement = (p.durationMove / p.defaultAssetsCount) * 200 / p.velocity;
+                    p.dtMovement = (p.durationMove / p.defaultAssetsCount) * 200 / p.speed;
                 }
                 if (p.frontAssetsCount > 0) {
-                    p.dtPause = (p.durationPause / p.frontAssetsCount) * 200 / p.velocity;
+                    p.dtPause = (p.durationPause / p.frontAssetsCount) * 200 / p.speed;
                 } else if (p.defaultAssetsCount > 0) {
                     // we assume that forwardAssetsCount is equal to backwardAssetsCount
-                    p.dtPause = (p.durationPause / p.defaultAssetsCount) * 200 / p.velocity;
+                    p.dtPause = (p.durationPause / p.defaultAssetsCount) * 200 / p.speed;
                 }
             }, []);
         },

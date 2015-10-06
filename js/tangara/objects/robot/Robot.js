@@ -51,12 +51,8 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
                         var item = p.carriedItems[i];
                         item.setLocation(x + i * 10, y);
                     }
-                } else if (p.mayFall && !(p.platform && p.platform[x] && p.platform[x][y + 1])) {
-                    this.moveDownward();
-                }
-                    
-                //TODO: remove p.blocked?
-                if (p.inMovement && p.moving && p.blocked && oldX === p.x && oldY === p.y) {
+                }   
+                if (p.inMovement && p.moving && oldX === p.x && oldY === p.y) {
                     p.moving = false;
                     p.destinationX = p.x;
                     p.destinationY = p.y;
@@ -209,14 +205,6 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
         for (var i = 0 ; i < number ; i++) {
             this.gObject.moveDownward();
         }
-    };
-
-    /**
-     * Robot jumps of two tiles.
-     */
-    Robot.prototype._jump = function() {
-        this.gObject.moveForward();
-        this.gObject.moveForward();
     };
 
     /**

@@ -31,6 +31,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
             }, [data]);
         },
         checkTransparency: function(object, col) {
+
             if (this.p.transparencyMask === null) {
                 return false;
             }
@@ -86,11 +87,10 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
                     clear = false;
                 }
             }
-
             if (clear) {
                 return true;
             }
-
+            return false;
             if (separateXL !== 0) {
                 if (separateXR !== 0) {
                     // cannot move horizontally
@@ -113,9 +113,15 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
                 col.separate[1] = separateYB + deltaY;
             }
 
+
+            return false;
+
             // calculate normal
             var normalX = col.separate[0];
             var normalY = -col.separate[1];
+            
+
+            
             var dist = Math.sqrt(normalX * normalX + normalY * normalY);
             if (dist > 0) {
                 normalX /= dist;

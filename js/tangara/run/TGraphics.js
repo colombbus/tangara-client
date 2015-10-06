@@ -50,23 +50,18 @@ define(['jquery', 'quintus'], function($, Quintus) {
         };
 
 
-        Q.Stage.prototype.TsearchSkip = function(obj, collisionMask, skip) {
+        Q.Stage.prototype.TsearchSkip = function(obj, collisionMask, skip, regrid) {
             var col;
 
-            Q._generateCollisionPoints(obj);
-            this.regrid(obj, obj.stage !== this);
+            if (regrid) {
+                Q._generateCollisionPoints(obj);
+                this.regrid(obj, obj.stage !== this);
+            }
 
             if (typeof skip === 'undefined') {
                 skip = 0;
             }
-
-            col = this._collideCollisionLayer(obj,collisionMask);
-            if (col) {
-            	skip--;
-            	if (skip<0) {
-            		return col;
-            	}
-            }
+            
             var grid = obj.grid, gridCell, col;
 
             for (var y = grid.Y1; y <= grid.Y2; y++) {
@@ -305,6 +300,20 @@ define(['jquery', 'quintus'], function($, Quintus) {
             object.size(true);
             Q._generatePoints(object, true);
         };
+
+        this.regridObject = function(object) {
+            Q._generateCollisionPoints(object);
+            object.stage.regrid(object);            
+        };
+
+        this.searchCollisionLayer = function(object, collisionMask, regrid) {
+            var stage = object.stage;
+            if (regrid) {
+                Q._generateCollisionPoints(object);
+                stage.regrid(object, false);
+            }
+            return stage._collideCollisionLayer(object,collisionMask);
+        }
 
         this.getAsset = function(name) {
             return Q.asset(name);
