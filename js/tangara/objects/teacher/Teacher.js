@@ -9,7 +9,7 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
         // Do not call parent constructor, as we don't want this object to be erased when clearing the
         // Runtime
         this.synchronousManager = new SynchronousManager();
-
+        TRuntime.addInstance(this);
     };
 
     Teacher.prototype = Object.create(TObject.prototype);
@@ -361,6 +361,12 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
 		return displayedMethods;
 	};
 	
+    Teacher.prototype.freeze = function(value) {
+    };
+
+    Teacher.prototype.clear = function() {
+    };
+        
     var teacherInstance = new Teacher();
 
     return teacherInstance;

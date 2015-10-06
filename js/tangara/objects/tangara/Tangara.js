@@ -6,8 +6,7 @@ define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink
      * @exports Tangara
      */
     var Tangara = function() {
-        // Do not call parent constructor, as we don't want this object to be erased when clearing the
-        // Runtime
+        TRuntime.addInstance(this);
     };
 
     Tangara.prototype = Object.create(TObject.prototype);
@@ -94,6 +93,13 @@ define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink
         else
             return answer;
     };
+    
+    Tangara.prototype.freeze = function(value) {
+    };
+
+    Tangara.prototype.clear = function() {
+    };
+
 
     var tangaraInstance = new Tangara();
 
