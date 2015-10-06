@@ -14,6 +14,8 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
         this.platform.addTile("door.png", this.getResource("door.png"));
         this.platform.addTile("exit.png", this.getResource("exit.png"));
         this.platform.addTile("wall.png", this.getResource("wall.png"));
+        this.platform.setCollidableTile(Builder.DOOR, false);
+        this.platform.setCollidableTile(Builder.EXIT, false);
         this.platform._build();
     };
 

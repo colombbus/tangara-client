@@ -52,45 +52,44 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
     
     var TSpriteSheet = graphics.addClass("SpriteSheet", "TSpriteSheet", {
     	init: function(img, options) {
-  	      TUtils.extend(this,{
-  	          name: name,
-  	          img: img,
-  	          w: img.width,
-  	          h: img.height,
-  	          tileW: 64,
-  	          tileH: 64,
-  	          sx: 0,
-  	          sy: 0,
-  	          spacingX: 0,
-  	          spacingY: 0,
-                  currentRow: 0,
-  	          frameProperties: {}
-  	          });
-  	        if(options) { TUtils.extend(this,options); }
-  	        // fix for old tilew instead of tileW
-  	        if(this.tilew) { 
-  	          this.tileW = this.tilew; 
-  	          delete this['tilew']; 
-  	        }
-  	        if(this.tileh) { 
-  	          this.tileH = this.tileh; 
-  	          delete this['tileh']; 
-  	        }
+            TUtils.extend(this,{
+                name: name,
+                img: img,
+                w: img.width,
+                h: img.height,
+                tileW: 64,
+                tileH: 64,
+                sx: 0,
+                sy: 0,
+                spacingX: 0,
+                spacingY: 0,
+                currentRow: 0,
+                frameProperties: {}
+            });
+            if(options) { TUtils.extend(this,options); }
+            // fix for old tilew instead of tileW
+            if(this.tilew) { 
+                this.tileW = this.tilew; 
+                delete this['tilew']; 
+            }
+            if(this.tileh) { 
+                this.tileH = this.tileh; 
+                delete this['tileh']; 
+            }
 
-  	        this.cols = this.cols || 
-  	                    Math.floor(this.w / (this.tileW + this.spacingX));
+            this.cols = this.cols || 
+                        Math.floor(this.w / (this.tileW + this.spacingX));
 
-  	        this.frames = this.cols * (Math.ceil(this.h/(this.tileH + this.spacingY)));
-  		},
+            this.frames = this.cols * (Math.ceil(this.h/(this.tileH + this.spacingY)));
+            },
   	    draw: function(ctx, x, y, frame) {
   	        if(!ctx) { ctx = Q.ctx; }
   	        ctx.drawImage(this.img,
-  	                      this.fx(frame),this.fy(frame),
-  	                      this.tileW, this.tileH,
-  	                      Math.floor(x),Math.floor(y),
-  	                      this.tileW, this.tileH);
-
-  	      }
+                    this.fx(frame),this.fy(frame),
+                    this.tileW, this.tileH,
+                    Math.floor(x),Math.floor(y),
+                    this.tileW, this.tileH);
+            }
     });
     
     Platform.prototype.gClass = graphics.addClass("TileLayer", "TPlatform", {
@@ -103,48 +102,49 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
                 drawBaseTile:false,
                 built:false,
                 designMode:false,
-                tiles: [[]]
+                tiles: [[]],
+                collidable: [false]
             }, props), defaultProps);
             if (!this.p.built) {
             	this.spriteSheet = false;
             	this.operations = [];
-        	}
+            }
         },
         build: function() {
-        	this.perform( function() {
-        		this.init({built:true, initialized:this.p.initialized, tiles:this.p.tiles, tileW:this.p.tileW, tileH:this.p.tileH, drawBaseTile:this.p.drawBaseTile, id:this.p.id, x:this.p.x, y:this.p.y});
-        		graphics.objectResized(this);
-        	});
+            this.perform( function() {
+                this.init({built:true, initialized:this.p.initialized, tiles:this.p.tiles, tileW:this.p.tileW, tileH:this.p.tileH, drawBaseTile:this.p.drawBaseTile, id:this.p.id, x:this.p.x, y:this.p.y, collidable:this.p.collidable});
+                graphics.objectResized(this);
+            });
         },
         setStructure: function(data) {
             this.p.tiles = data;
-        	if (this.p.built) {
-        		// rebuild object
-        		this.build();
-        	}
-        	if (!this.p.initialized && this.spriteSheet !== false) {
-        		this.initialized();
-        	}
+            if (this.p.built) {
+                    // rebuild object
+                this.build();
+            }
+            if (!this.p.initialized && this.spriteSheet !== false) {
+                this.initialized();
+            }
         },
         draw: function(context) {
         	if (this.p.initialized && this.p.built) {
-        		this._super(context);
+                    this._super(context);
         	}
         },
         sheet: function(img,options) {
             if(!img) {
             	return this.spriteSheet;
-        	}
-        	this.spriteSheet = new TSpriteSheet(img, options);
-        	this.p.tileW = this.spriteSheet.tileW;
-        	this.p.tileH = this.spriteSheet.tileH;
-        	if (this.p.built) {
-        		// rebuild object
-        		this.build();
-        	}
-        	if (!this.p.initialized && this.p.tiles) {
-        		this.initialized();
-        	}
+            }
+            this.spriteSheet = new TSpriteSheet(img, options);
+            this.p.tileW = this.spriteSheet.tileW;
+            this.p.tileH = this.spriteSheet.tileH;
+            if (this.p.built) {
+                    // rebuild object
+                this.build();
+            }
+            if (!this.p.initialized && this.p.tiles) {
+                this.initialized();
+            }
         },
         perform: function(action, parameters) {
             if (this.p.initialized) {
@@ -223,19 +223,28 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
             } 
         },
         drawBlock: function(ctx, blockX, blockY) {
-        	// Fixed a bug in Quintus(?): startX and startY should not hold references to p.x and p.y
-	      var p = this.p,
-	          startX = Math.floor(blockX * p.blockW),
-	          startY = Math.floor(blockY * p.blockH);
-	
-	      if(!this.blocks[blockY] || !this.blocks[blockY][blockX]) {
-	        this.prerenderBlock(blockX,blockY);
-	      }
-	
-	      if(this.blocks[blockY]  && this.blocks[blockY][blockX]) {
-	        ctx.drawImage(this.blocks[blockY][blockX],startX,startY);
-	      }
-	}
+            // Fixed a bug in Quintus(?): startX and startY should not hold references to p.x and p.y
+            var p = this.p,
+                startX = Math.floor(blockX * p.blockW),
+                startY = Math.floor(blockY * p.blockH);
+
+            if(!this.blocks[blockY] || !this.blocks[blockY][blockX]) {
+              this.prerenderBlock(blockX,blockY);
+            }
+
+            if(this.blocks[blockY]  && this.blocks[blockY][blockX]) {
+              ctx.drawImage(this.blocks[blockY][blockX],startX,startY);
+            }
+	},
+        addCollidable:function() {
+            this.p.collidable.push(true);
+        },
+        setCollidable: function(tileNum, value) {
+            this.p.collidable[tileNum] = value;
+        },
+        collidableTile: function(tileNum) {
+            return this.p.collidable[tileNum];
+        }
     });
     
     /**
@@ -263,12 +272,17 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
     Platform.prototype.addTile = function(imageName, imagePath) {
         var self = this;
         this.tiles.push(imageName);
+        this.gObject.addCollidable();
         this.resources.add(imageName, imagePath, function() {
             if (self.built) {
                 // build sheet only if object already built
                 self.buildSheet();
             }
         });
+    };
+    
+    Platform.prototype.setCollidableTile = function(number, value) {
+        this.gObject.setCollidable(number, value);
     };
     
     /**
@@ -449,26 +463,26 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
         canvas.width = tileW*(this.tiles.length+1);
         canvas.height = tileH;
         if (this.baseTile !== "") {
-        	var tile = this.resources.get(this.baseTile);
-        	if (!tile) {
-        		// resource not already loaded: exit
-        		return;
-        	}
+            var tile = this.resources.get(this.baseTile);
+            if (!tile) {
+                // resource not already loaded: exit
+                return;
+            }
             ctx.drawImage(tile, 0, 0);
         }
     	for (var i =0; i< this.tiles.length;i++) {
-        	var tile = this.resources.get(this.tiles[i]);
-        	if (!tile) {
-        		// resource not already loaded: exit
-        		return;
-        	}
+            var tile = this.resources.get(this.tiles[i]);
+            if (!tile) {
+                // resource not already loaded: exit
+                return;
+            }
             ctx.drawImage(tile, tileW*(i+1), 0);
     	}
         var newImage = new Image();
         var self = this;
         newImage.onload = function() {
-        	//self.sheet = newImage;
-        	self.gObject.sheet(newImage, {'tileW':tileW, 'tileH':tileH});
+            //self.sheet = newImage;
+            self.gObject.sheet(newImage, {'tileW':tileW, 'tileH':tileH});
         };
         // start loading
         newImage.src = canvas.toDataURL();
