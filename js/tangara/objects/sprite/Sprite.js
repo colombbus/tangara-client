@@ -306,8 +306,10 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
             this.perform(function() {
                 this.p.destinationX = this.p.x;
                 this.p.destinationY = this.p.y;
-                this.p.vx = 0;
-                this.p.vy = 0;
+                // remove this for now as it will stop any jump
+                // TODO: find a more elegant way
+                /*this.p.vx = 0;
+                this.p.vy = 0;*/
                 this.p.direction = Sprite.DIRECTION_NONE;
             }, {});
         },
