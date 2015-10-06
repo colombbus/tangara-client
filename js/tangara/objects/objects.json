@@ -195,8 +195,8 @@
         },
         "parents": true
     },
-    "OldKeyStroke": {
-        "path": "oldkeystroke",
+    "KeyStroke": {
+        "path": "keystroke",
         "translations": {
             "fr": "CommandesClavier",
             "es": "TBT",
@@ -204,14 +204,15 @@
         },
         "parents": true
     },
-    "KeyStroke": {
-        "path": "keystroke",
+    "KeyStrokeInstance": {
+        "path": "keystrokeinstance",
         "translations": {
-            "fr": "Clavier",
+            "fr": "clavier",
             "es": "TBT",
-            "en": "Keys"
+            "en": "keys"
         },
-        "parents": true
+        "parents": true,
+        "instance": true
     },
     "Tangara": {
         "path": "tangara",

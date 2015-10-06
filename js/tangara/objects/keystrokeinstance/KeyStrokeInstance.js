@@ -4,14 +4,15 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
      * Allows the association of commands with keyboard.
      * @exports KeyStroke
      */
-    var KeyStroke = function() {
-        TObject.call(this);
+    var KeyStrokeInstance = function() {
+        //TObject.call(this);
         this.commands = new CommandManager();
         this.active = true;
         this.keyDown = false;
         this.keyboardEnabled = false;
         this.checkAllKeysUp = false;
         this.waiting = false;
+        this.keyWaited = false;
         this.keys = new Array();
         var that = this;
         this.listenerKeyDown = function(e) {
@@ -26,16 +27,16 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
         this.synchronousManager = new SynchronousManager();        
     };
 
-    KeyStroke.prototype = Object.create(TObject.prototype);
-    KeyStroke.prototype.constructor = KeyStroke;
-    KeyStroke.prototype.className = "KeyStroke";
+    KeyStrokeInstance.prototype = Object.create(TObject.prototype);
+    KeyStrokeInstance.prototype.constructor = KeyStrokeInstance;
+    KeyStrokeInstance.prototype.className = "KeyStrokeInstance";
 
     /**
      * Returns the Keycode of a key.
      * @param {String} key
      * @returns {Number}    Keycode corresponding to key.
      */
-    KeyStroke.prototype.getKeyCode = function(key) {
+    KeyStrokeInstance.prototype.getKeyCode = function(key) {
         key = TUtils.removeAccents(key);
         key = this.getMessage(key);
         var code = TUtils.getkeyCode(key);
@@ -49,7 +50,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
      * Enable the possibility to use keyboard.
      * @returns {Boolean}   Returns false if already enabled.
      */
-    KeyStroke.prototype.enableKeyboard = function() {
+    KeyStrokeInstance.prototype.enableKeyboard = function() {
         if (this.keyboardEnabled) {
             return false;
         }
@@ -73,7 +74,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
      * Disable the possibility to use keyboard.
      * @returns {Boolean}   Returns false if already disabled.
      */
-    KeyStroke.prototype.disableKeyboard = function() {
+    KeyStrokeInstance.prototype.disableKeyboard = function() {
         if (!this.keyboardEnabled) {
             return false;
         }
@@ -90,7 +91,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
      * @param {String} key
      * @param {String} command  Command triggered if key is pressed
      */
-    KeyStroke.prototype._addCommand = function(key, command) {
+    KeyStrokeInstance.prototype._addCommand = function(key, command) {
         key = TUtils.getString(key);
         command = TUtils.getCommand(command);
         var keycode = this.getKeyCode(key);
@@ -108,7 +109,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
      * Remove all commands associated to key.
      * @param {String} key
      */
-    KeyStroke.prototype._removeCommands = function(key) {
+    KeyStrokeInstance.prototype._removeCommands = function(key) {
         key = TUtils.getString(key);
         var keycode = this.getKeyCode(key);
         if (keycode !== false) {
@@ -127,7 +128,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
      * @param {String} param1
      * @param {String} param2
      */
-    KeyStroke.prototype._addCommandRelease = function(param1, param2) {
+    KeyStrokeInstance.prototype._addCommandRelease = function(param1, param2) {
         var key, command;
         if (typeof param2 !== 'undefined') {
             key = param1;
@@ -160,7 +161,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
      * - 1 : Remove all commands associated with the release of key.
      * @param {String} key
      */
-    KeyStroke.prototype._removeCommandRelease = function(key) {
+    KeyStrokeInstance.prototype._removeCommandRelease = function(key) {
         if (TUtils.checkString(key)) {
             // remove commands to be launched when a given key is released
             var keycode = this.getKeyCode(key);
@@ -180,14 +181,14 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
     /**
      * Enable the management of keys.
      */
-    KeyStroke.prototype._activate = function() {
+    KeyStrokeInstance.prototype._activate = function() {
         this.active = true;
     };
 
     /**
      * Disable the management of keys.
      */
-    KeyStroke.prototype._deactivate = function() {
+    KeyStrokeInstance.prototype._deactivate = function() {
         if (this.active) {
             this.active = false;
             for (var keycode in this.keys) {
@@ -199,39 +200,34 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
     /**
      * Delete all commands associated to KeyStroke, and delete it.
      */
-    KeyStroke.prototype.deleteObject = function() {
-        // remove listeners
-        this.disableKeyboard();
-
+    KeyStrokeInstance.prototype.deleteObject = function() {
         // delete commands
         for (var keycode in this.keys) {
             this.commands.removeCommands(keycode + "_down");
             this.commands.removeCommands(keycode + "_up");
         }
         this.commands.removeCommands("key_up_all");
-        this.commands = undefined;
-
+        
         // delete keys
         this.keys.length = 0;
-        this.keys = undefined;
-
-        TObject.prototype.deleteObject.call(this);
     };
 
     /**
      * Checks which keys are down and execute associated commands.
      * @param {type} e
      */
-    KeyStroke.prototype.processKeyDown = function(e) {
+    KeyStrokeInstance.prototype.processKeyDown = function(e) {
         if (this.active) {
             if (this.waiting) {
                 this.waiting = false;
+                this.keyWaited = e.keyCode;
                 this.synchronousManager.end();
-            }            
+            } else {
+                this.keyWaited = false;
+            }
             var keycode = e.keyCode;
             this.commands.executeCommands({'field': keycode + "_down"});
             this.keys[keycode] = true;
-
         }
     };
     
@@ -239,7 +235,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
      * Checks which keys are up and execute associated commands.
      * @param {type} e
      */
-    KeyStroke.prototype.processKeyUp = function(e) {
+    KeyStrokeInstance.prototype.processKeyUp = function(e) {
         if (this.active) {
             var keycode = e.keyCode;
             this.commands.executeCommands({'field': keycode + "_up"});
@@ -260,7 +256,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
      * Enable or disable keyboard depending on value, and freeze it.
      * @param {Boolean} value
      */
-    KeyStroke.prototype.freeze = function(value) {
+    KeyStrokeInstance.prototype.freeze = function(value) {
         if (value) {
             this.disableKeyboard();
         } else {
@@ -273,7 +269,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
      * Enable or disable the display of commands.
      * @param {Boolean} value
      */
-    KeyStroke.prototype._displayCommands = function(value) {
+    KeyStrokeInstance.prototype._displayCommands = function(value) {
         value = TUtils.getBoolean(value);
         this.commands.logCommands(value);
     };
@@ -283,13 +279,13 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
      * Detect if a given key is down
      * @param {String} key
      */
-    KeyStroke.prototype._wait = function(key) {
+    KeyStrokeInstance.prototype._wait = function(key) {
         //TODO: find a better way
         if (!this.keyboardEnabled) {
             this.enableKeyboard();
         }
         this.waiting = true;
-        this.synchronousManager.start();
+        this.synchronousManager.begin();
     };
 
     
@@ -297,16 +293,19 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
      * Detect if a given key is down
      * @param {String} key
      */
-    KeyStroke.prototype._detect = function(key) {
+    KeyStrokeInstance.prototype._detect = function(key) {
         //TODO: find a better way
         if (!this.keyboardEnabled) {
             this.enableKeyboard();
         }        
         var keycode = this.getKeyCode(key);
-        return (typeof this.keys[keycode] !== 'undefined' && this.keys[keycode]);
+        return (this.keyWaited === keycode || (typeof this.keys[keycode] !== 'undefined' && this.keys[keycode]));
     };
+    
+    
+    var instance = new KeyStrokeInstance();
 
-    return KeyStroke;
+    return instance;
 });
 
 
