@@ -201,8 +201,8 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
             for (var i=0; i<p.length ; i ++) {
                 p2[i] = [];
                 for (var j=0; j<cols; j++) {
-                    if (p[i][j] === Builder.BRICK) {
-                        p2[i][j] = Builder.BRICK;
+                    if (p[i][j] === Builder.BRICK || p[i][j] === Builder.WALL) {
+                        p2[i][j] = p[i][j];
                     } else {
                         p2[i][j] = 0;
                     }
