@@ -55,6 +55,7 @@ function load() {
                                         canvas.setLoadingValue(count, total);
                                     }, function() {
                                     canvas.removeLoading();
+                                    canvas.giveFocus();
                                     TRuntime.executeStatements(statements, init_programName);
                                 });
                             });

@@ -42,7 +42,9 @@ define(['ui/TComponent', 'jquery', 'TRuntime'], function(TComponent, $, TRuntime
         this.removeLoading = function() {
             $canvasLoading.hide();
         };
-
+        this.giveFocus = function() {
+            $canvas.get(0).focus();
+        };
     }
 
     TLearnCanvas.prototype = Object.create(TComponent.prototype);

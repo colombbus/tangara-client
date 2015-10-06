@@ -92,6 +92,10 @@ define(['jquery', 'TRuntime', 'ui/TComponent'], function($, TRuntime, TComponent
         this.removeLoading = function() {
             $canvasLoading.hide();
         };
+        
+        this.giveFocus = function() {
+            $canvas.get(0).focus();
+        };
     }
     ;
 

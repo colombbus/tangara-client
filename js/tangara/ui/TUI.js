@@ -232,6 +232,9 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 this.disableEditor();
                 console.clear();
                 TRuntime.executeFrom(editor,editor.getProgramName());
+                window.setTimeout(function() {
+                    canvas.giveFocus();
+                });
             }
         };
 
