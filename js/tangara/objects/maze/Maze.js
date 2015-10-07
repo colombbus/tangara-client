@@ -28,7 +28,7 @@ define(['objects/platform/Platform', 'TUtils'], function( Platform, TUtils) {
      * @param {Integer} x
      * @param {Integer} y
      */
-    Maze.prototype._builGround = function(x,y) {
+    Maze.prototype._buildGround = function(x,y) {
         x = TUtils.getInteger(x);
         y = TUtils.getInteger(y);
         this._setTile(x,y,Maze.GROUND);
