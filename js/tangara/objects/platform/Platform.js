@@ -551,6 +551,10 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
             }
             this.nbCols = newNbCols;
         }
+        window.console.debug(row);
+        window.console.log("x :" + x);
+        window.console.log("y :" + y);
+        
         for (var i=0; i<row.length; i++) {
             this.rows[y][x+i] = row[i];
         }

@@ -32,17 +32,17 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
     });
     
     /*
-     * Put a brick at given location
+     * Put a ground at given location
      * If no location given, use current location
      * @param {Integer} x
      * @param {Integer} y
      */
-    Builder.prototype._buildBrick = function(x,y) {
+    Builder.prototype._buildGround = function(x,y) {
         if (typeof x === 'undefined') {
             x = this.gObject.getGridX();
             y = this.gObject.getGridY();
         }
-        this.maze._buildBrick(x,y);
+        this.maze._buildGround(x,y);
     };
     
 

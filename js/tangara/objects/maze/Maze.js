@@ -24,14 +24,14 @@ define(['objects/platform/Platform', 'TUtils'], function( Platform, TUtils) {
     Maze.EXIT = 0x04;
 
     /*
-     * Put a brick at given location
+     * Put a ground at given location
      * @param {Integer} x
      * @param {Integer} y
      */
-    Maze.prototype._buildBrick = function(x,y) {
+    Maze.prototype._builGround = function(x,y) {
         x = TUtils.getInteger(x);
         y = TUtils.getInteger(y);
-        this._setTile(x,y,Maze.BRICK);
+        this._setTile(x,y,Maze.GROUND);
     };
     
 
