@@ -1,4 +1,4 @@
-define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'objects/platform/Platform'], function($, TUtils, SynchronousManager, Robot, Platform) {
+define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'objects/maze/Maze'], function($, TUtils, SynchronousManager, Robot, Maze) {
     /**
      * Defines Builder, inherited from Robot.
      * It's a robot which can deposit tiles.
@@ -9,23 +9,12 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
         this.synchronousManager = new SynchronousManager();
         this.gObject.synchronousManager = this.synchronousManager;
         var gObject = this.gObject;
-        this.platform = new Platform();
-        this.platform.addTile("brick.png", this.getResource("brick.png"));
-        this.platform.addTile("door.png", this.getResource("door.png"));
-        this.platform.addTile("exit.png", this.getResource("exit.png"));
-        this.platform.addTile("wall.png", this.getResource("wall.png"));
-        this.platform.setCollidableTile(Builder.DOOR, false);
-        this.platform.setCollidableTile(Builder.EXIT, false);
-        this.platform._build();
+        this.maze = new Maze();
     };
 
     Builder.prototype = Object.create(Robot.prototype);
     Builder.prototype.constructor = Builder;
     Builder.prototype.className = "Builder";
-    Builder.BRICK = 0x01;
-    Builder.DOOR = 0x02;
-    Builder.EXIT = 0x03;
-    Builder.WALL = 0x04;
 
     var graphics = Builder.prototype.graphics;
 
@@ -52,11 +41,8 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
         if (typeof x === 'undefined') {
             x = this.gObject.getGridX();
             y = this.gObject.getGridY();
-        } else {
-            x = TUtils.getInteger(x);
-            y = TUtils.getInteger(y);
         }
-        this.platform._setTile(x,y,Builder.BRICK);
+        this.maze._buildBrick(x,y);
     };
     
 
@@ -70,12 +56,8 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
         if (typeof x === 'undefined') {
             x = this.gObject.getGridX();
             y = this.gObject.getGridY();
-        } else {
-            x = TUtils.getInteger(x);
-            y = TUtils.getInteger(y);
         }
-        this.platform._setTile(x,y,Builder.DOOR);
-        this.platform.setDoorLocation(x,y);
+        this.maze._buildDoor(x,y);
     };
 
     /*
@@ -88,15 +70,12 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
         if (typeof x === 'undefined') {
             x = this.gObject.getGridX();
             y = this.gObject.getGridY();
-        } else {
-            x = TUtils.getInteger(x);
-            y = TUtils.getInteger(y);
         }
-        this.platform._setTile(x,y,Builder.EXIT);
+        this.maze._buildExit(x,y);
     };
     
     /*
-     * Build an wall at current location 
+     * Build a wall at current location 
      * If no location given, use current location
      * @param {Integer} x
      * @param {Integer} y
@@ -105,11 +84,8 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
         if (typeof x === 'undefined') {
             x = this.gObject.getGridX();
             y = this.gObject.getGridY();
-        } else {
-            x = TUtils.getInteger(x);
-            y = TUtils.getInteger(y);
         }
-        this.platform._setTile(x,y,Builder.WALL);
+        this.maze._buildWall(x,y);
     };
     
     /**
@@ -119,16 +95,29 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
      * @param {String} imageName    Image's name used for tiles
      */
     Builder.prototype._addTile = function(imageName) {
-        this.platform._addTile(imageName);
+        this.maze._addTile(imageName);
     };
     
     /**
-     * Build the Platform inside Builder, and then return it.
-     * @returns {Platform}
+     * Add a new row, starting from Builder's location
+     * Builder goes down one tile afterwards, in order to allow several calls
+     * @param {String} imageName    Image's name used for tiles
      */
-    Builder.prototype._getPlatform = function() {
-        return this.platform;
+    Builder.prototype._addRow = function(row) {
+        if (TUtils.checkArray(row)) {
+            row = TUtils.getArray(row);
+        } else {
+            row = arguments;
+        }
+        this.maze._setRow(this.gObject.getGridX(), this.gObject.getGridY(), row);
+        this._moveDownward();
     };
+    
+    Builder.prototype.deleteObject = function() {
+        this.maze.deleteObject();
+        this.maze = undefined;
+        Robot.prototype.deleteObject.call(this);
+    };    
     
     return Builder;
 });

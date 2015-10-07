@@ -9,7 +9,8 @@
             {"name":"_buildWall","translated":"poserMur","displayed":"poserMur()"},
             {"name":"_buildStructure","translated":"construire","displayed":"construire()"},
             {"name":"_addTile","translated":"ajouterBrique","displayed":"ajouterBrique(\"image\")"},
-            {"name":"_getPlatform","translated":"récupérerPlateforme","displayed":"récupérerPlateforme()"}
+            {"name":"_getPlatform","translated":"récupérerPlateforme","displayed":"récupérerPlateforme()"},
+            {"name":"_addRow","translated":"poserLigne","displayed":"poserLigne(0,0)"}
             ]
     }
 }

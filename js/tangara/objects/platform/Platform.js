@@ -522,6 +522,43 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
     };
     
     /**
+     * Sets a row, starting from the given location.
+     * If the row is too short, it is filled with 0.
+     * If the row is too long, it is truncated.
+     * @param {Number[]} row
+     */
+    Platform.prototype._setRow = function(x, y, row) {
+    	if (this.nbCols === 0 && this.nbRows === 0) {
+            this.nbCols = row.length+x;
+    	}
+        if (y>=this.nbRows) {
+            // rows have to be created
+            for (var i=this.nbRows; i<=y; i++) {
+                this.rows[i] = [];
+                for (var j=0; j<this.nbCols; j++) {
+                   this.rows[i].push[0];
+                }
+            }
+            this.nbRows = y+1;
+        }
+        var newNbCols = row.length+x;
+        if (newNbCols>this.nbCols) {
+            // cols have to be created
+            for (var i=0; i< this.nbRows; i++) {
+                for (var j = this.nbCols; j<newNbCols; j++) {
+                    this.rows[i].push(0);
+                }
+            }
+            this.nbCols = newNbCols;
+        }
+        for (var i=0; i<row.length; i++) {
+            this.rows[y][x+i] = row[i];
+        }
+        this.buildStructure();
+    };    
+    
+    
+    /**
      * Delete Platform.
      */
     Platform.prototype.deleteObject = function() {

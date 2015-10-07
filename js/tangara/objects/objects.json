@@ -504,5 +504,14 @@
             "en": "Information"
         },
         "parents": true
+    },
+     "Maze": {
+        "path": "maze",
+        "translations": {
+            "fr": "Labyrinthe",
+            "es": "TBD",
+            "en": "Maze"
+        },
+        "parents": true
     }
 }
