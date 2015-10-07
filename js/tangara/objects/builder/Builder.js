@@ -103,9 +103,10 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
      * Builder goes down one tile afterwards, in order to allow several calls
      * @param {String} imageName    Image's name used for tiles
      */
-    Builder.prototype._addRow = function(row) {
-        if (TUtils.checkArray(row)) {
-            row = TUtils.getArray(row);
+    Builder.prototype._addRow = function() {
+        var row;
+        if (arguments.length === 1 && TUtils.checkArray(arguments[0])) {
+            row = arguments[0];
         } else {
             row = arguments;
         }

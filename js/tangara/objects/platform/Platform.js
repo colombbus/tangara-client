@@ -315,11 +315,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
      * @param {Number[]} row
      */
     Platform.prototype._addRow = function(row) {
-        if (TUtils.checkArray(row)) {
-            row = TUtils.getArray(row);
-        } else {
-            row = arguments;
-        }
+        row = TUtils.getArray(row);
     	if (this.nbCols === 0 && this.nbRows === 0) {
             this.nbCols = row.length;
     	}
@@ -551,9 +547,6 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
             }
             this.nbCols = newNbCols;
         }
-        window.console.debug(row);
-        window.console.log("x :" + x);
-        window.console.log("y :" + y);
         
         for (var i=0; i<row.length; i++) {
             this.rows[y][x+i] = row[i];
