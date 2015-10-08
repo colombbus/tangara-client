@@ -167,6 +167,13 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
                 this.blocks.push(objId);
             }
         },
+        removeBlock: function(block) {
+            var objId = block.getGObject().getId();
+            var index = this.blocks.indexOf(objId);
+            if (index !== -1) {
+                this.blocks.splice(index,1);
+            }
+        },
         mayFall: function(value) {
             if (typeof value === 'undefined') {
                     value = true;
