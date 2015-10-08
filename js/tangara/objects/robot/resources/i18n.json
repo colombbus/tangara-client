@@ -12,7 +12,9 @@
             {"name":"_pickupItem","translated":"ramasserItem","displayed":"ramasserItem()"},
             {"name":"_dropItem","translated":"déposerItem","displayed":"déposerItem()"},
             {"name":"_countCarriedItems","translated":"compterItemsRamass\u00e9s","displayed":"compterItemsRamass\u00e9s()"},
-            {"name":"_wasBlocked","translated":"estBloqu\u00e9","displayed":"estBloqu\u00e9(\"haut\")"}
+            {"name":"_wasBlocked","translated":"estBloqu\u00e9","displayed":"estBloqu\u00e9(\"haut\")"},
+            {"name":"_getItemName","translated":"récupérerNomItem","displayed":"récupérerNomItem()"},
+            {"name":"_isOverExit","translated":"estSurSortie","displayed":"estSurSortie()"}
             ]
     }
 }

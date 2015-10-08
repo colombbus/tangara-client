@@ -24,12 +24,6 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
             this._super(TUtils.extend({
             }, props), defaultProps);
         },
-        getGridX:function() {
-            return this.p.gridX;
-        },
-        getGridY:function() {
-            return this.p.gridY;
-        },
         setFlash:function(value) {
             if (value) {
                 this.p.speed = 2000;

@@ -16,6 +16,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
         }
         this.synchronousManager = new SynchronousManager();
         this.gObject.synchronousManager = this.synchronousManager;
+        this.exitLocation = false;
         if (auto) {
             Platform.register(this);
         }
@@ -218,6 +219,20 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
                 this.p.x = x*this.p.length;
                 this.p.y = y*this.p.length;
             }
+        },
+        getItemName: function() {
+            var count = this.countItems();
+            if (count === 0) {
+                throw "no item";
+            }
+            var item = this.p.encountered[0];
+            return item.getName();
+        },
+        getGridX:function() {
+            return this.p.gridX;
+        },
+        getGridY:function() {
+            return this.p.gridY;
         }
     });
 
@@ -361,11 +376,34 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
     	Hero.prototype._addPlatform.call(this, platform);
         var entrance = platform.getEntranceLocation();
         this.setEntranceLocation(entrance[0],entrance[1]);
+        var exit = platform.getExitLocation();
+        if (exit) {
+            this.setExitLocation(exit[0],exit[1]);
+        }
     };
     
     Robot.prototype.setEntranceLocation = function(x, y) {
         this.gObject.setStartLocation(x,y);
     };
+
+    Robot.prototype.setExitLocation = function(x, y) {
+        this.exitLocation = [x, y];
+    };
+    
+    Robot.prototype._getItemName = function() {
+        try {
+            return this.gObject.getItemName();
+        } catch (e) {
+            throw new Error(this.getMessage("no items"));
+        }
+    };
+    
+    Robot.prototype._isOverExit = function() {
+        if (this.exitLocation) {
+            return (this.gObject.getGridX()=== this.exitLocation[0] && this.gObject.getGridY()=== this.exitLocation[1]);
+        }
+        return false;
+    };    
     
     Robot.prototype.deleteObject = function() {
         this.synchronousManager.end();
