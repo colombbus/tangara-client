@@ -15,7 +15,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
         this.resources = new ResourceManager();
         this.sheet = null;
         this.built = false;
-        this.doorLocation = [0,0];
+        this.entranceLocation = [0,0];
         TRuntime.addGraphicalObject(this, false);
         var g = TRuntime.getGraphics().getInstance();
         g.stage().collisionLayer(this.gObject);
@@ -509,12 +509,12 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
         }
     };
     
-    Platform.prototype.getDoorLocation = function() {
-        return this.doorLocation;
+    Platform.prototype.getEntranceLocation = function() {
+        return this.entranceLocation;
     };
     
-    Platform.prototype.setDoorLocation = function(x,y) {
-        this.doorLocation = [x,y];
+    Platform.prototype.setEntranceLocation = function(x,y) {
+        this.entranceLocation = [x,y];
     };
     
     /**

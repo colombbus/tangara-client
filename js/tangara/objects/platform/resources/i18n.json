@@ -9,7 +9,7 @@
             {"name":"_setBaseTile","translated":"définirBriqueFond","displayed":"définirBriqueFond(\"image\")"},
             {"name":"_setTile","translated":"définirBrique","displayed":"définirBrique(0,0,1)"},
             {"name":"_buildBrick","translated":"poserSol","displayed":"poserSol()"},
-            {"name":"_buildDoor","translated":"poserPorte","displayed":"poserPorte()"},
+            {"name":"_buildEntrance","translated":"poserEntrée","displayed":"poserEntrée()"},
             {"name":"_buildExit","translated":"poserSortie","displayed":"poserSortie()"},
             {"name":"_buildWall","translated":"poserMur","displayed":"poserMur()"}
          ]

@@ -3,7 +3,7 @@
     "fr": {
         "methods":[
             {"name":"_buildGround","translated":"poserSol","displayed":"poserSol(0,0)"},
-            {"name":"_buildDoor","translated":"poserPorte","displayed":"poserPorte(0,0)"},
+            {"name":"_buildEntrance","translated":"poserEntrée","displayed":"poserEntrée(0,0)"},
             {"name":"_buildExit","translated":"poserSortie","displayed":"poserSortie(0,0)"},
             {"name":"_buildWall","translated":"poserMur","displayed":"poserMur(0,0)"}
             ]

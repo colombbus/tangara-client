@@ -47,19 +47,29 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
     
 
     /*
+     * Build an entrance at current location 
+     * If no location given, use current location
+     * @param {Integer} x
+     * @param {Integer} y
+     */
+    Builder.prototype._buildEntrance = function(x,y) {
+        if (typeof x === 'undefined') {
+            x = this.gObject.getGridX();
+            y = this.gObject.getGridY();
+        }
+        this.maze._buildEntrance(x,y);
+    };
+    
+    /*
      * Build a door at current location 
      * If no location given, use current location
      * @param {Integer} x
      * @param {Integer} y
      */
     Builder.prototype._buildDoor = function(x,y) {
-        if (typeof x === 'undefined') {
-            x = this.gObject.getGridX();
-            y = this.gObject.getGridY();
-        }
-        this.maze._buildDoor(x,y);
+        this._buildEntrance(x,y);
     };
-
+    
     /*
      * Build an exit at current location 
      * If no location given, use current location

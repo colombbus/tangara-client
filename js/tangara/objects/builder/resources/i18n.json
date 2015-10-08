@@ -5,6 +5,7 @@
             {"name":"_buildGround","translated":"poserSol","displayed":"poserSol()"},
             {"name":"_getStructure","translated":"récupérerStructure","displayed":"récupérerStructure()"},
             {"name":"_buildDoor","translated":"poserPorte","displayed":"poserPorte()"},
+            {"name":"_buildEntrance","translated":"poserEntrée","displayed":"poserEntrée()"},
             {"name":"_buildExit","translated":"poserSortie","displayed":"poserSortie()"},
             {"name":"_buildWall","translated":"poserMur","displayed":"poserMur()"},
             {"name":"_buildStructure","translated":"construire","displayed":"construire()"},
