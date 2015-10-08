@@ -293,6 +293,10 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             interpreter.resume();
         };
         
+        this.interrupt = function() {
+            interpreter.stop();
+        };
+        
         // OBJECTS MANAGEMENT
 
         this.addObject = function(object) {

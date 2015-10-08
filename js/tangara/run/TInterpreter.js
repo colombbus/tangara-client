@@ -38,15 +38,7 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
         var clear = function() {
             definedFunctions = {};
             localVariables = [];
-            currentVariables = [];
-            stack = [[]];
-            cached = [[]];
-            blockLevel = 0;
-            running = false;
-            suspended = false;
-            stackPointer = [0];
-            executionLevel = 0;
-            callers = [];
+            stop();
         };
 
         this.clear = function() {
@@ -70,6 +62,14 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
 
         var stop = function() {
             stack = [[]];
+            cached = [[]];
+            blockLevel = 0;
+            running = false;
+            suspended = false;
+            stackPointer = [0];
+            executionLevel = 0;
+            currentVariables = [];
+            callers = [];
         };
 
         this.start = function() {
@@ -83,6 +83,7 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
                 run();
             }
         };
+
 
         this.addStatement = function(statement, programName) {
             if (typeof programName === 'undefined') {

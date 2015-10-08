@@ -147,6 +147,7 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/teacher/Teach
          * @param {Statements[]} statements
          */
         this.check = function(statements) {
+            TRuntime.interrupt();
             Teacher.setStatements(statements);
             if (endStatements !== false) {
                 TRuntime.executeStatements(endStatements);
