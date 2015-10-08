@@ -294,7 +294,7 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
         };
         
         this.interrupt = function() {
-            interpreter.stop();
+            interpreter.interrupt();
         };
         
         // OBJECTS MANAGEMENT

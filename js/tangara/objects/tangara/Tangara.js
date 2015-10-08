@@ -94,6 +94,14 @@ define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink
             return answer;
     };
     
+    
+    /**
+     * Interrupt execution
+     */
+    Tangara.prototype._interrupt = function() {
+        TRuntime.interrupt();
+    };
+    
     Tangara.prototype.freeze = function(value) {
     };
 

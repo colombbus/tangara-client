@@ -71,6 +71,37 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
             currentVariables = [];
             callers = [];
         };
+        
+        this.interrupt = function() {
+            var loop = false;
+            var pointer = 0;
+            var stackLength = stack[executionLevel].length;
+            while (!loop && pointer < stackLength) {
+                var statement = stack[executionLevel][pointer];
+                if (statement.type === "ControlOperation") {
+                    switch (statement.operation) {
+                        case "leaveBlock" : 
+                            leaveBlock();
+                            break;
+                        case "leaveFunction":
+                            lowerExecutionLevel(null);
+                            pointer = 0;
+                            stackLength = stack[executionLevel].length;
+                            break;
+                    }
+                } else {
+                    loop = (typeof statement.controls !== 'undefined'&& typeof statement.controls.loop !== 'undefined');
+                }
+                pointer++;
+            }
+            if (loop) {
+                // remove statements up until loop
+                stack[executionLevel].splice(0,pointer); 
+            } else {
+                //  no loop encountered: we just stop
+                stop();
+            }
+        };
 
         this.start = function() {
             if (!running) {
