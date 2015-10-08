@@ -1,6 +1,6 @@
 define(['TError', 'TUtils'], function(TError, TUtils) {
     function TInterpreter() {
-        var MAX_LOOP = 99;
+        var MAX_LOOP = 50;
         
         var runtimeFrame;
         var errorHandler;
