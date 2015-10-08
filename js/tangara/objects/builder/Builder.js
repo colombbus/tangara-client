@@ -29,6 +29,13 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
         },
         getGridY:function() {
             return this.p.gridY;
+        },
+        setFlash:function(value) {
+            if (value) {
+                this.p.speed = 2000;
+            } else {
+                this.p.speed = 200;
+            }
         }
     });
     
@@ -127,6 +134,13 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
     
     Builder.prototype.getTileCount = function(number) {
         return this.maze.getTileCount(number);
+    };
+
+    /*
+     * set flash mode of builder
+     */
+    Builder.prototype._setFlash = function(value) {
+        this.gObject.setFlash(value);
     };
     
     Builder.prototype.deleteObject = function() {
