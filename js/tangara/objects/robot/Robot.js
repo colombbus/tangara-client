@@ -352,8 +352,12 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
     Robot.prototype._addPlatform = function(platform) {
     	Hero.prototype._addPlatform.call(this, platform);
         var entrance = platform.getEntranceLocation();
-        this.gObject.setGridLocation(entrance[0], entrance[1]);
-    };    
+        this.setEntranceLocation(entrance[0],entrance[1]);
+    };
+    
+    Robot.prototype.setEntranceLocation = function(x, y) {
+        this.gObject.setGridLocation(x,y);
+    };
     
     Robot.prototype.deleteObject = function() {
         this.synchronousManager.end();

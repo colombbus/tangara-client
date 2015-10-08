@@ -125,6 +125,10 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
         this._moveDownward();
     };
     
+    Builder.prototype.getTileCount = function(number) {
+        return this.maze.getTileCount(number);
+    };
+    
     Builder.prototype.deleteObject = function() {
         this.maze.deleteObject();
         this.maze = undefined;

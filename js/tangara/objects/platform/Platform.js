@@ -16,6 +16,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
         this.sheet = null;
         this.built = false;
         this.entranceLocation = [0,0];
+        this.counters = [0];
         TRuntime.addGraphicalObject(this, false);
         var g = TRuntime.getGraphics().getInstance();
         g.stage().collisionLayer(this.gObject);
@@ -127,9 +128,9 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
             }
         },
         draw: function(context) {
-        	if (this.p.initialized && this.p.built) {
-                    this._super(context);
-        	}
+            if (this.p.initialized && this.p.built) {
+                this._super(context);
+            }
         },
         sheet: function(img,options) {
             if(!img) {
@@ -272,6 +273,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
     Platform.prototype.addTile = function(imageName, imagePath) {
         var self = this;
         this.tiles.push(imageName);
+        this.counters.push(0);
         this.gObject.addCollidable();
         this.resources.add(imageName, imagePath, function() {
             if (self.built) {
@@ -304,7 +306,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
 	    		}
 	    	});
         } catch (e) {
-            throw new Error(this.getMessage("file not found", name));
+            throw new Error(this.getMessage("file not found", imageName));
         }
     };
     
@@ -329,6 +331,10 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
             row.splice(this.nbCols, row.length);
     	}
     	this.rows.push(row);
+        // update counters
+        for (var i=0;i<row.length;i++) {
+            this.counters[row[i]]++;
+        }
     	this.nbRows++;
     	this.buildStructure();
     };
@@ -342,14 +348,16 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
     Platform.prototype._addColumn = function(col) {
     	col = TUtils.getArray(col);
     	if (this.nbCols === 0 && this.nbRows === 0) {
-    		this.nbRows = col.length;
+            this.nbRows = col.length;
     	}
     	for (var i = 0; i< this.nbRows; i++) {
-    		if (i<col.length) {
-    			this.rows[i].push(col[i]);
-    		} else {
-    			this.rows[i].push(0);
-    		}
+            if (i<col.length) {
+                this.rows[i].push(col[i]);
+                this.counters[col[i]]++;
+            } else {
+                this.rows[i].push(0);
+                this.counters[0]++;
+            }
     	}
     	this.nbCols++;
     	this.buildStructure();
@@ -367,14 +375,22 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
                 throw new Error(this.getMessage("structure incorrect"));
             }
             var newNbCols = structure[0].length;
+            var tileNumber;
+            // init counters
+            for (var i=0; i<this.counters.length; i++) {
+                this.counters[i]=0;
+            }
             for (var i=0; i<structure.length; i++) {
                 newRows[i] = [];
                 for (var j = 0; j<newNbCols; j++) {
                     if (j<structure[i].length) {
-                            newRows[i][j] = structure[i][j];
+                        tileNumber = structure[i][j];
+                        newRows[i][j] = tileNumber;
+                        this.counters[tileNumber]++;
                     } else {
-                            // row too short: fill with 0
-                            newRows[i][j] = 0;
+                        // row too short: fill with 0
+                        newRows[i][j] = 0;
+                        this.counters[0]++;
                     }
                 }
             }
@@ -413,7 +429,8 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
             for (var i=this.nbRows; i<=y; i++) {
                 this.rows[i] = [];
                 for (var j=0; j<this.nbCols; j++) {
-                   this.rows[i].push[0];
+                   this.rows[i].push(0);
+                   this.counters[0]++;
                 }
             }
             this.nbRows = y+1;
@@ -423,11 +440,15 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
             for (var i=0; i< this.nbRows; i++) {
                 for (var j = this.nbCols; j<=x; j++) {
                     this.rows[i].push(0);
+                    this.counters[0]++;
                 }
             }
             this.nbCols = x+1;
         }
+        // update counter of preceding tile
+        this.counters[this.rows[y][x]]--;
         this.rows[y][x] = number;
+        this.counters[number]++;
         this.buildStructure();        
     };
 
@@ -515,6 +536,11 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
     
     Platform.prototype.setEntranceLocation = function(x,y) {
         this.entranceLocation = [x,y];
+        // warn every robots registered that entrance has been added
+        for (var i=0;i<Platform.registered.length;i++) {
+            var object = Platform.registered[i];
+            object.setEntranceLocation(x,y);
+        }        
     };
     
     /**
@@ -532,7 +558,8 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
             for (var i=this.nbRows; i<=y; i++) {
                 this.rows[i] = [];
                 for (var j=0; j<this.nbCols; j++) {
-                   this.rows[i].push[0];
+                   this.rows[i].push(0);
+                   this.counters[0]++;
                 }
             }
             this.nbRows = y+1;
@@ -543,16 +570,28 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
             for (var i=0; i< this.nbRows; i++) {
                 for (var j = this.nbCols; j<newNbCols; j++) {
                     this.rows[i].push(0);
+                    this.counters[0]++;
                 }
             }
             this.nbCols = newNbCols;
         }
         
+        var previous;
         for (var i=0; i<row.length; i++) {
+            previous = this.rows[y][x+i];
+            this.counters[previous]--;
             this.rows[y][x+i] = row[i];
+            this.counters[row[i]]++;
         }
         this.buildStructure();
     };    
+    
+    Platform.prototype.getTileCount = function(tileNumber) {
+        if (typeof this.counters[tileNumber] !== 'undefined') {
+            return this.counters[tileNumber];
+        }
+        return 0;
+    };
     
     
     /**

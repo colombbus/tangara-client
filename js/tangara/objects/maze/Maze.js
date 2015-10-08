@@ -72,6 +72,15 @@ define(['objects/platform/Platform', 'TUtils'], function( Platform, TUtils) {
         this._setTile(x,y,Maze.WALL);
     };
 
+    Maze.prototype._setRow = function(x, y, row) {
+        Platform.prototype._setRow.call(this,x,y,row);
+        // TODO: fix this
+        /*var entranceLocation = row.indexOf(Maze.ENTRANCE);
+        if (entranceLocation !== -1) {
+            this.setEntranceLocation(entranceLocation,y);
+        }*/
+    };
+
     return Maze;
 });
 
