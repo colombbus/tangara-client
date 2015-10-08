@@ -134,6 +134,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
                 this.p.inMovement = true;
                 this.p.destinationX -= this.p.length*n;
                 this.p.vx = -this.p.speed;
+                this.p.gridY-=n;
             }, []);
         },
         moveForward: function(n) {
@@ -144,6 +145,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
                 this.p.inMovement = true;
                 this.p.destinationX += this.p.length*n;
                 this.p.vx = this.p.speed;
+                this.p.gridX+=n;
             }, []);
         },        
         moveUpward: function(n) {
@@ -154,6 +156,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
                 this.p.inMovement = true;
                 this.p.destinationY -= this.p.length*n;
                 this.p.vy = -this.p.speed;
+                this.p.gridY-=n;
             }, []);
         },
         moveDownward: function(n) {
@@ -164,6 +167,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
                 this.p.inMovement = true;
                 this.p.destinationY += this.p.length*n;
                 this.p.vy = this.p.speed;
+                this.p.gridY+=n;
             }, []);
         },
         countItems: function() {
