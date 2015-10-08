@@ -210,6 +210,14 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
         updateGridLocation: function() {
             this.p.gridX = Math.floor(this.p.x/this.p.length);
             this.p.gridY = Math.floor(this.p.y/this.p.length);
+        },
+        setStartLocation: function(x, y) {
+            if (this.p.initialized) {
+                this.setGridLocation(x,y);
+            } else {
+                this.p.x = x*this.p.length;
+                this.p.y = y*this.p.length;
+            }
         }
     });
 
@@ -356,7 +364,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
     };
     
     Robot.prototype.setEntranceLocation = function(x, y) {
-        this.gObject.setGridLocation(x,y);
+        this.gObject.setStartLocation(x,y);
     };
     
     Robot.prototype.deleteObject = function() {
