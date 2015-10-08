@@ -213,12 +213,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
             this.p.gridY = Math.floor(this.p.y/this.p.length);
         },
         setStartLocation: function(x, y) {
-            if (this.p.initialized) {
-                this.setGridLocation(x,y);
-            } else {
-                this.p.x = x*this.p.length;
-                this.p.y = y*this.p.length;
-            }
+            this.setGridLocation(x,y);
         },
         getItemName: function() {
             var count = this.countItems();
