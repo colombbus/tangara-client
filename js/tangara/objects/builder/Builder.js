@@ -5,11 +5,12 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
      * @exports Builder
      */
     var Builder = function() {
+        // build maze before calling constructor in order to have builder drawn over the maze
+        this.maze = new Maze();
         Robot.call(this, "builder", false);
         this.synchronousManager = new SynchronousManager();
         this.gObject.synchronousManager = this.synchronousManager;
         var gObject = this.gObject;
-        this.maze = new Maze();
     };
 
     Builder.prototype = Object.create(Robot.prototype);
