@@ -77,10 +77,8 @@ define(['objects/platform/Platform', 'TUtils'], function( Platform, TUtils) {
         for (var i=0; i<row.length; i++){
             if (row[i] === Maze.ENTRANCE) {
                 this.setEntranceLocation(x+i,y);
-                break;
             } else if (row[i] === Maze.EXIT) {
                 this.setExitLocation(x+i,y);
-                break;
             }
         }
         Platform.prototype._setRow.call(this,x,y,row);
