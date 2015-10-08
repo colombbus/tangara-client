@@ -73,14 +73,15 @@ define(['objects/platform/Platform', 'TUtils'], function( Platform, TUtils) {
     };
 
     Maze.prototype._setRow = function(x, y, row) {
+        for (var i=0; i<row.length; i++){
+            if (row[i] === Maze.ENTRANCE) {
+                this.setEntranceLocation(x+i,y);
+                break;
+            }
+        }
         Platform.prototype._setRow.call(this,x,y,row);
-        // TODO: fix this
-        /*var entranceLocation = row.indexOf(Maze.ENTRANCE);
-        if (entranceLocation !== -1) {
-            this.setEntranceLocation(entranceLocation,y);
-        }*/
     };
-
+    
     return Maze;
 });
 
