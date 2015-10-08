@@ -7,6 +7,7 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
         var definedFunctions = {};
         var running = false;
         var suspended = false;
+        var loopSuspended = false;
         var localVariables = [];
         var currentVariables = [];
         var blockLevel = 0;
@@ -70,6 +71,7 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
             executionLevel = 0;
             currentVariables = [];
             callers = [];
+            loopSuspended = false;
         };
         
         this.interrupt = function() {
@@ -194,7 +196,7 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
             var statement;
             try {
                 running = true;
-                while (!suspended && stack[executionLevel].length > 0) {
+                while (!suspended && ! loopSuspended && stack[executionLevel].length > 0) {
                     var currentLevel = executionLevel;
                     stackPointer[executionLevel] = 0;
                     statement = stack[executionLevel][0];
@@ -489,10 +491,10 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
             if (statement.controls.loop > MAX_LOOP) {
                 // suspend execution in order to allow interruption
                 statement.controls.loop = 0;
-                suspended = true;
+                loopSuspended = true;
                 setTimeout(function() {
-                    if (suspended) {
-                        suspended = false;
+                    if (loopSuspended) {
+                        loopSuspended = false;
                         run();
                     }
                 }, 0);
