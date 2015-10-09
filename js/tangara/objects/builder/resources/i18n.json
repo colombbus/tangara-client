@@ -12,7 +12,7 @@
             {"name":"_addTile","translated":"ajouterBrique","displayed":"ajouterBrique(\"image\")"},
             {"name":"_getPlatform","translated":"récupérerPlateforme","displayed":"récupérerPlateforme()"},
             {"name":"_addRow","translated":"poserLigne","displayed":"poserLigne(0,0)"},
-            {"name":"_setFlash","translated":"estPressé","displayed":"estPressé(true)"}
+            {"name":"_setFlash","translated":"sePresser","displayed":"sePresser()"}
             ]
     }
 }

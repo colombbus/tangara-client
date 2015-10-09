@@ -134,6 +134,10 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
      * set flash mode of builder
      */
     Builder.prototype._setFlash = function(value) {
+        if (typeof value === 'undefined') {
+            value = true;
+        }
+        value = TUtils.getBoolean(value);
         this.gObject.setFlash(value);
     };
     
