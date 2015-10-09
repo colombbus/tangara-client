@@ -2,10 +2,10 @@
     "hide": ["_alwaysMoveForward", "_alwaysMoveBackward", "_alwaysMoveUpward", "_alwaysMoveDownward", "_setImage", "_setTransparent", "_displayImage", "_displayNextImage", "_displayPreviousImage", "_removeImageSet", "_setCharacter", "_setCenterLocation"],
     "fr": {
         "methods":[
-            {"name":"_moveForward","translated":"avancer","displayed":"avancer(50)"},
-            {"name":"_moveBackward","translated":"reculer","displayed":"reculer(50)"},
-            {"name":"_moveUpward","translated":"monter","displayed":"monter(50)"},
-            {"name":"_moveDownward","translated":"descendre","displayed":"descendre(50)"},
+            {"name":"_moveForward","translated":"avancer","displayed":"avancer(1)"},
+            {"name":"_moveBackward","translated":"reculer","displayed":"reculer(1)"},
+            {"name":"_moveUpward","translated":"monter","displayed":"monter(1)"},
+            {"name":"_moveDownward","translated":"descendre","displayed":"descendre(1)"},
             {"name":"_setVelocity","translated":"d\u00e9finirVitesse","displayed":"d\u00e9finirVitesse(100)"},
             {"name":"_setStep","translated":"d\u00e9finirPas","displayed":"d\u00e9finirPas(50)"},
             {"name":"_countItems","translated":"compterItems","displayed":"compterItems()"},
