@@ -140,6 +140,18 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
         value = TUtils.getBoolean(value);
         this.gObject.setFlash(value);
     };
+
+    Builder.prototype._setTileCollidable = function(tileNumber, value) {
+        if (typeof value === 'undefined') {
+            value = true;
+        }
+        tileNumber = TUtils.getInteger(tileNumber);
+        value = TUtils.getBoolean(value);
+        if (tileNumber <0 || tileNumber >= this.maze.getTilesLength()) {
+            throw new Error(TUtils.format(this.getMessage("incorrect index")), tileNumber);
+        }
+        this.maze.setCollidableTile(tileNumber, value);
+    };
     
     Builder.prototype.deleteObject = function() {
         this.maze.deleteObject();
