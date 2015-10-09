@@ -608,6 +608,10 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
         return 0;
     };
     
+    Platform.prototype.getTilesLength = function() {
+        return this.tiles.length;
+    };
+    
     
     /**
      * Delete Platform.
