@@ -363,6 +363,7 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
         };
 
         this.clear = function() {
+            interpreter.clear();
             // TODO: clear RuntimeFrame as well (e.g. to erase declared functions)
             this.clearGraphics();
             while (tObjects.length > 0) {
@@ -374,7 +375,6 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             for (var i=0;i<tInstances.length;i++) {
                 tInstances[i].clear();
             }
-            interpreter.clear();
         };
 
         this.setDesignMode = function(value) {
