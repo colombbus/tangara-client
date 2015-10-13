@@ -1,4 +1,4 @@
-define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'objects/maze/Maze'], function($, TUtils, SynchronousManager, Robot, Maze) {
+define(['jquery', 'TUtils', 'objects/robot/Robot', 'objects/maze/Maze'], function($, TUtils, Robot, Maze) {
     /**
      * Defines Builder, inherited from Robot.
      * It's a robot which can deposit tiles.
@@ -8,9 +8,6 @@ define(['jquery', 'TUtils', 'SynchronousManager', 'objects/robot/Robot', 'object
         // build maze before calling constructor in order to have builder drawn over the maze
         this.maze = new Maze();
         Robot.call(this, "builder", false);
-        this.synchronousManager = new SynchronousManager();
-        this.gObject.synchronousManager = this.synchronousManager;
-        var gObject = this.gObject;
     };
 
     Builder.prototype = Object.create(Robot.prototype);
