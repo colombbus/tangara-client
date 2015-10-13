@@ -62,18 +62,18 @@ function load() {
         window.console.log("* Loading Environment *");
         window.console.log("*******************");
         TEnvironment.load(function() {
-            window.console.log("*******************");
-            window.console.log("* Loading Runtime *");
-            window.console.log("*******************");
+            TEnvironment.log("*******************");
+            TEnvironment.log("* Loading Runtime *");
+            TEnvironment.log("*******************");
             TRuntime.load(function() {
-                window.console.log("***************************");
-                window.console.log("* Building User Interface *");
-                window.console.log("***************************");
+                TEnvironment.log("***************************");
+                TEnvironment.log("* Building User Interface *");
+                TEnvironment.log("***************************");
                 frame = new TLearnFrame(function(component) {
                     $("body").append(component);
-                    window.console.log("*******************");
-                    window.console.log("* Initiating link *");
-                    window.console.log("*******************");
+                    TEnvironment.log("*******************");
+                    TEnvironment.log("* Initiating link *");
+                    TEnvironment.log("*******************");
                     // Create task and grader
                     window.task = new Task(this);
                     window.grader = new Grader();
@@ -88,9 +88,9 @@ function load() {
                         var hash = document.location.hash;
                         exerciseId = parseInt(hash.substring(1));
                     }
-                    window.console.log("********************");
-                    window.console.log("* Loading exercise *");
-                    window.console.log("********************");
+                    TEnvironment.log("********************");
+                    TEnvironment.log("* Loading exercise *");
+                    TEnvironment.log("********************");
                     var self = this;
                     $(document).ready(function() {
                         // Create task and grader

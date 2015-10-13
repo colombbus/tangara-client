@@ -434,14 +434,14 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager'
      */
     Character.prototype._loadSkeleton = function(name) {
         name = TUtils.getString(name);
-        window.console.log("loading skeleton");
+        TEnvironment.log("loading skeleton");
         var baseImageUrl = this.getResource(name) + "/";
         var skeletonUrl = baseImageUrl + "skeleton.json";
-        window.console.log("Skeleton URL : " + skeletonUrl);
+        TEnvironment.log("Skeleton URL : " + skeletonUrl);
         var parent = this;
         var elements = new Array();
         var assets = new Array();
-        window.console.log("url : " + skeletonUrl);
+        TEnvironment.log("url : " + skeletonUrl);
         $.ajax({
             dataType: "json",
             url: skeletonUrl,

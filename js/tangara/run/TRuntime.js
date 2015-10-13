@@ -27,11 +27,11 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             graphics = new TGraphics();
 
             self = this;
-            window.console.log("loading base classes");
+            TEnvironment.log("loading base classes");
             // set repeat keyword
             TParser.setRepeatKeyword(TEnvironment.getMessage("repeat-keyword"));
             loadBaseClasses(TEnvironment.getLanguage(), function(baseNames) {
-                window.console.log("* Retrieving list of translated objects");
+                TEnvironment.log("* Retrieving list of translated objects");
                 // find objects and translate them
                 var classesUrl = TEnvironment.getObjectListUrl();
                 TResource.get(classesUrl,[], function(data) {
@@ -39,9 +39,9 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
                         // Ask parser to protect translated names
                         TParser.protectIdentifiers(translatedNames.concat(baseNames));
                         // Load translated error messages
-                        window.console.log("* Loading translated error messages");
+                        TEnvironment.log("* Loading translated error messages");
                         TError.loadMessages(function() {
-                            window.console.log("**** TRUNTIME INITIALIZED ****");
+                            TEnvironment.log("**** TRUNTIME INITIALIZED ****");
                             if (typeof callback !== "undefined") {
                                 callback.call(self);
                             }
@@ -72,7 +72,7 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             for (var i=0;i<classes.length; i++) {
                 var objectName = classes[i];
                 protectedNames.push(objectName);
-                window.console.log("adding base object " + objectName);
+                TEnvironment.log("adding base object " + objectName);
                 require([objectName], function(aClass) {
                     TI18n.internationalize(aClass, false, language, function() {
                         classesToLoad--;
@@ -108,7 +108,7 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
                     var lib = "objects/" + val['path'] + "/" + key;
                     //classPath[key] = val['path'];
                     if (typeof val['translations'][language] !== 'undefined') {
-                        window.console.log("adding " + lib);
+                        TEnvironment.log("adding " + lib);
                         //classLib.push(lib);
                         var translatedName = val['translations'][language];
                         var parents, instance;
@@ -134,7 +134,7 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
                             }
                             aConstructor.prototype.objectPath = val['path'];
                             TI18n.internationalize(aConstructor, parents, language, function() {
-                                window.console.log("Declaring translated object '" + translatedName + "'");
+                                TEnvironment.log("Declaring translated object '" + translatedName + "'");
                                 runtimeFrame[translatedName] = aClass;
                                 translatedNames.push(translatedName);
                                 classesToLoad--;

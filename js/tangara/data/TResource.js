@@ -1,6 +1,7 @@
 define(['jquery'], function($) {
     var TResource = function() {
         var cacheEnabled = false;
+        var log = false;
         var MILISECONDS_PER_DAY = 1000 * 60 * 60 * 24;
         
         /*
@@ -52,6 +53,7 @@ define(['jquery'], function($) {
                     return;
                 }
             }
+            var self = this;
             $.ajax({
                 dataType: "json",
                 url: name,
@@ -62,7 +64,7 @@ define(['jquery'], function($) {
                         for (var i=0; i<fields.length; i++) {
                             if (typeof data[fields[i]] !== 'undefined') {
                                 value[fields[i]] = data[fields[i]];
-                                window.console.log("found field '"+fields[i]+"' in resource '"+name);
+                                self.log("found field '"+fields[i]+"' in resource '"+name);
                             }
                         }
                     } else {
@@ -122,6 +124,16 @@ define(['jquery'], function($) {
                     callback.call(this, "");
                 }
             });
+        };
+        
+        this.setLog = function(value) {
+            log = value;
+        };
+        
+        this.log = function(message) {
+            if (log) {
+                window.console.log(message);
+            }
         };
     };
     

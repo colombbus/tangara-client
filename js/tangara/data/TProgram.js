@@ -185,8 +185,10 @@ define(['TParser', 'TLink', 'TEnvironment', 'TUtils', 'TError'], function(TParse
             if (!newProgram) {
                 TLink.renameProgram(name, value, function(error) {
                     if (typeof error !== 'undefined') {
-                        window.console.log("error detected");
-                        window.console.debug(error);
+                        TEnvironment.log("error detected");
+                        if (TEnvironment.isLogEnabled()) {
+                            window.console.debug(error);
+                        }
                         callback.call(this, error);
                     } else {
                         name = value;

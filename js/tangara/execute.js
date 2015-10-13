@@ -33,9 +33,9 @@ function load() {
         window.console.log("* Loading Environment *");
         window.console.log("*******************");
         TEnvironment.load(function() {
-            window.console.log("*******************");
-            window.console.log("* Loading Runtime *");
-            window.console.log("*******************");
+            TEnvironment.log("*******************");
+            TEnvironment.log("* Loading Runtime *");
+            TEnvironment.log("*******************");
             TRuntime.load(function() {
                 var canvas = new TCanvas(function(component) {
                     $("body").append(component);
