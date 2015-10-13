@@ -163,7 +163,7 @@ define(['objects/teacher/Teacher','ui/TComponent', 'TParser', 'ui/TLog', 'TEnvir
         this.resize = function() {
             aceEditor.resize();
         };
-
+		
         var consoleCompleter = {
             getCompletions: function(editor, session, pos, prefix, callback) {
                 pos.column--;
@@ -177,16 +177,6 @@ define(['objects/teacher/Teacher','ui/TComponent', 'TParser', 'ui/TLog', 'TEnvir
                 var index = token.index;
 				
 				var methodNames=[];
-
-                // TODO: see if we can handle this situation in js
-                /*if (token.type === "rparen") {
-                 // Right parenthesis: try to find actual identifier
-                 while (index >0 & token.type !== "identifier") {
-                 index--;
-                 token = tokens[index];
-                 }
-                 endToken = "[";
-                 }*/
 
                 if (token.type !== "identifier" && token.type !== "text" && token.type !== "keyword" && token.type !== "string") {
                     return false;
@@ -220,7 +210,7 @@ define(['objects/teacher/Teacher','ui/TComponent', 'TParser', 'ui/TLog', 'TEnvir
 
                     name = part + name;
                 }
-
+				
                 if (name.length === 0) {
                     return false;
                 }
@@ -231,18 +221,25 @@ define(['objects/teacher/Teacher','ui/TComponent', 'TParser', 'ui/TLog', 'TEnvir
                 var unicodeName = TUtils.toUnicode(name);
                 //console.log("unicode " + name);
                 var regex = new RegExp("(?:^|\\s)" + unicodeName + "\\s*=\\s*new\\s*([\\S^\\" + endToken + "]*)\\s*\\" + endToken);
-
                 var result = regex.exec(valueBefore);
 
+				// Searching if the token was an instancied object
+				if ((token.type === "identifier")|| (result === null)) {
+					var word = token.value;
+					
+				    var uninstancied = ["tangara", "declick" ,"clavier", "teacher"];
+					
+					if (uninstancied.indexOf(word) > -1) {
+						result = [word, word];
+					}
+				}
+				
                 var completions = [];
-
-                if (name === "tangara") {
-                    result = [name, name];
-                }
+                
+				console.log("Completed name " + result);
                 if (result !== null && result.length > 0) {
                     var className = result[1];
 					completions = Teacher.getDisplayedMethods(className);
-                 
                 }
 								
                 callback(null, completions);
