@@ -32,7 +32,8 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
     var score = 0;
     var displayedClasses = [];
     var displayedMethods = [];
-	var completions = {};
+    var completions = {};
+    var timer = -1;
     
     
     /**
@@ -245,7 +246,7 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
     Teacher.prototype.wait = function(delay) {
         this.synchronousManager.begin();
         var parent = this;
-        window.setTimeout(function() {
+        timer = window.setTimeout(function() {
             parent.synchronousManager.end();
         }, delay);
     };
@@ -365,35 +366,13 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
     };
 
     Teacher.prototype.clear = function() {
+        if (timer !== -1) {
+            window.clearTimeout(timer);
+        }
+        this.synchronousManager.end();
     };
         
     var teacherInstance = new Teacher();
 
     return teacherInstance;
 });
-
-
-
-//	in order tests purposes : 
-//	var completions = {
-//			"Animation":{
-//				methods:[
-//            {"name":"_moveForward","translated":"avancer","displayed":"avancer(50)"},
-//            {"name":"_moveBackward","translated":"reculer","displayed":"reculer(50)"},
-//            {"name":"_moveUpward","translated":"monter","displayed":"monter(50)"},
-//            {"name":"_moveDownward","translated":"descendre","displayed":"descendre(50)"},
-//            {"name":"_raiseLeftArm","translated":"leverBrasGauche","displayed":"leverBrasGauche(90)"},
-//            {"name":"_raiseRightArm","translated":"leverBrasDroit","displayed":"leverBrasDroit(90)"}
-//				]
-//			},
-//			"Robot":{
-//				methods:[
-//            {"name":"_moveForward","translated":"avancer","displayed":"avancer(50)"},
-//            {"name":"_moveUpward","translated":"monter","displayed":"monter(50)"},
-//            {"name":"_moveDownward","translated":"descendre","displayed":"descendre(50)"},
-//            {"name":"_raiseLeftArm","translated":"leverBrasGauche","displayed":"leverBrasGauche(90)"},
-//            {"name":"_raiseRightArm","translated":"leverBrasDroit","displayed":"leverBrasDroit(90)"}
-//				]
-//			}
-//		
-//	};
