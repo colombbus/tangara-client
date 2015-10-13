@@ -343,6 +343,7 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
      */
     Teacher.prototype.getDisplayedMethods = function(aClass){
 		var displayedClass=completions[aClass];
+		var displayedMethods = [];
 		if (typeof displayedClass === "undefined"){
 			return [];
 		}
