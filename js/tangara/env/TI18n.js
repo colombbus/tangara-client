@@ -1,4 +1,4 @@
-define(['jquery', 'TResource'], function($, TResource) {
+define(['jquery', 'TResource', 'TEnvironment'], function($, TResource, TEnvironment) {
     /**
      * Internationalization of Declick.
      * Allows the program to be adapted to various languages.
@@ -138,9 +138,9 @@ define(['jquery', 'TResource'], function($, TResource) {
                                 processedFiles[file][name] = value;
                             }
                         });
-                        window.console.log("found messages in language: " + language);
+                        TEnvironment.log("found messages in language: " + language);
                     } else {
-                        window.console.log("found no messages for language: " + language);
+                        TEnvironment.log("found no messages for language: " + language);
                     }
                     if (typeof callback !== 'undefined') {
                         callback.call(self);

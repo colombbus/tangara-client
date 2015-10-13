@@ -82,18 +82,18 @@ function load() {
         window.console.log("* Loading Environment *");
         window.console.log("*******************");
         TEnvironment.load(function() {
-            window.console.log("*******************");
-            window.console.log("* Loading Runtime *");
-            window.console.log("*******************");
+            TEnvironment.log("*******************");
+            TEnvironment.log("* Loading Runtime *");
+            TEnvironment.log("*******************");
             TRuntime.load(function() {
-                window.console.log("***************************");
-                window.console.log("* Building User Interface *");
-                window.console.log("***************************");
+                TEnvironment.log("***************************");
+                TEnvironment.log("* Building User Interface *");
+                TEnvironment.log("***************************");
                 frame = new TFrame(function(component) {
                     $("body").append(component);
-                    window.console.log("*******************");
-                    window.console.log("* Initiating link *");
-                    window.console.log("*******************");
+                    TEnvironment.log("*******************");
+                    TEnvironment.log("* Initiating link *");
+                    TEnvironment.log("*******************");
                     var currentProject = new TProject();
                     currentProject.init(function() {
                         TEnvironment.setProject(currentProject);

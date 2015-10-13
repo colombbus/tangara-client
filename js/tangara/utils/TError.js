@@ -179,9 +179,9 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TResource'], function($, TEnvironme
         TResource.get(errorsFile, [language], function(data) {
             if (typeof data[language] !== 'undefined') {
                 TError.errors = data[language];
-                window.console.log("found errors translated in language: " + language);
+                TEnvironment.log("found errors translated in language: " + language);
             } else {
-                window.console.log("found no translated errors for language: " + language);
+                TEnvironment.log("found no translated errors for language: " + language);
             }
             callback.call(this);
         });

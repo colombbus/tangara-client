@@ -16,7 +16,7 @@ define(['jquery', 'TResource'], function($, TResource) {
         this.language = "fr";
 
         // Config parameters: default values
-        this.config = {"debug": false, "backend-path": "/tangara-server/web/app.php/", "cache":true};
+        this.config = {"debug": false, "backend-path": "/tangara-server/web/app.php/", "cache":true, "log":false};
         this.debug;
 
         /**
@@ -38,16 +38,16 @@ define(['jquery', 'TResource'], function($, TResource) {
                         document.domain = self.config['document-domain'];
                     }
                     TResource.setCacheEnabled(self.isCacheEnabled());
-                    
-                    window.console.log("* Retrieving translated messages");
+                    TResource.setLog(self.config['log']);
+                    self.log("* Retrieving translated messages");
                     var messageFile = self.getResource("messages.json");
                     var language = self.language;
                     TResource.get(messageFile,[language], function(data) {
                         if (typeof data[language] !== 'undefined') {
-                            window.console.log("found messages in language: " + language);
+                            self.log("found messages in language: " + language);
                             self.messages = data[language];
                         } else {
-                            window.console.log("found no messages for language: " + language);
+                            self.log("found no messages for language: " + language);
                         }
                         if (typeof callback !== 'undefined') {
                             callback.call(self);
@@ -220,10 +220,10 @@ define(['jquery', 'TResource'], function($, TResource) {
             }
             if (gl === null) {
                 support3D = false;
-                console.log("3D functions not supported");
+                this.log("3D functions not supported");
             } else {
                 support3D = true;
-                console.log("3D functions supported");
+                this.log("3D functions supported");
             }
             return support3D;
         };
@@ -235,6 +235,17 @@ define(['jquery', 'TResource'], function($, TResource) {
         this.isCacheEnabled = function() {
             return (typeof window.localStorage !== 'undefined' && this.config['cache']);
         };
+        
+        this.log = function(message) {
+            if (this.config["log"]) {
+                window.console.log(message);
+            }
+        };
+        
+        this.isLogEnabled = function() {
+            return this.config["log"];
+        };
+        
     };
 
     var environmentInstance = new TEnvironment();
