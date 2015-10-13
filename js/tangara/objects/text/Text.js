@@ -34,11 +34,20 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
             var oldH = this.p.h;
             var oldW = this.p.w;
             var context = graphics.getContext();
-            context.font = "normal " + this.p.textSize + "px Verdana,Sans-serif";
-            this.p.h = this.p.textSize;
-            this.p.w = context.measureText(this.p.label).width;
-            this.p.x += this.p.w / 2 - oldW / 2;
-            this.p.y += this.p.h / 2 - oldH / 2;
+            try {
+                context.font = "normal " + this.p.textSize + "px Verdana,Sans-serif";
+                this.p.h = this.p.textSize;
+                this.p.w = context.measureText(this.p.label).width;
+                this.p.x += this.p.w / 2 - oldW / 2;
+                this.p.y += this.p.h / 2 - oldH / 2;
+            } catch (e) {
+                // Firefox may throw NS_ERROR_FAILURE in case iframe is hidden: fallback
+                this.p.h = this.p.textSize;
+                // use fixed width for glyphs
+                this.p.w = (this.p.textSize/1.5) * this.p.label.length;
+                this.p.x += this.p.w / 2 - oldW / 2;
+                this.p.y += this.p.h / 2 - oldH / 2;
+            }
             graphics.objectResized(this);
         },
         draw: function(context) {
